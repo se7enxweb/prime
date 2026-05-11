@@ -47,6 +47,7 @@ class SizeRangeFilterIteratorTest extends RealIteratorTestCase
 
 class InnerSizeIterator extends \ArrayIterator
 {
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return new \SplFileInfo(parent::current());

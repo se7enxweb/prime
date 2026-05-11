@@ -109,7 +109,7 @@ class HelperSet implements \IteratorAggregate
     /**
      * @return Helper[]
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->helpers);
     }

@@ -27,7 +27,7 @@ abstract class FilterIterator extends \FilterIterator
      *
      * @see FilterIterator::rewind()
      */
-    public function rewind()
+    public function rewind(): void
     {
         if (\PHP_VERSION_ID > 50607 || (\PHP_VERSION_ID > 50523 && \PHP_VERSION_ID < 50600)) {
             parent::rewind();

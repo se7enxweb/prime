@@ -16,14 +16,14 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToHtml5LocalDa
 
 class DateTimeToHtml5LocalDateTimeTransformerTest extends TestCase
 {
-    public static function assertEquals($expected, $actual, $message = '', $delta = 0, $maxDepth = 10, $canonicalize = false, $ignoreCase = false)
+    public static function assertEquals($expected, $actual, string $message = ''): void
     {
         if ($expected instanceof \DateTime && $actual instanceof \DateTime) {
             $expected = $expected->format('c');
             $actual = $actual->format('c');
         }
 
-        parent::assertEquals($expected, $actual, $message, $delta, $maxDepth, $canonicalize, $ignoreCase);
+        parent::assertEquals($expected, $actual, $message);
     }
 
     public function transformProvider()

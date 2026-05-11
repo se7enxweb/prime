@@ -43,6 +43,7 @@ class Iterator implements \Iterator
         next($this->values);
     }
 
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return current($this->values);

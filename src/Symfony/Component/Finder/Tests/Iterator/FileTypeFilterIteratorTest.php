@@ -56,6 +56,7 @@ class FileTypeFilterIteratorTest extends RealIteratorTestCase
 
 class InnerTypeIterator extends \ArrayIterator
 {
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return new \SplFileInfo(parent::current());

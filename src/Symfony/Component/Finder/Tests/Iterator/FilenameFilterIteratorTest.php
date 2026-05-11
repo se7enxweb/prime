@@ -42,6 +42,7 @@ class FilenameFilterIteratorTest extends IteratorTestCase
 
 class InnerNameIterator extends \ArrayIterator
 {
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return new \SplFileInfo(parent::current());
