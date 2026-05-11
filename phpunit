@@ -1,14 +1,44 @@
 #!/usr/bin/env php
 <?php
+/*
+ * 7x Prime (se7enxweb) — phpunit shim for PHP 8.x
+ * Copyright (c) 7x (se7enxweb). All rights reserved.
+ *
+ * The symfony/phpunit-bridge simple-phpunit wrapper is broken on PHP 8
+ * because the bundled PHPUnit 6.5 cache requires internal classes that
+ * no longer exist. This shim bypasses the bridge entirely and delegates
+ * directly to the globally installed PHPUnit binary.
+ */
 
-// Cache-Id: https://github.com/symfony/phpunit-bridge/commit/66ffffcd8a6bb23aec847c8bdfb918610399499a
+$candidates = [
+    // Composer global install (root)
+    '/root/.config/composer/vendor/bin/phpunit',
+    // Composer global install (home-based fallback)
+    getenv('HOME') . '/.config/composer/vendor/bin/phpunit',
+    getenv('HOME') . '/.composer/vendor/bin/phpunit',
+    // Project vendor (if ever installed locally again)
+    __DIR__ . '/vendor/bin/phpunit',
+    // System-wide
+    '/usr/local/bin/phpunit',
+    '/usr/bin/phpunit',
+];
 
-if (!file_exists(__DIR__.'/vendor/symfony/phpunit-bridge/bin/simple-phpunit')) {
-    echo "Unable to find the `simple-phpunit` script in `vendor/symfony/phpunit-bridge/bin/`.\nPlease run `composer update` before running this command.\n";
+$phpunit = null;
+foreach ($candidates as $candidate) {
+    if ($candidate && is_executable($candidate)) {
+        $phpunit = $candidate;
+        break;
+    }
+}
+
+if ($phpunit === null) {
+    fwrite(STDERR, "Error: No PHPUnit binary found. Install via:\n");
+    fwrite(STDERR, "  COMPOSER_ALLOW_SUPERUSER=1 composer global require phpunit/phpunit\n");
     exit(1);
 }
-if (\PHP_VERSION_ID >= 70000 && !getenv('SYMFONY_PHPUNIT_VERSION')) {
-    putenv('SYMFONY_PHPUNIT_VERSION=6.5');
-}
-putenv('SYMFONY_PHPUNIT_DIR='.__DIR__.'/.phpunit');
-require __DIR__.'/vendor/symfony/phpunit-bridge/bin/simple-phpunit';
+
+// Pass all arguments through unchanged
+$args = array_map('escapeshellarg', array_slice($argv, 1));
+$cmd  = escapeshellarg($phpunit) . ' ' . implode(' ', $args);
+passthru($cmd, $code);
+exit($code);
