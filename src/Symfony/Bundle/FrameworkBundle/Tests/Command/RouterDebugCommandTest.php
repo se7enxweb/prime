@@ -26,7 +26,7 @@ class RouterDebugCommandTest extends TestCase
         $ret = $tester->execute(array('name' => null), array('decorated' => false));
 
         $this->assertEquals(0, $ret, 'Returns 0 in case of success');
-        $this->assertContains('Name   Method   Scheme   Host   Path', $tester->getDisplay());
+        $this->assertStringContainsString('Name   Method   Scheme   Host   Path', $tester->getDisplay());
     }
 
     public function testDebugSingleRoute()
@@ -35,7 +35,7 @@ class RouterDebugCommandTest extends TestCase
         $ret = $tester->execute(array('name' => 'foo'), array('decorated' => false));
 
         $this->assertEquals(0, $ret, 'Returns 0 in case of success');
-        $this->assertContains('Route Name   | foo', $tester->getDisplay());
+        $this->assertStringContainsString('Route Name   | foo', $tester->getDisplay());
     }
 
     /**

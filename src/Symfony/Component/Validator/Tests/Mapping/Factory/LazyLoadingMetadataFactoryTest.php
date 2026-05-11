@@ -202,10 +202,10 @@ class LazyLoadingMetadataFactoryTest extends TestCase
         }
 
         $this->assertCount(4, $groups);
-        $this->assertContains('Default', $groups);
-        $this->assertContains('EntityStaticCarTurbo', $groups);
-        $this->assertContains('EntityStaticCar', $groups);
-        $this->assertContains('EntityStaticVehicle', $groups);
+        $this->assertStringContainsString('Default', $groups);
+        $this->assertStringContainsString('EntityStaticCarTurbo', $groups);
+        $this->assertStringContainsString('EntityStaticCar', $groups);
+        $this->assertStringContainsString('EntityStaticVehicle', $groups);
     }
 }
 

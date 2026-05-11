@@ -924,7 +924,7 @@ abstract class AbstractDivLayoutTest extends AbstractLayoutTest
         $html = $this->renderWidget($form->createView());
 
         // compare plain HTML to check the whitespace
-        $this->assertContains('<div id="form" class="foobar" data-foo="bar">', $html);
+        $this->assertStringContainsString('<div id="form" class="foobar" data-foo="bar">', $html);
     }
 
     public function testWidgetContainerAttributeNameRepeatedIfTrue()
@@ -936,6 +936,6 @@ abstract class AbstractDivLayoutTest extends AbstractLayoutTest
         $html = $this->renderWidget($form->createView());
 
         // foo="foo"
-        $this->assertContains('<div id="form" foo="foo">', $html);
+        $this->assertStringContainsString('<div id="form" foo="foo">', $html);
     }
 }

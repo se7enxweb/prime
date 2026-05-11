@@ -361,9 +361,9 @@ class ApplicationTest extends TestCase
             $this->fail('->find() throws a CommandNotFoundException if command does not exist, with alternatives');
         } catch (\Exception $e) {
             $this->assertInstanceOf('Symfony\Component\Console\Exception\CommandNotFoundException', $e, '->find() throws a CommandNotFoundException if command does not exist, with alternatives');
-            $this->assertRegExp('/Did you mean one of these/', $e->getMessage(), '->find() throws a CommandNotFoundException if command does not exist, with alternatives');
-            $this->assertRegExp('/foo1:bar/', $e->getMessage());
-            $this->assertRegExp('/foo:bar/', $e->getMessage());
+            $this->assertMatchesRegularExpression('/Did you mean one of these/', $e->getMessage(), '->find() throws a CommandNotFoundException if command does not exist, with alternatives');
+            $this->assertMatchesRegularExpression('/foo1:bar/', $e->getMessage());
+            $this->assertMatchesRegularExpression('/foo:bar/', $e->getMessage());
         }
 
         // Namespace + plural
@@ -372,8 +372,8 @@ class ApplicationTest extends TestCase
             $this->fail('->find() throws a CommandNotFoundException if command does not exist, with alternatives');
         } catch (\Exception $e) {
             $this->assertInstanceOf('Symfony\Component\Console\Exception\CommandNotFoundException', $e, '->find() throws a CommandNotFoundException if command does not exist, with alternatives');
-            $this->assertRegExp('/Did you mean one of these/', $e->getMessage(), '->find() throws a CommandNotFoundException if command does not exist, with alternatives');
-            $this->assertRegExp('/foo1/', $e->getMessage());
+            $this->assertMatchesRegularExpression('/Did you mean one of these/', $e->getMessage(), '->find() throws a CommandNotFoundException if command does not exist, with alternatives');
+            $this->assertMatchesRegularExpression('/foo1/', $e->getMessage());
         }
 
         $application->add(new \Foo3Command());
@@ -385,8 +385,8 @@ class ApplicationTest extends TestCase
             $this->fail('->find() should throw an Symfony\Component\Console\Exception\CommandNotFoundException if a command is ambiguous because of a subnamespace, with alternatives');
         } catch (\Exception $e) {
             $this->assertInstanceOf('Symfony\Component\Console\Exception\CommandNotFoundException', $e);
-            $this->assertRegExp('/foo3:bar/', $e->getMessage());
-            $this->assertRegExp('/foo3:bar:toh/', $e->getMessage());
+            $this->assertMatchesRegularExpression('/foo3:bar/', $e->getMessage());
+            $this->assertMatchesRegularExpression('/foo3:bar:toh/', $e->getMessage());
         }
     }
 
@@ -415,10 +415,10 @@ class ApplicationTest extends TestCase
         } catch (\Exception $e) {
             $this->assertInstanceOf('Symfony\Component\Console\Exception\CommandNotFoundException', $e, '->find() throws a CommandNotFoundException if command does not exist');
             $this->assertSame(array('afoobar1', 'foo:bar1'), $e->getAlternatives());
-            $this->assertRegExp(sprintf('/Command "%s" is not defined./', $commandName), $e->getMessage(), '->find() throws a CommandNotFoundException if command does not exist, with alternatives');
-            $this->assertRegExp('/afoobar1/', $e->getMessage(), '->find() throws a CommandNotFoundException if command does not exist, with alternative : "afoobar1"');
-            $this->assertRegExp('/foo:bar1/', $e->getMessage(), '->find() throws a CommandNotFoundException if command does not exist, with alternative : "foo:bar1"');
-            $this->assertNotRegExp('/foo:bar(?>!1)/', $e->getMessage(), '->find() throws a CommandNotFoundException if command does not exist, without "foo:bar" alternative');
+            $this->assertMatchesRegularExpression(sprintf('/Command "%s" is not defined./', $commandName), $e->getMessage(), '->find() throws a CommandNotFoundException if command does not exist, with alternatives');
+            $this->assertMatchesRegularExpression('/afoobar1/', $e->getMessage(), '->find() throws a CommandNotFoundException if command does not exist, with alternative : "afoobar1"');
+            $this->assertMatchesRegularExpression('/foo:bar1/', $e->getMessage(), '->find() throws a CommandNotFoundException if command does not exist, with alternative : "foo:bar1"');
+            $this->assertDoesNotMatchRegularExpression('/foo:bar(?>!1)/', $e->getMessage(), '->find() throws a CommandNotFoundException if command does not exist, without "foo:bar" alternative');
         }
     }
 
@@ -459,13 +459,13 @@ class ApplicationTest extends TestCase
         } catch (\Exception $e) {
             $this->assertInstanceOf('Symfony\Component\Console\Exception\CommandNotFoundException', $e, '->find() throws a CommandNotFoundException if namespace does not exist');
             $this->assertCount(3, $e->getAlternatives());
-            $this->assertContains('foo', $e->getAlternatives());
-            $this->assertContains('foo1', $e->getAlternatives());
-            $this->assertContains('foo3', $e->getAlternatives());
-            $this->assertRegExp('/There are no commands defined in the "foo2" namespace./', $e->getMessage(), '->find() throws a CommandNotFoundException if namespace does not exist, with alternative');
-            $this->assertRegExp('/foo/', $e->getMessage(), '->find() throws a CommandNotFoundException if namespace does not exist, with alternative : "foo"');
-            $this->assertRegExp('/foo1/', $e->getMessage(), '->find() throws a CommandNotFoundException if namespace does not exist, with alternative : "foo1"');
-            $this->assertRegExp('/foo3/', $e->getMessage(), '->find() throws a CommandNotFoundException if namespace does not exist, with alternative : "foo3"');
+            $this->assertStringContainsString('foo', $e->getAlternatives());
+            $this->assertStringContainsString('foo1', $e->getAlternatives());
+            $this->assertStringContainsString('foo3', $e->getAlternatives());
+            $this->assertMatchesRegularExpression('/There are no commands defined in the "foo2" namespace./', $e->getMessage(), '->find() throws a CommandNotFoundException if namespace does not exist, with alternative');
+            $this->assertMatchesRegularExpression('/foo/', $e->getMessage(), '->find() throws a CommandNotFoundException if namespace does not exist, with alternative : "foo"');
+            $this->assertMatchesRegularExpression('/foo1/', $e->getMessage(), '->find() throws a CommandNotFoundException if namespace does not exist, with alternative : "foo1"');
+            $this->assertMatchesRegularExpression('/foo3/', $e->getMessage(), '->find() throws a CommandNotFoundException if namespace does not exist, with alternative : "foo3"');
         }
     }
 
@@ -1053,7 +1053,7 @@ class ApplicationTest extends TestCase
 
         $tester = new ApplicationTester($application);
         $tester->run(array('command' => 'foo'));
-        $this->assertContains('before.foo.caught.after.', $tester->getDisplay());
+        $this->assertStringContainsString('before.foo.caught.after.', $tester->getDisplay());
     }
 
     public function testRunDispatchesAllEventsWithExceptionInListener()
@@ -1073,7 +1073,7 @@ class ApplicationTest extends TestCase
 
         $tester = new ApplicationTester($application);
         $tester->run(array('command' => 'foo'));
-        $this->assertContains('before.caught.after.', $tester->getDisplay());
+        $this->assertStringContainsString('before.caught.after.', $tester->getDisplay());
     }
 
     public function testRunWithError()
@@ -1166,7 +1166,7 @@ class ApplicationTest extends TestCase
 
         $tester = new ApplicationTester($application);
         $exitCode = $tester->run(array('command' => 'foo'));
-        $this->assertContains('before.after.', $tester->getDisplay());
+        $this->assertStringContainsString('before.after.', $tester->getDisplay());
         $this->assertEquals(ConsoleCommandEvent::RETURN_CODE_DISABLED, $exitCode);
     }
 

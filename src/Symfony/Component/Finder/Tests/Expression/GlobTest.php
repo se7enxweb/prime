@@ -25,11 +25,11 @@ class GlobTest extends TestCase
     public function testGlobToRegex($glob, $match, $noMatch)
     {
         foreach ($match as $m) {
-            $this->assertRegExp(Expression::create($glob)->getRegex()->render(), $m, '::toRegex() converts a glob to a regexp');
+            $this->assertMatchesRegularExpression(Expression::create($glob)->getRegex()->render(), $m, '::toRegex() converts a glob to a regexp');
         }
 
         foreach ($noMatch as $m) {
-            $this->assertNotRegExp(Expression::create($glob)->getRegex()->render(), $m, '::toRegex() converts a glob to a regexp');
+            $this->assertDoesNotMatchRegularExpression(Expression::create($glob)->getRegex()->render(), $m, '::toRegex() converts a glob to a regexp');
         }
     }
 

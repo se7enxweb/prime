@@ -36,7 +36,7 @@ class ConfigDebugCommandTest extends WebTestCase
         $ret = $tester->execute(array('name' => 'TestBundle'));
 
         $this->assertSame(0, $ret, 'Returns 0 in case of success');
-        $this->assertContains('custom: foo', $tester->getDisplay());
+        $this->assertStringContainsString('custom: foo', $tester->getDisplay());
     }
 
     /**

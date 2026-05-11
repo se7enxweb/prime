@@ -114,7 +114,7 @@ class PhpExecutableFinderTest extends TestCase
         //TODO maybe php executable is custom or even Windows
         if ('\\' === \DIRECTORY_SEPARATOR) {
             $this->assertTrue(is_executable($current));
-            $this->assertRegExp('/\\\\php\.(exe|bat|cmd|com)$/i', $current, '::find() returns the executable PHP with suffixes');
+            $this->assertMatchesRegularExpression('/\\\\php\.(exe|bat|cmd|com)$/i', $current, '::find() returns the executable PHP with suffixes');
         }
     }
 }

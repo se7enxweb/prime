@@ -54,7 +54,7 @@ class QuestionHelperTest extends TestCase
 
         rewind($output->getStream());
         $stream = stream_get_contents($output->getStream());
-        $this->assertContains('Input "Fabien" is not a superhero!', $stream);
+        $this->assertStringContainsString('Input "Fabien" is not a superhero!', $stream);
 
         try {
             $question = new ChoiceQuestion('What is your favorite superhero?', $heroes, '1');

@@ -152,7 +152,7 @@ class CommandTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertNotEmpty($result);
-        $this->assertRegExp('/PHP|HipHop/', $result[0]);
+        $this->assertMatchesRegularExpression('/PHP|HipHop/', $result[0]);
     }
 
     public function testCastToString()

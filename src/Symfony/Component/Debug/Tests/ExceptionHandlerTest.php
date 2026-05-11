@@ -39,8 +39,8 @@ class ExceptionHandlerTest extends TestCase
         $handler->sendPhpResponse(new \RuntimeException('Foo'));
         $response = ob_get_clean();
 
-        $this->assertContains('<h1>Whoops, looks like something went wrong.</h1>', $response);
-        $this->assertNotContains('<h2 class="block_exception clear_fix">', $response);
+        $this->assertStringContainsString('<h1>Whoops, looks like something went wrong.</h1>', $response);
+        $this->assertStringNotContainsString('<h2 class="block_exception clear_fix">', $response);
 
         $handler = new ExceptionHandler(true);
 
@@ -48,8 +48,8 @@ class ExceptionHandlerTest extends TestCase
         $handler->sendPhpResponse(new \RuntimeException('Foo'));
         $response = ob_get_clean();
 
-        $this->assertContains('<h1>Whoops, looks like something went wrong.</h1>', $response);
-        $this->assertContains('<h2 class="block_exception clear_fix">', $response);
+        $this->assertStringContainsString('<h1>Whoops, looks like something went wrong.</h1>', $response);
+        $this->assertStringContainsString('<h2 class="block_exception clear_fix">', $response);
     }
 
     public function testStatusCode()
@@ -60,7 +60,7 @@ class ExceptionHandlerTest extends TestCase
         $handler->sendPhpResponse(new NotFoundHttpException('Foo'));
         $response = ob_get_clean();
 
-        $this->assertContains('Sorry, the page you are looking for could not be found.', $response);
+        $this->assertStringContainsString('Sorry, the page you are looking for could not be found.', $response);
 
         $expectedHeaders = array(
             array('HTTP/1.0 404', true, null),

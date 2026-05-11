@@ -598,7 +598,7 @@ class HttpCacheTest extends HttpCacheTestCase
         $this->assertTraceContains('miss');
         $this->assertTraceContains('store');
         $this->assertEquals('Hello World', $this->response->getContent());
-        $this->assertRegExp('/s-maxage=10/', $this->response->headers->get('Cache-Control'));
+        $this->assertMatchesRegularExpression('/s-maxage=10/', $this->response->headers->get('Cache-Control'));
 
         $this->cacheConfig['default_ttl'] = 10;
         $this->request('GET', '/');
@@ -607,7 +607,7 @@ class HttpCacheTest extends HttpCacheTestCase
         $this->assertTraceContains('fresh');
         $this->assertTraceNotContains('store');
         $this->assertEquals('Hello World', $this->response->getContent());
-        $this->assertRegExp('/s-maxage=10/', $this->response->headers->get('Cache-Control'));
+        $this->assertMatchesRegularExpression('/s-maxage=10/', $this->response->headers->get('Cache-Control'));
     }
 
     public function testAssignsDefaultTtlWhenResponseHasNoFreshnessInformationAndAfterTtlWasExpired()
@@ -620,7 +620,7 @@ class HttpCacheTest extends HttpCacheTestCase
         $this->assertTraceContains('miss');
         $this->assertTraceContains('store');
         $this->assertEquals('Hello World', $this->response->getContent());
-        $this->assertRegExp('/s-maxage=2/', $this->response->headers->get('Cache-Control'));
+        $this->assertMatchesRegularExpression('/s-maxage=2/', $this->response->headers->get('Cache-Control'));
 
         $this->request('GET', '/');
         $this->assertHttpKernelIsNotCalled();
@@ -628,7 +628,7 @@ class HttpCacheTest extends HttpCacheTestCase
         $this->assertTraceContains('fresh');
         $this->assertTraceNotContains('store');
         $this->assertEquals('Hello World', $this->response->getContent());
-        $this->assertRegExp('/s-maxage=2/', $this->response->headers->get('Cache-Control'));
+        $this->assertMatchesRegularExpression('/s-maxage=2/', $this->response->headers->get('Cache-Control'));
 
         // expires the cache
         $values = $this->getMetaStorageValues();
@@ -648,7 +648,7 @@ class HttpCacheTest extends HttpCacheTestCase
         $this->assertTraceContains('invalid');
         $this->assertTraceContains('store');
         $this->assertEquals('Hello World', $this->response->getContent());
-        $this->assertRegExp('/s-maxage=2/', $this->response->headers->get('Cache-Control'));
+        $this->assertMatchesRegularExpression('/s-maxage=2/', $this->response->headers->get('Cache-Control'));
 
         $this->setNextResponse();
 
@@ -658,7 +658,7 @@ class HttpCacheTest extends HttpCacheTestCase
         $this->assertTraceContains('fresh');
         $this->assertTraceNotContains('store');
         $this->assertEquals('Hello World', $this->response->getContent());
-        $this->assertRegExp('/s-maxage=2/', $this->response->headers->get('Cache-Control'));
+        $this->assertMatchesRegularExpression('/s-maxage=2/', $this->response->headers->get('Cache-Control'));
     }
 
     public function testAssignsDefaultTtlWhenResponseHasNoFreshnessInformationAndAfterTtlWasExpiredWithStatus304()
@@ -671,7 +671,7 @@ class HttpCacheTest extends HttpCacheTestCase
         $this->assertTraceContains('miss');
         $this->assertTraceContains('store');
         $this->assertEquals('Hello World', $this->response->getContent());
-        $this->assertRegExp('/s-maxage=2/', $this->response->headers->get('Cache-Control'));
+        $this->assertMatchesRegularExpression('/s-maxage=2/', $this->response->headers->get('Cache-Control'));
 
         $this->request('GET', '/');
         $this->assertHttpKernelIsNotCalled();
@@ -699,7 +699,7 @@ class HttpCacheTest extends HttpCacheTestCase
         $this->assertTraceContains('store');
         $this->assertTraceNotContains('miss');
         $this->assertEquals('Hello World', $this->response->getContent());
-        $this->assertRegExp('/s-maxage=2/', $this->response->headers->get('Cache-Control'));
+        $this->assertMatchesRegularExpression('/s-maxage=2/', $this->response->headers->get('Cache-Control'));
 
         $this->request('GET', '/');
         $this->assertHttpKernelIsNotCalled();
@@ -707,7 +707,7 @@ class HttpCacheTest extends HttpCacheTestCase
         $this->assertTraceContains('fresh');
         $this->assertTraceNotContains('store');
         $this->assertEquals('Hello World', $this->response->getContent());
-        $this->assertRegExp('/s-maxage=2/', $this->response->headers->get('Cache-Control'));
+        $this->assertMatchesRegularExpression('/s-maxage=2/', $this->response->headers->get('Cache-Control'));
     }
 
     public function testDoesNotAssignDefaultTtlWhenResponseHasMustRevalidateDirective()
@@ -720,7 +720,7 @@ class HttpCacheTest extends HttpCacheTestCase
         $this->assertEquals(200, $this->response->getStatusCode());
         $this->assertTraceContains('miss');
         $this->assertTraceNotContains('store');
-        $this->assertNotRegExp('/s-maxage/', $this->response->headers->get('Cache-Control'));
+        $this->assertDoesNotMatchRegularExpression('/s-maxage/', $this->response->headers->get('Cache-Control'));
         $this->assertEquals('Hello World', $this->response->getContent());
     }
 

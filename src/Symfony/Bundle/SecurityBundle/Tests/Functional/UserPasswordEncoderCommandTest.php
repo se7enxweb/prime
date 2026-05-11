@@ -58,7 +58,7 @@ class UserPasswordEncoderCommandTest extends WebTestCase
         ), array('interactive' => false));
 
         $output = $this->passwordEncoderCommandTester->getDisplay();
-        $this->assertContains('Password encoding succeeded', $output);
+        $this->assertStringContainsString('Password encoding succeeded', $output);
 
         $encoder = new BCryptPasswordEncoder(17);
         preg_match('# Encoded password\s{1,}([\w+\/$.]+={0,2})\s+#', $output, $matches);
@@ -75,7 +75,7 @@ class UserPasswordEncoderCommandTest extends WebTestCase
         ), array('interactive' => false));
 
         $output = $this->passwordEncoderCommandTester->getDisplay();
-        $this->assertContains('Password encoding succeeded', $output);
+        $this->assertStringContainsString('Password encoding succeeded', $output);
 
         $encoder = new Pbkdf2PasswordEncoder('sha512', true, 1000);
         preg_match('# Encoded password\s{1,}([\w+\/]+={0,2})\s+#', $output, $matches);

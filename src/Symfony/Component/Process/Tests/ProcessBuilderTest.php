@@ -94,7 +94,7 @@ class ProcessBuilderTest extends TestCase
 
         $proc = $pb->getProcess();
 
-        $this->assertContains('second', $proc->getCommandLine());
+        $this->assertStringContainsString('second', $proc->getCommandLine());
     }
 
     public function testPrefixIsPrependedToAllGeneratedProcess()

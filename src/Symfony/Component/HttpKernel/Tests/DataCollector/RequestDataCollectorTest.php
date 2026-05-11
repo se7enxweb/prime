@@ -43,7 +43,7 @@ class RequestDataCollectorTest extends TestCase
         $this->assertSame(array('name' => 'foo'), $c->getRouteParams());
         $this->assertSame(array(), $c->getSessionAttributes());
         $this->assertSame('en', $c->getLocale());
-        $this->assertRegExp('/Resource\(stream#\d+\)/', $attributes->get('resource'));
+        $this->assertMatchesRegularExpression('/Resource\(stream#\d+\)/', $attributes->get('resource'));
         $this->assertSame('Object(stdClass)', $attributes->get('object'));
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\ParameterBag', $c->getResponseHeaders());

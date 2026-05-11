@@ -59,7 +59,7 @@ class CountryTypeTest extends BaseTypeTest
             $countryCodes[] = $choice->value;
         }
 
-        $this->assertNotContains('ZZ', $countryCodes);
+        $this->assertStringNotContainsString('ZZ', $countryCodes);
     }
 
     public function testSubmitNull($expected = null, $norm = null, $view = null)

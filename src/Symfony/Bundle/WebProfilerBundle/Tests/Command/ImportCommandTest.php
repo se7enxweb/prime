@@ -42,6 +42,6 @@ class ImportCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(array('filename' => __DIR__.'/../Fixtures/profile.data'));
-        $this->assertRegExp('/Profile "TOKEN" has been successfully imported\./', $commandTester->getDisplay());
+        $this->assertMatchesRegularExpression('/Profile "TOKEN" has been successfully imported\./', $commandTester->getDisplay());
     }
 }

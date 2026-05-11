@@ -46,13 +46,13 @@ class LocaleTest extends TestCase
     public function testGetCountries()
     {
         $countries = Locale::getCountries();
-        $this->assertContains('BR', $countries);
+        $this->assertStringContainsString('BR', $countries);
     }
 
     public function testGetCountriesForSwitzerland()
     {
         $countries = Locale::getCountries();
-        $this->assertContains('CH', $countries);
+        $this->assertStringContainsString('CH', $countries);
     }
 
     public function testGetDisplayLanguages()
@@ -64,7 +64,7 @@ class LocaleTest extends TestCase
     public function testGetLanguages()
     {
         $languages = Locale::getLanguages();
-        $this->assertContains('pt_BR', $languages);
+        $this->assertStringContainsString('pt_BR', $languages);
     }
 
     public function testGetDisplayLocales()
@@ -76,6 +76,6 @@ class LocaleTest extends TestCase
     public function testGetLocales()
     {
         $locales = Locale::getLocales();
-        $this->assertContains('pt', $locales);
+        $this->assertStringContainsString('pt', $locales);
     }
 }
