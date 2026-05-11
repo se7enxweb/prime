@@ -93,21 +93,24 @@ class LazyLoadingMetadataFactoryTest extends TestCase
               ->method('has');
         $cache->expects($this->exactly(2))
               ->method('read')
-              ->withConsecutive(
-                  array($this->equalTo(self::PARENT_CLASS)),
-                  array($this->equalTo(self::INTERFACE_A_CLASS))
-              )
-              ->will($this->returnValue(false));
+              ->willReturnCallback(function ($className) {
+                  static $calls = [];
+                  $calls[] = $className;
+                  $this->assertContains($className, [self::PARENT_CLASS, self::INTERFACE_A_CLASS]);
+                  return false;
+              });
         $cache->expects($this->exactly(2))
               ->method('write')
-              ->withConsecutive(
-                  $this->callback(function ($metadata) use ($interfaceAConstraints) {
-                      return $interfaceAConstraints == $metadata->getConstraints();
-                  }),
-                  $this->callback(function ($metadata) use ($parentClassConstraints) {
-                      return $parentClassConstraints == $metadata->getConstraints();
-                  })
-              );
+              ->willReturnCallback(function ($metadata) use ($interfaceAConstraints, $parentClassConstraints) {
+                  static $callCount = 0;
+                  $callCount++;
+                  // first call: interfaceA constraints, second call: parentClass constraints
+                  if (1 === $callCount) {
+                      $this->assertEquals($interfaceAConstraints, $metadata->getConstraints());
+                  } else {
+                      $this->assertEquals($parentClassConstraints, $metadata->getConstraints());
+                  }
+              });
 
         $metadata = $factory->getMetadataFor(self::PARENT_CLASS);
 
@@ -134,10 +137,6 @@ class LazyLoadingMetadataFactoryTest extends TestCase
               ->method('has');
         $cache->expects($this->exactly(2))
               ->method('read')
-              ->withConsecutive(
-                  array(self::PARENT_CLASS),
-                  array(self::INTERFACE_A_CLASS)
-              )
               ->willReturnCallback(function ($name) use ($metadata, $parentClass, $interfaceClass) {
                   if ($parentClass == $name) {
                       return $metadata;

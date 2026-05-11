@@ -407,10 +407,17 @@ class ErrorHandlerTest extends TestCase
             $logger
                 ->expects($this->exactly(2))
                 ->method('log')
-                ->withConsecutive(
-                    array($this->equalTo(LogLevel::WARNING), $this->equalTo('Dummy log')),
-                    array($this->equalTo(LogLevel::DEBUG), $this->equalTo('Silenced warning'))
-                )
+                ->willReturnCallback(function ($level, $message) {
+                    static $calls = 0;
+                    $calls++;
+                    if (1 === $calls) {
+                        $this->assertEquals(LogLevel::WARNING, $level);
+                        $this->assertEquals('Dummy log', $message);
+                    } else {
+                        $this->assertEquals(LogLevel::DEBUG, $level);
+                        $this->assertEquals('Silenced warning', $message);
+                    }
+                })
             ;
 
             $handler->setDefaultLogger($logger, array(E_USER_WARNING => LogLevel::WARNING));
