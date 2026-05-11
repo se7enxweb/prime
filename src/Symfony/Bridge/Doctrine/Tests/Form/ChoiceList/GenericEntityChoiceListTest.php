@@ -71,11 +71,12 @@ class GenericEntityChoiceListTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\StringCastException
      * @expectedMessage   Entity "Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdEntity" passed to the choice field must have a "__toString()" method defined (or you can also override the "property" option).
      */
     public function testEntitiesMustHaveAToStringMethod()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\StringCastException::class);
+
         $entity1 = new SingleIntIdNoToStringEntity(1, 'Foo');
         $entity2 = new SingleIntIdNoToStringEntity(2, 'Bar');
 
@@ -98,10 +99,11 @@ class GenericEntityChoiceListTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\RuntimeException
      */
     public function testChoicesMustBeManaged()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\RuntimeException::class);
+
         $entity1 = new SingleIntIdEntity(1, 'Foo');
         $entity2 = new SingleIntIdEntity(2, 'Bar');
 

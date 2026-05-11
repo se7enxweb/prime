@@ -45,10 +45,11 @@ class PhpEngineTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testGetInvalidHelper()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $container = $this->getContainer();
         $loader = $this->getMockForAbstractClass('Symfony\Component\Templating\Loader\Loader');
         $engine = new PhpEngine(new TemplateNameParser(), $container, $loader);

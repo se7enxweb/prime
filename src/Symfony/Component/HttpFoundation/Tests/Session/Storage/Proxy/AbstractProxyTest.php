@@ -122,11 +122,12 @@ class AbstractProxyTest extends TestCase
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     * @expectedException \LogicException
      * @requires PHP 5.4
      */
     public function testSetActivePhp54()
     {
+        $this->expectException(\LogicException::class);
+
         $this->proxy->setActive(true);
     }
 
@@ -143,10 +144,11 @@ class AbstractProxyTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testNameExceptionPhp53()
     {
+        $this->expectException(\LogicException::class);
+
         if (\PHP_VERSION_ID >= 50400) {
             $this->markTestSkipped('Test skipped, for PHP 5.3 only.');
         }
@@ -158,11 +160,12 @@ class AbstractProxyTest extends TestCase
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     * @expectedException \LogicException
      * @requires PHP 5.4
      */
     public function testNameExceptionPhp54()
     {
+        $this->expectException(\LogicException::class);
+
         session_start();
         $this->proxy->setName('foo');
     }
@@ -180,10 +183,11 @@ class AbstractProxyTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testIdExceptionPhp53()
     {
+        $this->expectException(\LogicException::class);
+
         if (\PHP_VERSION_ID >= 50400) {
             $this->markTestSkipped('Test skipped, for PHP 5.3 only.');
         }
@@ -195,11 +199,12 @@ class AbstractProxyTest extends TestCase
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     * @expectedException \LogicException
      * @requires PHP 5.4
      */
     public function testIdExceptionPhp54()
     {
+        $this->expectException(\LogicException::class);
+
         session_start();
         $this->proxy->setId('foo');
     }

@@ -53,10 +53,11 @@ class TemplateManagerTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function testGetNameOfInvalidTemplate()
     {
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+
         $profile = $this->mockProfile();
         $this->templateManager->getName($profile, 'notexistingpanel');
     }

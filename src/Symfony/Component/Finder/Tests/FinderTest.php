@@ -294,10 +294,11 @@ class FinderTest extends Iterator\RealIteratorTestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testInWithNonExistentDirectory()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $finder = new Finder();
         $finder->in('foobar');
     }
@@ -311,10 +312,11 @@ class FinderTest extends Iterator\RealIteratorTestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testInWithNonDirectoryGlob()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $finder = new Finder();
         $finder->in(__DIR__.'/Fixtures/A/a*');
     }
@@ -328,10 +330,11 @@ class FinderTest extends Iterator\RealIteratorTestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testGetIteratorWithoutIn()
     {
+        $this->expectException(\LogicException::class);
+
         $finder = Finder::create();
         $finder->getIterator();
     }
@@ -460,10 +463,11 @@ class FinderTest extends Iterator\RealIteratorTestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testCountWithoutIn()
     {
+        $this->expectException(\LogicException::class);
+
         $finder = Finder::create()->files();
         \count($finder);
     }

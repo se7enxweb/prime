@@ -38,10 +38,11 @@ class SerializerTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\UnexpectedValueException
      */
     public function testNormalizeNoMatch()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\UnexpectedValueException::class);
+
         $serializer = new Serializer(array($this->getMockBuilder('Symfony\Component\Serializer\Normalizer\CustomNormalizer')->getMock()));
         $serializer->normalize(new \stdClass(), 'xml');
     }
@@ -61,28 +62,31 @@ class SerializerTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\UnexpectedValueException
      */
     public function testNormalizeOnDenormalizer()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\UnexpectedValueException::class);
+
         $serializer = new Serializer(array(new TestDenormalizer()), array());
         $this->assertTrue($serializer->normalize(new \stdClass(), 'json'));
     }
 
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\UnexpectedValueException
      */
     public function testDenormalizeNoMatch()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\UnexpectedValueException::class);
+
         $serializer = new Serializer(array($this->getMockBuilder('Symfony\Component\Serializer\Normalizer\CustomNormalizer')->getMock()));
         $serializer->denormalize('foo', 'stdClass');
     }
 
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\UnexpectedValueException
      */
     public function testDenormalizeOnNormalizer()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\UnexpectedValueException::class);
+
         $serializer = new Serializer(array(new TestNormalizer()), array());
         $data = array('title' => 'foo', 'numbers' => array(5, 3));
         $this->assertTrue($serializer->denormalize(json_encode($data), 'stdClass', 'json'));
@@ -165,20 +169,22 @@ class SerializerTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\UnexpectedValueException
      */
     public function testSerializeNoEncoder()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\UnexpectedValueException::class);
+
         $serializer = new Serializer(array(), array());
         $data = array('title' => 'foo', 'numbers' => array(5, 3));
         $serializer->serialize($data, 'json');
     }
 
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\LogicException
      */
     public function testSerializeNoNormalizer()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\LogicException::class);
+
         $serializer = new Serializer(array(), array('json' => new JsonEncoder()));
         $data = array('title' => 'foo', 'numbers' => array(5, 3));
         $serializer->serialize(Model::fromArray($data), 'json');
@@ -203,30 +209,33 @@ class SerializerTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\LogicException
      */
     public function testDeserializeNoNormalizer()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\LogicException::class);
+
         $serializer = new Serializer(array(), array('json' => new JsonEncoder()));
         $data = array('title' => 'foo', 'numbers' => array(5, 3));
         $serializer->deserialize(json_encode($data), '\Symfony\Component\Serializer\Tests\Model', 'json');
     }
 
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\UnexpectedValueException
      */
     public function testDeserializeWrongNormalizer()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\UnexpectedValueException::class);
+
         $serializer = new Serializer(array(new CustomNormalizer()), array('json' => new JsonEncoder()));
         $data = array('title' => 'foo', 'numbers' => array(5, 3));
         $serializer->deserialize(json_encode($data), '\Symfony\Component\Serializer\Tests\Model', 'json');
     }
 
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\UnexpectedValueException
      */
     public function testDeserializeNoEncoder()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\UnexpectedValueException::class);
+
         $serializer = new Serializer(array(), array());
         $data = array('title' => 'foo', 'numbers' => array(5, 3));
         $serializer->deserialize(json_encode($data), '\Symfony\Component\Serializer\Tests\Model', 'json');

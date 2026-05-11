@@ -35,10 +35,11 @@ class MessageSelectorTest extends TestCase
 
     /**
      * @dataProvider getNonMatchingMessages
-     * @expectedException \InvalidArgumentException
      */
     public function testThrowExceptionIfMatchingMessageCannotBeFound($id, $number)
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $selector = new MessageSelector();
 
         $selector->choose($id, $number, 'en');

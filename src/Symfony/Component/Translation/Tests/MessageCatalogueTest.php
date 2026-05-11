@@ -133,10 +133,11 @@ class MessageCatalogueTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testAddFallbackCatalogueWithParentCircularReference()
     {
+        $this->expectException(\LogicException::class);
+
         $main = new MessageCatalogue('en_US');
         $fallback = new MessageCatalogue('fr_FR');
 
@@ -145,10 +146,11 @@ class MessageCatalogueTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testAddFallbackCatalogueWithFallbackCircularReference()
     {
+        $this->expectException(\LogicException::class);
+
         $fr = new MessageCatalogue('fr');
         $en = new MessageCatalogue('en');
         $es = new MessageCatalogue('es');
@@ -159,10 +161,11 @@ class MessageCatalogueTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testAddCatalogueWhenLocaleIsNotTheSameAsTheCurrentOne()
     {
+        $this->expectException(\LogicException::class);
+
         $catalogue = new MessageCatalogue('en');
         $catalogue->addCatalogue(new MessageCatalogue('fr', array()));
     }

@@ -90,10 +90,11 @@ class LazyChoiceListTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\InvalidArgumentException
      */
     public function testLoadChoiceListShouldReturnChoiceList()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\InvalidArgumentException::class);
+
         $list = new LazyChoiceListInvalidImpl();
 
         $list->getChoices();

@@ -205,10 +205,11 @@ class ConstraintTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\InvalidArgumentException
      */
     public function testGetErrorNameForUnknownCode()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\InvalidArgumentException::class);
+
         Constraint::getErrorName(1);
     }
 
@@ -224,11 +225,12 @@ class ConstraintTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\InvalidOptionsException
-     * @expectedExceptionMessage The options "0", "5" do not exist
      */
     public function testInvalidOptions()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\InvalidOptionsException::class);
+        $this->expectExceptionMessage('The options \"0\", \"5\" do not exist');
+
         new ConstraintA(array('property2' => 'foo', 'bar', 5 => 'baz'));
     }
 

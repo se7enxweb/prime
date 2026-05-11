@@ -116,10 +116,11 @@ class PhpGeneratorDumperTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testDumpWithoutRoutes()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         file_put_contents($this->testTmpFilepath, $this->generatorDumper->dump(array('class' => 'WithoutRoutesUrlGenerator')));
         include $this->testTmpFilepath;
 
@@ -129,10 +130,11 @@ class PhpGeneratorDumperTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Routing\Exception\RouteNotFoundException
      */
     public function testGenerateNonExistingRoute()
     {
+        $this->expectException(\Symfony\Component\Routing\Exception\RouteNotFoundException::class);
+
         $this->routeCollection->add('Test', new Route('/test'));
 
         file_put_contents($this->testTmpFilepath, $this->generatorDumper->dump(array('class' => 'NonExistingRoutesUrlGenerator')));

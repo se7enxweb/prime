@@ -17,10 +17,11 @@ use Symfony\Component\Validator\Mapping\Factory\BlackHoleMetadataFactory;
 class BlackHoleMetadataFactoryTest extends TestCase
 {
     /**
-     * @expectedException \LogicException
      */
     public function testGetMetadataForThrowsALogicException()
     {
+        $this->expectException(\LogicException::class);
+
         $metadataFactory = new BlackHoleMetadataFactory();
         $metadataFactory->getMetadataFor('foo');
     }

@@ -24,10 +24,11 @@ class PhpFrameworkExtensionTest extends FrameworkExtensionTest
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testAssetsCannotHavePathAndUrl()
     {
+        $this->expectException(\LogicException::class);
+
         $this->createContainerFromClosure(function ($container) {
             $container->loadFromExtension('framework', array(
                 'assets' => array(
@@ -39,10 +40,11 @@ class PhpFrameworkExtensionTest extends FrameworkExtensionTest
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testAssetPackageCannotHavePathAndUrl()
     {
+        $this->expectException(\LogicException::class);
+
         $this->createContainerFromClosure(function ($container) {
             $container->loadFromExtension('framework', array(
                 'assets' => array(

@@ -31,10 +31,11 @@ class ButtonTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\AlreadySubmittedException
      */
     public function testSetParentOnSubmittedButton()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\AlreadySubmittedException::class);
+
         $button = $this->getButtonBuilder('button')
             ->getForm()
         ;

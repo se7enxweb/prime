@@ -75,11 +75,12 @@ class GroupSequenceTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\OutOfBoundsException
      * @group legacy
      */
     public function testLegacyGetExpectsExistingKey()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\OutOfBoundsException::class);
+
         $sequence = new GroupSequence(array('Group 1', 'Group 2'));
 
         $sequence[2];

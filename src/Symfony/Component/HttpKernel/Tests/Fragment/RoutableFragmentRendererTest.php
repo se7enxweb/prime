@@ -56,11 +56,12 @@ class RoutableFragmentRendererTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      * @dataProvider      getGenerateFragmentUriDataWithNonScalar
      */
     public function testGenerateFragmentUriWithNonScalar($controller)
     {
+        $this->expectException(\LogicException::class);
+
         $this->callGenerateFragmentUriMethod($controller, Request::create('/'));
     }
 

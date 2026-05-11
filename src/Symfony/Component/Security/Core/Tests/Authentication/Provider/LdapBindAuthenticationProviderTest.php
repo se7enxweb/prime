@@ -23,11 +23,12 @@ use Symfony\Component\Security\Core\User\User;
 class LdapBindAuthenticationProviderTest extends TestCase
 {
     /**
-     * @expectedException        \Symfony\Component\Security\Core\Exception\BadCredentialsException
-     * @expectedExceptionMessage The presented password must not be empty.
      */
     public function testEmptyPasswordShouldThrowAnException()
     {
+        $this->expectException(\Symfony\Component\Security\Core\Exception\BadCredentialsException::class);
+        $this->expectExceptionMessage('The presented password must not be empty.');
+
         $userProvider = $this->getMockBuilder('Symfony\Component\Security\Core\User\UserProviderInterface')->getMock();
         $ldap = $this->getMockBuilder('Symfony\Component\Ldap\LdapClientInterface')->getMock();
         $userChecker = $this->getMockBuilder('Symfony\Component\Security\Core\User\UserCheckerInterface')->getMock();
@@ -40,11 +41,12 @@ class LdapBindAuthenticationProviderTest extends TestCase
     }
 
     /**
-     * @expectedException        \Symfony\Component\Security\Core\Exception\BadCredentialsException
-     * @expectedExceptionMessage The presented password must not be empty.
      */
     public function testNullPasswordShouldThrowAnException()
     {
+        $this->expectException(\Symfony\Component\Security\Core\Exception\BadCredentialsException::class);
+        $this->expectExceptionMessage('The presented password must not be empty.');
+
         $userProvider = $this->getMockBuilder('Symfony\Component\Security\Core\User\UserProviderInterface')->getMock();
         $ldap = $this->getMockBuilder('Symfony\Component\Ldap\LdapClientInterface')->getMock();
         $userChecker = $this->getMockBuilder('Symfony\Component\Security\Core\User\UserCheckerInterface')->getMock();
@@ -57,11 +59,12 @@ class LdapBindAuthenticationProviderTest extends TestCase
     }
 
     /**
-     * @expectedException        \Symfony\Component\Security\Core\Exception\BadCredentialsException
-     * @expectedExceptionMessage The presented password is invalid.
      */
     public function testBindFailureShouldThrowAnException()
     {
+        $this->expectException(\Symfony\Component\Security\Core\Exception\BadCredentialsException::class);
+        $this->expectExceptionMessage('The presented password is invalid.');
+
         $userProvider = $this->getMockBuilder('Symfony\Component\Security\Core\User\UserProviderInterface')->getMock();
         $ldap = $this->getMockBuilder('Symfony\Component\Ldap\LdapClientInterface')->getMock();
         $ldap

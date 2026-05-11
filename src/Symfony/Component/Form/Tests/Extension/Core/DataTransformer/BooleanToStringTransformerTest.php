@@ -46,18 +46,20 @@ class BooleanToStringTransformerTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\TransformationFailedException
      */
     public function testTransformFailsIfString()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\TransformationFailedException::class);
+
         $this->transformer->transform('1');
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\TransformationFailedException
      */
     public function testReverseTransformFailsIfInteger()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\TransformationFailedException::class);
+
         $this->transformer->reverseTransform(1);
     }
 

@@ -104,10 +104,11 @@ class StopwatchEventTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testStopWithoutStart()
     {
+        $this->expectException(\LogicException::class);
+
         $event = new StopwatchEvent(microtime(true) * 1000);
         $event->stop();
     }
@@ -155,10 +156,11 @@ class StopwatchEventTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidOriginThrowsAnException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new StopwatchEvent('abc');
     }
 

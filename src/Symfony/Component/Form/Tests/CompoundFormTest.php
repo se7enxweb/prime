@@ -268,10 +268,11 @@ class CompoundFormTest extends AbstractFormTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\AlreadySubmittedException
      */
     public function testAddThrowsExceptionIfAlreadySubmitted()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\AlreadySubmittedException::class);
+
         $this->form->submit(array());
         $this->form->add($this->getBuilder('foo')->getForm());
     }
@@ -287,10 +288,11 @@ class CompoundFormTest extends AbstractFormTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\AlreadySubmittedException
      */
     public function testRemoveThrowsExceptionIfAlreadySubmitted()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\AlreadySubmittedException::class);
+
         $this->form->add($this->getBuilder('foo')->setCompound(false)->getForm());
         $this->form->submit(array('foo' => 'bar'));
         $this->form->remove('foo');

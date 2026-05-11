@@ -92,10 +92,11 @@ class FormTypeValidatorExtensionTest extends BaseValidatorExtensionTest
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidValidatorInterface()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new FormTypeValidatorExtension(null);
     }
 

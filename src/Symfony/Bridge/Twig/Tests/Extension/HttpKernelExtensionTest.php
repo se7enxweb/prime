@@ -22,10 +22,11 @@ use Twig\Loader\ArrayLoader;
 class HttpKernelExtensionTest extends TestCase
 {
     /**
-     * @expectedException \Twig\Error\RuntimeError
      */
     public function testFragmentWithError()
     {
+        $this->expectException(\Twig\Error\RuntimeError::class);
+
         $renderer = $this->getFragmentHandler($this->throwException(new \Exception('foo')));
 
         $this->renderTemplate($renderer);

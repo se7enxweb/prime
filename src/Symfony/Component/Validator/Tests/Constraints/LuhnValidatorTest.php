@@ -104,11 +104,12 @@ class LuhnValidatorTest extends AbstractConstraintValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\UnexpectedTypeException
      * @dataProvider getInvalidTypes
      */
     public function testInvalidTypes($number)
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\UnexpectedTypeException::class);
+
         $constraint = new Luhn();
 
         $this->validator->validate($number, $constraint);

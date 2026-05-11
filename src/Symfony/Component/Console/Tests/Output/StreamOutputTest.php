@@ -37,11 +37,12 @@ class StreamOutputTest extends TestCase
     }
 
     /**
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage The StreamOutput class needs a stream as its first argument.
      */
     public function testStreamIsRequired()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The StreamOutput class needs a stream as its first argument.');
+
         new StreamOutput('foo');
     }
 

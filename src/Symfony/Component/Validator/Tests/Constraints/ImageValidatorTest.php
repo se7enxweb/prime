@@ -168,10 +168,11 @@ class ImageValidatorTest extends AbstractConstraintValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\ConstraintDefinitionException
      */
     public function testInvalidMinWidth()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\ConstraintDefinitionException::class);
+
         $constraint = new Image(array(
             'minWidth' => '1abc',
         ));
@@ -180,10 +181,11 @@ class ImageValidatorTest extends AbstractConstraintValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\ConstraintDefinitionException
      */
     public function testInvalidMaxWidth()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\ConstraintDefinitionException::class);
+
         $constraint = new Image(array(
             'maxWidth' => '1abc',
         ));
@@ -192,10 +194,11 @@ class ImageValidatorTest extends AbstractConstraintValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\ConstraintDefinitionException
      */
     public function testInvalidMinHeight()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\ConstraintDefinitionException::class);
+
         $constraint = new Image(array(
             'minHeight' => '1abc',
         ));
@@ -204,10 +207,11 @@ class ImageValidatorTest extends AbstractConstraintValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\ConstraintDefinitionException
      */
     public function testInvalidMaxHeight()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\ConstraintDefinitionException::class);
+
         $constraint = new Image(array(
             'maxHeight' => '1abc',
         ));
@@ -259,10 +263,11 @@ class ImageValidatorTest extends AbstractConstraintValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\ConstraintDefinitionException
      */
     public function testInvalidMinRatio()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\ConstraintDefinitionException::class);
+
         $constraint = new Image(array(
             'minRatio' => '1abc',
         ));
@@ -271,10 +276,11 @@ class ImageValidatorTest extends AbstractConstraintValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\ConstraintDefinitionException
      */
     public function testInvalidMaxRatio()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\ConstraintDefinitionException::class);
+
         $constraint = new Image(array(
             'maxRatio' => '1abc',
         ));

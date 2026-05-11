@@ -54,10 +54,11 @@ class AccessDecisionManagerTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testSetUnsupportedStrategy()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new AccessDecisionManager(array($this->getVoter(VoterInterface::ACCESS_GRANTED)), 'fooBar');
     }
 

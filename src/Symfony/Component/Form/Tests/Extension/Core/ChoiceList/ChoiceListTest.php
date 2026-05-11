@@ -98,10 +98,11 @@ class ChoiceListTest extends AbstractChoiceListTest
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testInitWithInsufficientLabels()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->list = new ChoiceList(
             array($this->obj1, $this->obj2),
             array('A')

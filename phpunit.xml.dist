@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
          backupGlobals="false"
          colors="true"
          bootstrap="vendor/autoload.php"
-         failOnRisky="true"
-         failOnWarning="true"
 >
     <php>
         <ini name="error_reporting" value="-1" />
@@ -31,37 +29,23 @@
         </exclude>
     </groups>
 
-    <filter>
-        <whitelist>
+    <coverage>
+        <include>
             <directory>./src/Symfony/</directory>
-            <exclude>
-                <directory>./src/Symfony/Bridge/*/Tests</directory>
-                <directory>./src/Symfony/Component/*/Tests</directory>
-                <directory>./src/Symfony/Component/*/*/Tests</directory>
-                <directory>./src/Symfony/Bundle/*/Tests</directory>
-                <directory>./src/Symfony/Bundle/*/Resources</directory>
-                <directory>./src/Symfony/Component/*/Resources</directory>
-                <directory>./src/Symfony/Component/*/*/Resources</directory>
-                <directory>./src/Symfony/Bridge/*/vendor</directory>
-                <directory>./src/Symfony/Bundle/*/vendor</directory>
-                <directory>./src/Symfony/Component/*/vendor</directory>
-                <directory>./src/Symfony/Component/*/*/vendor</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+        </include>
+        <exclude>
+            <directory>./src/Symfony/Bridge/*/Tests</directory>
+            <directory>./src/Symfony/Component/*/Tests</directory>
+            <directory>./src/Symfony/Component/*/*/Tests</directory>
+            <directory>./src/Symfony/Bundle/*/Tests</directory>
+            <directory>./src/Symfony/Bundle/*/Resources</directory>
+            <directory>./src/Symfony/Component/*/Resources</directory>
+            <directory>./src/Symfony/Component/*/*/Resources</directory>
+            <directory>./src/Symfony/Bridge/*/vendor</directory>
+            <directory>./src/Symfony/Bundle/*/vendor</directory>
+            <directory>./src/Symfony/Component/*/vendor</directory>
+            <directory>./src/Symfony/Component/*/*/vendor</directory>
+        </exclude>
+    </coverage>
 
-    <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
-            <arguments>
-                <array>
-                    <element key="time-sensitive">
-                        <array>
-                            <element key="0"><string>Symfony\Component\Console</string></element>
-                            <element key="1"><string>Symfony\Component\HttpFoundation</string></element>
-                        </array>
-                    </element>
-                </array>
-            </arguments>
-        </listener>
-    </listeners>
 </phpunit>

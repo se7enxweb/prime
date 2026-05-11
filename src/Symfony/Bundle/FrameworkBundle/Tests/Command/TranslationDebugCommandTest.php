@@ -79,10 +79,11 @@ class TranslationDebugCommandTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testDebugInvalidDirectory()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')->getMock();
         $kernel->expects($this->once())
             ->method('getBundle')

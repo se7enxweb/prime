@@ -348,10 +348,11 @@ class ResolvedFormTypeTest extends TestCase
 
     /**
      * @dataProvider provideInvalidNames
-     * @expectedException \Symfony\Component\Form\Exception\InvalidArgumentException
      */
     public function testGetNameFailsIfInvalidChars($name)
     {
+        $this->expectException(\Symfony\Component\Form\Exception\InvalidArgumentException::class);
+
         $this->type->expects($this->once())
             ->method('getName')
             ->willReturn($name);

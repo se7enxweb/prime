@@ -90,10 +90,11 @@ class PropertyAccessorTest extends TestCase
 
     /**
      * @dataProvider getPathsWithMissingProperty
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
      */
     public function testGetValueThrowsExceptionIfPropertyNotFound($objectOrArray, $path)
     {
+        $this->expectException(\Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException::class);
+
         $this->propertyAccessor->getValue($objectOrArray, $path);
     }
 
@@ -107,19 +108,21 @@ class PropertyAccessorTest extends TestCase
 
     /**
      * @dataProvider getPathsWithMissingIndex
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchIndexException
      */
     public function testGetValueThrowsExceptionIfIndexNotFoundAndIndexExceptionsEnabled($objectOrArray, $path)
     {
+        $this->expectException(\Symfony\Component\PropertyAccess\Exception\NoSuchIndexException::class);
+
         $this->propertyAccessor = new PropertyAccessor(false, true);
         $this->propertyAccessor->getValue($objectOrArray, $path);
     }
 
     /**
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchIndexException
      */
     public function testGetValueThrowsExceptionIfNotArrayAccess()
     {
+        $this->expectException(\Symfony\Component\PropertyAccess\Exception\NoSuchIndexException::class);
+
         $this->propertyAccessor->getValue(new \stdClass(), '[index]');
     }
 
@@ -167,10 +170,11 @@ class PropertyAccessorTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
      */
     public function testGetValueDoesNotReadMagicCallByDefault()
     {
+        $this->expectException(\Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException::class);
+
         $this->propertyAccessor->getValue(new TestClassMagicCall('Bernhard'), 'magicCallProperty');
     }
 
@@ -191,11 +195,12 @@ class PropertyAccessorTest extends TestCase
 
     /**
      * @dataProvider getPathsWithUnexpectedType
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException
-     * @expectedExceptionMessage PropertyAccessor requires a graph of objects or arrays to operate on
      */
     public function testGetValueThrowsExceptionIfNotObjectOrArray($objectOrArray, $path)
     {
+        $this->expectException(\Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException::class);
+        $this->expectExceptionMessage('PropertyAccessor requires a graph of objects or arrays to operate on');
+
         $this->propertyAccessor->getValue($objectOrArray, $path);
     }
 
@@ -211,10 +216,11 @@ class PropertyAccessorTest extends TestCase
 
     /**
      * @dataProvider getPathsWithMissingProperty
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
      */
     public function testSetValueThrowsExceptionIfPropertyNotFound($objectOrArray, $path)
     {
+        $this->expectException(\Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException::class);
+
         $this->propertyAccessor->setValue($objectOrArray, $path, 'Updated');
     }
 
@@ -240,10 +246,11 @@ class PropertyAccessorTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchIndexException
      */
     public function testSetValueThrowsExceptionIfNotArrayAccess()
     {
+        $this->expectException(\Symfony\Component\PropertyAccess\Exception\NoSuchIndexException::class);
+
         $object = new \stdClass();
 
         $this->propertyAccessor->setValue($object, '[index]', 'Updated');
@@ -259,20 +266,22 @@ class PropertyAccessorTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
      */
     public function testSetValueThrowsExceptionIfThereAreMissingParameters()
     {
+        $this->expectException(\Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException::class);
+
         $object = new TestClass('Bernhard');
 
         $this->propertyAccessor->setValue($object, 'publicAccessorWithMoreRequiredParameters', 'Updated');
     }
 
     /**
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
      */
     public function testSetValueDoesNotUpdateMagicCallByDefault()
     {
+        $this->expectException(\Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException::class);
+
         $author = new TestClassMagicCall('Bernhard');
 
         $this->propertyAccessor->setValue($author, 'magicCallProperty', 'Updated');
@@ -291,11 +300,12 @@ class PropertyAccessorTest extends TestCase
 
     /**
      * @dataProvider getPathsWithUnexpectedType
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException
-     * @expectedExceptionMessage PropertyAccessor requires a graph of objects or arrays to operate on
      */
     public function testSetValueThrowsExceptionIfNotObjectOrArray($objectOrArray, $path)
     {
+        $this->expectException(\Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException::class);
+        $this->expectExceptionMessage('PropertyAccessor requires a graph of objects or arrays to operate on');
+
         $this->propertyAccessor->setValue($objectOrArray, $path, 'value');
     }
 
@@ -528,22 +538,24 @@ class PropertyAccessorTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Expected argument of type "DateTime", "string" given
      */
     public function testThrowTypeError()
     {
+        $this->expectException(\Symfony\Component\PropertyAccess\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected argument of type \"DateTime\", \"string\" given');
+
         $object = new TypeHinted();
 
         $this->propertyAccessor->setValue($object, 'date', 'This is a string, \DateTime expected.');
     }
 
     /**
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Expected argument of type "DateTime", "NULL" given
      */
     public function testThrowTypeErrorWithNullArgument()
     {
+        $this->expectException(\Symfony\Component\PropertyAccess\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected argument of type \"DateTime\", \"NULL\" given');
+
         $object = new TypeHinted();
 
         $this->propertyAccessor->setValue($object, 'date', null);
@@ -569,11 +581,12 @@ class PropertyAccessorTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Expected argument of type "Countable", "string" given
      */
     public function testThrowTypeErrorWithInterface()
     {
+        $this->expectException(\Symfony\Component\PropertyAccess\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected argument of type \"Countable\", \"string\" given');
+
         $object = new TypeHinted();
 
         $this->propertyAccessor->setValue($object, 'countable', 'This is a string, \Countable expected.');
@@ -582,10 +595,11 @@ class PropertyAccessorTest extends TestCase
     /**
      * @requires PHP 7
      *
-     * @expectedException \TypeError
      */
     public function testDoNotDiscardReturnTypeError()
     {
+        $this->expectException(\TypeError::class);
+
         $object = new ReturnTyped();
 
         $this->propertyAccessor->setValue($object, 'foos', array(new \DateTime()));
@@ -594,10 +608,11 @@ class PropertyAccessorTest extends TestCase
     /**
      * @requires PHP 7
      *
-     * @expectedException \TypeError
      */
     public function testDoNotDiscardReturnTypeErrorWhenWriterMethodIsMisconfigured()
     {
+        $this->expectException(\TypeError::class);
+
         $object = new ReturnTyped();
 
         $this->propertyAccessor->setValue($object, 'name', 'foo');

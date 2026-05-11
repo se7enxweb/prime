@@ -18,10 +18,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class AutoAliasServicePassTest extends TestCase
 {
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException
      */
     public function testProcessWithMissingParameter()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException::class);
+
         $container = new ContainerBuilder();
 
         $container->register('example')
@@ -32,10 +33,11 @@ class AutoAliasServicePassTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      */
     public function testProcessWithMissingFormat()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException::class);
+
         $container = new ContainerBuilder();
 
         $container->register('example')

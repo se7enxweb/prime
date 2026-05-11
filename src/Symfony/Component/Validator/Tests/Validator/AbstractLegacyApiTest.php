@@ -71,10 +71,11 @@ abstract class AbstractLegacyApiTest extends AbstractValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\NoSuchMetadataException
      */
     public function testTraversableTraverseDisabled()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\NoSuchMetadataException::class);
+
         $test = $this;
         $entity = new Entity();
         $traversable = new \ArrayIterator(array('key' => $entity));
@@ -92,10 +93,11 @@ abstract class AbstractLegacyApiTest extends AbstractValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\NoSuchMetadataException
      */
     public function testRecursiveTraversableRecursiveTraversalDisabled()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\NoSuchMetadataException::class);
+
         $test = $this;
         $entity = new Entity();
         $traversable = new \ArrayIterator(array(

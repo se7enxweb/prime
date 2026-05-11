@@ -26,10 +26,11 @@ class LegacyFragmentRendererPassTest extends TestCase
      * Tests that content rendering not implementing FragmentRendererInterface
      * trigger an exception.
      *
-     * @expectedException \InvalidArgumentException
      */
     public function testContentRendererWithoutInterface()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $builder = new ContainerBuilder();
         $builder->register('fragment.handler');
         $builder->register('my_content_renderer', 'stdClass')

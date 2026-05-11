@@ -42,11 +42,12 @@ class RouterTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The Router does not support the following options: "option_foo", "option_bar"
      */
     public function testSetOptionsWithUnsupportedOptions()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The Router does not support the following options: \"option_foo\", \"option_bar\"');
+
         $this->router->setOptions(array(
             'cache_dir' => './cache',
             'option_foo' => true,
@@ -63,20 +64,22 @@ class RouterTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The Router does not support the "option_foo" option
      */
     public function testSetOptionWithUnsupportedOption()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The Router does not support the \"option_foo\" option');
+
         $this->router->setOption('option_foo', true);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The Router does not support the "option_foo" option
      */
     public function testGetOptionWithUnsupportedOption()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The Router does not support the \"option_foo\" option');
+
         $this->router->getOption('option_foo', true);
     }
 

@@ -127,18 +127,20 @@ class EntityTypeTest extends BaseTypeTest
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\MissingOptionsException
      */
     public function testClassOptionIsRequired()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\MissingOptionsException::class);
+
         $this->factory->createNamed('name', static::TESTED_TYPE);
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\RuntimeException
      */
     public function testInvalidClassOption()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\RuntimeException::class);
+
         $this->factory->createNamed('name', static::TESTED_TYPE, null, array(
             'class' => 'foo',
         ));
@@ -199,10 +201,11 @@ class EntityTypeTest extends BaseTypeTest
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testConfigureQueryBuilderWithNonQueryBuilderAndNonClosure()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+
         $field = $this->factory->createNamed('name', static::TESTED_TYPE, null, array(
             'em' => 'default',
             'class' => self::SINGLE_IDENT_CLASS,
@@ -211,10 +214,11 @@ class EntityTypeTest extends BaseTypeTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\UnexpectedTypeException
      */
     public function testConfigureQueryBuilderWithClosureReturningNonQueryBuilder()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\UnexpectedTypeException::class);
+
         $field = $this->factory->createNamed('name', static::TESTED_TYPE, null, array(
             'em' => 'default',
             'class' => self::SINGLE_IDENT_CLASS,

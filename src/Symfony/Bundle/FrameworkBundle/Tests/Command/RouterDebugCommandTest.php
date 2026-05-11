@@ -39,10 +39,11 @@ class RouterDebugCommandTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testDebugInvalidRoute()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->createCommandTester()->execute(array('name' => 'test'));
     }
 

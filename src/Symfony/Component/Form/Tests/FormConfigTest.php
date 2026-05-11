@@ -139,10 +139,11 @@ class FormConfigTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\InvalidArgumentException
      */
     public function testSetMethodDoesNotAllowOtherValues()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\InvalidArgumentException::class);
+
         $this->getConfigBuilder()->setMethod('foo');
     }
 

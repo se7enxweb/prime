@@ -19,10 +19,11 @@ use Symfony\Component\HttpFoundation\Request;
 class ExpressionRequestMatcherTest extends TestCase
 {
     /**
-     * @expectedException \LogicException
      */
     public function testWhenNoExpressionIsSet()
     {
+        $this->expectException(\LogicException::class);
+
         $expressionRequestMatcher = new ExpressionRequestMatcher();
         $expressionRequestMatcher->matches(new Request());
     }

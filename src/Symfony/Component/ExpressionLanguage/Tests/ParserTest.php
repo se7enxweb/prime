@@ -19,22 +19,24 @@ use Symfony\Component\ExpressionLanguage\Parser;
 class ParserTest extends TestCase
 {
     /**
-     * @expectedException        \Symfony\Component\ExpressionLanguage\SyntaxError
-     * @expectedExceptionMessage Variable "foo" is not valid around position 1 for expression `foo`.
      */
     public function testParseWithInvalidName()
     {
+        $this->expectException(\Symfony\Component\ExpressionLanguage\SyntaxError::class);
+        $this->expectExceptionMessage('Variable \"foo\" is not valid around position 1 for expression `foo`.');
+
         $lexer = new Lexer();
         $parser = new Parser(array());
         $parser->parse($lexer->tokenize('foo'));
     }
 
     /**
-     * @expectedException        \Symfony\Component\ExpressionLanguage\SyntaxError
-     * @expectedExceptionMessage Variable "foo" is not valid around position 1 for expression `foo`.
      */
     public function testParseWithZeroInNames()
     {
+        $this->expectException(\Symfony\Component\ExpressionLanguage\SyntaxError::class);
+        $this->expectExceptionMessage('Variable \"foo\" is not valid around position 1 for expression `foo`.');
+
         $lexer = new Lexer();
         $parser = new Parser(array());
         $parser->parse($lexer->tokenize('foo'), array(0));
@@ -165,10 +167,11 @@ class ParserTest extends TestCase
 
     /**
      * @dataProvider getInvalidPostfixData
-     * @expectedException \Symfony\Component\ExpressionLanguage\SyntaxError
      */
     public function testParseWithInvalidPostfixData($expr, $names = array())
     {
+        $this->expectException(\Symfony\Component\ExpressionLanguage\SyntaxError::class);
+
         $lexer = new Lexer();
         $parser = new Parser(array());
         $parser->parse($lexer->tokenize($expr), $names);

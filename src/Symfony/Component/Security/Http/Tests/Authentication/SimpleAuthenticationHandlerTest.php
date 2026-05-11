@@ -79,11 +79,12 @@ class SimpleAuthenticationHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException        \UnexpectedValueException
-     * @expectedExceptionMessage onAuthenticationSuccess method must return null to use the default success handler, or a Response object
      */
     public function testOnAuthenticationSuccessThrowsAnExceptionIfNonResponseIsReturned()
     {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('onAuthenticationSuccess method must return null to use the default success handler, or a Response object');
+
         $this->successHandler->expects($this->never())
             ->method('onAuthenticationSuccess');
 
@@ -149,11 +150,12 @@ class SimpleAuthenticationHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException        \UnexpectedValueException
-     * @expectedExceptionMessage onAuthenticationFailure method must return null to use the default failure handler, or a Response object
      */
     public function testOnAuthenticationFailureThrowsAnExceptionIfNonResponseIsReturned()
     {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('onAuthenticationFailure method must return null to use the default failure handler, or a Response object');
+
         $this->failureHandler->expects($this->never())
             ->method('onAuthenticationFailure');
 

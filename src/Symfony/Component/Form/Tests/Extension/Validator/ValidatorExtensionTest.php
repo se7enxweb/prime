@@ -88,11 +88,12 @@ class ValidatorExtensionTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\UnexpectedTypeException
      * @group legacy
      */
     public function testInvalidValidatorInterface()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\UnexpectedTypeException::class);
+
         new ValidatorExtension(null);
     }
 }

@@ -101,41 +101,45 @@ class ProgressIndicatorTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Must have at least 2 indicator value characters.
      */
     public function testCannotSetInvalidIndicatorCharacters()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Must have at least 2 indicator value characters.');
+
         $bar = new ProgressIndicator($this->getOutputStream(), null, 100, array('1'));
     }
 
     /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Progress indicator already started.
      */
     public function testCannotStartAlreadyStartedIndicator()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Progress indicator already started.');
+
         $bar = new ProgressIndicator($this->getOutputStream());
         $bar->start('Starting...');
         $bar->start('Starting Again.');
     }
 
     /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Progress indicator has not yet been started.
      */
     public function testCannotAdvanceUnstartedIndicator()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Progress indicator has not yet been started.');
+
         $bar = new ProgressIndicator($this->getOutputStream());
         $bar->advance();
     }
 
     /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Progress indicator has not yet been started.
      */
     public function testCannotFinishUnstartedIndicator()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Progress indicator has not yet been started.');
+
         $bar = new ProgressIndicator($this->getOutputStream());
         $bar->finish('Finished');
     }

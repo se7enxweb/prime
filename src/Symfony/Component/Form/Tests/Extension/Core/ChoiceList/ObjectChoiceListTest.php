@@ -116,10 +116,11 @@ class ObjectChoiceListTest extends AbstractChoiceListTest
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testInitArrayWithGroupPathThrowsExceptionIfNestedArray()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->obj1 = (object) array('name' => 'A', 'category' => 'Group 1');
         $this->obj2 = (object) array('name' => 'B', 'category' => 'Group 1');
         $this->obj3 = (object) array('name' => 'C', 'category' => 'Group 2');
@@ -174,10 +175,11 @@ class ObjectChoiceListTest extends AbstractChoiceListTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\StringCastException
      */
     public function testInitArrayThrowsExceptionIfToStringNotFound()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\StringCastException::class);
+
         $this->obj1 = new ObjectChoiceListTest_EntityWithToString('A');
         $this->obj2 = new ObjectChoiceListTest_EntityWithToString('B');
         $this->obj3 = (object) array('name' => 'C');

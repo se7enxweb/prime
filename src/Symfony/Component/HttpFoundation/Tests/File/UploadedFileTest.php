@@ -130,10 +130,11 @@ class UploadedFileTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\HttpFoundation\File\Exception\FileException
      */
     public function testMoveLocalFileIsNotAllowed()
     {
+        $this->expectException(\Symfony\Component\HttpFoundation\File\Exception\FileException::class);
+
         $file = new UploadedFile(
             __DIR__.'/Fixtures/test.gif',
             'original.gif',

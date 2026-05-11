@@ -105,11 +105,12 @@ class ContainerAwareEventDispatcherTest extends AbstractEventDispatcherTest
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @group legacy
      */
     public function testTriggerAListenerServiceOutOfScope()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $service = $this->getMockBuilder('Symfony\Component\EventDispatcher\Tests\Service')->getMock();
 
         $scope = new Scope('scope');

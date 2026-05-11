@@ -30,10 +30,11 @@ class RememberMeTokenTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testConstructorSecretCannotBeNull()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new RememberMeToken(
             $this->getUser(),
             null,
@@ -42,10 +43,11 @@ class RememberMeTokenTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testConstructorSecretCannotBeEmptyString()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new RememberMeToken(
             $this->getUser(),
             '',

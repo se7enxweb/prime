@@ -25,11 +25,12 @@ class InputOptionTest extends TestCase
     }
 
     /**
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage Impossible to have an option mode VALUE_IS_ARRAY if the option does not accept a value.
      */
     public function testArrayModeWithoutValue()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Impossible to have an option mode VALUE_IS_ARRAY if the option does not accept a value.');
+
         new InputOption('foo', 'f', InputOption::VALUE_IS_ARRAY);
     }
 
@@ -97,26 +98,29 @@ class InputOptionTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testEmptyNameIsInvalid()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new InputOption('');
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testDoubleDashNameIsInvalid()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new InputOption('--');
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testSingleDashOptionIsInvalid()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new InputOption('foo', '-');
     }
 
@@ -166,21 +170,23 @@ class InputOptionTest extends TestCase
     }
 
     /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage Cannot set a default value when using InputOption::VALUE_NONE mode.
      */
     public function testDefaultValueWithValueNoneMode()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Cannot set a default value when using InputOption::VALUE_NONE mode.');
+
         $option = new InputOption('foo', 'f', InputOption::VALUE_NONE);
         $option->setDefault('default');
     }
 
     /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage A default value for an array option must be an array.
      */
     public function testDefaultValueWithIsArrayMode()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('A default value for an array option must be an array.');
+
         $option = new InputOption('foo', 'f', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY);
         $option->setDefault('default');
     }

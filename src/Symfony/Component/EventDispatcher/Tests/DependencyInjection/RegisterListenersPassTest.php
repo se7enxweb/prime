@@ -21,10 +21,11 @@ class RegisterListenersPassTest extends TestCase
      * Tests that event subscribers not implementing EventSubscriberInterface
      * trigger an exception.
      *
-     * @expectedException \InvalidArgumentException
      */
     public function testEventSubscriberWithoutInterface()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $builder = new ContainerBuilder();
         $builder->register('event_dispatcher');
         $builder->register('my_event_subscriber', 'stdClass')
@@ -52,11 +53,12 @@ class RegisterListenersPassTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The service "foo" must be public as event listeners are lazy-loaded.
      */
     public function testPrivateEventListener()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The service \"foo\" must be public as event listeners are lazy-loaded.');
+
         $container = new ContainerBuilder();
         $container->register('foo', 'stdClass')->setPublic(false)->addTag('kernel.event_listener', array());
         $container->register('event_dispatcher', 'stdClass');
@@ -66,11 +68,12 @@ class RegisterListenersPassTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The service "foo" must be public as event subscribers are lazy-loaded.
      */
     public function testPrivateEventSubscriber()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The service \"foo\" must be public as event subscribers are lazy-loaded.');
+
         $container = new ContainerBuilder();
         $container->register('foo', 'stdClass')->setPublic(false)->addTag('kernel.event_subscriber', array());
         $container->register('event_dispatcher', 'stdClass');
@@ -80,11 +83,12 @@ class RegisterListenersPassTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The service "foo" must not be abstract as event listeners are lazy-loaded.
      */
     public function testAbstractEventListener()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The service \"foo\" must not be abstract as event listeners are lazy-loaded.');
+
         $container = new ContainerBuilder();
         $container->register('foo', 'stdClass')->setAbstract(true)->addTag('kernel.event_listener', array());
         $container->register('event_dispatcher', 'stdClass');
@@ -94,11 +98,12 @@ class RegisterListenersPassTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The service "foo" must not be abstract as event subscribers are lazy-loaded.
      */
     public function testAbstractEventSubscriber()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The service \"foo\" must not be abstract as event subscribers are lazy-loaded.');
+
         $container = new ContainerBuilder();
         $container->register('foo', 'stdClass')->setAbstract(true)->addTag('kernel.event_subscriber', array());
         $container->register('event_dispatcher', 'stdClass');
@@ -132,11 +137,12 @@ class RegisterListenersPassTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage You have requested a non-existent parameter "subscriber.class"
      */
     public function testEventSubscriberUnresolvableClassName()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('You have requested a non-existent parameter \"subscriber.class\"');
+
         $container = new ContainerBuilder();
         $container->register('foo', '%subscriber.class%')->addTag('kernel.event_subscriber', array());
         $container->register('event_dispatcher', 'stdClass');

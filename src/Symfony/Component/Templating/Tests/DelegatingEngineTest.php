@@ -35,11 +35,12 @@ class DelegatingEngineTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage No engine is able to work with the template "template.php"
      */
     public function testRenderWithNoSupportedEngine()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No engine is able to work with the template \"template.php\"');
+
         $firstEngine = $this->getEngineMock('template.php', false);
         $secondEngine = $this->getEngineMock('template.php', false);
 
@@ -62,11 +63,12 @@ class DelegatingEngineTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Template "template.php" cannot be streamed as the engine supporting it does not implement StreamingEngineInterface
      */
     public function testStreamRequiresStreamingEngine()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Template \"template.php\" cannot be streamed as the engine supporting it does not implement StreamingEngineInterface');
+
         $delegatingEngine = new DelegatingEngine(array(new TestEngine()));
         $delegatingEngine->stream('template.php', array('foo' => 'bar'));
     }
@@ -113,11 +115,12 @@ class DelegatingEngineTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage No engine is able to work with the template "template.php"
      */
     public function testGetInvalidEngine()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No engine is able to work with the template \"template.php\"');
+
         $firstEngine = $this->getEngineMock('template.php', false);
         $secondEngine = $this->getEngineMock('template.php', false);
 

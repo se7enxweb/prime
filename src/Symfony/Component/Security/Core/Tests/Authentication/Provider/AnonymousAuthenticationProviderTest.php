@@ -25,21 +25,23 @@ class AnonymousAuthenticationProviderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\AuthenticationException
-     * @expectedExceptionMessage The token is not supported by this authentication provider.
      */
     public function testAuthenticateWhenTokenIsNotSupported()
     {
+        $this->expectException(\Symfony\Component\Security\Core\Exception\AuthenticationException::class);
+        $this->expectExceptionMessage('The token is not supported by this authentication provider.');
+
         $provider = $this->getProvider('foo');
 
         $provider->authenticate($this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')->getMock());
     }
 
     /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\BadCredentialsException
      */
     public function testAuthenticateWhenSecretIsNotValid()
     {
+        $this->expectException(\Symfony\Component\Security\Core\Exception\BadCredentialsException::class);
+
         $provider = $this->getProvider('foo');
 
         $provider->authenticate($this->getSupportedToken('bar'));

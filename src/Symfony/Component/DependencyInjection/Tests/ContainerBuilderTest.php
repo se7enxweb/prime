@@ -132,21 +132,23 @@ class ContainerBuilderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      * @dataProvider provideBadId
      */
     public function testBadAliasId($id)
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException::class);
+
         $builder = new ContainerBuilder();
         $builder->setAlias($id, 'foo');
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      * @dataProvider provideBadId
      */
     public function testBadDefinitionId($id)
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException::class);
+
         $builder = new ContainerBuilder();
         $builder->setDefinition($id, new Definition('Foo'));
     }
@@ -164,11 +166,12 @@ class ContainerBuilderTest extends TestCase
     }
 
     /**
-     * @expectedException        \Symfony\Component\DependencyInjection\Exception\RuntimeException
-     * @expectedExceptionMessage You have requested a synthetic service ("foo"). The DIC does not know how to construct this service.
      */
     public function testGetUnsetLoadingServiceWhenCreateServiceThrowsAnException()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('You have requested a synthetic service (\"foo\"). The DIC does not know how to construct this service.');
+
         $builder = new ContainerBuilder();
         $builder->register('foo', 'stdClass')->setSynthetic(true);
 
@@ -456,10 +459,11 @@ class ContainerBuilderTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testCreateSyntheticService()
     {
+        $this->expectException(\RuntimeException::class);
+
         $builder = new ContainerBuilder();
         $builder->register('foo', 'Bar\FooClass')->setSynthetic(true);
         $builder->get('foo');
@@ -484,11 +488,12 @@ class ContainerBuilderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\RuntimeException
-     * @expectedExceptionMessage Constructing service "foo" from a parent definition is not supported at build time.
      */
     public function testResolveServicesWithDecoratedDefinition()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('Constructing service \"foo\" from a parent definition is not supported at build time.');
+
         $builder = new ContainerBuilder();
         $builder->setDefinition('grandpa', new Definition('stdClass'));
         $builder->setDefinition('parent', new DefinitionDecorator('grandpa'));
@@ -550,10 +555,11 @@ class ContainerBuilderTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testMergeLogicException()
     {
+        $this->expectException(\LogicException::class);
+
         $container = new ContainerBuilder();
         $container->setResourceTracking(false);
         $container->compile();
@@ -739,10 +745,11 @@ class ContainerBuilderTest extends TestCase
     }
 
     /**
-     * @expectedException \BadMethodCallException
      */
     public function testThrowsExceptionWhenSetServiceOnAFrozenContainer()
     {
+        $this->expectException(\BadMethodCallException::class);
+
         $container = new ContainerBuilder();
         $container->setResourceTracking(false);
         $container->setDefinition('a', new Definition('stdClass'));
@@ -822,10 +829,11 @@ class ContainerBuilderTest extends TestCase
     }
 
     /**
-     * @expectedException \BadMethodCallException
      */
     public function testThrowsExceptionWhenSetDefinitionOnAFrozenContainer()
     {
+        $this->expectException(\BadMethodCallException::class);
+
         $container = new ContainerBuilder();
         $container->setResourceTracking(false);
         $container->compile();

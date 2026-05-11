@@ -192,10 +192,11 @@ EOF;
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\DumpException
      */
     public function testObjectSupportDisabledWithExceptions()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\DumpException::class);
+
         $this->dumper->dump(array('foo' => new A(), 'bar' => 1), 0, 0, true, false);
     }
 
@@ -233,20 +234,22 @@ EOF;
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The indentation must be greater than zero
      */
     public function testZeroIndentationThrowsException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The indentation must be greater than zero');
+
         $this->dumper->setIndentation(0);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The indentation must be greater than zero
      */
     public function testNegativeIndentationThrowsException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The indentation must be greater than zero');
+
         $this->dumper->setIndentation(-4);
     }
 }

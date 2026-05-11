@@ -77,10 +77,11 @@ class ParameterBagTest extends TestCase
     /**
      * @group legacy
      * @dataProvider getInvalidPaths
-     * @expectedException \InvalidArgumentException
      */
     public function testGetDeepWithInvalidPaths($path)
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $bag = new ParameterBag(array('foo' => array('bar' => 'moo')));
 
         $bag->get($path, null, true);

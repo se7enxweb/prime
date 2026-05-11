@@ -17,27 +17,30 @@ use Symfony\Component\Intl\Globals\IntlGlobals;
 class CollatorTest extends AbstractCollatorTest
 {
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\MethodArgumentValueNotImplementedException
      */
     public function testConstructorWithUnsupportedLocale()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\MethodArgumentValueNotImplementedException::class);
+
         new Collator('pt_BR');
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\MethodNotImplementedException
      */
     public function testCompare()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\MethodNotImplementedException::class);
+
         $collator = $this->getCollator('en');
         $collator->compare('a', 'b');
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\MethodNotImplementedException
      */
     public function testGetAttribute()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\MethodNotImplementedException::class);
+
         $collator = $this->getCollator('en');
         $collator->getAttribute(Collator::NUMERIC_COLLATION);
     }
@@ -67,37 +70,41 @@ class CollatorTest extends AbstractCollatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\MethodNotImplementedException
      */
     public function testGetSortKey()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\MethodNotImplementedException::class);
+
         $collator = $this->getCollator('en');
         $collator->getSortKey('Hello');
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\MethodNotImplementedException
      */
     public function testGetStrength()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\MethodNotImplementedException::class);
+
         $collator = $this->getCollator('en');
         $collator->getStrength();
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\MethodNotImplementedException
      */
     public function testSetAttribute()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\MethodNotImplementedException::class);
+
         $collator = $this->getCollator('en');
         $collator->setAttribute(Collator::NUMERIC_COLLATION, Collator::ON);
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\MethodNotImplementedException
      */
     public function testSetStrength()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\MethodNotImplementedException::class);
+
         $collator = $this->getCollator('en');
         $collator->setStrength(Collator::PRIMARY);
     }

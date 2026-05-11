@@ -52,11 +52,12 @@ class TemplateControllerTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage You can not use the TemplateController if the Templating Component or the Twig Bundle are not available.
      */
     public function testNoTwigNorTemplating()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('You can not use the TemplateController if the Templating Component or the Twig Bundle are not available.');
+
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
         $container->expects($this->at(0))->method('has')->willReturn(false);
         $container->expects($this->at(1))->method('has')->willReturn(false);

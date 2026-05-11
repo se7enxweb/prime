@@ -41,11 +41,12 @@ class CommandTest extends TestCase
     }
 
     /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage The command defined in "Symfony\Component\Console\Command\Command" cannot have an empty name.
      */
     public function testCommandNameCannotBeEmpty()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('The command defined in \"Symfony\\Component\\Console\\Command\\Command\" cannot have an empty name.');
+
         new Command();
     }
 
@@ -204,11 +205,12 @@ class CommandTest extends TestCase
     }
 
     /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage Cannot retrieve helper "formatter" because there is no HelperSet defined.
      */
     public function testGetHelperWithoutHelperSet()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Cannot retrieve helper \"formatter\" because there is no HelperSet defined.');
+
         $command = new \TestCommand();
         $command->getHelper('formatter');
     }
@@ -277,21 +279,23 @@ class CommandTest extends TestCase
     }
 
     /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage You must override the execute() method in the concrete command class.
      */
     public function testExecuteMethodNeedsToBeOverridden()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('You must override the execute() method in the concrete command class.');
+
         $command = new Command('foo');
         $command->run(new StringInput(''), new NullOutput());
     }
 
     /**
-     * @expectedException        \Symfony\Component\Console\Exception\InvalidOptionException
-     * @expectedExceptionMessage The "--bar" option does not exist.
      */
     public function testRunWithInvalidOption()
     {
+        $this->expectException(\Symfony\Component\Console\Exception\InvalidOptionException::class);
+        $this->expectExceptionMessage('The \"--bar\" option does not exist.');
+
         $command = new \TestCommand();
         $tester = new CommandTester($command);
         $tester->execute(array('--bar' => true));
@@ -413,11 +417,12 @@ class CommandTest extends TestCase
     }
 
     /**
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage Invalid callable provided to Command::setCode.
      */
     public function testSetCodeWithNonCallable()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid callable provided to Command::setCode.');
+
         $command = new \TestCommand();
         $command->setCode(array($this, 'nonExistentMethod'));
     }

@@ -80,10 +80,11 @@ class TemplateNameParserTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testParseValidNameWithNotFoundBundle()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->parser->parse('BarBundle:Post:index.html.php');
     }
 }

@@ -103,10 +103,11 @@ class BundleEntryReaderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\MissingResourceException
      */
     public function testReadNonExistingEntry()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\MissingResourceException::class);
+
         $this->readerImpl->expects($this->once())
             ->method('read')
             ->with(self::RES_DIR, 'root')
@@ -131,10 +132,11 @@ class BundleEntryReaderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\MissingResourceException
      */
     public function testDontFallbackIfEntryDoesNotExistAndFallbackDisabled()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\MissingResourceException::class);
+
         $this->readerImpl->expects($this->once())
             ->method('read')
             ->with(self::RES_DIR, 'en_GB')
@@ -159,10 +161,11 @@ class BundleEntryReaderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\MissingResourceException
      */
     public function testDontFallbackIfLocaleDoesNotExistAndFallbackDisabled()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\MissingResourceException::class);
+
         $this->readerImpl->expects($this->once())
             ->method('read')
             ->with(self::RES_DIR, 'en_GB')
@@ -291,10 +294,11 @@ class BundleEntryReaderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\MissingResourceException
      */
     public function testFailIfEntryFoundNeitherInParentNorChild()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\MissingResourceException::class);
+
         $this->readerImpl->expects($this->at(0))
             ->method('read')
             ->with(self::RES_DIR, 'en_GB')

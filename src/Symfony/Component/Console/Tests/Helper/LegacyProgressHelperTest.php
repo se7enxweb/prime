@@ -120,21 +120,23 @@ class LegacyProgressHelperTest extends TestCase
     }
 
     /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage You must start the progress bar
      */
     public function testSetCurrentBeforeStarting()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('You must start the progress bar');
+
         $progress = new ProgressHelper();
         $progress->setCurrent(15);
     }
 
     /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage You can't regress the progress bar
      */
     public function testRegressProgress()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('You can\'t regress the progress bar');
+
         $progress = new ProgressHelper();
         $progress->start($output = $this->getOutputStream(), 50);
         $progress->setCurrent(15);

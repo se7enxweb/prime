@@ -83,19 +83,21 @@ class StopwatchTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testUnknownEvent()
     {
+        $this->expectException(\LogicException::class);
+
         $stopwatch = new Stopwatch();
         $stopwatch->getEvent('foo');
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testStopWithoutStart()
     {
+        $this->expectException(\LogicException::class);
+
         $stopwatch = new Stopwatch();
         $stopwatch->stop('foo');
     }
@@ -146,10 +148,11 @@ class StopwatchTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testReopenANewSectionShouldThrowAnException()
     {
+        $this->expectException(\LogicException::class);
+
         $stopwatch = new Stopwatch();
         $stopwatch->openSection('section');
     }

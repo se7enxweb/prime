@@ -27,18 +27,20 @@ class RedirectResponseTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testRedirectResponseConstructorNullUrl()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $response = new RedirectResponse(null);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testRedirectResponseConstructorWrongStatusCode()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $response = new RedirectResponse('foo.bar', 404);
     }
 
@@ -66,10 +68,11 @@ class RedirectResponseTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testSetTargetUrlNull()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $response = new RedirectResponse('foo.bar');
         $response->setTargetUrl(null);
     }

@@ -20,10 +20,11 @@ use Symfony\Component\Validator\Constraints\Valid;
 class ValidTest extends TestCase
 {
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\ConstraintDefinitionException
      */
     public function testRejectGroupsOption()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\ConstraintDefinitionException::class);
+
         new Valid(array('groups' => 'foo'));
     }
 }

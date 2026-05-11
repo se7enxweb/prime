@@ -89,10 +89,11 @@ class PhpDumperTest extends TestCase
 
     /**
      * @dataProvider provideInvalidParameters
-     * @expectedException \InvalidArgumentException
      */
     public function testExportParameters($parameters)
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $dumper = new PhpDumper(new ContainerBuilder(new ParameterBag($parameters)));
         $dumper->dump();
     }
@@ -157,11 +158,12 @@ class PhpDumperTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Service id "bar$" cannot be converted to a valid PHP method name.
      */
     public function testAddServiceInvalidServiceId()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Service id \"bar$\" cannot be converted to a valid PHP method name.');
+
         $container = new ContainerBuilder();
         $container->register('bar$', 'FooClass');
         $dumper = new PhpDumper($container);
@@ -170,11 +172,12 @@ class PhpDumperTest extends TestCase
 
     /**
      * @dataProvider provideInvalidFactories
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\RuntimeException
-     * @expectedExceptionMessage Cannot dump definition
      */
     public function testInvalidFactories($factory)
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('Cannot dump definition');
+
         $container = new ContainerBuilder();
         $def = new Definition('stdClass');
         $def->setFactory($factory);
@@ -244,10 +247,11 @@ class PhpDumperTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
      */
     public function testCircularReference()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException::class);
+
         $container = new ContainerBuilder();
         $container->register('foo', 'stdClass')->addArgument(new Reference('bar'));
         $container->register('bar', 'stdClass')->setPublic(false)->addMethodCall('setA', array(new Reference('baz')));

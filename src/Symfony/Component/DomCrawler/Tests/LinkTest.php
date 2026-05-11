@@ -17,10 +17,11 @@ use Symfony\Component\DomCrawler\Link;
 class LinkTest extends TestCase
 {
     /**
-     * @expectedException \LogicException
      */
     public function testConstructorWithANonATag()
     {
+        $this->expectException(\LogicException::class);
+
         $dom = new \DOMDocument();
         $dom->loadHTML('<html><div><div></html>');
 
@@ -28,10 +29,11 @@ class LinkTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testConstructorWithAnInvalidCurrentUri()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $dom = new \DOMDocument();
         $dom->loadHTML('<html><a href="/foo">foo</a></html>');
 

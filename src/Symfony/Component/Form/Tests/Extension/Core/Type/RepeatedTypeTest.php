@@ -91,10 +91,11 @@ class RepeatedTypeTest extends BaseTypeTest
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testSetInvalidOptions()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+
         $this->factory->create(static::TESTED_TYPE, null, array(
             'type' => TextTypeTest::TESTED_TYPE,
             'options' => 'bad value',
@@ -102,10 +103,11 @@ class RepeatedTypeTest extends BaseTypeTest
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testSetInvalidFirstOptions()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+
         $this->factory->create(static::TESTED_TYPE, null, array(
             'type' => TextTypeTest::TESTED_TYPE,
             'first_options' => 'bad value',
@@ -113,10 +115,11 @@ class RepeatedTypeTest extends BaseTypeTest
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testSetInvalidSecondOptions()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+
         $this->factory->create(static::TESTED_TYPE, null, array(
             'type' => TextTypeTest::TESTED_TYPE,
             'second_options' => 'bad value',

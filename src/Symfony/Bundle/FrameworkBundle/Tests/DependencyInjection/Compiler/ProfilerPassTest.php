@@ -25,10 +25,11 @@ class ProfilerPassTest extends TestCase
      *
      *     <tag name="data_collector" template="YourBundle:Collector:templatename" id="your_collector_name" />
      *
-     * @expectedException \InvalidArgumentException
      */
     public function testTemplateNoIdThrowsException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $builder = new ContainerBuilder();
         $builder->register('profiler', 'ProfilerClass');
         $builder->register('my_collector_service')

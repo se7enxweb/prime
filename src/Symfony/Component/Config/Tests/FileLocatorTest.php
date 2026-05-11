@@ -87,32 +87,35 @@ class FileLocatorTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The file "foobar.xml" does not exist
      */
     public function testLocateThrowsAnExceptionIfTheFileDoesNotExists()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The file \"foobar.xml\" does not exist');
+
         $loader = new FileLocator(array(__DIR__.'/Fixtures'));
 
         $loader->locate('foobar.xml', __DIR__);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testLocateThrowsAnExceptionIfTheFileDoesNotExistsInAbsolutePath()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $loader = new FileLocator(array(__DIR__.'/Fixtures'));
 
         $loader->locate(__DIR__.'/Fixtures/foobar.xml', __DIR__);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage An empty file name is not valid to be located.
      */
     public function testLocateEmpty()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('An empty file name is not valid to be located.');
+
         $loader = new FileLocator(array(__DIR__.'/Fixtures'));
 
         $loader->locate(null, __DIR__);

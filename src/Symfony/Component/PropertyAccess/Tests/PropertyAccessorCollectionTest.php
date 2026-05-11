@@ -147,11 +147,12 @@ abstract class PropertyAccessorCollectionTest extends PropertyAccessorArrayAcces
     }
 
     /**
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
-     * @expectedExceptionMessage Neither the property "axes" nor one of the methods "addAx()"/"removeAx()", "addAxe()"/"removeAxe()", "addAxis()"/"removeAxis()", "setAxes()", "axes()", "__set()" or "__call()" exist and have public access in class "Mock_PropertyAccessorCollectionTest_CarNoAdderAndRemover
      */
     public function testSetValueFailsIfNoAdderNorRemoverFound()
     {
+        $this->expectException(\Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException::class);
+        $this->expectExceptionMessage('Neither the property \"axes\" nor one of the methods \"addAx()\"/\"removeAx()\", \"addAxe()\"/\"removeAxe()\", \"addAxis()\"/\"removeAxis()\", \"setAxes()\", \"axes()\", \"__set()\" or \"__call()\" exist and have public access in class \"Mock_PropertyAccessorCollectionTest_CarNoAdderAndRemover');
+
         $car = $this->getMockBuilder(__CLASS__.'_CarNoAdderAndRemover')->getMock();
         $axesBefore = $this->getContainer(array(1 => 'second', 3 => 'fourth'));
         $axesAfter = $this->getContainer(array(0 => 'first', 1 => 'second', 2 => 'third'));
@@ -188,11 +189,12 @@ abstract class PropertyAccessorCollectionTest extends PropertyAccessorArrayAcces
     }
 
     /**
-     * @expectedException \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
      * expectedExceptionMessageRegExp /The property "axes" in class "Mock_PropertyAccessorCollectionTest_Car[^"]*" can be defined with the methods "addAxis()", "removeAxis()" but the new value must be an array or an instance of \Traversable, "string" given./
      */
     public function testSetValueFailsIfAdderAndRemoverExistButValueIsNotTraversable()
     {
+        $this->expectException(\Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException::class);
+
         $car = $this->getMockBuilder(__CLASS__.'_Car')->getMock();
 
         $this->propertyAccessor->setValue($car, 'axes', 'Not an array or Traversable');

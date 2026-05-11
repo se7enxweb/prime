@@ -282,11 +282,12 @@ class ProgressBarTest extends TestCase
     }
 
     /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage You can't regress the progress bar
      */
     public function testRegressProgress()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('You can\'t regress the progress bar');
+
         $bar = new ProgressBar($output = $this->getOutputStream(), 50);
         $bar->start();
         $bar->setProgress(15);

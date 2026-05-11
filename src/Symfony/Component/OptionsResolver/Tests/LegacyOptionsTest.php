@@ -187,10 +187,11 @@ class LegacyOptionsTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\OptionDefinitionException
      */
     public function testFailForCyclicDependencies()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\OptionDefinitionException::class);
+
         $this->options->set('foo', function (Options $options) {
             $options->get('bam');
         });
@@ -203,10 +204,11 @@ class LegacyOptionsTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\OptionDefinitionException
      */
     public function testFailForCyclicDependenciesBetweenNormalizers()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\OptionDefinitionException::class);
+
         $this->options->set('foo', 'bar');
         $this->options->set('bam', 'baz');
 
@@ -222,10 +224,11 @@ class LegacyOptionsTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\OptionDefinitionException
      */
     public function testFailForCyclicDependenciesBetweenNormalizerAndLazyOption()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\OptionDefinitionException::class);
+
         $this->options->set('foo', function (Options $options) {
             $options->get('bam');
         });

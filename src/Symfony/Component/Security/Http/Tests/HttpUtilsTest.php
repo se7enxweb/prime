@@ -252,10 +252,11 @@ class HttpUtilsTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testCheckRequestPathWithUrlMatcherLoadingException()
     {
+        $this->expectException(\RuntimeException::class);
+
         $urlMatcher = $this->getMockBuilder('Symfony\Component\Routing\Matcher\UrlMatcherInterface')->getMock();
         $urlMatcher
             ->expects($this->any())
@@ -281,11 +282,12 @@ class HttpUtilsTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Matcher must either implement UrlMatcherInterface or RequestMatcherInterface
      */
     public function testUrlMatcher()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Matcher must either implement UrlMatcherInterface or RequestMatcherInterface');
+
         new HttpUtils($this->getUrlGenerator(), new \stdClass());
     }
 
@@ -299,11 +301,12 @@ class HttpUtilsTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage You must provide a UrlGeneratorInterface instance to be able to use routes.
      */
     public function testUrlGeneratorIsRequiredToGenerateUrl()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('You must provide a UrlGeneratorInterface instance to be able to use routes.');
+
         $utils = new HttpUtils();
         $utils->generateUri(new Request(), 'route_name');
     }

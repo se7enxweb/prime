@@ -83,53 +83,59 @@ class InlineTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
      */
     public function testParseScalarWithNonEscapedBlackslashAtTheEndShouldThrowException()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+
         Inline::parse('"Foo\\"');
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
      */
     public function testParseScalarWithIncorrectlyQuotedStringShouldThrowException()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+
         $value = "'don't do somthin' like that'";
         Inline::parse($value);
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
      */
     public function testParseScalarWithIncorrectlyDoubleQuotedStringShouldThrowException()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+
         $value = '"don"t do somthin" like that"';
         Inline::parse($value);
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
      */
     public function testParseInvalidMappingKeyShouldThrowException()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+
         $value = '{ "foo " bar": "bar" }';
         Inline::parse($value);
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
      */
     public function testParseInvalidMappingShouldThrowException()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+
         Inline::parse('[foo] bar');
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
      */
     public function testParseInvalidSequenceShouldThrowException()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+
         Inline::parse('{ foo: bar } bar');
     }
 
@@ -174,20 +180,22 @@ class InlineTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
-     * @expectedExceptionMessage A reference must contain at least one character.
      */
     public function testParseUnquotedAsterisk()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+        $this->expectExceptionMessage('A reference must contain at least one character.');
+
         Inline::parse('{ foo: * }');
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
-     * @expectedExceptionMessage A reference must contain at least one character.
      */
     public function testParseUnquotedAsteriskFollowedByAComment()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+        $this->expectExceptionMessage('A reference must contain at least one character.');
+
         Inline::parse('{ foo: * #foo }');
     }
 
@@ -466,11 +474,12 @@ class InlineTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
-     * @expectedExceptionMessage Malformed inline YAML string: {this, is not, supported}.
      */
     public function testNotSupportedMissingValue()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+        $this->expectExceptionMessage('Malformed inline YAML string: {this, is not, supported}.');
+
         Inline::parse('{this, is not, supported}');
     }
 
@@ -496,11 +505,12 @@ class InlineTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
-     * @expectedExceptionMessage Unexpected end of line, expected one of ",}".
      */
     public function testUnfinishedInlineMap()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+        $this->expectExceptionMessage('Unexpected end of line, expected one of \",}\".');
+
         Inline::parse("{abc: 'def'");
     }
 }

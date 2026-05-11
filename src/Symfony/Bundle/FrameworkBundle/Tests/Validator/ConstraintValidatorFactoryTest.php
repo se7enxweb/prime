@@ -54,10 +54,11 @@ class ConstraintValidatorFactoryTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\ValidatorException
      */
     public function testGetInstanceInvalidValidatorClass()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\ValidatorException::class);
+
         $constraint = $this->getMockBuilder('Symfony\\Component\\Validator\\Constraint')->getMock();
         $constraint
             ->expects($this->once())

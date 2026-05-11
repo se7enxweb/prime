@@ -116,10 +116,11 @@ class DefinitionDecoratorTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testReplaceArgumentShouldRequireIntegerIndex()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $def = new DefinitionDecorator('foo');
 
         $def->replaceArgument('0', 'foo');
@@ -141,10 +142,11 @@ class DefinitionDecoratorTest extends TestCase
     }
 
     /**
-     * @expectedException \OutOfBoundsException
      */
     public function testGetArgumentShouldCheckBounds()
     {
+        $this->expectException(\OutOfBoundsException::class);
+
         $def = new DefinitionDecorator('foo');
 
         $def->setArguments(array(0 => 'foo'));

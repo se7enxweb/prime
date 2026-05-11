@@ -49,10 +49,11 @@ class HeaderBagTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testGetDateException()
     {
+        $this->expectException(\RuntimeException::class);
+
         $bag = new HeaderBag(array('foo' => 'Tue'));
         $headerDate = $bag->getDate('foo');
     }

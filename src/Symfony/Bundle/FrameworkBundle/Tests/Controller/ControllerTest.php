@@ -79,11 +79,12 @@ class ControllerTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage The SecurityBundle is not registered in your application.
      */
     public function testGetUserWithEmptyContainer()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('The SecurityBundle is not registered in your application.');
+
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
         $container
             ->expects($this->once())
@@ -142,10 +143,11 @@ class ControllerTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
     public function testdenyAccessUnlessGranted()
     {
+        $this->expectException(\Symfony\Component\Security\Core\Exception\AccessDeniedException::class);
+
         $authorizationChecker = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface')->getMock();
         $authorizationChecker->expects($this->once())->method('isGranted')->willReturn(false);
 

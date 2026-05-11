@@ -58,10 +58,11 @@ class DependencyInjectionExtensionTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\InvalidArgumentException
      */
     public function testThrowExceptionForInvalidExtendedType()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\InvalidArgumentException::class);
+
         $formTypeExtension = $this->createFormTypeExtensionMock('unmatched');
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();

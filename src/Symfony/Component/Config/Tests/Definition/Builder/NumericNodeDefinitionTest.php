@@ -19,41 +19,45 @@ use Symfony\Component\Config\Definition\Builder\IntegerNodeDefinition as Numeric
 class NumericNodeDefinitionTest extends TestCase
 {
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage You cannot define a min(4) as you already have a max(3)
      */
     public function testIncoherentMinAssertion()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('You cannot define a min(4) as you already have a max(3)');
+
         $def = new NumericNodeDefinition('foo');
         $def->max(3)->min(4);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage You cannot define a max(2) as you already have a min(3)
      */
     public function testIncoherentMaxAssertion()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('You cannot define a max(2) as you already have a min(3)');
+
         $node = new NumericNodeDefinition('foo');
         $node->min(3)->max(2);
     }
 
     /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage The value 4 is too small for path "foo". Should be greater than or equal to 5
      */
     public function testIntegerMinAssertion()
     {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The value 4 is too small for path \"foo\". Should be greater than or equal to 5');
+
         $def = new IntegerNodeDefinition('foo');
         $def->min(5)->getNode()->finalize(4);
     }
 
     /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage The value 4 is too big for path "foo". Should be less than or equal to 3
      */
     public function testIntegerMaxAssertion()
     {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The value 4 is too big for path \"foo\". Should be less than or equal to 3');
+
         $def = new IntegerNodeDefinition('foo');
         $def->max(3)->getNode()->finalize(4);
     }
@@ -66,21 +70,23 @@ class NumericNodeDefinitionTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage The value 400 is too small for path "foo". Should be greater than or equal to 500
      */
     public function testFloatMinAssertion()
     {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The value 400 is too small for path \"foo\". Should be greater than or equal to 500');
+
         $def = new FloatNodeDefinition('foo');
         $def->min(5E2)->getNode()->finalize(4e2);
     }
 
     /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage The value 4.3 is too big for path "foo". Should be less than or equal to 0.3
      */
     public function testFloatMaxAssertion()
     {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The value 4.3 is too big for path \"foo\". Should be less than or equal to 0.3');
+
         $def = new FloatNodeDefinition('foo');
         $def->max(0.3)->getNode()->finalize(4.3);
     }

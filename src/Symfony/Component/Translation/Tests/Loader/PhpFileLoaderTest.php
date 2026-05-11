@@ -29,20 +29,22 @@ class PhpFileLoaderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Translation\Exception\NotFoundResourceException
      */
     public function testLoadNonExistingResource()
     {
+        $this->expectException(\Symfony\Component\Translation\Exception\NotFoundResourceException::class);
+
         $loader = new PhpFileLoader();
         $resource = __DIR__.'/../fixtures/non-existing.php';
         $loader->load($resource, 'en', 'domain1');
     }
 
     /**
-     * @expectedException \Symfony\Component\Translation\Exception\InvalidResourceException
      */
     public function testLoadThrowsAnExceptionIfFileNotLocal()
     {
+        $this->expectException(\Symfony\Component\Translation\Exception\InvalidResourceException::class);
+
         $loader = new PhpFileLoader();
         $resource = 'http://example.com/resources.php';
         $loader->load($resource, 'en', 'domain1');

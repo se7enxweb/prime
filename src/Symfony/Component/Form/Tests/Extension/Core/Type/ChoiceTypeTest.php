@@ -104,30 +104,33 @@ class ChoiceTypeTest extends BaseTypeTest
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testChoicesOptionExpectsArrayOrTraversable()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+
         $this->factory->create(static::TESTED_TYPE, null, array(
             'choices' => new \stdClass(),
         ));
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testChoiceListOptionExpectsChoiceListInterface()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+
         $this->factory->create(static::TESTED_TYPE, null, array(
             'choice_list' => array('foo' => 'foo'),
         ));
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testChoiceLoaderOptionExpectsChoiceLoaderInterface()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+
         $this->factory->create(static::TESTED_TYPE, null, array(
             'choice_loader' => new \stdClass(),
         ));

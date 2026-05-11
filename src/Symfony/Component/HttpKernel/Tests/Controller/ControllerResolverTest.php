@@ -91,10 +91,11 @@ class ControllerResolverTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testGetControllerOnObjectWithoutInvokeMethod()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $resolver = $this->createControllerResolver();
 
         $request = Request::create('/');
@@ -114,10 +115,11 @@ class ControllerResolverTest extends TestCase
 
     /**
      * @dataProvider      getUndefinedControllers
-     * @expectedException \InvalidArgumentException
      */
     public function testGetControllerOnNonUndefinedFunction($controller)
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $resolver = $this->createControllerResolver();
 
         $request = Request::create('/');
@@ -225,10 +227,11 @@ class ControllerResolverTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testIfExceptionIsThrownWhenMissingAnArgument()
     {
+        $this->expectException(\RuntimeException::class);
+
         $resolver = new ControllerResolver();
         $request = Request::create('/');
 

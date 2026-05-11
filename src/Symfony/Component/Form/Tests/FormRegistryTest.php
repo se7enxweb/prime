@@ -104,18 +104,20 @@ class FormRegistryTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\InvalidArgumentException
      */
     public function testFailIfUnregisteredTypeNoClass()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\InvalidArgumentException::class);
+
         $this->registry->getType('Symfony\Blubb');
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\InvalidArgumentException
      */
     public function testFailIfUnregisteredTypeNoFormType()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\InvalidArgumentException::class);
+
         $this->registry->getType('stdClass');
     }
 
@@ -256,10 +258,11 @@ class FormRegistryTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\InvalidArgumentException
      */
     public function testGetTypeThrowsExceptionIfTypeNotFound()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\InvalidArgumentException::class);
+
         $this->registry->getType('bar');
     }
 

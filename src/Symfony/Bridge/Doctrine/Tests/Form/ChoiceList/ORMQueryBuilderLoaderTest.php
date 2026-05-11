@@ -20,20 +20,22 @@ use Symfony\Bridge\Doctrine\Test\DoctrineTestHelper;
 class ORMQueryBuilderLoaderTest extends TestCase
 {
     /**
-     * @expectedException \Symfony\Component\Form\Exception\UnexpectedTypeException
      * @group legacy
      */
     public function testItOnlyWorksWithQueryBuilderOrClosure()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\UnexpectedTypeException::class);
+
         new ORMQueryBuilderLoader(new \stdClass());
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\UnexpectedTypeException
      * @group legacy
      */
     public function testClosureRequiresTheEntityManager()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\UnexpectedTypeException::class);
+
         $closure = function () {};
 
         new ORMQueryBuilderLoader($closure);

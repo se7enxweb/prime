@@ -489,11 +489,12 @@ class QuestionHelperTest extends TestCase
     }
 
     /**
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage The provided answer is ambiguous. Value should be one of env_2 or env_3.
      */
     public function testAmbiguousChoiceFromChoicelist()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The provided answer is ambiguous. Value should be one of env_2 or env_3.');
+
         $possibleChoices = array(
             'env_1' => 'My first environment',
             'env_2' => 'My environment',
@@ -560,11 +561,12 @@ class QuestionHelperTest extends TestCase
     }
 
     /**
-     * @expectedException        \Symfony\Component\Console\Exception\RuntimeException
-     * @expectedExceptionMessage Aborted
      */
     public function testAskThrowsExceptionOnMissingInput()
     {
+        $this->expectException(\Symfony\Component\Console\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('Aborted');
+
         $dialog = new QuestionHelper();
         $dialog->setInputStream($this->getInputStream(''));
 
@@ -572,11 +574,12 @@ class QuestionHelperTest extends TestCase
     }
 
     /**
-     * @expectedException        \Symfony\Component\Console\Exception\RuntimeException
-     * @expectedExceptionMessage Aborted
      */
     public function testAskThrowsExceptionOnMissingInputWithValidator()
     {
+        $this->expectException(\Symfony\Component\Console\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('Aborted');
+
         $dialog = new QuestionHelper();
         $dialog->setInputStream($this->getInputStream(''));
 
@@ -591,11 +594,12 @@ class QuestionHelperTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Choice question must have at least 1 choice available.
      */
     public function testEmptyChoices()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Choice question must have at least 1 choice available.');
+
         new ChoiceQuestion('Question', array(), 'irrelevant');
     }
 

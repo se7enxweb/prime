@@ -44,11 +44,12 @@ class DelegatingEngineTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage No engine is able to work with the template "template.php"
      */
     public function testGetInvalidEngine()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No engine is able to work with the template \"template.php\"');
+
         $firstEngine = $this->getEngineMock('template.php', false);
         $secondEngine = $this->getEngineMock('template.php', false);
         $container = $this->getContainerMock(array(

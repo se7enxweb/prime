@@ -66,10 +66,11 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\UnexpectedValueException
      */
     public function testEncodeNotUtf8WithoutPartialOnError()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\UnexpectedValueException::class);
+
         $arr = array(
             'utf8' => 'Hello World!',
             'notUtf8' => "\xb0\xd0\xb5\xd0",

@@ -29,10 +29,11 @@ class UsernamePasswordTokenTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testSetAuthenticatedToTrue()
     {
+        $this->expectException(\LogicException::class);
+
         $token = new UsernamePasswordToken('foo', 'bar', 'key');
         $token->setAuthenticated(true);
     }

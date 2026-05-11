@@ -89,18 +89,20 @@ class UrlPackageTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Asset\Exception\LogicException
      */
     public function testNoBaseUrls()
     {
+        $this->expectException(\Symfony\Component\Asset\Exception\LogicException::class);
+
         new UrlPackage(array(), new EmptyVersionStrategy());
     }
 
     /**
-     * @expectedException \Symfony\Component\Asset\Exception\InvalidArgumentException
      */
     public function testWrongBaseUrl()
     {
+        $this->expectException(\Symfony\Component\Asset\Exception\InvalidArgumentException::class);
+
         new UrlPackage(array('not-a-url'), new EmptyVersionStrategy());
     }
 

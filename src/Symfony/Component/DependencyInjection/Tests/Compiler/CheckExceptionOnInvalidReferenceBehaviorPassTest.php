@@ -35,10 +35,11 @@ class CheckExceptionOnInvalidReferenceBehaviorPassTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
     public function testProcessThrowsExceptionOnInvalidReference()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException::class);
+
         $container = new ContainerBuilder();
 
         $container
@@ -50,10 +51,11 @@ class CheckExceptionOnInvalidReferenceBehaviorPassTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
     public function testProcessThrowsExceptionOnInvalidReferenceFromInlinedDefinition()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException::class);
+
         $container = new ContainerBuilder();
 
         $def = new Definition();

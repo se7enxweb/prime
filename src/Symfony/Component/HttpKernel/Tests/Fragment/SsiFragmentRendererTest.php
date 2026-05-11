@@ -57,10 +57,11 @@ class SsiFragmentRendererTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testRenderControllerReferenceWithoutSignerThrowsException()
     {
+        $this->expectException(\LogicException::class);
+
         $strategy = new SsiFragmentRenderer(new Ssi(), $this->getInlineStrategy());
 
         $request = Request::create('/');
@@ -71,10 +72,11 @@ class SsiFragmentRendererTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testRenderAltControllerReferenceWithoutSignerThrowsException()
     {
+        $this->expectException(\LogicException::class);
+
         $strategy = new SsiFragmentRenderer(new Ssi(), $this->getInlineStrategy());
 
         $request = Request::create('/');

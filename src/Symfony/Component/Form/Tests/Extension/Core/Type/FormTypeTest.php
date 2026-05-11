@@ -218,10 +218,11 @@ class FormTypeTest extends BaseTypeTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Form\Exception\InvalidArgumentException
      */
     public function testDataClassMustBeValidClassOrInterface()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\InvalidArgumentException::class);
+
         $this->factory->createBuilder(static::TESTED_TYPE, null, array(
             'data_class' => 'foobar',
         ));
@@ -387,10 +388,11 @@ class FormTypeTest extends BaseTypeTest
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testAttributesException()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+
         $this->factory->create(static::TESTED_TYPE, null, array('attr' => ''));
     }
 

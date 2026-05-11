@@ -824,11 +824,12 @@ class ResponseTest extends ResponseTestCase
     }
 
     /**
-     * @expectedException \UnexpectedValueException
      * @dataProvider invalidContentProvider
      */
     public function testSetContentInvalid($content)
     {
+        $this->expectException(\UnexpectedValueException::class);
+
         $response = new Response();
         $response->setContent($content);
     }

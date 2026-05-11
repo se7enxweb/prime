@@ -20,10 +20,11 @@ use Symfony\Component\HttpKernel\UriSigner;
 class HIncludeFragmentRendererTest extends TestCase
 {
     /**
-     * @expectedException \LogicException
      */
     public function testRenderExceptionWhenControllerAndNoSigner()
     {
+        $this->expectException(\LogicException::class);
+
         $strategy = new HIncludeFragmentRenderer();
         $strategy->render(new ControllerReference('main_controller', array(), array()), Request::create('/'));
     }

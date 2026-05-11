@@ -35,11 +35,12 @@ class CheckReferenceValidityPassTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      * @group legacy
      */
     public function testProcessDetectsScopeWidening()
     {
+        $this->expectException(\RuntimeException::class);
+
         $container = new ContainerBuilder();
         $container->register('a')->addArgument(new Reference('b'));
         $container->register('b')->setScope('prototype');
@@ -67,11 +68,12 @@ class CheckReferenceValidityPassTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      * @group legacy
      */
     public function testProcessDetectsCrossScopeHierarchyReference()
     {
+        $this->expectException(\RuntimeException::class);
+
         $container = new ContainerBuilder();
         $container->addScope(new Scope('a'));
         $container->addScope(new Scope('b'));
@@ -83,10 +85,11 @@ class CheckReferenceValidityPassTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testProcessDetectsReferenceToAbstractDefinition()
     {
+        $this->expectException(\RuntimeException::class);
+
         $container = new ContainerBuilder();
 
         $container->register('a')->setAbstract(true);

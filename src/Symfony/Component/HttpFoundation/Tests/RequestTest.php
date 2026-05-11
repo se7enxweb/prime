@@ -757,10 +757,11 @@ class RequestTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testGetHostWithFakeHttpHostValue()
     {
+        $this->expectException(\RuntimeException::class);
+
         $request = new Request();
         $request->initialize(array(), array(), array(), array(), array(), array('HTTP_HOST' => 'www.host.com?query=string'));
         $request->getHost();
@@ -925,11 +926,12 @@ class RequestTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\HttpFoundation\Exception\ConflictingHeadersException
      * @dataProvider getClientIpsWithConflictingHeadersProvider
      */
     public function testGetClientIpsWithConflictingHeaders($httpForwarded, $httpXForwardedFor)
     {
+        $this->expectException(\Symfony\Component\HttpFoundation\Exception\ConflictingHeadersException::class);
+
         $request = new Request();
 
         $server = array(
@@ -1029,11 +1031,12 @@ class RequestTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      * @dataProvider getContentCantBeCalledTwiceWithResourcesProvider
      */
     public function testGetContentCantBeCalledTwiceWithResources($first, $second)
     {
+        $this->expectException(\LogicException::class);
+
         if (\PHP_VERSION_ID >= 50600) {
             $this->markTestSkipped('PHP >= 5.6 allows to open php://input several times.');
         }
@@ -1780,19 +1783,21 @@ class RequestTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testSetTrustedProxiesInvalidHeaderName()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         Request::create('http://example.com/');
         Request::setTrustedHeaderName('bogus name', 'X_MY_FOR');
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testGetTrustedProxiesInvalidHeaderName()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         Request::create('http://example.com/');
         Request::getTrustedHeaderName('bogus name');
     }

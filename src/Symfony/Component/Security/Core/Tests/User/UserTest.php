@@ -17,10 +17,11 @@ use Symfony\Component\Security\Core\User\User;
 class UserTest extends TestCase
 {
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testConstructorException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new User('', 'superpass');
     }
 

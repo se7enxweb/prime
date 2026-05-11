@@ -60,10 +60,11 @@ class OutputFormatterStyleStackTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidPop()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $stack = new OutputFormatterStyleStack();
         $stack->push(new OutputFormatterStyle('white', 'black'));
         $stack->pop(new OutputFormatterStyle('yellow', 'blue'));

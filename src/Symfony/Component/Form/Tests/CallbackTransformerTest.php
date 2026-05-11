@@ -30,10 +30,11 @@ class CallbackTransformerTest extends TestCase
     /**
      * @dataProvider invalidCallbacksProvider
      *
-     * @expectedException \InvalidArgumentException
      */
     public function testConstructorWithInvalidCallbacks($transformCallback, $reverseTransformCallback)
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new CallbackTransformer($transformCallback, $reverseTransformCallback);
     }
 

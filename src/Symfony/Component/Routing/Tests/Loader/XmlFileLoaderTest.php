@@ -103,21 +103,23 @@ class XmlFileLoaderTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @dataProvider getPathsToInvalidFiles
      */
     public function testLoadThrowsExceptionWithInvalidFile($filePath)
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $loader = new XmlFileLoader(new FileLocator(array(__DIR__.'/../Fixtures')));
         $loader->load($filePath);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @dataProvider getPathsToInvalidFiles
      */
     public function testLoadThrowsExceptionWithInvalidFileEvenWithoutSchemaValidation($filePath)
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $loader = new CustomXmlFileLoader(new FileLocator(array(__DIR__.'/../Fixtures')));
         $loader->load($filePath);
     }
@@ -128,11 +130,12 @@ class XmlFileLoaderTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Document types are not allowed.
      */
     public function testDocTypeIsNotAllowed()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Document types are not allowed.');
+
         $loader = new XmlFileLoader(new FileLocator(array(__DIR__.'/../Fixtures')));
         $loader->load('withdoctype.xml');
     }

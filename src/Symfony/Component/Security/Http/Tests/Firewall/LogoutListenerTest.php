@@ -123,10 +123,11 @@ class LogoutListenerTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testSuccessHandlerReturnsNonResponse()
     {
+        $this->expectException(\RuntimeException::class);
+
         $successHandler = $this->getSuccessHandler();
 
         list($listener, $tokenStorage, $httpUtils, $options) = $this->getListener($successHandler);
@@ -147,10 +148,11 @@ class LogoutListenerTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\LogoutException
      */
     public function testCsrfValidationFails()
     {
+        $this->expectException(\Symfony\Component\Security\Core\Exception\LogoutException::class);
+
         $tokenManager = $this->getTokenManager();
 
         list($listener, $tokenStorage, $httpUtils, $options) = $this->getListener(null, $tokenManager);

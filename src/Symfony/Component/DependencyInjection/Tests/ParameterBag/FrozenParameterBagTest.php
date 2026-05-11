@@ -27,37 +27,41 @@ class FrozenParameterBagTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testClear()
     {
+        $this->expectException(\LogicException::class);
+
         $bag = new FrozenParameterBag(array());
         $bag->clear();
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testSet()
     {
+        $this->expectException(\LogicException::class);
+
         $bag = new FrozenParameterBag(array());
         $bag->set('foo', 'bar');
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testAdd()
     {
+        $this->expectException(\LogicException::class);
+
         $bag = new FrozenParameterBag(array());
         $bag->add(array());
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testRemove()
     {
+        $this->expectException(\LogicException::class);
+
         $bag = new FrozenParameterBag(array('foo' => 'bar'));
         $bag->remove('foo');
     }

@@ -59,10 +59,11 @@ class TwigEngineTest extends TestCase
     }
 
     /**
-     * @expectedException \Twig\Error\SyntaxError
      */
     public function testRenderWithError()
     {
+        $this->expectException(\Twig\Error\SyntaxError::class);
+
         $engine = $this->getTwig();
 
         $engine->render(new TemplateReference('error'));

@@ -23,10 +23,11 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 class ExportCommandTest extends TestCase
 {
     /**
-     * @expectedException \LogicException
      */
     public function testExecuteWithUnknownToken()
     {
+        $this->expectException(\LogicException::class);
+
         $profiler = $this
             ->getMockBuilder('Symfony\Component\HttpKernel\Profiler\Profiler')
             ->disableOriginalConstructor()

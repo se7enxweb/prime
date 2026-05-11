@@ -204,10 +204,11 @@ class ValidationListenerTest extends TestCase
 
     /**
      * @group legacy
-     * @expectedException \InvalidArgumentException
      */
     public function testInvalidValidatorInterface()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new ValidationListener(null, $this->violationMapper);
     }
 }

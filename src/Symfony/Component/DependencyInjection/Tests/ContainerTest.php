@@ -146,21 +146,23 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @group legacy
      */
     public function testSetDoesNotAllowPrototypeScope()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $c = new Container();
         $c->set('foo', new \stdClass(), Container::SCOPE_PROTOTYPE);
     }
 
     /**
-     * @expectedException \RuntimeException
      * @group legacy
      */
     public function testSetDoesNotAllowInactiveScope()
     {
+        $this->expectException(\RuntimeException::class);
+
         $c = new Container();
         $c->addScope(new Scope('foo'));
         $c->set('foo', new \stdClass(), 'foo');
@@ -269,11 +271,12 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\RuntimeException
-     * @expectedExceptionMessage You have requested a synthetic service ("request"). The DIC does not know how to construct this service.
      */
     public function testGetSyntheticServiceAlwaysThrows()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('You have requested a synthetic service (\"request\"). The DIC does not know how to construct this service.');
+
         require_once __DIR__.'/Fixtures/php/services9.php';
 
         $container = new \ProjectServiceContainer();
@@ -316,12 +319,13 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\LogicException
-     * @expectedExceptionMessage Resetting the container is not allowed when a scope is active.
      * @group legacy
      */
     public function testCannotResetInActiveScope()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\LogicException::class);
+        $this->expectExceptionMessage('Resetting the container is not allowed when a scope is active.');
+
         $c = new Container();
         $c->addScope(new Scope('foo'));
         $c->set('bar', new \stdClass());
@@ -495,21 +499,23 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @group legacy
      */
     public function testEnterScopeNotAdded()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $container = new Container();
         $container->enterScope('foo');
     }
 
     /**
-     * @expectedException \RuntimeException
      * @group legacy
      */
     public function testEnterScopeDoesNotAllowInactiveParentScope()
     {
+        $this->expectException(\RuntimeException::class);
+
         $container = new Container();
         $container->addScope(new Scope('foo'));
         $container->addScope(new Scope('bar', 'foo'));
@@ -542,34 +548,37 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @dataProvider getLegacyBuiltInScopes
      * @group legacy
      */
     public function testAddScopeDoesNotAllowBuiltInScopes($scope)
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $container = new Container();
         $container->addScope(new Scope($scope));
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @group legacy
      */
     public function testAddScopeDoesNotAllowExistingScope()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $container = new Container();
         $container->addScope(new Scope('foo'));
         $container->addScope(new Scope('foo'));
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @dataProvider getLegacyInvalidParentScopes
      * @group legacy
      */
     public function testAddScopeDoesNotAllowInvalidParentScope($scope)
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $c = new Container();
         $c->addScope(new Scope('foo', $scope));
     }
@@ -605,11 +614,12 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage Something went terribly wrong!
      */
     public function testGetThrowsException()
     {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Something went terribly wrong!');
+
         $c = new ProjectServiceContainer();
 
         try {

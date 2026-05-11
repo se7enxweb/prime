@@ -108,10 +108,11 @@ class EncoderFactoryTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testGetInvalidNamedEncoderForEncoderAware()
     {
+        $this->expectException(\RuntimeException::class);
+
         $factory = new EncoderFactory(array(
             'Symfony\Component\Security\Core\Tests\Encoder\EncAwareUser' => new MessageDigestPasswordEncoder('sha1'),
             'encoder_name' => new MessageDigestPasswordEncoder('sha256'),

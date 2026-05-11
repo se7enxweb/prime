@@ -251,46 +251,51 @@ class ClassMetadataTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\GroupDefinitionException
      */
     public function testGroupSequencesFailIfNotContainingDefaultGroup()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\GroupDefinitionException::class);
+
         $this->metadata->setGroupSequence(array('Foo', 'Bar'));
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\GroupDefinitionException
      */
     public function testGroupSequencesFailIfContainingDefault()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\GroupDefinitionException::class);
+
         $this->metadata->setGroupSequence(array('Foo', $this->metadata->getDefaultGroup(), Constraint::DEFAULT_GROUP));
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\GroupDefinitionException
      */
     public function testGroupSequenceFailsIfGroupSequenceProviderIsSet()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\GroupDefinitionException::class);
+
         $metadata = new ClassMetadata(self::PROVIDERCLASS);
         $metadata->setGroupSequenceProvider(true);
         $metadata->setGroupSequence(array('GroupSequenceProviderEntity', 'Foo'));
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\GroupDefinitionException
      */
     public function testGroupSequenceProviderFailsIfGroupSequenceIsSet()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\GroupDefinitionException::class);
+
         $metadata = new ClassMetadata(self::PROVIDERCLASS);
         $metadata->setGroupSequence(array('GroupSequenceProviderEntity', 'Foo'));
         $metadata->setGroupSequenceProvider(true);
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\GroupDefinitionException
      */
     public function testGroupSequenceProviderFailsIfDomainClassIsInvalid()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\GroupDefinitionException::class);
+
         $metadata = new ClassMetadata('stdClass');
         $metadata->setGroupSequenceProvider(true);
     }

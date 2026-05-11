@@ -32,19 +32,21 @@ class IcuResFileLoaderTest extends LocalizedTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Translation\Exception\NotFoundResourceException
      */
     public function testLoadNonExistingResource()
     {
+        $this->expectException(\Symfony\Component\Translation\Exception\NotFoundResourceException::class);
+
         $loader = new IcuResFileLoader();
         $loader->load(__DIR__.'/../fixtures/non-existing.txt', 'en', 'domain1');
     }
 
     /**
-     * @expectedException \Symfony\Component\Translation\Exception\InvalidResourceException
      */
     public function testLoadInvalidResource()
     {
+        $this->expectException(\Symfony\Component\Translation\Exception\InvalidResourceException::class);
+
         $loader = new IcuResFileLoader();
         $loader->load(__DIR__.'/../fixtures/resourcebundle/corrupted', 'en', 'domain1');
     }

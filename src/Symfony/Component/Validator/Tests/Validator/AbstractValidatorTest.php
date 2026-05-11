@@ -512,10 +512,11 @@ abstract class AbstractValidatorTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\NoSuchMetadataException
      */
     public function testFailOnScalarReferences()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\NoSuchMetadataException::class);
+
         $entity = new Entity();
         $entity->reference = 'string';
 
@@ -730,10 +731,11 @@ abstract class AbstractValidatorTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\NoSuchMetadataException
      */
     public function testMetadataMustExistIfTraversalIsDisabled()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\NoSuchMetadataException::class);
+
         $entity = new Entity();
         $entity->reference = new \ArrayIterator();
 
@@ -839,11 +841,12 @@ abstract class AbstractValidatorTest extends TestCase
     /**
      * Cannot be UnsupportedMetadataException for BC with Symfony < 2.5.
      *
-     * @expectedException \Symfony\Component\Validator\Exception\ValidatorException
      * @group legacy
      */
     public function testLegacyValidatePropertyFailsIfPropertiesNotSupported()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\ValidatorException::class);
+
         // $metadata does not implement PropertyMetadataContainerInterface
         $metadata = $this->getMockBuilder('Symfony\Component\Validator\MetadataInterface')->getMock();
 
@@ -970,11 +973,12 @@ abstract class AbstractValidatorTest extends TestCase
     /**
      * Cannot be UnsupportedMetadataException for BC with Symfony < 2.5.
      *
-     * @expectedException \Symfony\Component\Validator\Exception\ValidatorException
      * @group legacy
      */
     public function testLegacyValidatePropertyValueFailsIfPropertiesNotSupported()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\ValidatorException::class);
+
         // $metadata does not implement PropertyMetadataContainerInterface
         $metadata = $this->getMockBuilder('Symfony\Component\Validator\MetadataInterface')->getMock();
 

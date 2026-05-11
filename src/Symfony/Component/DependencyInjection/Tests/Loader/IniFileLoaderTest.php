@@ -41,20 +41,22 @@ class IniFileLoaderTest extends TestCase
     }
 
     /**
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage The file "foo.ini" does not exist (in:
      */
     public function testExceptionIsRaisedWhenIniFileDoesNotExist()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The file \"foo.ini\" does not exist (in:');
+
         $this->loader->load('foo.ini');
     }
 
     /**
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage The "nonvalid.ini" file is not valid.
      */
     public function testExceptionIsRaisedWhenIniFileCannotBeParsed()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The \"nonvalid.ini\" file is not valid.');
+
         @$this->loader->load('nonvalid.ini');
     }
 

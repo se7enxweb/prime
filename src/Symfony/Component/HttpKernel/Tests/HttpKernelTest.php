@@ -25,20 +25,22 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class HttpKernelTest extends TestCase
 {
     /**
-     * @expectedException \RuntimeException
      */
     public function testHandleWhenControllerThrowsAnExceptionAndCatchIsTrue()
     {
+        $this->expectException(\RuntimeException::class);
+
         $kernel = new HttpKernel(new EventDispatcher(), $this->getResolver(function () { throw new \RuntimeException(); }));
 
         $kernel->handle(new Request(), HttpKernelInterface::MASTER_REQUEST, true);
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testHandleWhenControllerThrowsAnExceptionAndCatchIsFalseAndNoListenerIsRegistered()
     {
+        $this->expectException(\RuntimeException::class);
+
         $kernel = new HttpKernel(new EventDispatcher(), $this->getResolver(function () { throw new \RuntimeException(); }));
 
         $kernel->handle(new Request(), HttpKernelInterface::MASTER_REQUEST, false);
@@ -145,10 +147,11 @@ class HttpKernelTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function testHandleWhenNoControllerIsFound()
     {
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+
         $dispatcher = new EventDispatcher();
         $kernel = new HttpKernel($dispatcher, $this->getResolver(false));
 
@@ -156,10 +159,11 @@ class HttpKernelTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testHandleWhenTheControllerIsNotACallable()
     {
+        $this->expectException(\LogicException::class);
+
         $dispatcher = new EventDispatcher();
         $kernel = new HttpKernel($dispatcher, $this->getResolver('foobar'));
 
@@ -208,10 +212,11 @@ class HttpKernelTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testHandleWhenTheControllerDoesNotReturnAResponse()
     {
+        $this->expectException(\LogicException::class);
+
         $dispatcher = new EventDispatcher();
         $kernel = new HttpKernel($dispatcher, $this->getResolver(function () { return 'foo'; }));
 
@@ -273,10 +278,11 @@ class HttpKernelTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      */
     public function testInconsistentClientIpsOnMasterRequests()
     {
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\BadRequestHttpException::class);
+
         $dispatcher = new EventDispatcher();
         $dispatcher->addListener(KernelEvents::REQUEST, function ($event) {
             $event->getRequest()->getClientIp();

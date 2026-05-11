@@ -72,10 +72,11 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\UnexpectedTypeException
      */
     public function testExpectsStringCompatibleTypeOrFile()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\UnexpectedTypeException::class);
+
         $this->validator->validate(new \stdClass(), new File());
     }
 
@@ -228,10 +229,11 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\ConstraintDefinitionException
      */
     public function testInvalidMaxSize()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\ConstraintDefinitionException::class);
+
         $constraint = new File(array(
             'maxSize' => '1abc',
         ));

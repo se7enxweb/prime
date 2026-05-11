@@ -56,10 +56,11 @@ class CrawlerTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testAddInvalidType()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $crawler = new Crawler();
         $crawler->add(1);
     }
@@ -745,21 +746,23 @@ HTML;
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The selected node should be instance of DOMElement
      */
     public function testInvalidLink()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The selected node should be instance of DOMElement');
+
         $crawler = $this->createTestCrawler('http://example.com/bar/');
         $crawler->filterXPath('//li/text()')->link();
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The selected node should be instance of DOMElement
      */
     public function testInvalidLinks()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The selected node should be instance of DOMElement');
+
         $crawler = $this->createTestCrawler('http://example.com/bar/');
         $crawler->filterXPath('//li/text()')->link();
     }
@@ -837,11 +840,12 @@ HTML;
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The selected node should be instance of DOMElement
      */
     public function testInvalidForm()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The selected node should be instance of DOMElement');
+
         $crawler = $this->createTestCrawler('http://example.com/bar/');
         $crawler->filterXPath('//li/text()')->form();
     }

@@ -168,10 +168,11 @@ class RouteCompilerTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testRouteWithSameVariableTwice()
     {
+        $this->expectException(\LogicException::class);
+
         $route = new Route('/{name}/{name}');
 
         $compiled = $route->compile();
@@ -179,10 +180,11 @@ class RouteCompilerTest extends TestCase
 
     /**
      * @dataProvider getVariableNamesStartingWithADigit
-     * @expectedException \DomainException
      */
     public function testRouteWithVariableNameStartingWithADigit($name)
     {
+        $this->expectException(\DomainException::class);
+
         $route = new Route('/{'.$name.'}');
         $route->compile();
     }
@@ -268,10 +270,11 @@ class RouteCompilerTest extends TestCase
     }
 
     /**
-     * @expectedException \DomainException
      */
     public function testRouteWithTooLongVariableName()
     {
+        $this->expectException(\DomainException::class);
+
         $route = new Route(sprintf('/{%s}', str_repeat('a', RouteCompiler::VARIABLE_MAXIMUM_LENGTH + 1)));
         $route->compile();
     }

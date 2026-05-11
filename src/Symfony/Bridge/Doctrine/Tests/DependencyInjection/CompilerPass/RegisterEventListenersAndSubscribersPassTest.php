@@ -20,10 +20,11 @@ use Symfony\Component\DependencyInjection\Reference;
 class RegisterEventListenersAndSubscribersPassTest extends TestCase
 {
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testExceptionOnAbstractTaggedSubscriber()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $container = $this->createBuilder();
 
         $abstractDefinition = new Definition('stdClass');
@@ -36,10 +37,11 @@ class RegisterEventListenersAndSubscribersPassTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testExceptionOnAbstractTaggedListener()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $container = $this->createBuilder();
 
         $abstractDefinition = new Definition('stdClass');

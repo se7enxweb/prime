@@ -250,10 +250,11 @@ class UniqueEntityValidatorTest extends AbstractConstraintValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\ConstraintDefinitionException
      */
     public function testAllConfiguredFieldsAreCheckedOfBeingMappedByDoctrineWithIgnoreNullEnabled()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\ConstraintDefinitionException::class);
+
         $constraint = new UniqueEntity(array(
             'message' => 'myMessage',
             'fields' => array('name', 'name2'),
@@ -480,11 +481,12 @@ class UniqueEntityValidatorTest extends AbstractConstraintValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\ConstraintDefinitionException
-     * @expectedExceptionMessage Object manager "foo" does not exist.
      */
     public function testDedicatedEntityManagerNullObject()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\ConstraintDefinitionException::class);
+        $this->expectExceptionMessage('Object manager \"foo\" does not exist.');
+
         $constraint = new UniqueEntity(array(
             'message' => 'myMessage',
             'fields' => array('name'),
@@ -502,11 +504,12 @@ class UniqueEntityValidatorTest extends AbstractConstraintValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\ConstraintDefinitionException
-     * @expectedExceptionMessage Unable to find the object manager associated with an entity of class "Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdEntity"
      */
     public function testEntityManagerNullObject()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\ConstraintDefinitionException::class);
+        $this->expectExceptionMessage('Unable to find the object manager associated with an entity of class \"Symfony\\Bridge\\Doctrine\\Tests\\Fixtures\\SingleIntIdEntity\"');
+
         $constraint = new UniqueEntity(array(
             'message' => 'myMessage',
             'fields' => array('name'),

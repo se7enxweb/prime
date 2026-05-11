@@ -88,10 +88,11 @@ class TwigLoaderPassTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\LogicException
      */
     public function testMapperPassWithZeroTaggedLoaders()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\LogicException::class);
+
         $this->pass->process($this->builder);
     }
 }

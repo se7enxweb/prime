@@ -20,11 +20,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class SecurityExtensionTest extends TestCase
 {
     /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage The check_path "/some_area/login_check" for login method "form_login" is not matched by the firewall pattern "/secured_area/.*".
      */
     public function testInvalidCheckPath()
     {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The check_path \"/some_area/login_check\" for login method \"form_login\" is not matched by the firewall pattern \"/secured_area/.*\".');
+
         $container = $this->getRawContainer();
 
         $container->loadFromExtension('security', array(
@@ -46,11 +47,12 @@ class SecurityExtensionTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage No authentication listener registered for firewall "some_firewall"
      */
     public function testFirewallWithoutAuthenticationListener()
     {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
+        $this->expectExceptionMessage('No authentication listener registered for firewall \"some_firewall\"');
+
         $container = $this->getRawContainer();
 
         $container->loadFromExtension('security', array(
@@ -69,11 +71,12 @@ class SecurityExtensionTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage Unable to create definition for "security.user.provider.concrete.my_foo" user provider
      */
     public function testFirewallWithInvalidUserProvider()
     {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Unable to create definition for \"security.user.provider.concrete.my_foo\" user provider');
+
         $container = $this->getRawContainer();
 
         $extension = $container->getExtension('security');

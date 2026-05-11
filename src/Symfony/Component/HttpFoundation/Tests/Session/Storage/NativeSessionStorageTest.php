@@ -74,19 +74,21 @@ class NativeSessionStorageTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testRegisterBagException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $storage = $this->getStorage();
         $storage->getBag('non_existing');
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testRegisterBagForAStartedSessionThrowsException()
     {
+        $this->expectException(\LogicException::class);
+
         $storage = $this->getStorage();
         $storage->start();
         $storage->registerBag(new AttributeBag());
@@ -201,10 +203,11 @@ class NativeSessionStorageTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testSetSaveHandlerException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $storage = $this->getStorage();
         $storage->setSaveHandler(new \stdClass());
     }
@@ -253,10 +256,11 @@ class NativeSessionStorageTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testStartedOutside()
     {
+        $this->expectException(\RuntimeException::class);
+
         $storage = $this->getStorage();
 
         $this->assertFalse($storage->getSaveHandler()->isActive());

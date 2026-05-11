@@ -418,10 +418,11 @@ abstract class Abstract2Dot5ApiTest extends AbstractValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\ConstraintDefinitionException
      */
     public function testExpectTraversableIfTraversalEnabledOnClass()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\ConstraintDefinitionException::class);
+
         $entity = new Entity();
 
         $this->metadata->addConstraint(new Traverse(true));
@@ -541,11 +542,12 @@ abstract class Abstract2Dot5ApiTest extends AbstractValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\UnsupportedMetadataException
      * @group legacy
      */
     public function testMetadataMustImplementClassMetadataInterface()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\UnsupportedMetadataException::class);
+
         $entity = new Entity();
 
         $metadata = $this->getMockBuilder('Symfony\Component\Validator\Tests\Fixtures\LegacyClassMetadata')->getMock();
@@ -559,11 +561,12 @@ abstract class Abstract2Dot5ApiTest extends AbstractValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\UnsupportedMetadataException
      * @group legacy
      */
     public function testReferenceMetadataMustImplementClassMetadataInterface()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\UnsupportedMetadataException::class);
+
         $entity = new Entity();
         $entity->reference = new Reference();
 
@@ -580,11 +583,12 @@ abstract class Abstract2Dot5ApiTest extends AbstractValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\UnsupportedMetadataException
      * @group legacy
      */
     public function testLegacyPropertyMetadataMustImplementPropertyMetadataInterface()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\UnsupportedMetadataException::class);
+
         $entity = new Entity();
 
         // Legacy interface
@@ -636,10 +640,11 @@ abstract class Abstract2Dot5ApiTest extends AbstractValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\RuntimeException
      */
     public function testValidateFailsIfNoConstraintsAndNoObjectOrArray()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\RuntimeException::class);
+
         $this->validate('Foobar');
     }
 

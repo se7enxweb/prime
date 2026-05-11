@@ -19,11 +19,12 @@ use Symfony\Component\Filesystem\LockHandler;
 class LockHandlerTest extends TestCase
 {
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
-     * @expectedExceptionMessage Failed to create "/a/b/c/d/e": mkdir(): Permission denied.
      */
     public function testConstructWhenRepositoryDoesNotExist()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+        $this->expectExceptionMessage('Failed to create \"/a/b/c/d/e\": mkdir(): Permission denied.');
+
         if (!getenv('USER') || 'root' === getenv('USER')) {
             $this->markTestSkipped('This test will fail if run under superuser');
         }
@@ -31,11 +32,12 @@ class LockHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
-     * @expectedExceptionMessage The directory "/" is not writable.
      */
     public function testConstructWhenRepositoryIsNotWriteable()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+        $this->expectExceptionMessage('The directory \"/\" is not writable.');
+
         if (!getenv('USER') || 'root' === getenv('USER')) {
             $this->markTestSkipped('This test will fail if run under superuser');
         }

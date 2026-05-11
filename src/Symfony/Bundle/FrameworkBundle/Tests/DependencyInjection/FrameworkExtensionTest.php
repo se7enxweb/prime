@@ -55,11 +55,12 @@ abstract class FrameworkExtensionTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage CSRF protection needs sessions to be enabled.
      */
     public function testCsrfProtectionNeedsSessionToBeEnabled()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('CSRF protection needs sessions to be enabled.');
+
         $this->createContainerFromFile('csrf_needs_session');
     }
 
@@ -152,10 +153,11 @@ abstract class FrameworkExtensionTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      */
     public function testRouterRequiresResourceOption()
     {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
+
         $container = $this->createContainer();
         $loader = new FrameworkExtension();
         $loader->load(array(array('router' => true)), $container);
@@ -289,10 +291,11 @@ abstract class FrameworkExtensionTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      */
     public function testTemplatingRequiresAtLeastOneEngine()
     {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
+
         $container = $this->createContainer();
         $loader = new FrameworkExtension();
         $loader->load(array(array('templating' => null)), $container);

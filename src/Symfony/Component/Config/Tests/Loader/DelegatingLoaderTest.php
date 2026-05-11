@@ -57,10 +57,11 @@ class DelegatingLoaderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Config\Exception\FileLoaderLoadException
      */
     public function testLoadThrowsAnExceptionIfTheResourceCannotBeLoaded()
     {
+        $this->expectException(\Symfony\Component\Config\Exception\FileLoaderLoadException::class);
+
         $loader = $this->getMockBuilder('Symfony\Component\Config\Loader\LoaderInterface')->getMock();
         $loader->expects($this->once())->method('supports')->will($this->returnValue(false));
         $resolver = new LoaderResolver(array($loader));

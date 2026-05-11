@@ -286,20 +286,22 @@ class FormFactoryTest extends TestCase
     }
 
     /**
-     * @expectedException        \Symfony\Component\Form\Exception\UnexpectedTypeException
-     * @expectedExceptionMessage Expected argument of type "string, Symfony\Component\Form\ResolvedFormTypeInterface or Symfony\Component\Form\FormTypeInterface", "stdClass" given
      */
     public function testCreateNamedBuilderThrowsUnderstandableException()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\UnexpectedTypeException::class);
+        $this->expectExceptionMessage('Expected argument of type \"string, Symfony\\Component\\Form\\ResolvedFormTypeInterface or Symfony\\Component\\Form\\FormTypeInterface\", \"stdClass\" given');
+
         $this->factory->createNamedBuilder('name', new \stdClass());
     }
 
     /**
-     * @expectedException        \Symfony\Component\Form\Exception\UnexpectedTypeException
-     * @expectedExceptionMessage Expected argument of type "string, Symfony\Component\Form\ResolvedFormTypeInterface or Symfony\Component\Form\FormTypeInterface", "stdClass" given
      */
     public function testCreateThrowsUnderstandableException()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\UnexpectedTypeException::class);
+        $this->expectExceptionMessage('Expected argument of type \"string, Symfony\\Component\\Form\\ResolvedFormTypeInterface or Symfony\\Component\\Form\\FormTypeInterface\", \"stdClass\" given');
+
         $this->factory->create(new \stdClass());
     }
 

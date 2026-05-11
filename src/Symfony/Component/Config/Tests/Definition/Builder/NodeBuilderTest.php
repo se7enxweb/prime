@@ -18,19 +18,21 @@ use Symfony\Component\Config\Definition\Builder\VariableNodeDefinition as BaseVa
 class NodeBuilderTest extends TestCase
 {
     /**
-     * @expectedException \RuntimeException
      */
     public function testThrowsAnExceptionWhenTryingToCreateANonRegisteredNodeType()
     {
+        $this->expectException(\RuntimeException::class);
+
         $builder = new BaseNodeBuilder();
         $builder->node('', 'foobar');
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testThrowsAnExceptionWhenTheNodeClassIsNotFound()
     {
+        $this->expectException(\RuntimeException::class);
+
         $builder = new BaseNodeBuilder();
         $builder
             ->setNodeClass('noclasstype', '\\foo\\bar\\noclass')

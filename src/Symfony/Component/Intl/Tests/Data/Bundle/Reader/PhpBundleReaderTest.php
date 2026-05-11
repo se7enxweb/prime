@@ -39,34 +39,38 @@ class PhpBundleReaderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\ResourceBundleNotFoundException
      */
     public function testReadFailsIfNonExistingLocale()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\ResourceBundleNotFoundException::class);
+
         $this->reader->read(__DIR__.'/Fixtures/php', 'foo');
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\RuntimeException
      */
     public function testReadFailsIfNonExistingDirectory()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\RuntimeException::class);
+
         $this->reader->read(__DIR__.'/foo', 'en');
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\RuntimeException
      */
     public function testReadFailsIfNotAFile()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\RuntimeException::class);
+
         $this->reader->read(__DIR__.'/Fixtures/NotAFile', 'en');
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\ResourceBundleNotFoundException
      */
     public function testReaderDoesNotBreakOutOfGivenPath()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\ResourceBundleNotFoundException::class);
+
         $this->reader->read(__DIR__.'/Fixtures/php', '../invalid_directory/en');
     }
 }

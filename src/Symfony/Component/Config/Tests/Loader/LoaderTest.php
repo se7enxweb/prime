@@ -44,10 +44,11 @@ class LoaderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Config\Exception\FileLoaderLoadException
      */
     public function testResolveWhenResolverCannotFindLoader()
     {
+        $this->expectException(\Symfony\Component\Config\Exception\FileLoaderLoadException::class);
+
         $resolver = $this->getMockBuilder('Symfony\Component\Config\Loader\LoaderResolverInterface')->getMock();
         $resolver->expects($this->once())
             ->method('resolve')

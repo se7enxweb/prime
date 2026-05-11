@@ -125,11 +125,12 @@ class SymfonyQuestionHelperTest extends TestCase
     }
 
     /**
-     * @expectedException        \Symfony\Component\Console\Exception\RuntimeException
-     * @expectedExceptionMessage Aborted
      */
     public function testAskThrowsExceptionOnMissingInput()
     {
+        $this->expectException(\Symfony\Component\Console\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('Aborted');
+
         $dialog = new SymfonyQuestionHelper();
 
         $dialog->setInputStream($this->getInputStream(''));

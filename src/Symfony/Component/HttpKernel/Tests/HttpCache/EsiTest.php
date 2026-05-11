@@ -154,10 +154,11 @@ class EsiTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testProcessWhenNoSrcInAnEsi()
     {
+        $this->expectException(\RuntimeException::class);
+
         $esi = new Esi();
 
         $request = Request::create('/');
@@ -194,10 +195,11 @@ class EsiTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testHandleWhenResponseIsNot200()
     {
+        $this->expectException(\RuntimeException::class);
+
         $esi = new Esi();
         $response = new Response('foo');
         $response->setStatusCode(404);

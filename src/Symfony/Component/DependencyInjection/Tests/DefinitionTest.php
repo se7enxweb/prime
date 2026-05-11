@@ -101,11 +101,12 @@ class DefinitionTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Method name cannot be empty.
      */
     public function testExceptionOnEmptyMethodCall()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Method name cannot be empty.');
+
         $def = new Definition('stdClass');
         $def->addMethodCall('');
     }
@@ -202,10 +203,11 @@ class DefinitionTest extends TestCase
 
     /**
      * @dataProvider invalidDeprecationMessageProvider
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      */
     public function testSetDeprecatedWithInvalidDeprecationTemplate($message)
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException::class);
+
         $def = new Definition('stdClass');
         $def->setDeprecated(false, $message);
     }
@@ -288,10 +290,11 @@ class DefinitionTest extends TestCase
     }
 
     /**
-     * @expectedException \OutOfBoundsException
      */
     public function testGetArgumentShouldCheckBounds()
     {
+        $this->expectException(\OutOfBoundsException::class);
+
         $def = new Definition('stdClass');
 
         $def->addArgument('foo');
@@ -299,11 +302,12 @@ class DefinitionTest extends TestCase
     }
 
     /**
-     * @expectedException \OutOfBoundsException
-     * @expectedExceptionMessage The index "1" is not in the range [0, 0].
      */
     public function testReplaceArgumentShouldCheckBounds()
     {
+        $this->expectException(\OutOfBoundsException::class);
+        $this->expectExceptionMessage('The index \"1\" is not in the range [0, 0].');
+
         $def = new Definition('stdClass');
 
         $def->addArgument('foo');
@@ -311,11 +315,12 @@ class DefinitionTest extends TestCase
     }
 
     /**
-     * @expectedException \OutOfBoundsException
-     * @expectedExceptionMessage Cannot replace arguments if none have been configured yet.
      */
     public function testReplaceArgumentWithoutExistingArgumentsShouldCheckBounds()
     {
+        $this->expectException(\OutOfBoundsException::class);
+        $this->expectExceptionMessage('Cannot replace arguments if none have been configured yet.');
+
         $def = new Definition('stdClass');
         $def->replaceArgument(0, 'bar');
     }

@@ -94,10 +94,11 @@ class LegacySecurityContextTest extends TestCase
 
     /**
      * @dataProvider oldConstructorSignatureFailuresProvider
-     * @expectedException \BadMethodCallException
      */
     public function testOldConstructorSignatureFailures($first, $second)
     {
+        $this->expectException(\BadMethodCallException::class);
+
         new SecurityContext($first, $second);
     }
 

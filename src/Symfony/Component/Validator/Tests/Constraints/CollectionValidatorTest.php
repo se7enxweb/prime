@@ -58,10 +58,11 @@ abstract class CollectionValidatorTest extends AbstractConstraintValidatorTest
     }
 
     /**
-     * @expectedException \Symfony\Component\Validator\Exception\UnexpectedTypeException
      */
     public function testThrowsExceptionIfNotTraversable()
     {
+        $this->expectException(\Symfony\Component\Validator\Exception\UnexpectedTypeException::class);
+
         $this->validator->validate('foobar', new Collection(array('fields' => array(
             'foo' => new Range(array('min' => 4)),
         ))));

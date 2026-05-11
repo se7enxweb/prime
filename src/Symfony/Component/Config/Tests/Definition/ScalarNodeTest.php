@@ -42,10 +42,11 @@ class ScalarNodeTest extends TestCase
 
     /**
      * @dataProvider getInvalidValues
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidTypeException
      */
     public function testNormalizeThrowsExceptionOnInvalidValues($value)
     {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidTypeException::class);
+
         $node = new ScalarNode('test');
         $node->normalize($value);
     }
@@ -116,12 +117,13 @@ class ScalarNodeTest extends TestCase
 
     /**
      * @dataProvider getEmptyValues
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      *
      * @param mixed $value
      */
     public function testNotAllowedEmptyValuesThrowException($value)
     {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
+
         $node = new ScalarNode('test');
         $node->setAllowEmptyValue(false);
         $node->finalize($value);

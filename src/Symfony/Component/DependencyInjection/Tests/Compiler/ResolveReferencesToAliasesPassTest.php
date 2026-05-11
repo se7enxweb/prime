@@ -52,10 +52,11 @@ class ResolveReferencesToAliasesPassTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
      */
     public function testAliasCircularReference()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException::class);
+
         $container = new ContainerBuilder();
         $container->setAlias('bar', 'foo');
         $container->setAlias('foo', 'bar');

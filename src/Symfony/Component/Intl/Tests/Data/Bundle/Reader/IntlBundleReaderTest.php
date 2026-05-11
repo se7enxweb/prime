@@ -90,26 +90,29 @@ class IntlBundleReaderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\ResourceBundleNotFoundException
      */
     public function testReadFailsIfNonExistingLocale()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\ResourceBundleNotFoundException::class);
+
         $this->reader->read(__DIR__.'/Fixtures/res', 'foo');
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\ResourceBundleNotFoundException
      */
     public function testReadFailsIfNonExistingFallbackLocale()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\ResourceBundleNotFoundException::class);
+
         $this->reader->read(__DIR__.'/Fixtures/res', 'ro_AT');
     }
 
     /**
-     * @expectedException \Symfony\Component\Intl\Exception\RuntimeException
      */
     public function testReadFailsIfNonExistingDirectory()
     {
+        $this->expectException(\Symfony\Component\Intl\Exception\RuntimeException::class);
+
         $this->reader->read(__DIR__.'/foo', 'ro');
     }
 }

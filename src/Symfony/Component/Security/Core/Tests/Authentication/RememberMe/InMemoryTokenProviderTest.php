@@ -28,10 +28,11 @@ class InMemoryTokenProviderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\TokenNotFoundException
      */
     public function testLoadTokenBySeriesThrowsNotFoundException()
     {
+        $this->expectException(\Symfony\Component\Security\Core\Exception\TokenNotFoundException::class);
+
         $provider = new InMemoryTokenProvider();
         $provider->loadTokenBySeries('foo');
     }
@@ -50,10 +51,11 @@ class InMemoryTokenProviderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\TokenNotFoundException
      */
     public function testDeleteToken()
     {
+        $this->expectException(\Symfony\Component\Security\Core\Exception\TokenNotFoundException::class);
+
         $provider = new InMemoryTokenProvider();
 
         $token = new PersistentToken('foo', 'foo', 'foo', 'foo', new \DateTime());

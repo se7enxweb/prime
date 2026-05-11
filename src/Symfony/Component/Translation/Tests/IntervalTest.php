@@ -25,10 +25,11 @@ class IntervalTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testTestException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         Interval::test(1, 'foobar');
     }
 

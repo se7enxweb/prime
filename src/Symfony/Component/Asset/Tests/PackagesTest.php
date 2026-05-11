@@ -56,19 +56,21 @@ class PackagesTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Asset\Exception\LogicException
      */
     public function testNoDefaultPackage()
     {
+        $this->expectException(\Symfony\Component\Asset\Exception\LogicException::class);
+
         $packages = new Packages();
         $packages->getPackage();
     }
 
     /**
-     * @expectedException \Symfony\Component\Asset\Exception\InvalidArgumentException
      */
     public function testUndefinedPackage()
     {
+        $this->expectException(\Symfony\Component\Asset\Exception\InvalidArgumentException::class);
+
         $packages = new Packages();
         $packages->getPackage('a');
     }

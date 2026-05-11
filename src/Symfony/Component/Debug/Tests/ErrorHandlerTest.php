@@ -627,11 +627,12 @@ class ErrorHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException \Exception
      * @group no-hhvm
      */
     public function testCustomExceptionHandler()
     {
+        $this->expectException(\Exception::class);
+
         $handler = new ErrorHandler();
         $handler->setExceptionHandler(function ($e) use ($handler) {
             $handler->handleException($e);

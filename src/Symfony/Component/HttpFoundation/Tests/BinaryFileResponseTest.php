@@ -46,10 +46,11 @@ class BinaryFileResponseTest extends ResponseTestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testSetContent()
     {
+        $this->expectException(\LogicException::class);
+
         $response = new BinaryFileResponse(__FILE__);
         $response->setContent('foo');
     }

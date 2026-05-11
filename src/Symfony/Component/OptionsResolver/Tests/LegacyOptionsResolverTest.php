@@ -208,11 +208,12 @@ class LegacyOptionsResolverTest extends TestCase
     }
 
     /**
-     * @expectedException        \Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException
-     * @expectedExceptionMessage The option "foo" does not exist. Defined options are: "one", "three", "two".
      */
     public function testResolveFailsIfNonExistingOption()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException::class);
+        $this->expectExceptionMessage('The option \"foo\" does not exist. Defined options are: \"one\", \"three\", \"two\".');
+
         $this->resolver->setDefaults(array(
             'one' => '1',
         ));
@@ -231,10 +232,11 @@ class LegacyOptionsResolverTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\MissingOptionsException
      */
     public function testResolveFailsIfMissingRequiredOption()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\MissingOptionsException::class);
+
         $this->resolver->setRequired(array(
             'one',
         ));
@@ -319,10 +321,11 @@ class LegacyOptionsResolverTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testResolveFailsIfOptionValueNotAllowed()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+
         $this->resolver->setDefaults(array(
             'one' => '1',
         ));
@@ -463,10 +466,11 @@ class LegacyOptionsResolverTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testResolveFailsIfOptionTypeNotAllowed()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+
         $this->resolver->setDefaults(array(
             'one' => '1',
         ));
@@ -481,10 +485,11 @@ class LegacyOptionsResolverTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testResolveFailsIfOptionTypeNotAllowedMultipleOptions()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+
         $this->resolver->setDefaults(array(
             'one' => '1',
             'two' => '2',
@@ -502,10 +507,11 @@ class LegacyOptionsResolverTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testResolveFailsIfOptionTypeNotAllowedAddTypes()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+
         $this->resolver->setDefaults(array(
             'one' => '1',
         ));
@@ -679,10 +685,11 @@ class LegacyOptionsResolverTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function testResolveFailsIfValueAllowedCallbackReturnsFalse()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
+
         $this->resolver->setRequired(array(
             'test',
         ));

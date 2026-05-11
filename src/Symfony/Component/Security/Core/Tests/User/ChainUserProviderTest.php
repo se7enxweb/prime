@@ -41,10 +41,11 @@ class ChainUserProviderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
      */
     public function testLoadUserByUsernameThrowsUsernameNotFoundException()
     {
+        $this->expectException(\Symfony\Component\Security\Core\Exception\UsernameNotFoundException::class);
+
         $provider1 = $this->getProvider();
         $provider1
             ->expects($this->once())
@@ -106,10 +107,11 @@ class ChainUserProviderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\UnsupportedUserException
      */
     public function testRefreshUserThrowsUnsupportedUserException()
     {
+        $this->expectException(\Symfony\Component\Security\Core\Exception\UnsupportedUserException::class);
+
         $provider1 = $this->getProvider();
         $provider1
             ->expects($this->once())

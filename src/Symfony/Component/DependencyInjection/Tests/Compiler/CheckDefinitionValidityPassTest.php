@@ -19,10 +19,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CheckDefinitionValidityPassTest extends TestCase
 {
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\RuntimeException
      */
     public function testProcessDetectsSyntheticNonPublicDefinitions()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
+
         $container = new ContainerBuilder();
         $container->register('a')->setSynthetic(true)->setPublic(false);
 
@@ -30,11 +31,12 @@ class CheckDefinitionValidityPassTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\RuntimeException
      * @group legacy
      */
     public function testProcessDetectsSyntheticPrototypeDefinitions()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
+
         $container = new ContainerBuilder();
         $container->register('a')->setSynthetic(true)->setScope(ContainerInterface::SCOPE_PROTOTYPE);
 
@@ -42,11 +44,12 @@ class CheckDefinitionValidityPassTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\RuntimeException
      * @group legacy
      */
     public function testProcessDetectsSharedPrototypeDefinitions()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
+
         $container = new ContainerBuilder();
         $container->register('a')->setShared(true)->setScope(ContainerInterface::SCOPE_PROTOTYPE);
 
@@ -54,10 +57,11 @@ class CheckDefinitionValidityPassTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\RuntimeException
      */
     public function testProcessDetectsNonSyntheticNonAbstractDefinitionWithoutClass()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
+
         $container = new ContainerBuilder();
         $container->register('a')->setSynthetic(false)->setAbstract(false);
 
@@ -65,11 +69,12 @@ class CheckDefinitionValidityPassTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\RuntimeException
      * @group legacy
      */
     public function testLegacyProcessDetectsBothFactorySyntaxesUsed()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
+
         $container = new ContainerBuilder();
         $container->register('a')->setFactory(array('a', 'b'))->setFactoryClass('a');
 
@@ -103,10 +108,11 @@ class CheckDefinitionValidityPassTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\RuntimeException
      */
     public function testInvalidTags()
     {
+        $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
+
         $container = new ContainerBuilder();
         $container->register('a', 'class')->addTag('foo', array('bar' => array('baz' => 'baz')));
 

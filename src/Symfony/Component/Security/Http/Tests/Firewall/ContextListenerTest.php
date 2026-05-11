@@ -34,11 +34,12 @@ use Symfony\Component\Security\Http\Firewall\ContextListener;
 class ContextListenerTest extends TestCase
 {
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage $contextKey must not be empty
      */
     public function testItRequiresContextKey()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('$contextKey must not be empty');
+
         new ContextListener(
             $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')->getMock(),
             array(),
@@ -47,11 +48,12 @@ class ContextListenerTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage User provider "stdClass" must implement "Symfony\Component\Security\Core\User\UserProviderInterface
      */
     public function testUserProvidersNeedToImplementAnInterface()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('User provider \"stdClass\" must implement \"Symfony\\Component\\Security\\Core\\User\\UserProviderInterface');
+
         new ContextListener(
             $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')->getMock(),
             array(new \stdClass()),
@@ -274,10 +276,11 @@ class ContextListenerTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testRuntimeExceptionIsThrownIfNoSupportingUserProviderWasRegistered()
     {
+        $this->expectException(\RuntimeException::class);
+
         $this->handleEventWithPreviousSession(new TokenStorage(), array(new NotSupportingUserProvider(), new NotSupportingUserProvider()));
     }
 

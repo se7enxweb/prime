@@ -379,10 +379,11 @@ class GetSetMethodNormalizerTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testUncallableCallbacks()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->normalizer->setCallbacks(array('bar' => null));
 
         $obj = new GetConstructorDummy('baz', 'quux', true);
@@ -466,11 +467,12 @@ class GetSetMethodNormalizerTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\LogicException
-     * @expectedExceptionMessage Cannot normalize attribute "object" because injected serializer is not a normalizer
      */
     public function testUnableToNormalizeObjectAttribute()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\LogicException::class);
+        $this->expectExceptionMessage('Cannot normalize attribute \"object\" because injected serializer is not a normalizer');
+
         $serializer = $this->getMockBuilder('Symfony\Component\Serializer\SerializerInterface')->getMock();
         $this->normalizer->setSerializer($serializer);
 
@@ -482,10 +484,11 @@ class GetSetMethodNormalizerTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\CircularReferenceException
      */
     public function testUnableToNormalizeCircularReference()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\CircularReferenceException::class);
+
         $serializer = new Serializer(array($this->normalizer));
         $this->normalizer->setSerializer($serializer);
         $this->normalizer->setCircularReferenceLimit(2);

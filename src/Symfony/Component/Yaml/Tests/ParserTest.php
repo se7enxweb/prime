@@ -533,10 +533,11 @@ YAML;
 
     /**
      * @dataProvider invalidDumpedObjectProvider
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
      */
     public function testObjectsSupportDisabledWithExceptions($yaml)
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+
         $this->parser->parse($yaml, true, false);
     }
 
@@ -580,10 +581,11 @@ EOF;
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
      */
     public function testUnindentedCollectionException()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+
         $yaml = <<<'EOF'
 
 collection:
@@ -597,10 +599,11 @@ EOF;
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
      */
     public function testShortcutKeyUnindentedCollectionException()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+
         $yaml = <<<'EOF'
 
 collection:
@@ -613,11 +616,12 @@ EOF;
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
-     * @expectedExceptionMessageRegExp /^Multiple documents are not supported.+/
      */
     public function testMultipleDocumentsNotSupportedException()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+        $this->expectExceptionMessageMatches('/^Multiple documents are not supported.+/');
+
         Yaml::parse(<<<'EOL'
 # Ranking of 1998 home runs
 ---
@@ -634,10 +638,11 @@ EOL
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
      */
     public function testSequenceInAMapping()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+
         Yaml::parse(<<<'EOF'
 yaml:
   hash: me
@@ -694,10 +699,11 @@ EOT;
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
      */
     public function testMappingInASequence()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+
         Yaml::parse(<<<'EOF'
 yaml:
   - array stuff
@@ -707,11 +713,12 @@ EOF
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
-     * @expectedExceptionMessage missing colon
      */
     public function testScalarInSequence()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+        $this->expectExceptionMessage('missing colon');
+
         Yaml::parse(<<<'EOF'
 foo:
     - bar
@@ -1233,11 +1240,12 @@ YAML
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
-     * @expectedExceptionMessage Reference "foo" does not exist at line 2
      */
     public function testParserCleansUpReferencesBetweenRuns()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+        $this->expectExceptionMessage('Reference \"foo\" does not exist at line 2');
+
         $yaml = <<<YAML
 foo: &foo
     baz: foobar
@@ -1282,11 +1290,12 @@ YAML;
     }
 
     /**
-     * @expectedException \Symfony\Component\Yaml\Exception\ParseException
-     * @expectedExceptionMessage Reference "foo" does not exist
      */
     public function testEvalRefException()
     {
+        $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
+        $this->expectExceptionMessage('Reference \"foo\" does not exist');
+
         $yaml = <<<EOE
 foo: { &foo { a: Steve, <<: *foo} }
 EOE;

@@ -76,10 +76,11 @@ class RouteCollectionBuilderTest extends TestCase
     }
 
     /**
-     * @expectedException \BadMethodCallException
      */
     public function testImportWithoutLoaderThrowsException()
     {
+        $this->expectException(\BadMethodCallException::class);
+
         $collectionBuilder = new RouteCollectionBuilder();
         $collectionBuilder->import('routing.yml');
     }

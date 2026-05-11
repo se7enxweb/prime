@@ -44,11 +44,12 @@ class TypeTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage "foo" is not a valid PHP type.
      */
     public function testInvalidType()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('\"foo\" is not a valid PHP type.');
+
         new Type('foo');
     }
 }

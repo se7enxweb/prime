@@ -100,10 +100,11 @@ class InlineFragmentRendererTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testRenderExceptionNoIgnoreErrors()
     {
+        $this->expectException(\RuntimeException::class);
+
         $dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')->getMock();
         $dispatcher->expects($this->never())->method('dispatch');
 

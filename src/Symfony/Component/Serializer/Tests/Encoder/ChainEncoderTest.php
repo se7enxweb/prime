@@ -71,10 +71,11 @@ class ChainEncoderTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\RuntimeException
      */
     public function testEncodeUnsupportedFormat()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\RuntimeException::class);
+
         $this->chainEncoder->encode(array('foo' => 123), self::FORMAT_3);
     }
 

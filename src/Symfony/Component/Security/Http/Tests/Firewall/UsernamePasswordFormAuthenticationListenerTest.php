@@ -78,11 +78,12 @@ class UsernamePasswordFormAuthenticationListenerTest extends TestCase
 
     /**
      * @dataProvider postOnlyDataProvider
-     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     * @expectedExceptionMessage The key "_username" must be a string, "array" given.
      */
     public function testHandleNonStringUsername($postOnly)
     {
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\BadRequestHttpException::class);
+        $this->expectExceptionMessage('The key \"_username\" must be a string, \"array\" given.');
+
         $request = Request::create('/login_check', 'POST', array('_username' => array()));
         $request->setSession($this->getMockBuilder('Symfony\Component\HttpFoundation\Session\SessionInterface')->getMock());
         $listener = new UsernamePasswordFormAuthenticationListener(

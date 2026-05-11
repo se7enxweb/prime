@@ -59,11 +59,12 @@ class DirectoryLoaderTest extends TestCase
     }
 
     /**
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage The file "foo" does not exist (in:
      */
     public function testExceptionIsRaisedWhenDirectoryDoesNotExist()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The file \"foo\" does not exist (in:');
+
         $this->loader->load('foo/');
     }
 

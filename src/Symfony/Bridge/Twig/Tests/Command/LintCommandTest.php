@@ -46,10 +46,11 @@ class LintCommandTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testLintFileNotReadable()
     {
+        $this->expectException(\RuntimeException::class);
+
         $tester = $this->createCommandTester();
         $filename = $this->createFile('');
         unlink($filename);

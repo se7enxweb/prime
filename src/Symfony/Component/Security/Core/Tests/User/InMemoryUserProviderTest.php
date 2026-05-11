@@ -64,20 +64,22 @@ class InMemoryUserProviderTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testCreateUserAlreadyExist()
     {
+        $this->expectException(\LogicException::class);
+
         $provider = new InMemoryUserProvider();
         $provider->createUser(new User('fabien', 'foo'));
         $provider->createUser(new User('fabien', 'foo'));
     }
 
     /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
      */
     public function testLoadUserByUsernameDoesNotExist()
     {
+        $this->expectException(\Symfony\Component\Security\Core\Exception\UsernameNotFoundException::class);
+
         $provider = new InMemoryUserProvider();
         $provider->loadUserByUsername('fabien');
     }

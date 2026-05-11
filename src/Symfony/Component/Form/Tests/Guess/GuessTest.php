@@ -30,10 +30,11 @@ class GuessTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testGuessExpectsValidConfidence()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         new TestGuess(5);
     }
 }

@@ -20,26 +20,29 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class GroupsTest extends TestCase
 {
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\InvalidArgumentException
      */
     public function testEmptyGroupsParameter()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\InvalidArgumentException::class);
+
         new Groups(array('value' => array()));
     }
 
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\InvalidArgumentException
      */
     public function testNotAnArrayGroupsParameter()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\InvalidArgumentException::class);
+
         new Groups(array('value' => 'coopTilleuls'));
     }
 
     /**
-     * @expectedException \Symfony\Component\Serializer\Exception\InvalidArgumentException
      */
     public function testInvalidGroupsParameter()
     {
+        $this->expectException(\Symfony\Component\Serializer\Exception\InvalidArgumentException::class);
+
         new Groups(array('value' => array('a', 1, new \stdClass())));
     }
 

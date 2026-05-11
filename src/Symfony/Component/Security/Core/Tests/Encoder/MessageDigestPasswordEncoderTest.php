@@ -36,19 +36,21 @@ class MessageDigestPasswordEncoderTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testEncodePasswordAlgorithmDoesNotExist()
     {
+        $this->expectException(\LogicException::class);
+
         $encoder = new MessageDigestPasswordEncoder('foobar');
         $encoder->encodePassword('password', '');
     }
 
     /**
-     * @expectedException \Symfony\Component\Security\Core\Exception\BadCredentialsException
      */
     public function testEncodePasswordLength()
     {
+        $this->expectException(\Symfony\Component\Security\Core\Exception\BadCredentialsException::class);
+
         $encoder = new MessageDigestPasswordEncoder();
 
         $encoder->encodePassword(str_repeat('a', 5000), 'salt');

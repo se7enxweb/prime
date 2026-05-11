@@ -49,10 +49,11 @@ class IntegerNodeTest extends TestCase
 
     /**
      * @dataProvider getInvalidValues
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidTypeException
      */
     public function testNormalizeThrowsExceptionOnInvalidValues($value)
     {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidTypeException::class);
+
         $node = new IntegerNode('test');
         $node->normalize($value);
     }

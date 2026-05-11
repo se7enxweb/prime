@@ -85,11 +85,12 @@ class ExpressionLanguageTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\ExpressionLanguage\SyntaxError
-     * @expectedExceptionMessage Unexpected end of expression around position 6 for expression `node.`.
      */
     public function testParseThrowsInsteadOfNotice()
     {
+        $this->expectException(\Symfony\Component\ExpressionLanguage\SyntaxError::class);
+        $this->expectExceptionMessage('Unexpected end of expression around position 6 for expression `node.`.');
+
         $expressionLanguage = new ExpressionLanguage();
         $expressionLanguage->parse('node.', array('node'));
     }
@@ -161,10 +162,11 @@ class ExpressionLanguageTest extends TestCase
 
     /**
      * @dataProvider getRegisterCallbacks
-     * @expectedException \LogicException
      */
     public function testRegisterAfterParse($registerCallback)
     {
+        $this->expectException(\LogicException::class);
+
         $el = new ExpressionLanguage();
         $el->parse('1 + 1', array());
         $registerCallback($el);
@@ -172,31 +174,34 @@ class ExpressionLanguageTest extends TestCase
 
     /**
      * @dataProvider getRegisterCallbacks
-     * @expectedException \LogicException
      */
     public function testRegisterAfterEval($registerCallback)
     {
+        $this->expectException(\LogicException::class);
+
         $el = new ExpressionLanguage();
         $el->evaluate('1 + 1');
         $registerCallback($el);
     }
 
     /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessageRegExp  /Unable to call method "\w+" of object "\w+"./
      */
     public function testCallBadCallable()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessageMatches('/Unable to call method \"\\w+\" of object \"\\w+\"./');
+
         $el = new ExpressionLanguage();
         $el->evaluate('foo.myfunction()', array('foo' => new \stdClass()));
     }
 
     /**
      * @dataProvider getRegisterCallbacks
-     * @expectedException \LogicException
      */
     public function testRegisterAfterCompile($registerCallback)
     {
+        $this->expectException(\LogicException::class);
+
         $el = new ExpressionLanguage();
         $el->compile('1 + 1');
         $registerCallback($el);

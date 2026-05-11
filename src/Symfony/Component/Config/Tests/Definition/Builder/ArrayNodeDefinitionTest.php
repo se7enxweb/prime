@@ -36,11 +36,12 @@ class ArrayNodeDefinitionTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidDefinitionException
      * @dataProvider providePrototypeNodeSpecificCalls
      */
     public function testPrototypeNodeSpecificOption($method, $args)
     {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidDefinitionException::class);
+
         $node = new ArrayNodeDefinition('root');
 
         \call_user_func_array(array($node, $method), $args);
@@ -59,10 +60,11 @@ class ArrayNodeDefinitionTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidDefinitionException
      */
     public function testConcreteNodeSpecificOption()
     {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidDefinitionException::class);
+
         $node = new ArrayNodeDefinition('root');
         $node
             ->addDefaultsIfNotSet()
@@ -72,10 +74,11 @@ class ArrayNodeDefinitionTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidDefinitionException
      */
     public function testPrototypeNodesCantHaveADefaultValueWhenUsingDefaultChildren()
     {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidDefinitionException::class);
+
         $node = new ArrayNodeDefinition('root');
         $node
             ->defaultValue(array())

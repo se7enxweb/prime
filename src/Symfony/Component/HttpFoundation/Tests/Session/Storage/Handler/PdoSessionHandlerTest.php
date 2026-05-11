@@ -49,10 +49,11 @@ class PdoSessionHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testWrongPdoErrMode()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $pdo = $this->getMemorySqlitePdo();
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
 
@@ -60,10 +61,11 @@ class PdoSessionHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testInexistentTable()
     {
+        $this->expectException(\RuntimeException::class);
+
         $storage = new PdoSessionHandler($this->getMemorySqlitePdo(), array('db_table' => 'inexistent_table'));
         $storage->open('', 'sid');
         $storage->read('id');
@@ -72,10 +74,11 @@ class PdoSessionHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      */
     public function testCreateTableTwice()
     {
+        $this->expectException(\RuntimeException::class);
+
         $storage = new PdoSessionHandler($this->getMemorySqlitePdo());
         $storage->createTable();
     }

@@ -82,28 +82,31 @@ class StreamedResponseTest extends TestCase
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testSendContentWithNonCallable()
     {
+        $this->expectException(\LogicException::class);
+
         $response = new StreamedResponse(null);
         $response->sendContent();
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testSetCallbackNonCallable()
     {
+        $this->expectException(\LogicException::class);
+
         $response = new StreamedResponse(null);
         $response->setCallback(null);
     }
 
     /**
-     * @expectedException \LogicException
      */
     public function testSetContent()
     {
+        $this->expectException(\LogicException::class);
+
         $response = new StreamedResponse(function () { echo 'foo'; });
         $response->setContent('foo');
     }

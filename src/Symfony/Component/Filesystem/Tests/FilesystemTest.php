@@ -30,10 +30,11 @@ class FilesystemTest extends FilesystemTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
      */
     public function testCopyFails()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+
         $sourceFilePath = $this->workspace.\DIRECTORY_SEPARATOR.'copy_source_file';
         $targetFilePath = $this->workspace.\DIRECTORY_SEPARATOR.'copy_target_file';
 
@@ -41,10 +42,11 @@ class FilesystemTest extends FilesystemTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
      */
     public function testCopyUnreadableFileFails()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+
         // skip test on Windows; PHP can't easily set file as unreadable on Windows
         if ('\\' === \DIRECTORY_SEPARATOR) {
             $this->markTestSkipped('This test cannot run on Windows.');
@@ -119,10 +121,11 @@ class FilesystemTest extends FilesystemTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
      */
     public function testCopyWithOverrideWithReadOnlyTargetFails()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+
         // skip test on Windows; PHP can't easily set file as unwritable on Windows
         if ('\\' === \DIRECTORY_SEPARATOR) {
             $this->markTestSkipped('This test cannot run on Windows.');
@@ -223,10 +226,11 @@ class FilesystemTest extends FilesystemTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
      */
     public function testMkdirCreatesDirectoriesFails()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+
         $basePath = $this->workspace.\DIRECTORY_SEPARATOR;
         $dir = $basePath.'2';
 
@@ -245,10 +249,11 @@ class FilesystemTest extends FilesystemTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
      */
     public function testTouchFails()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+
         $file = $this->workspace.\DIRECTORY_SEPARATOR.'1'.\DIRECTORY_SEPARATOR.'2';
 
         $this->filesystem->touch($file);
@@ -381,10 +386,11 @@ class FilesystemTest extends FilesystemTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
      */
     public function testFilesExistsFails()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+
         if ('\\' !== \DIRECTORY_SEPARATOR) {
             $this->markTestSkipped('Long file names are an issue on Windows');
         }
@@ -597,10 +603,11 @@ class FilesystemTest extends FilesystemTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
      */
     public function testChownSymlinkFails()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+
         $this->markAsSkippedIfSymlinkIsMissing();
 
         $file = $this->workspace.\DIRECTORY_SEPARATOR.'file';
@@ -614,10 +621,11 @@ class FilesystemTest extends FilesystemTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
      */
     public function testChownFail()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+
         $this->markAsSkippedIfPosixIsMissing();
 
         $dir = $this->workspace.\DIRECTORY_SEPARATOR.'dir';
@@ -672,10 +680,11 @@ class FilesystemTest extends FilesystemTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
      */
     public function testChgrpSymlinkFails()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+
         $this->markAsSkippedIfSymlinkIsMissing();
 
         $file = $this->workspace.\DIRECTORY_SEPARATOR.'file';
@@ -689,10 +698,11 @@ class FilesystemTest extends FilesystemTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
      */
     public function testChgrpFail()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+
         $this->markAsSkippedIfPosixIsMissing();
 
         $dir = $this->workspace.\DIRECTORY_SEPARATOR.'dir';
@@ -714,10 +724,11 @@ class FilesystemTest extends FilesystemTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
      */
     public function testRenameThrowsExceptionIfTargetAlreadyExists()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+
         $file = $this->workspace.\DIRECTORY_SEPARATOR.'file';
         $newPath = $this->workspace.\DIRECTORY_SEPARATOR.'new_file';
 
@@ -742,10 +753,11 @@ class FilesystemTest extends FilesystemTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
      */
     public function testRenameThrowsExceptionOnError()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+
         $file = $this->workspace.\DIRECTORY_SEPARATOR.uniqid('fs_test_', true);
         $newPath = $this->workspace.\DIRECTORY_SEPARATOR.'new_file';
 
@@ -1133,10 +1145,11 @@ class FilesystemTest extends FilesystemTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
      */
     public function testTempnamWithZlibSchemeFails()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+
         $scheme = 'compress.zlib://';
         $dirname = $scheme.$this->workspace;
 
@@ -1158,10 +1171,11 @@ class FilesystemTest extends FilesystemTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
      */
     public function testTempnamWithPharSchemeFails()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+
         // Skip test if Phar disabled phar.readonly must be 0 in php.ini
         if (!\Phar::canWrite()) {
             $this->markTestSkipped('This test cannot run when phar.readonly is 1.');
@@ -1177,10 +1191,11 @@ class FilesystemTest extends FilesystemTestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\Filesystem\Exception\IOException
      */
     public function testTempnamWithHTTPSchemeFails()
     {
+        $this->expectException(\Symfony\Component\Filesystem\Exception\IOException::class);
+
         $scheme = 'http://';
         $dirname = $scheme.$this->workspace;
 

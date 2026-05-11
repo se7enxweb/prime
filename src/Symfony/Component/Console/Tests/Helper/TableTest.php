@@ -727,21 +727,23 @@ TABLE;
     }
 
     /**
-     * @expectedException \Symfony\Component\Console\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Style "absent" is not defined.
      */
     public function testIsNotDefinedStyleException()
     {
+        $this->expectException(\Symfony\Component\Console\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Style \"absent\" is not defined.');
+
         $table = new Table($this->getOutputStream());
         $table->setStyle('absent');
     }
 
     /**
-     * @expectedException \Symfony\Component\Console\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Style "absent" is not defined.
      */
     public function testGetStyleDefinition()
     {
+        $this->expectException(\Symfony\Component\Console\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Style \"absent\" is not defined.');
+
         Table::getStyleDefinition('absent');
     }
 

@@ -79,10 +79,11 @@ class GenericEventTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      */
     public function testGetArgException()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->event->getArgument('nameNotExist');
     }
 

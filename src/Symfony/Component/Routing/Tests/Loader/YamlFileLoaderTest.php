@@ -41,11 +41,12 @@ class YamlFileLoaderTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @dataProvider getPathsToInvalidFiles
      */
     public function testLoadThrowsExceptionWithInvalidFile($filePath)
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $loader = new YamlFileLoader(new FileLocator(array(__DIR__.'/../Fixtures')));
         $loader->load($filePath);
     }

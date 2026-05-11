@@ -17,10 +17,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class RouteTest extends TestCase
 {
     /**
-     * @expectedException \BadMethodCallException
      */
     public function testInvalidRouteParameter()
     {
+        $this->expectException(\BadMethodCallException::class);
+
         $route = new Route(array('foo' => 'bar'));
     }
 
