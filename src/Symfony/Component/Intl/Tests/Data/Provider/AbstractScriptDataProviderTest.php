@@ -264,7 +264,7 @@ abstract class AbstractScriptDataProviderTest extends AbstractDataProviderTest
      */
     protected $dataProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

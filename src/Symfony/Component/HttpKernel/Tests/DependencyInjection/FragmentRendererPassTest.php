@@ -71,7 +71,7 @@ class FragmentRendererPassTest extends TestCase
 
 class RendererService implements FragmentRendererInterface
 {
-    public function render($uri, Request $request = null, array $options = array())
+    public function render($uri, ?Request $request = null, array $options = array())
     {
     }
 

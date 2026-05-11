@@ -21,13 +21,13 @@ class DateTypeTest extends BaseTypeTest
 
     private $defaultTimezone;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->defaultTimezone = date_default_timezone_get();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         date_default_timezone_set($this->defaultTimezone);
         \Locale::setDefault('en');

@@ -33,7 +33,7 @@ abstract class AbstractFormTest extends TestCase
      */
     protected $form;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         // We need an actual dispatcher to use the deprecated
         // bindRequest() method
@@ -42,7 +42,7 @@ abstract class AbstractFormTest extends TestCase
         $this->form = $this->createForm();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->dispatcher = null;
         $this->factory = null;
@@ -62,7 +62,7 @@ abstract class AbstractFormTest extends TestCase
      *
      * @return FormBuilder
      */
-    protected function getBuilder($name = 'name', EventDispatcherInterface $dispatcher = null, $dataClass = null, array $options = array())
+    protected function getBuilder($name = 'name', ?EventDispatcherInterface $dispatcher = null, $dataClass = null, array $options = array())
     {
         return new FormBuilder($name, $dataClass, $dispatcher ?: $this->dispatcher, $this->factory, $options);
     }

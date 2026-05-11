@@ -31,7 +31,7 @@ class LegacyChoiceListAdapterTest extends TestCase
      */
     private $adaptedList;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->adaptedList = $this->getMockBuilder('Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceListInterface')->getMock();
         $this->list = new LegacyChoiceListAdapter($this->adaptedList);

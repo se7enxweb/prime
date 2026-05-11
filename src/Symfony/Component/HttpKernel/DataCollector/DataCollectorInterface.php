@@ -24,7 +24,7 @@ interface DataCollectorInterface
     /**
      * Collects data for the given Request and Response.
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null);
+    public function collect(Request $request, Response $response, ?\Exception $exception = null);
 
     /**
      * Returns the name of the collector.

@@ -22,7 +22,7 @@ class SqliteProfilerStorageTest extends AbstractProfilerStorageTest
     private $dbFile;
     private $storage;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dbFile = tempnam(sys_get_temp_dir(), 'sf2_sqlite_storage');
         if (file_exists($this->dbFile)) {
@@ -33,7 +33,7 @@ class SqliteProfilerStorageTest extends AbstractProfilerStorageTest
         $this->storage->purge();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         @unlink($this->dbFile);
     }

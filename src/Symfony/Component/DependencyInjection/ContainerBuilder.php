@@ -91,7 +91,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      */
     private $expressionLanguageProviders = array();
 
-    public function __construct(ParameterBagInterface $parameterBag = null)
+    public function __construct(?ParameterBagInterface $parameterBag = null)
     {
         parent::__construct($parameterBag);
 
@@ -276,7 +276,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * @throws BadMethodCallException When this ContainerBuilder is frozen
      * @throws \LogicException        if the container is frozen
      */
-    public function loadFromExtension($extension, array $values = null)
+    public function loadFromExtension($extension, ?array $values = null)
     {
         if ($this->isFrozen()) {
             throw new BadMethodCallException('Cannot load from an extension on a frozen container.');

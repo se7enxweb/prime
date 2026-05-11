@@ -741,7 +741,7 @@ class Crawler extends \SplObjectStorage
      *
      * @throws \InvalidArgumentException If the current node list is empty or the selected node is not instance of DOMElement
      */
-    public function form(array $values = null, $method = null)
+    public function form(?array $values = null, $method = null)
     {
         if (!\count($this)) {
             throw new \InvalidArgumentException('The current node list is empty.');

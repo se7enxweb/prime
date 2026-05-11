@@ -36,7 +36,7 @@ class LazyChoiceListTest extends TestCase
 
     private $value;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->innerList = $this->getMockBuilder('Symfony\Component\Form\ChoiceList\ChoiceListInterface')->getMock();
         $this->loader = $this->getMockBuilder('Symfony\Component\Form\ChoiceList\Loader\ChoiceLoaderInterface')->getMock();

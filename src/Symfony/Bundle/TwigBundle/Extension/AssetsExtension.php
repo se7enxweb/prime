@@ -30,7 +30,7 @@ class AssetsExtension extends AbstractExtension
     private $container;
     private $context;
 
-    public function __construct(ContainerInterface $container, RequestContext $requestContext = null)
+    public function __construct(ContainerInterface $container, ?RequestContext $requestContext = null)
     {
         $this->container = $container;
         $this->context = $requestContext;

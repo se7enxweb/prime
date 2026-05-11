@@ -165,7 +165,7 @@ class ControllerResolverTest extends BaseControllerResolverTest
         );
     }
 
-    protected function createControllerResolver(LoggerInterface $logger = null, ControllerNameParser $parser = null, ContainerInterface $container = null)
+    protected function createControllerResolver(?LoggerInterface $logger = null, ?ControllerNameParser $parser = null, ?ContainerInterface $container = null)
     {
         if (!$parser) {
             $parser = $this->createMockParser();
@@ -193,7 +193,7 @@ class ContainerAwareController implements ContainerAwareInterface
 {
     private $container;
 
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(?ContainerInterface $container = null)
     {
         $this->container = $container;
     }

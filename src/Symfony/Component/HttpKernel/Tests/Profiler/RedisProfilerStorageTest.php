@@ -21,7 +21,7 @@ class RedisProfilerStorageTest extends AbstractProfilerStorageTest
 {
     protected static $storage;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $redisMock = new RedisMock();
         $redisMock->connect('127.0.0.1', 6379);
@@ -34,7 +34,7 @@ class RedisProfilerStorageTest extends AbstractProfilerStorageTest
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (self::$storage) {
             self::$storage->purge();

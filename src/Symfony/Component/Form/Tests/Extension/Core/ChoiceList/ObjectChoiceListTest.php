@@ -42,7 +42,7 @@ class ObjectChoiceListTest extends AbstractChoiceListTest
 
     private $obj4;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->obj1 = (object) array('name' => 'A');
         $this->obj2 = (object) array('name' => 'B');

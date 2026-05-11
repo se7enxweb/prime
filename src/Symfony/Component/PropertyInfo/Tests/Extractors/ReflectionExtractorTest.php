@@ -25,7 +25,7 @@ class ReflectionExtractorTest extends TestCase
      */
     private $extractor;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->extractor = new ReflectionExtractor();
     }
@@ -66,7 +66,7 @@ class ReflectionExtractorTest extends TestCase
     /**
      * @dataProvider typesProvider
      */
-    public function testExtractors($property, array $type = null)
+    public function testExtractors($property, ?array $type = null)
     {
         $this->assertEquals($type, $this->extractor->getTypes('Symfony\Component\PropertyInfo\Tests\Fixtures\Dummy', $property, array()));
     }
@@ -90,7 +90,7 @@ class ReflectionExtractorTest extends TestCase
      * @dataProvider php7TypesProvider
      * @requires PHP 7.0
      */
-    public function testExtractPhp7Type($property, array $type = null)
+    public function testExtractPhp7Type($property, ?array $type = null)
     {
         $this->assertEquals($type, $this->extractor->getTypes('Symfony\Component\PropertyInfo\Tests\Fixtures\Php7Dummy', $property, array()));
     }
@@ -109,7 +109,7 @@ class ReflectionExtractorTest extends TestCase
      * @dataProvider php71TypesProvider
      * @requires PHP 7.1
      */
-    public function testExtractPhp71Type($property, array $type = null)
+    public function testExtractPhp71Type($property, ?array $type = null)
     {
         $this->assertEquals($type, $this->extractor->getTypes('Symfony\Component\PropertyInfo\Tests\Fixtures\Php71Dummy', $property, array()));
     }

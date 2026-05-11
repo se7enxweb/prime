@@ -41,7 +41,7 @@ class ControllerResolver implements ControllerResolverInterface
      */
     private $supportsScalarTypes;
 
-    public function __construct(LoggerInterface $logger = null)
+    public function __construct(?LoggerInterface $logger = null)
     {
         $this->logger = $logger;
 

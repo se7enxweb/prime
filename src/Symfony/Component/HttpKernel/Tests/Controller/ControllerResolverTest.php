@@ -265,7 +265,7 @@ class ControllerResolverTest extends TestCase
         $this->assertEquals(array(null, null, 'value', 'mandatory'), $resolver->getArguments($request, $controller));
     }
 
-    protected function createControllerResolver(LoggerInterface $logger = null)
+    protected function createControllerResolver(?LoggerInterface $logger = null)
     {
         return new ControllerResolver($logger);
     }

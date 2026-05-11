@@ -29,7 +29,7 @@ class DigestAuthenticationEntryPoint implements AuthenticationEntryPointInterfac
     private $nonceValiditySeconds;
     private $logger;
 
-    public function __construct($realmName, $secret, $nonceValiditySeconds = 300, LoggerInterface $logger = null)
+    public function __construct($realmName, $secret, $nonceValiditySeconds = 300, ?LoggerInterface $logger = null)
     {
         $this->realmName = $realmName;
         $this->secret = $secret;
@@ -40,7 +40,7 @@ class DigestAuthenticationEntryPoint implements AuthenticationEntryPointInterfac
     /**
      * {@inheritdoc}
      */
-    public function start(Request $request, AuthenticationException $authException = null)
+    public function start(Request $request, ?AuthenticationException $authException = null)
     {
         $expiryTime = microtime(true) + $this->nonceValiditySeconds * 1000;
         $signatureValue = md5($expiryTime.':'.$this->secret);

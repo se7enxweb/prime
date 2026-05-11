@@ -35,7 +35,7 @@ class TreeBuilder implements NodeParentInterface
      *
      * @throws \RuntimeException When the node type is not supported
      */
-    public function root($name, $type = 'array', NodeBuilder $builder = null)
+    public function root($name, $type = 'array', ?NodeBuilder $builder = null)
     {
         $builder = $builder ?: new NodeBuilder();
 

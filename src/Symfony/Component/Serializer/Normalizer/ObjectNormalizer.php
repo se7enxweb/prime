@@ -31,7 +31,7 @@ class ObjectNormalizer extends AbstractNormalizer
 
     protected $propertyAccessor;
 
-    public function __construct(ClassMetadataFactoryInterface $classMetadataFactory = null, NameConverterInterface $nameConverter = null, PropertyAccessorInterface $propertyAccessor = null)
+    public function __construct(?ClassMetadataFactoryInterface $classMetadataFactory = null, ?NameConverterInterface $nameConverter = null, ?PropertyAccessorInterface $propertyAccessor = null)
     {
         if (!class_exists('Symfony\Component\PropertyAccess\PropertyAccess')) {
             throw new RuntimeException('The ObjectNormalizer class requires the "PropertyAccess" component. Install "symfony/property-access" to use it.');

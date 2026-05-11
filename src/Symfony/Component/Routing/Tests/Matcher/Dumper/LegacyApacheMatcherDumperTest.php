@@ -23,7 +23,7 @@ class LegacyApacheMatcherDumperTest extends TestCase
 {
     protected static $fixturesPath;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$fixturesPath = realpath(__DIR__.'/../../Fixtures/');
     }

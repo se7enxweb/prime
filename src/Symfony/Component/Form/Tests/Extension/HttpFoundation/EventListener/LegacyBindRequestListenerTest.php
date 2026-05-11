@@ -36,7 +36,7 @@ class LegacyBindRequestListenerTest extends TestCase
      */
     private $uploadedFile;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $path = tempnam(sys_get_temp_dir(), 'sf2');
         touch($path);
@@ -67,7 +67,7 @@ class LegacyBindRequestListenerTest extends TestCase
         $this->uploadedFile = new UploadedFile($path, 'upload.png', 'image/png', 123, UPLOAD_ERR_OK);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unlink($this->uploadedFile->getRealPath());
     }

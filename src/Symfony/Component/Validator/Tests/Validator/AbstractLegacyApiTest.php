@@ -40,7 +40,7 @@ abstract class AbstractLegacyApiTest extends AbstractValidatorTest
      */
     abstract protected function createValidator(MetadataFactoryInterface $metadataFactory, array $objectInitializers = array());
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

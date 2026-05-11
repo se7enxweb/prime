@@ -87,7 +87,7 @@ class SecurityContext implements SecurityContextInterface
      *
      * {@inheritdoc}
      */
-    public function setToken(TokenInterface $token = null)
+    public function setToken(?TokenInterface $token = null)
     {
         return $this->tokenStorage->setToken($token);
     }

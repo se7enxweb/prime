@@ -61,7 +61,7 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
 
     private $underscoreMap = array('_' => '', '.' => '_', '\\' => '_');
 
-    public function __construct(ParameterBagInterface $parameterBag = null)
+    public function __construct(?ParameterBagInterface $parameterBag = null)
     {
         $this->parameterBag = $parameterBag ?: new ParameterBag();
     }

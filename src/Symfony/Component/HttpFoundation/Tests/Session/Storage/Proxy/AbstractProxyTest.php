@@ -59,12 +59,12 @@ class AbstractProxyTest extends TestCase
      */
     protected $proxy;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->proxy = new ConcreteProxy();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->proxy = null;
     }

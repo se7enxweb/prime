@@ -143,7 +143,7 @@ class UserPasswordEncoderCommandTest extends WebTestCase
         ), array('interactive' => false));
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $kernel = $this->createKernel(array('test_case' => 'PasswordEncode'));
         $kernel->boot();
@@ -156,7 +156,7 @@ class UserPasswordEncoderCommandTest extends WebTestCase
         $this->passwordEncoderCommandTester = new CommandTester($passwordEncoderCommand);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->passwordEncoderCommandTester = null;
     }

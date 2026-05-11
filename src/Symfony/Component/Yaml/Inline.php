@@ -1,7 +1,9 @@
 <?php
 
 /*
- * This file is part of the Symfony package.
+ * (c) 2004-2026 7x (se7enxweb) <info@se7enx.com>. All rights reserved.
+ *
+ * This file is part of the 7x Prime package.
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  *
@@ -518,7 +520,8 @@ class Inline
                         return (int) self::parseScalar(substr($scalar, 2));
                     case 0 === strpos($scalar, '!php/object:'):
                         if (self::$objectSupport) {
-                            return unserialize(substr($scalar, 12));
+                            // Security: restrict deserialization to no classes by default (PHP 8.x hardening).
+                            return unserialize(substr($scalar, 12), ['allowed_classes' => false]);
                         }
 
                         if (self::$exceptionOnInvalidType) {
@@ -528,7 +531,8 @@ class Inline
                         return;
                     case 0 === strpos($scalar, '!!php/object:'):
                         if (self::$objectSupport) {
-                            return unserialize(substr($scalar, 13));
+                            // Security: restrict deserialization to no classes by default (PHP 8.x hardening).
+                            return unserialize(substr($scalar, 13), ['allowed_classes' => false]);
                         }
 
                         if (self::$exceptionOnInvalidType) {

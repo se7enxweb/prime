@@ -476,7 +476,7 @@ class UrlMatcherTest extends TestCase
         $matcher->match('/');
     }
 
-    protected function getUrlMatcher(RouteCollection $routes, RequestContext $context = null)
+    protected function getUrlMatcher(RouteCollection $routes, ?RequestContext $context = null)
     {
         return new UrlMatcher($routes, $context ?: new RequestContext());
     }

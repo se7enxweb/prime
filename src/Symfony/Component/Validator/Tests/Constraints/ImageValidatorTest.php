@@ -43,7 +43,7 @@ class ImageValidatorTest extends AbstractConstraintValidatorTest
         return new ImageValidator();
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

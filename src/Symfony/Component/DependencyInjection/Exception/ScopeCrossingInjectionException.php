@@ -23,7 +23,7 @@ class ScopeCrossingInjectionException extends RuntimeException
     private $destServiceId;
     private $destScope;
 
-    public function __construct($sourceServiceId, $sourceScope, $destServiceId, $destScope, \Exception $previous = null)
+    public function __construct($sourceServiceId, $sourceScope, $destServiceId, $destScope, ?\Exception $previous = null)
     {
         parent::__construct(sprintf(
             'Scope Crossing Injection detected: The definition "%s" references the service "%s" which belongs to another scope hierarchy. '

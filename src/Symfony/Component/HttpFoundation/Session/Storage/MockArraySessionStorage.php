@@ -66,7 +66,7 @@ class MockArraySessionStorage implements SessionStorageInterface
      * @param string      $name    Session name
      * @param MetadataBag $metaBag MetadataBag instance
      */
-    public function __construct($name = 'MOCKSESSID', MetadataBag $metaBag = null)
+    public function __construct($name = 'MOCKSESSID', ?MetadataBag $metaBag = null)
     {
         $this->name = $name;
         $this->setMetadataBag($metaBag);
@@ -208,7 +208,7 @@ class MockArraySessionStorage implements SessionStorageInterface
         return $this->started;
     }
 
-    public function setMetadataBag(MetadataBag $bag = null)
+    public function setMetadataBag(?MetadataBag $bag = null)
     {
         if (null === $bag) {
             $bag = new MetadataBag();

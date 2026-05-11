@@ -1,7 +1,9 @@
 <?php
 
 /*
- * This file is part of the Symfony package.
+ * (c) 2004-2026 7x (se7enxweb) <info@se7enx.com>. All rights reserved.
+ *
+ * This file is part of the 7x Prime package.
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  *
@@ -25,6 +27,7 @@ class Cookie
     protected $path;
     protected $secure;
     protected $httpOnly;
+    protected $sameSite;
 
     /**
      * @param string                                  $name     The name of the cookie
@@ -34,10 +37,11 @@ class Cookie
      * @param string                                  $domain   The domain that the cookie is available to
      * @param bool                                    $secure   Whether the cookie should only be transmitted over a secure HTTPS connection from the client
      * @param bool                                    $httpOnly Whether the cookie will be made accessible only through the HTTP protocol
+     * @param string|null                             $sameSite The SameSite attribute (Lax, Strict, None, or null)
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = false, $httpOnly = true)
+    public function __construct($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = false, $httpOnly = true, ?string $sameSite = 'Lax')
     {
         // from PHP source code
         if (preg_match("/[=,; \t\r\n\013\014]/", $name)) {
@@ -59,6 +63,10 @@ class Cookie
             }
         }
 
+        if (null !== $sameSite && !in_array($sameSite, ['None', 'Lax', 'Strict'], true)) {
+            throw new \InvalidArgumentException('The "sameSite" parameter value is not valid.');
+        }
+
         $this->name = $name;
         $this->value = $value;
         $this->domain = $domain;
@@ -66,6 +74,7 @@ class Cookie
         $this->path = empty($path) ? '/' : $path;
         $this->secure = (bool) $secure;
         $this->httpOnly = (bool) $httpOnly;
+        $this->sameSite = $sameSite;
     }
 
     /**
@@ -101,6 +110,10 @@ class Cookie
 
         if (true === $this->isHttpOnly()) {
             $str .= '; httponly';
+        }
+
+        if (null !== $this->sameSite) {
+            $str .= '; samesite='.$this->sameSite;
         }
 
         return $str;
@@ -174,6 +187,16 @@ class Cookie
     public function isHttpOnly()
     {
         return $this->httpOnly;
+    }
+
+    /**
+     * Gets the SameSite attribute.
+     *
+     * @return string|null
+     */
+    public function getSameSite(): ?string
+    {
+        return $this->sameSite;
     }
 
     /**

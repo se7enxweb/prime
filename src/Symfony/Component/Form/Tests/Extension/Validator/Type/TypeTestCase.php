@@ -18,7 +18,7 @@ abstract class TypeTestCase extends BaseTypeTestCase
 {
     protected $validator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->validator = $this->getMockBuilder('Symfony\Component\Validator\Validator\ValidatorInterface')->getMock();
         $metadata = $this->getMockBuilder('Symfony\Component\Validator\Mapping\ClassMetadata')->disableOriginalConstructor()->getMock();
@@ -28,7 +28,7 @@ abstract class TypeTestCase extends BaseTypeTestCase
         parent::setUp();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->validator = null;
 

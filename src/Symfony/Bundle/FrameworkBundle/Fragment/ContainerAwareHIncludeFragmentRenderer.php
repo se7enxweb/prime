@@ -32,7 +32,7 @@ class ContainerAwareHIncludeFragmentRenderer extends HIncludeFragmentRenderer
     /**
      * {@inheritdoc}
      */
-    public function __construct(ContainerInterface $container, UriSigner $signer = null, $globalDefaultTemplate = null)
+    public function __construct(ContainerInterface $container, ?UriSigner $signer = null, $globalDefaultTemplate = null)
     {
         $this->container = $container;
 

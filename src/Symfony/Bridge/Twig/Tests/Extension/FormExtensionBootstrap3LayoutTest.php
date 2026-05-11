@@ -32,7 +32,7 @@ class FormExtensionBootstrap3LayoutTest extends AbstractBootstrap3LayoutTest
         'choice_attr',
     );
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -56,7 +56,7 @@ class FormExtensionBootstrap3LayoutTest extends AbstractBootstrap3LayoutTest
         $this->extension->initRuntime($environment);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

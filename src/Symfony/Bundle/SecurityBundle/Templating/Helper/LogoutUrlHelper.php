@@ -34,7 +34,7 @@ class LogoutUrlHelper extends Helper
      * @deprecated Passing a ContainerInterface as a first argument is deprecated since 2.7 and will be removed in 3.0.
      * @deprecated Passing a second and third argument is deprecated since 2.7 and will be removed in 3.0.
      */
-    public function __construct($generator, UrlGeneratorInterface $router = null, TokenStorageInterface $tokenStorage = null)
+    public function __construct($generator, ?UrlGeneratorInterface $router = null, ?TokenStorageInterface $tokenStorage = null)
     {
         if ($generator instanceof ContainerInterface) {
             @trigger_error('The '.__CLASS__.' constructor will require a LogoutUrlGenerator instead of a ContainerInterface instance in 3.0.', E_USER_DEPRECATED);

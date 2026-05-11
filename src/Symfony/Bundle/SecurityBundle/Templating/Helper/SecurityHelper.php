@@ -24,7 +24,7 @@ class SecurityHelper extends Helper
 {
     private $securityChecker;
 
-    public function __construct(AuthorizationCheckerInterface $securityChecker = null)
+    public function __construct(?AuthorizationCheckerInterface $securityChecker = null)
     {
         $this->securityChecker = $securityChecker;
     }

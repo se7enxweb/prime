@@ -57,7 +57,7 @@ class EntityTypeTest extends BaseTypeTest
      */
     private $emRegistry;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->em = DoctrineTestHelper::createTestEntityManager();
         $this->emRegistry = $this->createRegistryMock('default', $this->em);
@@ -87,7 +87,7 @@ class EntityTypeTest extends BaseTypeTest
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -767,7 +767,7 @@ class EntityTypeTest extends BaseTypeTest
             'em' => 'default',
             'class' => self::ITEM_GROUP_CLASS,
             'choice_label' => 'name',
-            'choice_value' => function (GroupableEntity $entity = null) {
+            'choice_value' => function (?GroupableEntity $entity = null) {
                 if (null === $entity) {
                     return '';
                 }

@@ -27,7 +27,7 @@ class ChoiceListTest extends AbstractChoiceListTest
 
     private $obj4;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->obj1 = new \stdClass();
         $this->obj2 = new \stdClass();

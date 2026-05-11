@@ -47,7 +47,7 @@ class ArgvInput extends Input
      * @param array|null           $argv       An array of parameters from the CLI (in the argv format)
      * @param InputDefinition|null $definition A InputDefinition instance
      */
-    public function __construct(array $argv = null, InputDefinition $definition = null)
+    public function __construct(?array $argv = null, ?InputDefinition $definition = null)
     {
         if (null === $argv) {
             $argv = $_SERVER['argv'];

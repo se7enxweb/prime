@@ -57,7 +57,7 @@ class LazyLoadingMetadataFactory implements MetadataFactoryInterface
      * @param CacheInterface|null  $cache  The cache for persisting metadata
      *                                     between multiple PHP requests
      */
-    public function __construct(LoaderInterface $loader = null, CacheInterface $cache = null)
+    public function __construct(?LoaderInterface $loader = null, ?CacheInterface $cache = null)
     {
         $this->loader = $loader;
         $this->cache = $cache;

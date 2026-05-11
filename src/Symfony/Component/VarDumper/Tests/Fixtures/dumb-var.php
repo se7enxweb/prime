@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * (c) 2004-2026 7x (se7enxweb) <info@se7enx.com>. All rights reserved.
+ *
+ * This file is part of the 7x Prime package.
+ */
+
 namespace Symfony\Component\VarDumper\Tests\Fixture;
 
 if (!class_exists('Symfony\Component\VarDumper\Tests\Fixture\DumbFoo')) {
@@ -21,7 +27,7 @@ $var = array(
     '[]' => array(),
     'res' => $g,
     'obj' => $foo,
-    'closure' => function ($a, \PDO &$b = null) {},
+    'closure' => function ($a, ?\PDO &$b = null) {},
     'line' => __LINE__ - 1,
     'nobj' => array((object) array()),
 );

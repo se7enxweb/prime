@@ -32,7 +32,7 @@ class FileProfilerStorageTest extends AbstractProfilerStorageTest
         }
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->tmpDir = sys_get_temp_dir().'/sf2_profiler_file_storage';
         if (is_dir($this->tmpDir)) {
@@ -42,7 +42,7 @@ class FileProfilerStorageTest extends AbstractProfilerStorageTest
         $this->storage->purge();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         self::cleanDir();
     }

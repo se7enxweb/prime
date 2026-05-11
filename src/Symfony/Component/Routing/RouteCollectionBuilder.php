@@ -38,7 +38,7 @@ class RouteCollectionBuilder
     private $methods;
     private $resources = array();
 
-    public function __construct(LoaderInterface $loader = null)
+    public function __construct(?LoaderInterface $loader = null)
     {
         $this->loader = $loader;
     }

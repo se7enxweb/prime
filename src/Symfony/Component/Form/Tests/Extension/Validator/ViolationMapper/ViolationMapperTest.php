@@ -58,7 +58,7 @@ class ViolationMapperTest extends TestCase
      */
     private $params;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')->getMock();
         $this->mapper = new ViolationMapper();

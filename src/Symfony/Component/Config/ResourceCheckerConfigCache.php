@@ -130,7 +130,7 @@ class ResourceCheckerConfigCache implements ConfigCacheInterface
      *
      * @throws \RuntimeException When cache file can't be written
      */
-    public function write($content, array $metadata = null)
+    public function write($content, ?array $metadata = null)
     {
         $mode = 0666;
         $umask = umask();

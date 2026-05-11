@@ -29,7 +29,7 @@ class Packages
      * @param PackageInterface   $defaultPackage The default package
      * @param PackageInterface[] $packages       Additional packages indexed by name
      */
-    public function __construct(PackageInterface $defaultPackage = null, array $packages = array())
+    public function __construct(?PackageInterface $defaultPackage = null, array $packages = array())
     {
         $this->defaultPackage = $defaultPackage;
 

@@ -38,7 +38,7 @@ class HttpUtils
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(UrlGeneratorInterface $urlGenerator = null, $urlMatcher = null, $domainRegexp = null)
+    public function __construct(?UrlGeneratorInterface $urlGenerator = null, $urlMatcher = null, $domainRegexp = null)
     {
         $this->urlGenerator = $urlGenerator;
         if (null !== $urlMatcher && !$urlMatcher instanceof UrlMatcherInterface && !$urlMatcher instanceof RequestMatcherInterface) {

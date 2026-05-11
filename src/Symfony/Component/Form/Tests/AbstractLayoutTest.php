@@ -21,7 +21,7 @@ abstract class AbstractLayoutTest extends FormIntegrationTestCase
     protected $csrfTokenManager;
     protected $testableFeatures = array();
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!\extension_loaded('intl')) {
             $this->markTestSkipped('Extension intl is required.');
@@ -41,7 +41,7 @@ abstract class AbstractLayoutTest extends FormIntegrationTestCase
         );
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->csrfTokenManager = null;
 

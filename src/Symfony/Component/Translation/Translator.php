@@ -75,7 +75,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
      *
      * @throws \InvalidArgumentException If a locale contains invalid characters
      */
-    public function __construct($locale, MessageSelector $selector = null, $cacheDir = null, $debug = false)
+    public function __construct($locale, ?MessageSelector $selector = null, $cacheDir = null, $debug = false)
     {
         $this->setLocale($locale);
         $this->selector = $selector ?: new MessageSelector();

@@ -21,12 +21,12 @@ class LegacyCoreAssetsHelperTest extends TestCase
 {
     protected $package;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->package = $this->getMockBuilder('Symfony\Component\Templating\Asset\PackageInterface')->getMock();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->package = null;
     }

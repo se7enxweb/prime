@@ -36,7 +36,7 @@ class TraceableEventDispatcher extends BaseTraceableEventDispatcher
      *
      * @deprecated since version 2.4, to be removed in 3.0.
      */
-    public function setProfiler(Profiler $profiler = null)
+    public function setProfiler(?Profiler $profiler = null)
     {
         @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.4 and will be removed in 3.0.', E_USER_DEPRECATED);
     }

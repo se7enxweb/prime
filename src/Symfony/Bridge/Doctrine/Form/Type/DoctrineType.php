@@ -108,7 +108,7 @@ abstract class DoctrineType extends AbstractType
         return false;
     }
 
-    public function __construct(ManagerRegistry $registry, PropertyAccessorInterface $propertyAccessor = null, ChoiceListFactoryInterface $choiceListFactory = null)
+    public function __construct(ManagerRegistry $registry, ?PropertyAccessorInterface $propertyAccessor = null, ?ChoiceListFactoryInterface $choiceListFactory = null)
     {
         $this->registry = $registry;
         $this->choiceListFactory = $choiceListFactory ?: new CachingFactoryDecorator(

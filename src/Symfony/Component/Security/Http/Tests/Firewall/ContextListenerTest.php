@@ -345,7 +345,7 @@ class SupportingUserProvider implements UserProviderInterface
 {
     private $refreshedUser;
 
-    public function __construct(User $refreshedUser = null)
+    public function __construct(?User $refreshedUser = null)
     {
         $this->refreshedUser = $refreshedUser;
     }

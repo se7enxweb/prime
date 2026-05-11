@@ -23,7 +23,7 @@ class StopwatchHelper extends Helper
 {
     private $stopwatch;
 
-    public function __construct(Stopwatch $stopwatch = null)
+    public function __construct(?Stopwatch $stopwatch = null)
     {
         $this->stopwatch = $stopwatch;
     }

@@ -33,7 +33,7 @@ class StringInput extends ArgvInput
      *
      * @deprecated The second argument is deprecated as it does not work (will be removed in 3.0), use 'bind' method instead
      */
-    public function __construct($input, InputDefinition $definition = null)
+    public function __construct($input, ?InputDefinition $definition = null)
     {
         if ($definition) {
             @trigger_error('The $definition argument of the '.__METHOD__.' method is deprecated and will be removed in 3.0. Set this parameter with the bind() method instead.', E_USER_DEPRECATED);

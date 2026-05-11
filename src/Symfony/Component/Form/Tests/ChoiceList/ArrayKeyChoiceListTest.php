@@ -22,7 +22,7 @@ class ArrayKeyChoiceListTest extends AbstractChoiceListTest
 {
     private $object;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

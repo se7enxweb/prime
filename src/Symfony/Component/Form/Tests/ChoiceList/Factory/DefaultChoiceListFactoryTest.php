@@ -86,7 +86,7 @@ class DefaultChoiceListFactoryTest extends TestCase
             : new DefaultChoiceListFactoryTest_Castable('Group 2');
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->obj1 = (object) array('label' => 'A', 'index' => 'w', 'value' => 'a', 'preferred' => false, 'group' => 'Group 1', 'attr' => array());
         $this->obj2 = (object) array('label' => 'B', 'index' => 'x', 'value' => 'b', 'preferred' => true, 'group' => 'Group 1', 'attr' => array('attr1' => 'value1'));

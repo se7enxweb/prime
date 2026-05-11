@@ -25,7 +25,7 @@ class FormTypeHttpFoundationExtension extends AbstractTypeExtension
     private $listener;
     private $requestHandler;
 
-    public function __construct(RequestHandlerInterface $requestHandler = null)
+    public function __construct(?RequestHandlerInterface $requestHandler = null)
     {
         $this->listener = new BindRequestListener();
         $this->requestHandler = $requestHandler ?: new HttpFoundationRequestHandler();

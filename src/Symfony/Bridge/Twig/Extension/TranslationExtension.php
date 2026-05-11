@@ -32,7 +32,7 @@ class TranslationExtension extends AbstractExtension
     private $translator;
     private $translationNodeVisitor;
 
-    public function __construct(TranslatorInterface $translator, NodeVisitorInterface $translationNodeVisitor = null)
+    public function __construct(TranslatorInterface $translator, ?NodeVisitorInterface $translationNodeVisitor = null)
     {
         if (!$translationNodeVisitor) {
             $translationNodeVisitor = new TranslationNodeVisitor();

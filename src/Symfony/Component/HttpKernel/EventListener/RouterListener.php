@@ -104,14 +104,14 @@ class RouterListener implements EventSubscriberInterface
      *
      * @deprecated since version 2.4, to be removed in 3.0.
      */
-    public function setRequest(Request $request = null)
+    public function setRequest(?Request $request = null)
     {
         @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.4 and will be made private in 3.0.', E_USER_DEPRECATED);
 
         $this->setCurrentRequest($request);
     }
 
-    private function setCurrentRequest(Request $request = null)
+    private function setCurrentRequest(?Request $request = null)
     {
         if (null !== $request && $this->request !== $request) {
             try {

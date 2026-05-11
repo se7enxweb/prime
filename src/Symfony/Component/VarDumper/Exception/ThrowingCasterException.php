@@ -19,7 +19,7 @@ class ThrowingCasterException extends \Exception
     /**
      * @param \Exception $prev The exception thrown from the caster
      */
-    public function __construct($prev, \Exception $e = null)
+    public function __construct($prev, ?\Exception $e = null)
     {
         if (!$prev instanceof \Exception) {
             @trigger_error('Providing $caster as the first argument of the '.__METHOD__.' method is deprecated since Symfony 2.8 and will be removed in 3.0. Provide directly the $prev exception instead.', E_USER_DEPRECATED);

@@ -23,14 +23,14 @@ class FixRadioInputListenerTest extends TestCase
 {
     private $choiceList;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->choiceList = new ArrayKeyChoiceList(array('' => 'Empty', 0 => 'A', 1 => 'B'));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

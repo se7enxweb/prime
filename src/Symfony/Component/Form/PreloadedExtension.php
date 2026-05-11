@@ -31,7 +31,7 @@ class PreloadedExtension implements FormExtensionInterface
      * @param FormTypeExtensionInterface[][] $typeExtensions The type extensions that the extension should support
      * @param FormTypeGuesserInterface|null  $typeGuesser    The guesser that the extension should support
      */
-    public function __construct(array $types, array $typeExtensions, FormTypeGuesserInterface $typeGuesser = null)
+    public function __construct(array $types, array $typeExtensions, ?FormTypeGuesserInterface $typeGuesser = null)
     {
         $this->typeExtensions = $typeExtensions;
         $this->typeGuesser = $typeGuesser;

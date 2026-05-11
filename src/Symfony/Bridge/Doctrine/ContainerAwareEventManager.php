@@ -46,7 +46,7 @@ class ContainerAwareEventManager extends EventManager
      *
      * @return bool
      */
-    public function dispatchEvent($eventName, EventArgs $eventArgs = null)
+    public function dispatchEvent($eventName, ?EventArgs $eventArgs = null)
     {
         if (isset($this->listeners[$eventName])) {
             $eventArgs = null === $eventArgs ? EventArgs::getEmptyInstance() : $eventArgs;

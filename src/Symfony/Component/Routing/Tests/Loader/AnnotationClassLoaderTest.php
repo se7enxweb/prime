@@ -18,7 +18,7 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
     protected $loader;
     private $reader;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

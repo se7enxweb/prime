@@ -29,7 +29,7 @@ class Command
      */
     private $errorHandler;
 
-    public function __construct(Command $parent = null)
+    public function __construct(?Command $parent = null)
     {
         $this->parent = $parent;
     }
@@ -49,7 +49,7 @@ class Command
      *
      * @return self
      */
-    public static function create(Command $parent = null)
+    public static function create(?Command $parent = null)
     {
         return new self($parent);
     }

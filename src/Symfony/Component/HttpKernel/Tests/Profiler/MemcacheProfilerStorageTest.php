@@ -21,7 +21,7 @@ class MemcacheProfilerStorageTest extends AbstractProfilerStorageTest
 {
     protected static $storage;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $memcacheMock = new MemcacheMock();
         $memcacheMock->addServer('127.0.0.1', 11211);
@@ -34,7 +34,7 @@ class MemcacheProfilerStorageTest extends AbstractProfilerStorageTest
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (self::$storage) {
             self::$storage->purge();

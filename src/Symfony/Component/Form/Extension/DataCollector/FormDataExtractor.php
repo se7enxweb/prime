@@ -25,7 +25,7 @@ class FormDataExtractor implements FormDataExtractorInterface
 {
     private $valueExporter;
 
-    public function __construct(ValueExporter $valueExporter = null)
+    public function __construct(?ValueExporter $valueExporter = null)
     {
         $this->valueExporter = $valueExporter ?: new ValueExporter();
     }

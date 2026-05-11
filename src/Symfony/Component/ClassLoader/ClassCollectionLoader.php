@@ -394,7 +394,7 @@ REGEX;
      *
      * @throws \RuntimeException if a circular dependency is detected
      */
-    private static function resolveDependencies(array $tree, $node, \ArrayObject $resolved = null, \ArrayObject $unresolved = null)
+    private static function resolveDependencies(array $tree, $node, ?\ArrayObject $resolved = null, ?\ArrayObject $unresolved = null)
     {
         if (null === $resolved) {
             $resolved = new \ArrayObject();

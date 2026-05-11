@@ -23,7 +23,7 @@ class LegacyPdoSessionHandlerTest extends TestCase
 {
     private $pdo;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->pdo = new \PDO('sqlite::memory:');

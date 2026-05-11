@@ -24,7 +24,7 @@ class ControllerResolver extends BaseControllerResolver
     protected $container;
     protected $parser;
 
-    public function __construct(ContainerInterface $container, ControllerNameParser $parser, LoggerInterface $logger = null)
+    public function __construct(ContainerInterface $container, ControllerNameParser $parser, ?LoggerInterface $logger = null)
     {
         $this->container = $container;
         $this->parser = $parser;

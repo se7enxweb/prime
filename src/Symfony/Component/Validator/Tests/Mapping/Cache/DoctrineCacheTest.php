@@ -78,7 +78,7 @@ class DoctrineCacheTest extends TestCase
         );
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->cache = new DoctrineCache(new ArrayCache());
     }

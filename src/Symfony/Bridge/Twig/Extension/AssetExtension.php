@@ -30,7 +30,7 @@ class AssetExtension extends AbstractExtension
      * Passing an HttpFoundationExtension instance as a second argument must not be relied on
      * as it's only there to maintain BC with older Symfony version. It will be removed in 3.0.
      */
-    public function __construct(Packages $packages, HttpFoundationExtension $foundationExtension = null)
+    public function __construct(Packages $packages, ?HttpFoundationExtension $foundationExtension = null)
     {
         $this->packages = $packages;
         $this->foundationExtension = $foundationExtension;

@@ -13,7 +13,7 @@ class DelegatingLoaderTest extends TestCase
     /** @var ControllerNameParser */
     private $controllerNameParser;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->controllerNameParser = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser')
             ->disableOriginalConstructor()

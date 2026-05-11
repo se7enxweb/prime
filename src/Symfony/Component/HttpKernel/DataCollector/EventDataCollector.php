@@ -25,7 +25,7 @@ class EventDataCollector extends DataCollector implements LateDataCollectorInter
 {
     protected $dispatcher;
 
-    public function __construct(EventDispatcherInterface $dispatcher = null)
+    public function __construct(?EventDispatcherInterface $dispatcher = null)
     {
         $this->dispatcher = $dispatcher;
     }
@@ -33,7 +33,7 @@ class EventDataCollector extends DataCollector implements LateDataCollectorInter
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, ?\Exception $exception = null)
     {
         $this->data = array(
             'called_listeners' => array(),

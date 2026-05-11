@@ -1,7 +1,9 @@
 <?php
 
 /*
- * This file is part of the Symfony package.
+ * (c) 2004-2026 7x (se7enxweb) <info@se7enx.com>. All rights reserved.
+ *
+ * This file is part of the 7x Prime package.
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  *
@@ -486,6 +488,7 @@ EOTXT
             return $var;
         };
 
-        return array($var(), $GLOBALS, &$GLOBALS);
+        // PHP 8.1+: $GLOBALS cannot be passed by reference; return value copy only.
+        return array($var(), $GLOBALS);
     }
 }

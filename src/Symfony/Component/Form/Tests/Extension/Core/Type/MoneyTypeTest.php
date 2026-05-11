@@ -17,7 +17,7 @@ class MoneyTypeTest extends BaseTypeTest
 {
     const TESTED_TYPE = 'Symfony\Component\Form\Extension\Core\Type\MoneyType';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         // we test against different locales, so we need the full
         // implementation

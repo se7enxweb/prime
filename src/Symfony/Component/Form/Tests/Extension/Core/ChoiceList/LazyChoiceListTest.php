@@ -27,7 +27,7 @@ class LazyChoiceListTest extends TestCase
      */
     private $list;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -38,7 +38,7 @@ class LazyChoiceListTest extends TestCase
         ), array('b')));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

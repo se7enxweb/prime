@@ -22,13 +22,13 @@ class LegacySessionCsrfProviderTest extends TestCase
     protected $provider;
     protected $session;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->session = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')->disableOriginalConstructor()->getMock();
         $this->provider = new SessionCsrfProvider($this->session, 'SECRET');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->provider = null;
         $this->session = null;

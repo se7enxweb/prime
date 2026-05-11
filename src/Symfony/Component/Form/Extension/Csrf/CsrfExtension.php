@@ -34,7 +34,7 @@ class CsrfExtension extends AbstractExtension
      * @param TranslatorInterface       $translator        The translator for translating error messages
      * @param string|null               $translationDomain The translation domain for translating
      */
-    public function __construct($tokenManager, TranslatorInterface $translator = null, $translationDomain = null)
+    public function __construct($tokenManager, ?TranslatorInterface $translator = null, $translationDomain = null)
     {
         if ($tokenManager instanceof CsrfProviderInterface) {
             $tokenManager = new CsrfProviderAdapter($tokenManager);

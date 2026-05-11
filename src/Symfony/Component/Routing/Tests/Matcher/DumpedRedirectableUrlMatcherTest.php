@@ -19,7 +19,7 @@ use Symfony\Component\Routing\RouteCollection;
 
 class DumpedRedirectableUrlMatcherTest extends RedirectableUrlMatcherTest
 {
-    protected function getUrlMatcher(RouteCollection $routes, RequestContext $context = null)
+    protected function getUrlMatcher(RouteCollection $routes, ?RequestContext $context = null)
     {
         static $i = 0;
 

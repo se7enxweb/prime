@@ -1,7 +1,9 @@
 <?php
 
 /*
- * This file is part of the Symfony package.
+ * (c) 2004-2026 7x (se7enxweb) <info@se7enx.com>. All rights reserved.
+ *
+ * This file is part of the 7x Prime package.
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  *
@@ -100,7 +102,7 @@ class NativeSessionStorage implements SessionStorageInterface
      * @param AbstractProxy|NativeSessionHandler|\SessionHandlerInterface|null $handler
      * @param MetadataBag                                                      $metaBag MetadataBag
      */
-    public function __construct(array $options = array(), $handler = null, MetadataBag $metaBag = null)
+    public function __construct(array $options = array(), $handler = null, ?MetadataBag $metaBag = null)
     {
         $options += array(
             // disable by default because it's managed by HeaderBag (if used)
@@ -138,18 +140,19 @@ class NativeSessionStorage implements SessionStorageInterface
             return true;
         }
 
-        if (\PHP_VERSION_ID >= 50400 && \PHP_SESSION_ACTIVE === session_status()) {
+        if (\PHP_SESSION_ACTIVE === session_status()) {
             throw new \RuntimeException('Failed to start the session: already started by PHP.');
-        }
-
-        if (\PHP_VERSION_ID < 50400 && !$this->closed && isset($_SESSION) && session_id()) {
-            // not 100% fool-proof, but is the most reliable way to determine if a session is active in PHP 5.3
-            throw new \RuntimeException('Failed to start the session: already started by PHP ($_SESSION is set).');
         }
 
         if (ini_get('session.use_cookies') && headers_sent($file, $line)) {
             throw new \RuntimeException(sprintf('Failed to start the session because headers have already been sent by "%s" at line %d.', $file, $line));
         }
+
+        // Security: enforce session cookie hardening on PHP 8.x.
+        // session.cookie_samesite requires PHP 7.3+; cookie_secure/httponly are best-practice defaults.
+        @ini_set('session.cookie_httponly', '1');
+        @ini_set('session.cookie_samesite', 'Lax');
+        @ini_set('session.use_strict_mode', '1');
 
         // ok to try and start the session
         if (!session_start()) {
@@ -157,10 +160,6 @@ class NativeSessionStorage implements SessionStorageInterface
         }
 
         $this->loadSession();
-        if (!$this->saveHandler->isWrapper() && !$this->saveHandler->isSessionHandlerInterface()) {
-            // This condition matches only PHP 5.3 with internal save handlers
-            $this->saveHandler->setActive(true);
-        }
 
         return true;
     }
@@ -296,7 +295,7 @@ class NativeSessionStorage implements SessionStorageInterface
         return $this->bags[$name];
     }
 
-    public function setMetadataBag(MetadataBag $metaBag = null)
+    public function setMetadataBag(?MetadataBag $metaBag = null)
     {
         if (null === $metaBag) {
             $metaBag = new MetadataBag();
@@ -427,7 +426,7 @@ class NativeSessionStorage implements SessionStorageInterface
      * PHP takes the return value from the read() handler, unserializes it
      * and populates $_SESSION with the result automatically.
      */
-    protected function loadSession(array &$session = null)
+    protected function loadSession(?array &$session = null)
     {
         if (null === $session) {
             $session = &$_SESSION;

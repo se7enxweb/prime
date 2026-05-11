@@ -1,7 +1,9 @@
 <?php
 
 /*
- * This file is part of the Symfony package.
+ * (c) 2004-2026 7x (se7enxweb) <info@se7enx.com>. All rights reserved.
+ *
+ * This file is part of the 7x Prime package.
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  *
@@ -355,7 +357,15 @@ class Response
 
         // cookies
         foreach ($this->headers->getCookies() as $cookie) {
-            setcookie($cookie->getName(), $cookie->getValue(), $cookie->getExpiresTime(), $cookie->getPath(), $cookie->getDomain(), $cookie->isSecure(), $cookie->isHttpOnly());
+            // PHP 8.0+ options array supports SameSite natively.
+            setcookie($cookie->getName(), (string) $cookie->getValue(), [
+                'expires'  => $cookie->getExpiresTime(),
+                'path'     => $cookie->getPath(),
+                'domain'   => (string) $cookie->getDomain(),
+                'secure'   => $cookie->isSecure(),
+                'httponly' => $cookie->isHttpOnly(),
+                'samesite' => $cookie->getSameSite() ?? 'Lax',
+            ]);
         }
 
         return $this;
@@ -706,7 +716,7 @@ class Response
      *
      * @return $this
      */
-    public function setExpires(\DateTime $date = null)
+    public function setExpires(?\DateTime $date = null)
     {
         if (null === $date) {
             $this->headers->remove('Expires');
@@ -846,7 +856,7 @@ class Response
      *
      * @return $this
      */
-    public function setLastModified(\DateTime $date = null)
+    public function setLastModified(?\DateTime $date = null)
     {
         if (null === $date) {
             $this->headers->remove('Last-Modified');

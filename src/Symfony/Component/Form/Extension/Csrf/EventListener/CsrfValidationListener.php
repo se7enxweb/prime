@@ -54,7 +54,7 @@ class CsrfValidationListener implements EventSubscriberInterface
      * @param string|null               $translationDomain
      * @param ServerParams              $serverParams
      */
-    public function __construct($fieldName, $tokenManager, $tokenId, $errorMessage, TranslatorInterface $translator = null, $translationDomain = null, ServerParams $serverParams = null)
+    public function __construct($fieldName, $tokenManager, $tokenId, $errorMessage, ?TranslatorInterface $translator = null, $translationDomain = null, ?ServerParams $serverParams = null)
     {
         if ($tokenManager instanceof CsrfProviderInterface) {
             $tokenManager = new CsrfProviderAdapter($tokenManager);

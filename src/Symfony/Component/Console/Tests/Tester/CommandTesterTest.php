@@ -22,7 +22,7 @@ class CommandTesterTest extends TestCase
     protected $command;
     protected $tester;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->command = new Command('foo');
         $this->command->addArgument('command');
@@ -33,7 +33,7 @@ class CommandTesterTest extends TestCase
         $this->tester->execute(array('foo' => 'bar'), array('interactive' => false, 'decorated' => false, 'verbosity' => Output::VERBOSITY_VERBOSE));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->command = null;
         $this->tester = null;

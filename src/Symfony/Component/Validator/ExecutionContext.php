@@ -47,7 +47,7 @@ class ExecutionContext implements ExecutionContextInterface
      * @param string                          $group             The current validation group
      * @param string                          $propertyPath      The property path to the current node
      */
-    public function __construct(GlobalExecutionContextInterface $globalContext, TranslatorInterface $translator, $translationDomain = null, MetadataInterface $metadata = null, $value = null, $group = null, $propertyPath = '')
+    public function __construct(GlobalExecutionContextInterface $globalContext, TranslatorInterface $translator, $translationDomain = null, ?MetadataInterface $metadata = null, $value = null, $group = null, $propertyPath = '')
     {
         if (null === $group) {
             $group = Constraint::DEFAULT_GROUP;

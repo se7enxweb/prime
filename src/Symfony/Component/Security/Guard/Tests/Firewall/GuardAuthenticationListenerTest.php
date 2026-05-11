@@ -220,7 +220,7 @@ class GuardAuthenticationListenerTest extends TestCase
         $listener->handle($this->event);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->authenticationManager = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager')
             ->disableOriginalConstructor()
@@ -245,7 +245,7 @@ class GuardAuthenticationListenerTest extends TestCase
         $this->rememberMeServices = $this->getMockBuilder('Symfony\Component\Security\Http\RememberMe\RememberMeServicesInterface')->getMock();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->authenticationManager = null;
         $this->guardAuthenticatorHandler = null;

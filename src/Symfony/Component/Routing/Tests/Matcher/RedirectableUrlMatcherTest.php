@@ -87,7 +87,7 @@ class RedirectableUrlMatcherTest extends UrlMatcherTest
         $this->assertSame(array('_route' => 'foo'), $matcher->match('/foo'));
     }
 
-    protected function getUrlMatcher(RouteCollection $routes, RequestContext $context = null)
+    protected function getUrlMatcher(RouteCollection $routes, ?RequestContext $context = null)
     {
         return $this->getMockForAbstractClass('Symfony\Component\Routing\Matcher\RedirectableUrlMatcher', array($routes, $context ?: new RequestContext()));
     }

@@ -184,7 +184,7 @@ abstract class KernelTestCase extends TestCase
     /**
      * Clean up Kernel usage in this test.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         static::ensureKernelShutdown();
     }

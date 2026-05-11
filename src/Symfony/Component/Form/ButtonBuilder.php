@@ -272,7 +272,7 @@ class ButtonBuilder implements \IteratorAggregate, FormBuilderInterface
      *
      * @throws BadMethodCallException
      */
-    public function setDataMapper(DataMapperInterface $dataMapper = null)
+    public function setDataMapper(?DataMapperInterface $dataMapper = null)
     {
         throw new BadMethodCallException('Buttons do not support data mappers.');
     }

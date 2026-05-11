@@ -118,7 +118,7 @@ class FormLoginAuthenticatorTest extends TestCase
         $this->assertEquals(self::LOGIN_URL, $failureResponse->getTargetUrl());
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->requestWithoutSession = new Request(array(), array(), array(), array(), array(), array());
         $this->requestWithSession = new Request(array(), array(), array(), array(), array(), array());

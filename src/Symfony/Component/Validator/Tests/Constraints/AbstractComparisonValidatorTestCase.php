@@ -181,7 +181,7 @@ abstract class AbstractComparisonValidatorTestCase extends AbstractConstraintVal
      *
      * @return Constraint
      */
-    abstract protected function createConstraint(array $options = null);
+    abstract protected function createConstraint(?array $options = null);
 
     /**
      * @return string|null

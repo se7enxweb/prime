@@ -33,7 +33,7 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, ?\Exception $exception = null)
     {
         $responseHeaders = $response->headers->all();
         foreach ($response->headers->getCookies() as $cookie) {

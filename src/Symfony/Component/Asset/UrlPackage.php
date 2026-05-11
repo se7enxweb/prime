@@ -43,7 +43,7 @@ class UrlPackage extends Package
      * @param VersionStrategyInterface $versionStrategy The version strategy
      * @param ContextInterface|null    $context         Context
      */
-    public function __construct($baseUrls, VersionStrategyInterface $versionStrategy, ContextInterface $context = null)
+    public function __construct($baseUrls, VersionStrategyInterface $versionStrategy, ?ContextInterface $context = null)
     {
         parent::__construct($versionStrategy, $context);
 

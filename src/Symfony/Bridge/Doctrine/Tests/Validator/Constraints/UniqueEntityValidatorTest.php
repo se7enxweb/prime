@@ -53,7 +53,7 @@ class UniqueEntityValidatorTest extends AbstractConstraintValidatorTest
         return Validation::API_VERSION_2_5;
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->em = DoctrineTestHelper::createTestEntityManager();
         $this->registry = $this->createRegistryMock($this->em);
@@ -62,7 +62,7 @@ class UniqueEntityValidatorTest extends AbstractConstraintValidatorTest
         parent::setUp();
     }
 
-    protected function createRegistryMock(ObjectManager $em = null)
+    protected function createRegistryMock(?ObjectManager $em = null)
     {
         $registry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')->getMock();
         $registry->expects($this->any())

@@ -299,7 +299,7 @@ class XliffFileLoader implements LoaderInterface
      *
      * @return array
      */
-    private function parseNotesMetadata(\SimpleXMLElement $noteElement = null, $encoding = null)
+    private function parseNotesMetadata(?\SimpleXMLElement $noteElement = null, $encoding = null)
     {
         $notes = array();
 

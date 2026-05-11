@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Mapping\Cache\ApcCache;
  */
 class LegacyApcCacheTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN) || !filter_var(ini_get('apc.enable_cli'), FILTER_VALIDATE_BOOLEAN)) {
             $this->markTestSkipped('APC is not enabled.');

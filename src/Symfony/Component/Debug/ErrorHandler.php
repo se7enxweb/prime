@@ -174,7 +174,7 @@ class ErrorHandler
         return $handler;
     }
 
-    public function __construct(BufferingLogger $bootstrappingLogger = null)
+    public function __construct(?BufferingLogger $bootstrappingLogger = null)
     {
         if ($bootstrappingLogger) {
             $this->bootstrappingLogger = $bootstrappingLogger;
@@ -562,7 +562,7 @@ class ErrorHandler
      *
      * @internal
      */
-    public function handleException($exception, array $error = null)
+    public function handleException($exception, ?array $error = null)
     {
         if (null === $error) {
             self::$exitCode = 255;
@@ -640,7 +640,7 @@ class ErrorHandler
      *
      * @internal
      */
-    public static function handleFatalError(array $error = null)
+    public static function handleFatalError(?array $error = null)
     {
         if (null === self::$reservedMemory) {
             return;

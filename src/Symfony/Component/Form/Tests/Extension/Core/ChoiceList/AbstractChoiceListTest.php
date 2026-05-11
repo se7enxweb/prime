@@ -125,7 +125,7 @@ abstract class AbstractChoiceListTest extends TestCase
      */
     protected $label4;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

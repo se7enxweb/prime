@@ -29,7 +29,7 @@ class CacheClearCommandTest extends TestCase
     private $fs;
     private $rootDir;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fs = new Filesystem();
         $this->kernel = new TestAppKernel('test', true);
@@ -38,7 +38,7 @@ class CacheClearCommandTest extends TestCase
         $this->fs->mkdir($this->rootDir);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fs->remove($this->rootDir);
     }

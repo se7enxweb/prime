@@ -19,7 +19,7 @@ class ControllerNameParserTest extends TestCase
 {
     protected $loader;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->loader = new ClassLoader();
         $this->loader->addPrefixes(array(
@@ -29,7 +29,7 @@ class ControllerNameParserTest extends TestCase
         $this->loader->register();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         spl_autoload_unregister(array($this->loader, 'loadClass'));
 

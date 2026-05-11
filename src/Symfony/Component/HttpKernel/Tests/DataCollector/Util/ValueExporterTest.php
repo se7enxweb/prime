@@ -21,7 +21,7 @@ class ValueExporterTest extends TestCase
      */
     private $valueExporter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->valueExporter = new ValueExporter();
     }

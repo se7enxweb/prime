@@ -1,7 +1,9 @@
 <?php
 
 /*
- * This file is part of the Symfony package.
+ * (c) 2004-2026 7x (se7enxweb) <info@se7enx.com>. All rights reserved.
+ *
+ * This file is part of the 7x Prime package.
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  *
@@ -139,6 +141,11 @@ class HeaderBag implements \IteratorAggregate, \Countable
 
         $values = array_values((array) $values);
 
+        // Security: strip CR/LF to prevent HTTP response splitting (CWE-113).
+        $values = array_map(static function ($v) {
+            return str_replace(["\r", "\n"], '', (string) $v);
+        }, $values);
+
         if (true === $replace || !isset($this->headers[$key])) {
             $this->headers[$key] = $values;
         } else {
@@ -201,7 +208,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
      *
      * @throws \RuntimeException When the HTTP header is not parseable
      */
-    public function getDate($key, \DateTime $default = null)
+    public function getDate($key, ?\DateTime $default = null)
     {
         if (null === $value = $this->get($key)) {
             return $default;

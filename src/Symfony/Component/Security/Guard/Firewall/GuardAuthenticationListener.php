@@ -45,7 +45,7 @@ class GuardAuthenticationListener implements ListenerInterface
      * @param GuardAuthenticatorInterface[]  $guardAuthenticators   The authenticators, with keys that match what's passed to GuardAuthenticationProvider
      * @param LoggerInterface                $logger                A LoggerInterface instance
      */
-    public function __construct(GuardAuthenticatorHandler $guardHandler, AuthenticationManagerInterface $authenticationManager, $providerKey, array $guardAuthenticators, LoggerInterface $logger = null)
+    public function __construct(GuardAuthenticatorHandler $guardHandler, AuthenticationManagerInterface $authenticationManager, $providerKey, array $guardAuthenticators, ?LoggerInterface $logger = null)
     {
         if (empty($providerKey)) {
             throw new \InvalidArgumentException('$providerKey must not be empty.');
@@ -171,7 +171,7 @@ class GuardAuthenticationListener implements ListenerInterface
      * @param TokenInterface              $token
      * @param Response                    $response
      */
-    private function triggerRememberMe(GuardAuthenticatorInterface $guardAuthenticator, Request $request, TokenInterface $token, Response $response = null)
+    private function triggerRememberMe(GuardAuthenticatorInterface $guardAuthenticator, Request $request, TokenInterface $token, ?Response $response = null)
     {
         if (null === $this->rememberMeServices) {
             if (null !== $this->logger) {

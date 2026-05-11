@@ -25,13 +25,13 @@ class SymfonyStyleTest extends TestCase
     /** @var CommandTester */
     protected $tester;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->command = new Command('sfstyle');
         $this->tester = new CommandTester($this->command);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->command = null;
         $this->tester = null;

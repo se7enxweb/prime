@@ -29,7 +29,7 @@ class MongoDbProfilerStorageTestDataCollector extends DataCollector
         return $this->data;
     }
 
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, ?\Exception $exception = null)
     {
     }
 
@@ -130,7 +130,7 @@ class MongoDbProfilerStorageTest extends AbstractProfilerStorageTest
         return $this->storage;
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->storage = new MongoDbProfilerStorage('mongodb://localhost/symfony_tests/profiler_data', '', '', 86400);
         $m = new \ReflectionMethod($this->storage, 'getMongo');
@@ -144,7 +144,7 @@ class MongoDbProfilerStorageTest extends AbstractProfilerStorageTest
         $this->storage->purge();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->storage->purge();
     }

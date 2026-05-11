@@ -24,7 +24,7 @@ class OptionsResolver2Dot6Test extends TestCase
      */
     private $resolver;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->resolver = new OptionsResolver();
     }

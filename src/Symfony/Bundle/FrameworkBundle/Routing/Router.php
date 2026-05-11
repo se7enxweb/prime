@@ -34,7 +34,7 @@ class Router extends BaseRouter implements WarmableInterface
      * @param array              $options   An array of options
      * @param RequestContext     $context   The context
      */
-    public function __construct(ContainerInterface $container, $resource, array $options = array(), RequestContext $context = null)
+    public function __construct(ContainerInterface $container, $resource, array $options = array(), ?RequestContext $context = null)
     {
         $this->container = $container;
 

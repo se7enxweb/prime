@@ -33,7 +33,7 @@ class FormExtensionDivLayoutTest extends AbstractDivLayoutTest
         'choice_attr',
     );
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -60,7 +60,7 @@ class FormExtensionDivLayoutTest extends AbstractDivLayoutTest
         $this->extension->initRuntime($environment);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

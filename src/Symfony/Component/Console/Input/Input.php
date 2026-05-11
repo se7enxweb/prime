@@ -32,7 +32,7 @@ abstract class Input implements InputInterface
     protected $arguments = array();
     protected $interactive = true;
 
-    public function __construct(InputDefinition $definition = null)
+    public function __construct(?InputDefinition $definition = null)
     {
         if (null === $definition) {
             $this->definition = new InputDefinition();

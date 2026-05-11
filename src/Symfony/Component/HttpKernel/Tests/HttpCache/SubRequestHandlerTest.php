@@ -21,12 +21,12 @@ class SubRequestHandlerTest extends TestCase
 {
     private static $globalState;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         self::$globalState = $this->getGlobalState();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         foreach (self::$globalState[1] as $key => $name) {
             Request::setTrustedHeaderName($key, $name);

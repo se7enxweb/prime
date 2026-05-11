@@ -25,7 +25,7 @@ class LegacyOptionsTest extends TestCase
      */
     private $options;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->options = new OptionsResolver();
     }

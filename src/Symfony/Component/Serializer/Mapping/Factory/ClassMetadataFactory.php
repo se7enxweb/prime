@@ -27,7 +27,7 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
     private $cache;
     private $loadedClasses;
 
-    public function __construct(LoaderInterface $loader, Cache $cache = null)
+    public function __construct(LoaderInterface $loader, ?Cache $cache = null)
     {
         $this->loader = $loader;
         $this->cache = $cache;

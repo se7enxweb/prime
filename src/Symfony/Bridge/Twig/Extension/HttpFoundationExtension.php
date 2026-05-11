@@ -27,7 +27,7 @@ class HttpFoundationExtension extends AbstractExtension
     private $requestStack;
     private $requestContext;
 
-    public function __construct(RequestStack $requestStack, RequestContext $requestContext = null)
+    public function __construct(RequestStack $requestStack, ?RequestContext $requestContext = null)
     {
         $this->requestStack = $requestStack;
         $this->requestContext = $requestContext;

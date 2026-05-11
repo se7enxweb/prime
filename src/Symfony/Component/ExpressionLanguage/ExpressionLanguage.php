@@ -32,7 +32,7 @@ class ExpressionLanguage
      * @param ParserCacheInterface                  $cache
      * @param ExpressionFunctionProviderInterface[] $providers
      */
-    public function __construct(ParserCacheInterface $cache = null, array $providers = array())
+    public function __construct(?ParserCacheInterface $cache = null, array $providers = array())
     {
         $this->cache = $cache ?: new ArrayParserCache();
         $this->registerFunctions();

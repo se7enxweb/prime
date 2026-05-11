@@ -25,7 +25,7 @@ class TimedPhpEngine extends PhpEngine
 {
     protected $stopwatch;
 
-    public function __construct(TemplateNameParserInterface $parser, ContainerInterface $container, LoaderInterface $loader, Stopwatch $stopwatch, GlobalVariables $globals = null)
+    public function __construct(TemplateNameParserInterface $parser, ContainerInterface $container, LoaderInterface $loader, Stopwatch $stopwatch, ?GlobalVariables $globals = null)
     {
         parent::__construct($parser, $container, $loader, $globals);
 

@@ -17,7 +17,7 @@ class NumberTypeTest extends BaseTypeTest
 {
     const TESTED_TYPE = 'Symfony\Component\Form\Extension\Core\Type\NumberType';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

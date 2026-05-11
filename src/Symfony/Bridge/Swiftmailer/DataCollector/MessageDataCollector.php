@@ -46,7 +46,7 @@ class MessageDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, ?\Exception $exception = null)
     {
         // only collect when Swiftmailer has already been initialized
         if (class_exists('Swift_Mailer', false)) {

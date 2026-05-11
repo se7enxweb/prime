@@ -34,7 +34,7 @@ class RouterController
     private $matcher;
     private $routes;
 
-    public function __construct(Profiler $profiler = null, Environment $twig, UrlMatcherInterface $matcher = null, RouteCollection $routes = null)
+    public function __construct(?Profiler $profiler = null, Environment $twig, ?UrlMatcherInterface $matcher = null, ?RouteCollection $routes = null)
     {
         $this->profiler = $profiler;
         $this->twig = $twig;

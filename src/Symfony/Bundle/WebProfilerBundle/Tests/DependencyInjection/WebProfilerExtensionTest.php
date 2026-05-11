@@ -41,7 +41,7 @@ class WebProfilerExtensionTest extends TestCase
         self::assertEquals(array(), $errors, $message);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -63,7 +63,7 @@ class WebProfilerExtensionTest extends TestCase
         $this->container->set('kernel', $this->kernel);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

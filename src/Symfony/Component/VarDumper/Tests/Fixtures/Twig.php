@@ -5,7 +5,7 @@ class __TwigTemplate_VarDumperFixture_u75a09 extends Twig\Template
 {
     private $filename;
 
-    public function __construct(Twig\Environment $env = null, $filename = null)
+    public function __construct(?Twig\Environment $env = null, $filename = null)
     {
         if (null !== $env) {
             parent::__construct($env);

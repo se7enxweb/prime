@@ -24,7 +24,7 @@ use Symfony\Component\Locale\Locale;
  */
 class LocaleTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         \Locale::setDefault('en');
     }

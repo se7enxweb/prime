@@ -52,7 +52,7 @@ abstract class AbstractRememberMeServices implements RememberMeServicesInterface
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(array $userProviders, $secret, $providerKey, array $options = array(), LoggerInterface $logger = null)
+    public function __construct(array $userProviders, $secret, $providerKey, array $options = array(), ?LoggerInterface $logger = null)
     {
         if (empty($secret)) {
             throw new \InvalidArgumentException('$secret must not be empty.');

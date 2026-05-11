@@ -26,7 +26,7 @@ class FirewallContext
     private $exceptionListener;
     private $logoutListener;
 
-    public function __construct(array $listeners, ExceptionListener $exceptionListener = null, LogoutListener $logoutListener = null)
+    public function __construct(array $listeners, ?ExceptionListener $exceptionListener = null, ?LogoutListener $logoutListener = null)
     {
         $this->listeners = $listeners;
         $this->exceptionListener = $exceptionListener;

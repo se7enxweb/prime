@@ -28,7 +28,7 @@ class Debugger implements DebuggerInterface
 {
     protected $logger;
 
-    public function __construct(LoggerInterface $logger = null)
+    public function __construct(?LoggerInterface $logger = null)
     {
         $this->logger = $logger;
     }

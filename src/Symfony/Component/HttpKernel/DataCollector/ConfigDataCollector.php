@@ -41,7 +41,7 @@ class ConfigDataCollector extends DataCollector
     /**
      * Sets the Kernel associated with this Request.
      */
-    public function setKernel(KernelInterface $kernel = null)
+    public function setKernel(?KernelInterface $kernel = null)
     {
         $this->kernel = $kernel;
     }
@@ -49,7 +49,7 @@ class ConfigDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, ?\Exception $exception = null)
     {
         $this->data = array(
             'app_name' => $this->name,

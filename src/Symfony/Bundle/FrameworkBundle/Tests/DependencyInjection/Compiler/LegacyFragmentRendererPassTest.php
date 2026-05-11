@@ -55,7 +55,7 @@ class LegacyFragmentRendererPassTest extends TestCase
 
 class RendererService implements \Symfony\Component\HttpKernel\Fragment\FragmentRendererInterface
 {
-    public function render($uri, Request $request = null, array $options = array())
+    public function render($uri, ?Request $request = null, array $options = array())
     {
     }
 

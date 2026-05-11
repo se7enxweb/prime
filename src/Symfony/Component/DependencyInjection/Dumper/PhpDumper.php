@@ -1453,7 +1453,7 @@ EOF;
      *
      * @return string
      */
-    private function getServiceCall($id, Reference $reference = null)
+    private function getServiceCall($id, ?Reference $reference = null)
     {
         while ($this->container->hasAlias($id)) {
             $id = (string) $this->container->getAlias($id);

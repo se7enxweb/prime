@@ -40,7 +40,7 @@ class LegacyExecutionContextTest extends TestCase
      */
     private $context;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->visitor = $this->getMockBuilder('Symfony\Component\Validator\ValidationVisitor')
             ->disableOriginalConstructor()
@@ -65,7 +65,7 @@ class LegacyExecutionContextTest extends TestCase
         $this->context = new ExecutionContext($this->globalContext, $this->translator, self::TRANS_DOMAIN, $this->metadata, 'currentValue', 'Group', 'foo.bar');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->globalContext = null;
         $this->context = null;

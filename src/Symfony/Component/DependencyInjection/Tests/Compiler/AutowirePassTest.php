@@ -612,7 +612,7 @@ class LesTilleuls
 
 class OptionalParameter
 {
-    public function __construct(CollisionInterface $c = null, A $a, Foo $f = null)
+    public function __construct(?CollisionInterface $c = null, A $a, ?Foo $f = null)
     {
     }
 }
@@ -650,7 +650,7 @@ class MultipleArguments
 
 class MultipleArgumentsOptionalScalar
 {
-    public function __construct(A $a, $foo = 'default_val', Lille $lille = null)
+    public function __construct(A $a, $foo = 'default_val', ?Lille $lille = null)
     {
     }
 }

@@ -28,7 +28,7 @@ class ExportCommand extends Command
 {
     private $profiler;
 
-    public function __construct(Profiler $profiler = null)
+    public function __construct(?Profiler $profiler = null)
     {
         $this->profiler = $profiler;
 

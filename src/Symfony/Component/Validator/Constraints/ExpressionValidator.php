@@ -30,7 +30,7 @@ class ExpressionValidator extends ConstraintValidator
     private $propertyAccessor;
     private $expressionLanguage;
 
-    public function __construct(PropertyAccessorInterface $propertyAccessor = null, ExpressionLanguage $expressionLanguage = null)
+    public function __construct(?PropertyAccessorInterface $propertyAccessor = null, ?ExpressionLanguage $expressionLanguage = null)
     {
         $this->propertyAccessor = $propertyAccessor;
         $this->expressionLanguage = $expressionLanguage;

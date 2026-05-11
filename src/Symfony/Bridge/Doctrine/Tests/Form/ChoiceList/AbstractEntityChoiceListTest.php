@@ -38,7 +38,7 @@ abstract class AbstractEntityChoiceListTest extends AbstractChoiceListTest
 
     protected $obj4;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->em = DoctrineTestHelper::createTestEntityManager();
 
@@ -66,7 +66,7 @@ abstract class AbstractEntityChoiceListTest extends AbstractChoiceListTest
         parent::setUp();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

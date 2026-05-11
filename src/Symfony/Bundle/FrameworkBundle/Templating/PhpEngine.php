@@ -26,7 +26,7 @@ class PhpEngine extends BasePhpEngine implements EngineInterface
 {
     protected $container;
 
-    public function __construct(TemplateNameParserInterface $parser, ContainerInterface $container, LoaderInterface $loader, GlobalVariables $globals = null)
+    public function __construct(TemplateNameParserInterface $parser, ContainerInterface $container, LoaderInterface $loader, ?GlobalVariables $globals = null)
     {
         $this->container = $container;
 
@@ -65,7 +65,7 @@ class PhpEngine extends BasePhpEngine implements EngineInterface
     /**
      * {@inheritdoc}
      */
-    public function renderResponse($view, array $parameters = array(), Response $response = null)
+    public function renderResponse($view, array $parameters = array(), ?Response $response = null)
     {
         if (null === $response) {
             $response = new Response();

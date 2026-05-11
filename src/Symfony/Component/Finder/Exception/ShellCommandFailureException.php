@@ -25,7 +25,7 @@ class ShellCommandFailureException extends AdapterFailureException
 {
     private $command;
 
-    public function __construct(AdapterInterface $adapter, Command $command, \Exception $previous = null)
+    public function __construct(AdapterInterface $adapter, Command $command, ?\Exception $previous = null)
     {
         $this->command = $command;
         parent::__construct($adapter, 'Shell command failed: "'.$command->join().'".', $previous);

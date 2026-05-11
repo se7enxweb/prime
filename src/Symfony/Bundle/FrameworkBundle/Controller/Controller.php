@@ -179,7 +179,7 @@ class Controller extends ContainerAware
      *
      * @return Response A Response instance
      */
-    public function render($view, array $parameters = array(), Response $response = null)
+    public function render($view, array $parameters = array(), ?Response $response = null)
     {
         if ($this->container->has('templating')) {
             return $this->container->get('templating')->renderResponse($view, $parameters, $response);
@@ -207,7 +207,7 @@ class Controller extends ContainerAware
      *
      * @return StreamedResponse A StreamedResponse instance
      */
-    public function stream($view, array $parameters = array(), StreamedResponse $response = null)
+    public function stream($view, array $parameters = array(), ?StreamedResponse $response = null)
     {
         if ($this->container->has('templating')) {
             $templating = $this->container->get('templating');
@@ -246,7 +246,7 @@ class Controller extends ContainerAware
      *
      * @return NotFoundHttpException
      */
-    public function createNotFoundException($message = 'Not Found', \Exception $previous = null)
+    public function createNotFoundException($message = 'Not Found', ?\Exception $previous = null)
     {
         return new NotFoundHttpException($message, $previous);
     }
@@ -263,7 +263,7 @@ class Controller extends ContainerAware
      *
      * @return AccessDeniedException
      */
-    public function createAccessDeniedException($message = 'Access Denied.', \Exception $previous = null)
+    public function createAccessDeniedException($message = 'Access Denied.', ?\Exception $previous = null)
     {
         return new AccessDeniedException($message, $previous);
     }

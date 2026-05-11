@@ -31,7 +31,7 @@ class HttpCacheTestCase extends TestCase
     protected $esi;
     protected $store;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->kernel = null;
 
@@ -49,7 +49,7 @@ class HttpCacheTestCase extends TestCase
         $this->clearDirectory(sys_get_temp_dir().'/http_cache');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if ($this->cache) {
             $this->cache->getStore()->cleanup();
@@ -141,7 +141,7 @@ class HttpCacheTestCase extends TestCase
     }
 
     // A basic response with 200 status code and a tiny body.
-    public function setNextResponse($statusCode = 200, array $headers = array(), $body = 'Hello World', \Closure $customizer = null)
+    public function setNextResponse($statusCode = 200, array $headers = array(), $body = 'Hello World', ?\Closure $customizer = null)
     {
         $this->kernel = new TestHttpKernel($body, $statusCode, $headers, $customizer);
     }

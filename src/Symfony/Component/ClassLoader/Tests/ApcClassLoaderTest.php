@@ -17,7 +17,7 @@ use Symfony\Component\ClassLoader\ClassLoader;
 
 class ApcClassLoaderTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!(filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN) && filter_var(ini_get('apc.enable_cli'), FILTER_VALIDATE_BOOLEAN))) {
             $this->markTestSkipped('The apc extension is not enabled.');
@@ -26,7 +26,7 @@ class ApcClassLoaderTest extends TestCase
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN) && filter_var(ini_get('apc.enable_cli'), FILTER_VALIDATE_BOOLEAN)) {
             apcu_clear_cache();

@@ -54,7 +54,7 @@ class ResolvedFormType implements ResolvedFormTypeInterface
      */
     private $optionsResolver;
 
-    public function __construct(FormTypeInterface $innerType, array $typeExtensions = array(), ResolvedFormTypeInterface $parent = null)
+    public function __construct(FormTypeInterface $innerType, array $typeExtensions = array(), ?ResolvedFormTypeInterface $parent = null)
     {
         $fqcn = \get_class($innerType);
         $name = $innerType->getName();
@@ -163,7 +163,7 @@ class ResolvedFormType implements ResolvedFormTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function createView(FormInterface $form, FormView $parent = null)
+    public function createView(FormInterface $form, ?FormView $parent = null)
     {
         return $this->newView($parent);
     }
@@ -318,7 +318,7 @@ class ResolvedFormType implements ResolvedFormTypeInterface
      *
      * @return FormView A new view instance
      */
-    protected function newView(FormView $parent = null)
+    protected function newView(?FormView $parent = null)
     {
         return new FormView($parent);
     }

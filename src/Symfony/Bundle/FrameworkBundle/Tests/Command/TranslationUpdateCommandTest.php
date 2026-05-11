@@ -48,7 +48,7 @@ class TranslationUpdateCommandTest extends TestCase
         $this->assertRegExp('/Translation files were successfully updated./', $tester->getDisplay());
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fs = new Filesystem();
         $this->translationDir = sys_get_temp_dir().'/'.uniqid('sf2_translation', true);
@@ -56,7 +56,7 @@ class TranslationUpdateCommandTest extends TestCase
         $this->fs->mkdir($this->translationDir.'/Resources/views');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fs->remove($this->translationDir);
     }
@@ -75,7 +75,7 @@ class TranslationUpdateCommandTest extends TestCase
         return new CommandTester($application->find('translation:update'));
     }
 
-    private function getContainer($extractedMessages = array(), $loadedMessages = array(), HttpKernel\KernelInterface $kernel = null)
+    private function getContainer($extractedMessages = array(), $loadedMessages = array(), ?HttpKernel\KernelInterface $kernel = null)
     {
         $translator = $this->getMockBuilder('Symfony\Component\Translation\Translator')
             ->disableOriginalConstructor()

@@ -47,7 +47,7 @@ class NormalizationBuilder
      *
      * @return ExprBuilder|$this
      */
-    public function before(\Closure $closure = null)
+    public function before(?\Closure $closure = null)
     {
         if (null !== $closure) {
             $this->before[] = $closure;

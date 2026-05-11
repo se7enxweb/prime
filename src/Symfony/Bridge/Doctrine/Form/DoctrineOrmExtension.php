@@ -28,7 +28,7 @@ class DoctrineOrmExtension extends AbstractExtension
     private $propertyAccessor;
     private $choiceListFactory;
 
-    public function __construct(ManagerRegistry $registry, PropertyAccessorInterface $propertyAccessor = null, ChoiceListFactoryInterface $choiceListFactory = null)
+    public function __construct(ManagerRegistry $registry, ?PropertyAccessorInterface $propertyAccessor = null, ?ChoiceListFactoryInterface $choiceListFactory = null)
     {
         $this->registry = $registry;
         $this->propertyAccessor = $propertyAccessor ?: PropertyAccess::createPropertyAccessor();

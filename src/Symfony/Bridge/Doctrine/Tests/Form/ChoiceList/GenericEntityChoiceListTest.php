@@ -38,7 +38,7 @@ class GenericEntityChoiceListTest extends TestCase
      */
     private $em;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->em = DoctrineTestHelper::createTestEntityManager();
 
@@ -63,7 +63,7 @@ class GenericEntityChoiceListTest extends TestCase
         parent::setUp();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

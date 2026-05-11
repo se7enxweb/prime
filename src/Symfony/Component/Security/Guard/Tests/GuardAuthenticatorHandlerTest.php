@@ -155,7 +155,7 @@ class GuardAuthenticatorHandlerTest extends TestCase
         $handler->authenticateWithToken($this->token, $this->request, 'some_provider_key');
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->tokenStorage = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')->getMock();
         $this->dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')->getMock();
@@ -165,7 +165,7 @@ class GuardAuthenticatorHandlerTest extends TestCase
         $this->guardAuthenticator = $this->getMockBuilder('Symfony\Component\Security\Guard\GuardAuthenticatorInterface')->getMock();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->tokenStorage = null;
         $this->dispatcher = null;

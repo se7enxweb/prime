@@ -30,7 +30,7 @@ class MemcacheSessionHandlerTest extends TestCase
 
     protected $memcache;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (\defined('HHVM_VERSION')) {
             $this->markTestSkipped('PHPUnit_MockObject cannot mock the Memcache class on HHVM. See https://github.com/sebastianbergmann/phpunit-mock-objects/pull/289');
@@ -44,7 +44,7 @@ class MemcacheSessionHandlerTest extends TestCase
         );
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->memcache = null;
         $this->storage = null;

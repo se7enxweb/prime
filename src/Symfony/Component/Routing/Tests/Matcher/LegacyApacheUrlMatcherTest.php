@@ -23,12 +23,12 @@ class LegacyApacheUrlMatcherTest extends TestCase
 {
     protected $server;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->server = $_SERVER;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $_SERVER = $this->server;
     }

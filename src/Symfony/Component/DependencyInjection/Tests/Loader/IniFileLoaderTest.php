@@ -23,12 +23,12 @@ class IniFileLoaderTest extends TestCase
     protected $container;
     protected $loader;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$fixturesPath = realpath(__DIR__.'/../Fixtures/');
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->container = new ContainerBuilder();
         $this->loader = new IniFileLoader($this->container, new FileLocator(self::$fixturesPath.'/ini'));

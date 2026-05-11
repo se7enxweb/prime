@@ -86,7 +86,7 @@ class TwigEngine extends BaseEngine implements EngineInterface
      *
      * @throws Error if something went wrong like a thrown exception while rendering the template
      */
-    public function renderResponse($view, array $parameters = array(), Response $response = null)
+    public function renderResponse($view, array $parameters = array(), ?Response $response = null)
     {
         if (null === $response) {
             $response = new Response();

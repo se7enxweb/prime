@@ -57,7 +57,7 @@ class FormDataExtractorTest extends TestCase
      */
     private $factory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->valueExporter = new FormDataExtractorTest_SimpleValueExporter();
         $this->dataExtractor = new FormDataExtractor($this->valueExporter);

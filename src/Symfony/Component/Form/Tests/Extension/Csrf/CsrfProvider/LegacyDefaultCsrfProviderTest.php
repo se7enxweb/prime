@@ -23,12 +23,12 @@ class LegacyDefaultCsrfProviderTest extends TestCase
 {
     protected $provider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->provider = new DefaultCsrfProvider('SECRET');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->provider = null;
     }

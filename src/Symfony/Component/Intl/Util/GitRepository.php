@@ -78,7 +78,7 @@ final class GitRepository
         return new \DateTime($this->getLastLine($this->execInPath('git log -1 --format="%ai"')));
     }
 
-    public function getLastTag(callable $filter = null)
+    public function getLastTag(?callable $filter = null)
     {
         $tags = $this->execInPath('git tag -l --sort=v:refname');
 

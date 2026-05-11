@@ -49,7 +49,7 @@ abstract class AbstractConstraintValidatorTest extends TestCase
     protected $constraint;
     protected $defaultTimezone;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->group = 'MyGroup';
         $this->metadata = null;
@@ -71,7 +71,7 @@ abstract class AbstractConstraintValidatorTest extends TestCase
         $this->setDefaultTimezone('UTC');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->restoreDefaultTimezone();
     }
@@ -331,7 +331,7 @@ class ConstraintViolationAssertion
     private $constraint;
     private $cause;
 
-    public function __construct(LegacyExecutionContextInterface $context, $message, Constraint $constraint = null, array $assertions = array())
+    public function __construct(LegacyExecutionContextInterface $context, $message, ?Constraint $constraint = null, array $assertions = array())
     {
         $this->context = $context;
         $this->message = $message;

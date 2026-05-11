@@ -51,7 +51,7 @@ class SimplePreAuthenticationListener implements ListenerInterface
      * @param LoggerInterface|null            $logger                A LoggerInterface instance
      * @param EventDispatcherInterface|null   $dispatcher            An EventDispatcherInterface instance
      */
-    public function __construct(TokenStorageInterface $tokenStorage, AuthenticationManagerInterface $authenticationManager, $providerKey, SimplePreAuthenticatorInterface $simpleAuthenticator, LoggerInterface $logger = null, EventDispatcherInterface $dispatcher = null)
+    public function __construct(TokenStorageInterface $tokenStorage, AuthenticationManagerInterface $authenticationManager, $providerKey, SimplePreAuthenticatorInterface $simpleAuthenticator, ?LoggerInterface $logger = null, ?EventDispatcherInterface $dispatcher = null)
     {
         if (empty($providerKey)) {
             throw new \InvalidArgumentException('$providerKey must not be empty.');

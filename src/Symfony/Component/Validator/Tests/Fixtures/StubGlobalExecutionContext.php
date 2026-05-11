@@ -26,7 +26,7 @@ class StubGlobalExecutionContext implements GlobalExecutionContextInterface
     private $root;
     private $visitor;
 
-    public function __construct($root = null, ValidationVisitorInterface $visitor = null)
+    public function __construct($root = null, ?ValidationVisitorInterface $visitor = null)
     {
         $this->violations = new ConstraintViolationList();
         $this->root = $root;

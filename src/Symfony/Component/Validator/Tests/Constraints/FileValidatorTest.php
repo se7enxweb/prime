@@ -32,7 +32,7 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
         return new FileValidator();
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -41,7 +41,7 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
         fwrite($this->file, ' ', 1);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

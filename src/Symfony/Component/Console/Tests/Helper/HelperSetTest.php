@@ -109,7 +109,7 @@ class HelperSetTest extends TestCase
         }
     }
 
-    private function getGenericMockHelper($name, HelperSet $helperset = null)
+    private function getGenericMockHelper($name, ?HelperSet $helperset = null)
     {
         $mock_helper = $this->getMockBuilder('\Symfony\Component\Console\Helper\HelperInterface')->getMock();
         $mock_helper->expects($this->any())

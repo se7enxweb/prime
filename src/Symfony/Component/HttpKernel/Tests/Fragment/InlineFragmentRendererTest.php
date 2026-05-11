@@ -24,7 +24,7 @@ class InlineFragmentRendererTest extends TestCase
 {
     private $originalTrustedHeaderName;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->originalTrustedHeaderNames = array(
             Request::getTrustedHeaderName(Request::HEADER_CLIENT_IP),
@@ -32,7 +32,7 @@ class InlineFragmentRendererTest extends TestCase
         );
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         Request::setTrustedHeaderName(Request::HEADER_CLIENT_IP, $this->originalTrustedHeaderNames[0]);
         Request::setTrustedHeaderName(Request::HEADER_FORWARDED, $this->originalTrustedHeaderNames[1]);

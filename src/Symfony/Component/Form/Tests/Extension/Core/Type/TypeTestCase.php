@@ -19,7 +19,7 @@ use Symfony\Component\Form\Test\TypeTestCase as BaseTypeTestCase;
  */
 abstract class TypeTestCase extends BaseTypeTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         @trigger_error('Abstract class '.__CLASS__.' is deprecated since Symfony 2.3 and will be removed in 3.0. Use the Symfony\Component\Form\Test\TypeTestCase class instead.', E_USER_DEPRECATED);
         parent::setUp();

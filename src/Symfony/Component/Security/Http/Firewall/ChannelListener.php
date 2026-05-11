@@ -28,7 +28,7 @@ class ChannelListener implements ListenerInterface
     private $authenticationEntryPoint;
     private $logger;
 
-    public function __construct(AccessMapInterface $map, AuthenticationEntryPointInterface $authenticationEntryPoint, LoggerInterface $logger = null)
+    public function __construct(AccessMapInterface $map, AuthenticationEntryPointInterface $authenticationEntryPoint, ?LoggerInterface $logger = null)
     {
         $this->map = $map;
         $this->authenticationEntryPoint = $authenticationEntryPoint;

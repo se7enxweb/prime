@@ -90,7 +90,7 @@ class Router implements RouterInterface, RequestMatcherInterface
      * @param RequestContext  $context  The context
      * @param LoggerInterface $logger   A logger instance
      */
-    public function __construct(LoaderInterface $loader, $resource, array $options = array(), RequestContext $context = null, LoggerInterface $logger = null)
+    public function __construct(LoaderInterface $loader, $resource, array $options = array(), ?RequestContext $context = null, ?LoggerInterface $logger = null)
     {
         $this->loader = $loader;
         $this->resource = $resource;

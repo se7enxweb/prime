@@ -35,7 +35,7 @@ class DumpedUrlMatcherTest extends UrlMatcherTest
         parent::testSchemeRequirement();
     }
 
-    protected function getUrlMatcher(RouteCollection $routes, RequestContext $context = null)
+    protected function getUrlMatcher(RouteCollection $routes, ?RequestContext $context = null)
     {
         static $i = 0;
 

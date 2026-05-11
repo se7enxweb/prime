@@ -67,7 +67,7 @@ interface ResolvedFormTypeInterface
      *
      * @return FormView The created form view
      */
-    public function createView(FormInterface $form, FormView $parent = null);
+    public function createView(FormInterface $form, ?FormView $parent = null);
 
     /**
      * Configures a form builder for the type hierarchy.

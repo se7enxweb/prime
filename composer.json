@@ -1,11 +1,16 @@
 {
-    "name": "symfony/symfony",
+    "name": "se7enxweb/prime",
     "type": "library",
-    "description": "The Symfony PHP framework",
-    "keywords": ["framework"],
-    "homepage": "https://symfony.com",
+    "description": "7x Prime (v2.9) — a fast, secure, PHP 8.x compatible fork of Symfony v2.8.52 (The last release of that specific API version), maintained by 7x (se7enx.com)",
+    "keywords": ["framework", "php8", "symfony2", "7x", "prime"],
+    "homepage": "https://se7enx.com",
     "license": "MIT",
     "authors": [
+        {
+            "name": "7x",
+            "email": "info@se7enx.com",
+            "homepage": "https://se7enx.com"
+        },
         {
             "name": "Fabien Potencier",
             "email": "fabien@symfony.com"
@@ -16,21 +21,15 @@
         }
     ],
     "require": {
-        "php": ">=5.3.9",
+        "php": "^8.0",
         "ext-xml": "*",
         "doctrine/common": "~2.4",
-        "twig/twig": "~1.34|~2.4",
+        "se7enxweb/twig": "~1.34|~2.4",
         "psr/log": "~1.0",
         "symfony/security-acl": "~2.7|~3.0.0",
-        "symfony/polyfill-apcu": "~1.1",
         "symfony/polyfill-ctype": "~1.8",
         "symfony/polyfill-intl-icu": "~1.0",
-        "symfony/polyfill-mbstring": "~1.0",
-        "symfony/polyfill-php54": "~1.0",
-        "symfony/polyfill-php55": "~1.0",
-        "symfony/polyfill-php56": "~1.0",
-        "symfony/polyfill-php70": "~1.0",
-        "symfony/polyfill-util": "~1.0"
+        "symfony/polyfill-mbstring": "~1.0"
     },
     "replace": {
         "symfony/asset": "self.version",
@@ -120,7 +119,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-            "dev-master": "2.8-dev"
+            "dev-2.9": "2.9-dev"
         }
     }
 }
