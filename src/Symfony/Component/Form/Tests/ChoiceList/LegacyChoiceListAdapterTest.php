@@ -27,7 +27,7 @@ class LegacyChoiceListAdapterTest extends TestCase
     private $list;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|ChoiceListInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|ChoiceListInterface
      */
     private $adaptedList;
 

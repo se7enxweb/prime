@@ -34,7 +34,7 @@ class ViolationMapperTest extends TestCase
     const LEVEL_2 = 3;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $dispatcher;
 
@@ -89,7 +89,7 @@ class ViolationMapperTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getDataMapper()
     {

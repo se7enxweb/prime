@@ -70,7 +70,7 @@ abstract class AbstractFormTest extends TestCase
     /**
      * @param string $name
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getMockForm($name = 'name')
     {
@@ -88,7 +88,7 @@ abstract class AbstractFormTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getDataMapper()
     {
@@ -96,7 +96,7 @@ abstract class AbstractFormTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getDataTransformer()
     {
@@ -104,7 +104,7 @@ abstract class AbstractFormTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getFormValidator()
     {

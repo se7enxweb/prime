@@ -24,12 +24,12 @@ class PropertyPathMapperTest extends TestCase
     private $mapper;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $dispatcher;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $propertyAccessor;
 
@@ -41,7 +41,7 @@ class PropertyPathMapperTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getPropertyPath($path)
     {
@@ -56,7 +56,7 @@ class PropertyPathMapperTest extends TestCase
      * @param bool                $synchronized
      * @param bool                $submitted
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     private function getForm(FormConfigInterface $config, $synchronized = true, $submitted = true)
     {

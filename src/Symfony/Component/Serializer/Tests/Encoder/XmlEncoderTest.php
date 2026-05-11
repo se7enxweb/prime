@@ -646,7 +646,7 @@ XML;
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|NormalizerInterface
+     * @return \PHPUnit\Framework\MockObject\MockObject|NormalizerInterface
      */
     private function createMockDateTimeNormalizer()
     {

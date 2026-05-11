@@ -22,7 +22,7 @@ class DataCollectorExtensionTest extends TestCase
     private $extension;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $dataCollector;
 

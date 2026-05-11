@@ -27,17 +27,17 @@ use Symfony\Component\Form\ChoiceList\Factory\ChoiceListFactoryInterface;
 class DoctrineChoiceLoaderTest extends TestCase
 {
     /**
-     * @var ChoiceListFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ChoiceListFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $factory;
 
     /**
-     * @var ObjectManager|\PHPUnit_Framework_MockObject_MockObject
+     * @var ObjectManager|\PHPUnit\Framework\MockObject\MockObject
      */
     private $om;
 
     /**
-     * @var ObjectRepository|\PHPUnit_Framework_MockObject_MockObject
+     * @var ObjectRepository|\PHPUnit\Framework\MockObject\MockObject
      */
     private $repository;
 
@@ -47,12 +47,12 @@ class DoctrineChoiceLoaderTest extends TestCase
     private $class;
 
     /**
-     * @var IdReader|\PHPUnit_Framework_MockObject_MockObject
+     * @var IdReader|\PHPUnit\Framework\MockObject\MockObject
      */
     private $idReader;
 
     /**
-     * @var EntityLoaderInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EntityLoaderInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $objectLoader;
 

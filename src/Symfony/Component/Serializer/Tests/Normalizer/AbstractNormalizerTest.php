@@ -24,7 +24,7 @@ class AbstractNormalizerTest extends TestCase
     private $normalizer;
 
     /**
-     * @var ClassMetadataFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ClassMetadataFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     private $classMetadata;
 

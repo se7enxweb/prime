@@ -313,8 +313,8 @@ abstract class AbstractNumberFormatterTest extends TestCase
     {
         $exceptionCode = 'PHPUnit\Framework\Error\Warning';
 
-        if (class_exists('PHPUnit_Framework_Error_Warning')) {
-            $exceptionCode = 'PHPUnit_Framework_Error_Warning';
+        if (class_exists('PHPUnit\Framework\Error\Warning')) {
+            $exceptionCode = 'PHPUnit\Framework\Error\Warning';
         }
 
         $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}($exceptionCode);
@@ -662,8 +662,8 @@ abstract class AbstractNumberFormatterTest extends TestCase
     {
         $exceptionCode = 'PHPUnit\Framework\Error\Warning';
 
-        if (class_exists('PHPUnit_Framework_Error_Warning')) {
-            $exceptionCode = 'PHPUnit_Framework_Error_Warning';
+        if (class_exists('PHPUnit\Framework\Error\Warning')) {
+            $exceptionCode = 'PHPUnit\Framework\Error\Warning';
         }
 
         $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}($exceptionCode);
@@ -808,8 +808,8 @@ abstract class AbstractNumberFormatterTest extends TestCase
     {
         $exceptionCode = 'PHPUnit\Framework\Error\Warning';
 
-        if (class_exists('PHPUnit_Framework_Error_Warning')) {
-            $exceptionCode = 'PHPUnit_Framework_Error_Warning';
+        if (class_exists('PHPUnit\Framework\Error\Warning')) {
+            $exceptionCode = 'PHPUnit\Framework\Error\Warning';
         }
 
         $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}($exceptionCode);
