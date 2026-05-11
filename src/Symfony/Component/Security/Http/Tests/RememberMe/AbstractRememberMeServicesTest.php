@@ -261,7 +261,7 @@ class AbstractRememberMeServicesTest extends TestCase
         $service = $this->getService();
 
         $encoded = $this->callProtected($service, 'encodeCookie', array($cookieParts));
-        $this->assertInternalType('string', $encoded);
+        $this->assertIsString($encoded);
 
         $decoded = $this->callProtected($service, 'decodeCookie', array($encoded));
         $this->assertSame($cookieParts, $decoded);

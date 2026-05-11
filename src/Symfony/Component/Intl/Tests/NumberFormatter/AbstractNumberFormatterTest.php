@@ -702,7 +702,7 @@ abstract class AbstractNumberFormatterTest extends TestCase
         $formatter = $this->getNumberFormatter('en', NumberFormatter::DECIMAL);
 
         $parsedValue = $formatter->parse('2,147,483,647', NumberFormatter::TYPE_INT64);
-        $this->assertInternalType('integer', $parsedValue);
+        $this->assertIsInt($parsedValue);
         $this->assertEquals(2147483647, $parsedValue);
 
         $parsedValue = $formatter->parse('-2,147,483,648', NumberFormatter::TYPE_INT64);
@@ -710,9 +710,9 @@ abstract class AbstractNumberFormatterTest extends TestCase
         // Bug #59597 was fixed on PHP 5.3.14 and 5.4.4
         // The negative PHP_INT_MAX was being converted to float
         if ((\PHP_VERSION_ID < 50400 && \PHP_VERSION_ID >= 50314) || \PHP_VERSION_ID >= 50404 || (\extension_loaded('intl') && method_exists('IntlDateFormatter', 'setTimeZone'))) {
-            $this->assertInternalType('int', $parsedValue);
+            $this->assertIsInt($parsedValue);
         } else {
-            $this->assertInternalType('float', $parsedValue);
+            $this->assertIsFloat($parsedValue);
         }
 
         $this->assertEquals(-2147483648, $parsedValue);
@@ -725,11 +725,11 @@ abstract class AbstractNumberFormatterTest extends TestCase
         $formatter = $this->getNumberFormatter('en', NumberFormatter::DECIMAL);
 
         $parsedValue = $formatter->parse('2,147,483,647', NumberFormatter::TYPE_INT64);
-        $this->assertInternalType('integer', $parsedValue);
+        $this->assertIsInt($parsedValue);
         $this->assertEquals(2147483647, $parsedValue);
 
         $parsedValue = $formatter->parse('-2,147,483,648', NumberFormatter::TYPE_INT64);
-        $this->assertInternalType('integer', $parsedValue);
+        $this->assertIsInt($parsedValue);
         $this->assertEquals(-2147483647 - 1, $parsedValue);
     }
 
@@ -744,11 +744,11 @@ abstract class AbstractNumberFormatterTest extends TestCase
 
         // int 64 using only 32 bit range strangeness
         $parsedValue = $formatter->parse('2,147,483,648', NumberFormatter::TYPE_INT64);
-        $this->assertInternalType('float', $parsedValue);
+        $this->assertIsFloat($parsedValue);
         $this->assertEquals(2147483648, $parsedValue, '->parse() TYPE_INT64 does not use true 64 bit integers, using only the 32 bit range.');
 
         $parsedValue = $formatter->parse('-2,147,483,649', NumberFormatter::TYPE_INT64);
-        $this->assertInternalType('float', $parsedValue);
+        $this->assertIsFloat($parsedValue);
         $this->assertEquals(-2147483649, $parsedValue, '->parse() TYPE_INT64 does not use true 64 bit integers, using only the 32 bit range.');
     }
 
@@ -762,7 +762,7 @@ abstract class AbstractNumberFormatterTest extends TestCase
         $formatter = $this->getNumberFormatter('en', NumberFormatter::DECIMAL);
 
         $parsedValue = $formatter->parse('2,147,483,648', NumberFormatter::TYPE_INT64);
-        $this->assertInternalType('integer', $parsedValue);
+        $this->assertIsInt($parsedValue);
 
         // Bug #59597 was fixed on PHP 5.3.14 and 5.4.4
         // A 32 bit integer was being generated instead of a 64 bit integer
@@ -773,7 +773,7 @@ abstract class AbstractNumberFormatterTest extends TestCase
         }
 
         $parsedValue = $formatter->parse('-2,147,483,649', NumberFormatter::TYPE_INT64);
-        $this->assertInternalType('integer', $parsedValue);
+        $this->assertIsInt($parsedValue);
 
         // Bug #59597 was fixed on PHP 5.3.14 and 5.4.4
         // A 32 bit integer was being generated instead of a 64 bit integer

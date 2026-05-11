@@ -150,7 +150,7 @@ class CommandTest extends TestCase
         $cmd->add('--version');
         $result = $cmd->execute();
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertNotEmpty($result);
         $this->assertRegExp('/PHP|HipHop/', $result[0]);
     }

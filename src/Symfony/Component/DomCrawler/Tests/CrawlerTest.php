@@ -805,7 +805,7 @@ HTML;
     public function testLinks()
     {
         $crawler = $this->createTestCrawler('http://example.com/bar/')->selectLink('Foo');
-        $this->assertInternalType('array', $crawler->links(), '->links() returns an array');
+        $this->assertIsArray($crawler->links(), '->links() returns an array');
 
         $this->assertCount(4, $crawler->links(), '->links() returns an array');
         $links = $crawler->links();

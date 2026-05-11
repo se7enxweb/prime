@@ -106,7 +106,7 @@ class ContainerBuilderTest extends TestCase
         $this->assertNull($builder->get('foo', ContainerInterface::NULL_ON_INVALID_REFERENCE), '->get() returns null if the service does not exist and NULL_ON_INVALID_REFERENCE is passed as a second argument');
 
         $builder->register('foo', 'stdClass');
-        $this->assertInternalType('object', $builder->get('foo'), '->get() returns the service definition associated with the id');
+        $this->assertIsObject($builder->get('foo'), '->get() returns the service definition associated with the id');
         $builder->set('bar', $bar = new \stdClass());
         $this->assertEquals($bar, $builder->get('bar'), '->get() returns the service associated with the id');
         $builder->register('bar', 'stdClass');

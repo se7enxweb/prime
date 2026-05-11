@@ -706,7 +706,7 @@ class FormTypeTest extends BaseTypeTest
         $form = $builder->getForm();
 
         //This method should not throw a Fatal Error Exception.
-        $this->assertInternalType('string', $form->getErrorsAsString());
+        $this->assertIsString($form->getErrorsAsString());
     }
 
     public function testSubmitNull($expected = null, $norm = null, $view = null)
