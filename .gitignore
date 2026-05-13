@@ -1,3 +1,5 @@
+var/cache/dev
+var/cache/prod
 vendor/
 composer.lock
 phpunit.xml
