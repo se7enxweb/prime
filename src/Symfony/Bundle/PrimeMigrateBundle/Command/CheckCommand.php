@@ -54,12 +54,12 @@ before touching any code to understand the full scope of work.
 <comment>This command is 100% read-only — it never modifies any file.</comment>
 
 After reviewing the summary, use the individual sub-commands for detail:
-  <info>php bin/console prime:migrate:nullable</info>   — implicit nullable types
-  <info>php bin/console prime:migrate:forms</info>       — string form type aliases
-  <info>php bin/console prime:migrate:constraints</info> — reserved keyword constraints
-  <info>php bin/console prime:migrate:yaml</info>        — YAML !php/object: tags
-  <info>php bin/console prime:migrate:twig</info>        — Twig legacy class names
-  <info>php bin/console prime:migrate:report</info>      — full report (text/HTML/JSON)
+  <info>php bin/console prime:migrate:nullable --fix</info>   — implicit nullable types (auto-fixer)
+  <info>php bin/console prime:migrate:forms --fix</info>       — string form type aliases (auto-fixer)
+  <info>php bin/console prime:migrate:constraints</info>       — reserved keyword constraints
+  <info>php bin/console prime:migrate:yaml</info>              — YAML !php/object: tags
+  <info>php bin/console prime:migrate:twig</info>              — Twig legacy class names
+  <info>php bin/console prime:migrate:report</info>            — full report (text/HTML/JSON)
 HELP)
             ->addDirOption()
         ;
@@ -181,8 +181,12 @@ HELP)
             $output->writeln('');
             $output->writeln('Run <info>php bin/console prime:migrate:report</info> for full detail.');
 
+            $dirArg = '--dir=' . basename($dir) . '/';
             if ($nullableCount > 0) {
-                $output->writeln('Run <info>php bin/console prime:migrate:nullable --fix --dir=' . basename($dir) . '/</info> to auto-fix nullable types (preview with --dry-run first).');
+                $output->writeln('Run <info>php bin/console prime:migrate:nullable --fix ' . $dirArg . '</info> to auto-fix nullable types (preview with --dry-run first).');
+            }
+            if ($formsCount > 0) {
+                $output->writeln('Run <info>php bin/console prime:migrate:forms --fix ' . $dirArg . '</info> to auto-fix string form type aliases (preview with --dry-run first).');
             }
         }
 
