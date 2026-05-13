@@ -59,8 +59,8 @@ class FormsCommand extends AbstractMigrateCommand
 The <info>prime:migrate:forms</info> command scans your PHP source for the Symfony 2.3–2.7
 string-based form type API:
 
-  <comment>->add('name', 'text')</comment>     →  <info>->add('name', TextType::class)</info>
-  <comment>->add('age',  'integer')</comment>  →  <info>->add('age',  IntegerType::class)</info>
+  <comment>->add('name', TextType::class)</comment>     →  <info>->add('name', TextType::class)</info>
+  <comment>->add('age',  IntegerType::class)</comment>  →  <info>->add('age',  IntegerType::class)</info>
 
 These string aliases were deprecated in Symfony 2.8 and are not available in
 Symfony 3.0+. 7x Prime keeps them for backward compatibility but logs deprecations.

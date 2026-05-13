@@ -465,7 +465,9 @@ trait ScannerTrait
             if (str_starts_with($t, 'namespace ')) {
                 $namespaceIdx = $idx;
             }
-            if (str_starts_with($t, 'use ') && str_ends_with(rtrim($t), ';')) {
+            // Only count top-level `use` statements (no leading whitespace).
+            // Trait-use lines inside class bodies are indented and must be ignored.
+            if (str_starts_with($line, 'use ') && str_ends_with(rtrim($line), ';')) {
                 $lastUseIdx = $idx;
             }
         }
