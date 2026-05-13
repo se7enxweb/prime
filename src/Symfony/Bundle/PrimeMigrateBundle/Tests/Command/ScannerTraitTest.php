@@ -365,6 +365,228 @@ class ScannerTraitTest extends TestCase
         $this->assertArrayHasKey('snippet', $issues[0]);
     }
 
+    /**
+     * Regression: field names that match an alias (e.g. ->add('email', 'email'))
+     * must only produce ONE issue (the type position), not two.
+     */
+    public function testScanFormsDoesNotFlagFieldNameWhenItMatchesAlias(): void
+    {
+        $issues = Scanner::scanForms("->add('email', 'email')");
+        $this->assertCount(1, $issues, 'Only the type-position alias should be flagged, not the field name');
+        $this->assertSame('email', $issues[0]['alias']);
+    }
+
+    public function testScanFormsMultipleIssuesOnOneLine(): void
+    {
+        // Only ONE alias in type position on a single line is possible with ->add(),
+        // but we verify the issue count is exactly 1 here.
+        $issues = Scanner::scanForms("->add('name', 'text'), ->add('note', 'textarea')");
+        $this->assertCount(2, $issues);
+    }
+
+    public function testScanFormsReportsCorrectLineNumber(): void
+    {
+        $code   = "<?php\n\$b->add('name', 'text');\n";
+        $issues = Scanner::scanForms($code);
+        $this->assertCount(1, $issues);
+        $this->assertSame(2, $issues[0]['line']);
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // applyFormsFix — pure function / rewrite correctness
+    // ════════════════════════════════════════════════════════════════════════
+
+    public function testApplyFormsFixReplacesTextAlias(): void
+    {
+        $result = Scanner::applyFormsFix("<?php\n\$b->add('name', 'text');\n");
+        $this->assertSame(1, $result['count']);
+        $this->assertStringContainsString('TextType::class', $result['fixed']);
+        $this->assertStringNotContainsString("'text'", $result['fixed']);
+    }
+
+    public function testApplyFormsFixReplacesEmailWithFieldNameAlias(): void
+    {
+        // ->add('email', 'email') — field name 'email' must stay; type alias replaced
+        $result = Scanner::applyFormsFix("<?php\n\$b->add('email', 'email');\n");
+        $this->assertSame(1, $result['count']);
+        $fixed  = $result['fixed'];
+        $this->assertStringContainsString("'email'", $fixed, 'Field name must remain as string');
+        $this->assertStringContainsString('EmailType::class', $fixed);
+    }
+
+    public function testApplyFormsFixReplacesMultipleAliasesInOneFile(): void
+    {
+        $code = "<?php\n\$b->add('a', 'text');\n\$b->add('b', 'email');\n\$b->add('c', 'textarea');\n";
+        $result = Scanner::applyFormsFix($code);
+        $this->assertSame(3, $result['count']);
+        $this->assertStringContainsString('TextType::class', $result['fixed']);
+        $this->assertStringContainsString('EmailType::class', $result['fixed']);
+        $this->assertStringContainsString('TextareaType::class', $result['fixed']);
+    }
+
+    public function testApplyFormsFixInjectsUseAfterLastUseStatement(): void
+    {
+        $code = "<?php\nuse Foo\\Bar;\n\n\$b->add('name', 'text');\n";
+        $result = Scanner::applyFormsFix($code);
+        $fixed  = $result['fixed'];
+
+        $barPos = strpos($fixed, 'use Foo\\Bar;');
+        $textPos = strpos($fixed, 'use Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType;');
+        $this->assertNotFalse($textPos);
+        $this->assertGreaterThan($barPos, $textPos, 'New use must come after existing use statement');
+    }
+
+    public function testApplyFormsFixInjectsUseAfterNamespaceWhenNoUseExists(): void
+    {
+        $code = "<?php\nnamespace App\\Form;\n\n\$b->add('name', 'text');\n";
+        $result = Scanner::applyFormsFix($code);
+        $fixed  = $result['fixed'];
+
+        $nsPos  = strpos($fixed, 'namespace App\\Form;');
+        $usePos = strpos($fixed, 'use Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType;');
+        $this->assertNotFalse($usePos);
+        $this->assertGreaterThan($nsPos, $usePos);
+    }
+
+    public function testApplyFormsFixInjectsUseAfterPhpTagWhenNoNamespace(): void
+    {
+        $code = "<?php\n\n\$b->add('name', 'text');\n";
+        $result = Scanner::applyFormsFix($code);
+        $fixed  = $result['fixed'];
+
+        $phpPos = strpos($fixed, '<?php');
+        $usePos = strpos($fixed, 'use Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType;');
+        $this->assertNotFalse($usePos);
+        $this->assertGreaterThan($phpPos, $usePos);
+    }
+
+    public function testApplyFormsFixDoesNotDuplicateExistingUse(): void
+    {
+        $fqn  = 'Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType';
+        $code = "<?php\nuse {$fqn};\n\n\$b->add('name', 'text');\n";
+
+        $result = Scanner::applyFormsFix($code);
+        $fixed  = $result['fixed'];
+        $count  = substr_count($fixed, "use {$fqn};");
+        $this->assertSame(1, $count, 'Must not duplicate an already-present use statement');
+    }
+
+    public function testApplyFormsFixDoesNotInjectAlreadyPresentPartialUse(): void
+    {
+        // Some uses already there; only the missing one should be added.
+        $code = "<?php\nuse Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType;\n\n"
+              . "\$b->add('a', 'text');\n\$b->add('b', 'email');\n";
+
+        $result  = Scanner::applyFormsFix($code);
+        $fixed   = $result['fixed'];
+        $textCnt = substr_count($fixed, 'use Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType;');
+        $this->assertSame(1, $textCnt, 'TextType already imported — must not be duplicated');
+        $this->assertStringContainsString('use Symfony\\Component\\Form\\Extension\\Core\\Type\\EmailType;', $fixed);
+    }
+
+    public function testApplyFormsFixReturnsZeroCountWhenNothingToReplace(): void
+    {
+        $code   = "<?php\n\$b->add('name', TextType::class);\n";
+        $result = Scanner::applyFormsFix($code);
+        $this->assertSame(0, $result['count']);
+        $this->assertSame($code, $result['fixed']);
+        $this->assertSame([], $result['injected']);
+    }
+
+    public function testApplyFormsFixReturnValueHasExpectedKeys(): void
+    {
+        $result = Scanner::applyFormsFix("<?php\n\$b->add('n', 'text');\n");
+        $this->assertArrayHasKey('fixed',    $result);
+        $this->assertArrayHasKey('count',    $result);
+        $this->assertArrayHasKey('injected', $result);
+    }
+
+    public function testApplyFormsFixInjectedListMatchesUseStatements(): void
+    {
+        $code   = "<?php\n\$b->add('a', 'text');\n\$b->add('b', 'email');\n";
+        $result = Scanner::applyFormsFix($code);
+
+        $expectedFqns = [
+            'Symfony\\Component\\Form\\Extension\\Core\\Type\\EmailType',
+            'Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
+        ];
+        sort($expectedFqns);
+        $this->assertSame($expectedFqns, $result['injected']);
+    }
+
+    public function testApplyFormsFixHandlesEntityTypeWithDoctrineNamespace(): void
+    {
+        $code   = "<?php\n\$b->add('user', 'entity', ['class' => User::class]);\n";
+        $result = Scanner::applyFormsFix($code);
+        $this->assertSame(1, $result['count']);
+        $this->assertStringContainsString('EntityType::class', $result['fixed']);
+        $this->assertContains('Symfony\\Bridge\\Doctrine\\Form\\Type\\EntityType', $result['injected']);
+    }
+
+    public function testApplyFormsFixHandlesCreateFormCallShape(): void
+    {
+        $code   = "<?php\n\$form = \$this->createForm('text', \$data);\n";
+        $result = Scanner::applyFormsFix($code);
+        $this->assertSame(1, $result['count']);
+        $this->assertStringContainsString('TextType::class', $result['fixed']);
+    }
+
+    public function testApplyFormsFixIsIdempotent(): void
+    {
+        $code   = "<?php\n\$b->add('name', 'text');\n";
+        $pass1  = Scanner::applyFormsFix($code);
+        $pass2  = Scanner::applyFormsFix($pass1['fixed']);
+        $this->assertSame(0, $pass2['count'], 'Running fixer twice must produce no more changes');
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // formTypeNamespaceMap — coverage
+    // ════════════════════════════════════════════════════════════════════════
+
+    public function testFormTypeNamespaceMapKeySetMatchesFormTypeMap(): void
+    {
+        $mapKeys = array_keys(Scanner::formTypeMap());
+        $nsKeys  = array_keys(Scanner::formTypeNamespaceMap());
+        sort($mapKeys);
+        sort($nsKeys);
+        $this->assertSame($mapKeys, $nsKeys, 'formTypeNamespaceMap must cover every key in formTypeMap');
+    }
+
+    public function testFormTypeNamespaceMapAllValueAreFqns(): void
+    {
+        foreach (Scanner::formTypeNamespaceMap() as $alias => $fqn) {
+            $this->assertStringContainsString('\\', $fqn,
+                "formTypeNamespaceMap['{$alias}'] must be a FQCN, got '{$fqn}'"
+            );
+            $this->assertStringNotContainsString('::class', $fqn,
+                "formTypeNamespaceMap['{$alias}'] must NOT include '::class' suffix"
+            );
+        }
+    }
+
+    public function testFormTypeNamespaceMapTextType(): void
+    {
+        $map = Scanner::formTypeNamespaceMap();
+        $this->assertSame('Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType', $map['text']);
+    }
+
+    public function testFormTypeNamespaceMapEntityType(): void
+    {
+        $map = Scanner::formTypeNamespaceMap();
+        $this->assertSame('Symfony\\Bridge\\Doctrine\\Form\\Type\\EntityType', $map['entity']);
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // applyFormsFix — pure function safety proof
+    // ════════════════════════════════════════════════════════════════════════
+
+    public function testApplyFormsFixNeverWritesFiles(): void
+    {
+        $sentinel = sys_get_temp_dir() . '/prime_forms_fix_purity_' . uniqid('', true);
+        Scanner::applyFormsFix("<?php\n\$b->add('name', 'text');\n");
+        $this->assertFileDoesNotExist($sentinel);
+    }
+
     // ════════════════════════════════════════════════════════════════════════
     // scanConstraints
     // ════════════════════════════════════════════════════════════════════════

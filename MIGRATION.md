@@ -1349,7 +1349,7 @@ the framework source.
 |---------|---------|
 | `prime:migrate:check` | Comprehensive compatibility scan — runs all checks |
 | `prime:migrate:nullable` | Implicit nullable type scanner and auto-fixer |
-| `prime:migrate:forms` | String-based form type name scanner |
+| `prime:migrate:forms` | String-based form type scanner and auto-fixer |
 | `prime:migrate:constraints` | Reserved-keyword Validator constraint name scanner |
 | `prime:migrate:yaml` | YAML `!php/object:` usage scanner |
 | `prime:migrate:twig` | Twig 1.x `Twig_*` legacy class reference scanner |
@@ -1463,14 +1463,36 @@ public function setAuthor(?string $name = null, ?Author $author = null): void {}
 
 Scans PHP source files for string-based form type names — the Symfony 2.3–2.7 API
 deprecated in Symfony 2.8 and unavailable in Symfony 3.0+. 7x Prime retains the string
-aliases for backward compatibility but emits deprecation notices. This command is
-**report-only** — fixes must be applied manually.
+aliases for backward compatibility but emits deprecation notices.
+
+The command operates in three modes, mirroring `prime:migrate:nullable`:
 
 ```bash
+# Read-only scan — lists every affected file and line (nothing is written)
 php bin/console prime:migrate:forms --dir=src/
+
+# Preview the fix without writing (dry run)
+php bin/console prime:migrate:forms --dir=src/ --fix --dry-run
+
+# Apply the fix (writes files + injects use statements)
+php bin/console prime:migrate:forms --dir=src/ --fix
 ```
 
-**Example output:**
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `--dir=PATH` | Directory to scan (default: `src/`) |
+| `--fix` | Write the corrected files and inject `use` statements |
+| `--dry-run` | Show what would change without writing |
+
+**What the fixer does:**
+
+1. Replaces each string alias with the FQCN class constant (e.g. `'text'` → `TextType::class`)
+2. Injects the corresponding `use` statements alphabetically (no duplicates)
+3. Never touches files that are already clean
+
+**Example scan output:**
 
 ```
 Form Type String Alias Scanner
@@ -1478,22 +1500,78 @@ Form Type String Alias Scanner
 Scanning: src/
 
  src/MyBundle/Form/ArticleType.php
-   Line 22:  ->add('title',    'text')        → TextType::class
-   Line 23:  ->add('body',     'textarea')    → TextareaType::class
-   Line 24:  ->add('tags',     'collection')  → CollectionType::class
+   Line 22:  'text'  → TextType::class
+   Line 23:  'textarea'  → TextareaType::class
+   Line 24:  'collection'  → CollectionType::class
 
- src/MyBundle/Form/UserType.php
-   Line 18:  ->add('email',    'email')       → EmailType::class
-   Line 19:  ->add('password', 'password')    → PasswordType::class
+Found 3 string type issues in 1 file.
 
-Found 5 string type aliases in 2 files.
-
-Reference: MIGRATION.md — Step 9 (Form Type API) for the complete FQCN mapping table.
+To fix automatically:
+  php bin/console prime:migrate:forms --dir=src --fix --dry-run   (preview first)
+  php bin/console prime:migrate:forms --dir=src --fix              (apply)
 ```
 
-Apply the fixes manually by replacing each string alias with the FQCN class and adding the
-corresponding `use` statement. See [Step 9 — Form Type API](#11-step-9--form-type-api) for
-the full mapping table.
+**Example dry-run output:**
+
+```
+ [DRY RUN] src/MyBundle/Form/ArticleType.php — 3 replacements, 3 use statements would be added
+    + use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+    + use Symfony\Component\Form\Extension\Core\Type\TextType;
+    + use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+    Line 22:  'text'  → TextType::class
+    Line 23:  'textarea'  → TextareaType::class
+    Line 24:  'collection'  → CollectionType::class
+
+Dry run complete. 3 replacements in 1 file would be made.
+```
+
+**What the fixer produces:**
+
+```php
+// Before
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+
+class ArticleType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add('title', 'text')
+            ->add('body',  'textarea')
+            ->add('tags',  'collection')
+        ;
+    }
+}
+
+// After
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+
+class ArticleType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add('title', TextType::class)
+            ->add('body',  TextareaType::class)
+            ->add('tags',  CollectionType::class)
+        ;
+    }
+}
+```
+
+> **IMPORTANT:** Commit or stash your changes before running with `--fix`.
+> Review the result with `git diff src/` before committing.
+>
+> The `entity` type uses the Doctrine Bridge namespace:
+> `Symfony\Bridge\Doctrine\Form\Type\EntityType`. Verify the Doctrine Bridge
+> is installed in your project before using this type.
+
+See [Step 9 — Form Type API](#11-step-9--form-type-api) for the complete string-to-FQCN mapping table.
 
 ---
 
@@ -1673,9 +1751,11 @@ php bin/console prime:migrate:nullable --dir=src/ --fix              # apply
 git diff src/
 git add -A && git commit -m "Fix: explicit nullable types for PHP 8.4+ (prime:migrate:nullable)"
 
-# 5. Fix form type string aliases manually
-#    Use `prime:migrate:forms` output as your checklist.
-#    See MIGRATION.md Step 9 for the full FQCN mapping table.
+# 5. Fix form type string aliases (automated — fixer rewrites files + injects use statements)
+php bin/console prime:migrate:forms --dir=src/ --fix --dry-run   # preview
+php bin/console prime:migrate:forms --dir=src/ --fix              # apply
+git diff src/
+git add -A && git commit -m "Fix: FQCN form type names for Symfony 3.0+ (prime:migrate:forms)"
 
 # 6. Fix Twig legacy class references (if any)
 #    Use `prime:migrate:twig` output as your checklist.

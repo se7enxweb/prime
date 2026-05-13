@@ -312,9 +312,17 @@ trait ScannerTrait
         $aliases = implode('|', array_keys($typeMap));
         $lines   = explode("\n", $content);
 
-        // Pattern: string literal containing a known alias used as a form type
-        // Covers ->add(..., 'alias') / ->add(..., 'alias', [...]) / createForm('alias')
-        $re = '/[\'"](' . $aliases . ')[\'"](?:\s*,|\s*\))/';
+        // Pattern: string alias in the TYPE position only — not the field-name position.
+        //
+        // Handles two call shapes:
+        //   (a) Comma-preceded  →  ->add('fieldName', 'type')  /  ->add('f', 'type', [...])
+        //       The alias is after a comma, so it is NOT the first positional argument.
+        //   (b) Function-opened →  createForm('type', $data)  /  setType('type')
+        //       The alias IS the first argument but follows a named function open-paren.
+        //
+        // This avoids false-positives where a field name equals a type alias,
+        // e.g. ->add('email', 'email') previously matched 'email' twice (field + type).
+        $re = '/(?:,\s*|(?:createForm|setType|create)\s*\(\s*)[\'"](' . $aliases . ')[\'"](?:\s*,|\s*\))/';
 
         foreach ($lines as $idx => $line) {
             $trimmed = ltrim($line);
@@ -335,6 +343,144 @@ trait ScannerTrait
         }
 
         return $issues;
+    }
+
+    // ── Form type FQCN namespace map ──────────────────────────────────────────
+
+    /**
+     * Returns the fully-qualified namespace for each form type alias.
+     *
+     * Used by applyFormsFix() to inject `use` statements.
+     *
+     * @return array<string, string>  alias → FQCN (without ::class suffix)
+     */
+    public static function formTypeNamespaceMap(): array
+    {
+        $coreNs = 'Symfony\\Component\\Form\\Extension\\Core\\Type\\';
+        $map    = [];
+
+        foreach (self::formTypeMap() as $alias => $fqcn) {
+            $className  = str_replace('::class', '', $fqcn);
+            $map[$alias] = match ($alias) {
+                'entity' => 'Symfony\\Bridge\\Doctrine\\Form\\Type\\EntityType',
+                default  => $coreNs . $className,
+            };
+        }
+
+        return $map;
+    }
+
+    /**
+     * Applies the forms fix to a string of PHP source code.
+     *
+     * Replaces every string form type alias used as a form type name with its
+     * FQCN short class constant (e.g. `'text'` → `TextType::class`) and
+     * injects the corresponding `use` statements at the top of the file.
+     *
+     * This method is PURE (returns the fixed string, never writes a file).
+     * The caller decides whether to write the result.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyFormsFix(string $content): array
+    {
+        $typeMap = self::formTypeMap();
+        $nsMap   = self::formTypeNamespaceMap();
+        $aliases = implode('|', array_keys($typeMap));
+
+        // Same two-shape pattern as scanForms() — matches the TYPE position only.
+        // Group 1: the leading `,\s*` or `function(\s*` prefix (reconstructed verbatim).
+        // Group 2: the matched alias.
+        $re = '/(,\s*|(?:createForm|setType|create)\s*\(\s*)[\'"](' . $aliases . ')[\'"](?=\s*(?:,|\)))/';
+
+        $count       = 0;
+        $usedAliases = [];
+
+        $fixed = preg_replace_callback(
+            $re,
+            static function (array $m) use ($typeMap, &$count, &$usedAliases): string {
+                $prefix             = $m[1]; // comma+whitespace or function-open prefix
+                $alias              = $m[2];
+                $usedAliases[$alias] = true;
+                ++$count;
+
+                return $prefix . $typeMap[$alias]; // e.g. ', TextType::class'
+            },
+            $content
+        );
+
+        if ($fixed === null || $count === 0) {
+            return ['fixed' => $content, 'count' => 0, 'injected' => []];
+        }
+
+        // Determine which use statements need to be injected.
+        $toImport = [];
+        foreach (array_keys($usedAliases) as $alias) {
+            $fqn = $nsMap[$alias] ?? null;
+            if ($fqn === null) {
+                continue;
+            }
+            // Skip if a use statement for this FQN already exists in the original content.
+            if (strpos($content, 'use ' . $fqn) !== false) {
+                continue;
+            }
+            $toImport[] = $fqn;
+        }
+        sort($toImport);
+
+        if (!empty($toImport)) {
+            $fixed = self::injectUseStatements($fixed, $toImport);
+        }
+
+        return ['fixed' => $fixed, 'count' => $count, 'injected' => $toImport];
+    }
+
+    /**
+     * Inserts `use` statements into PHP source, sorted alphabetically.
+     *
+     * Placement preference:
+     *   1. After the last existing `use` statement.
+     *   2. After the `namespace` declaration (with a blank line separator).
+     *   3. After the `<?php` opening tag (with a blank line separator).
+     *   4. Prepended to the content if no anchor is found.
+     *
+     * @param string[] $fqns  Fully-qualified class names to import (without trailing ';')
+     */
+    private static function injectUseStatements(string $content, array $fqns): string
+    {
+        sort($fqns);
+
+        $useLines = array_map(static fn (string $fqn): string => 'use ' . $fqn . ';', $fqns);
+
+        $lines        = explode("\n", $content);
+        $lastUseIdx   = -1;
+        $namespaceIdx = -1;
+        $phpOpenIdx   = -1;
+
+        foreach ($lines as $idx => $line) {
+            $t = ltrim($line);
+            if ($phpOpenIdx === -1 && str_starts_with($t, '<?php')) {
+                $phpOpenIdx = $idx;
+            }
+            if (str_starts_with($t, 'namespace ')) {
+                $namespaceIdx = $idx;
+            }
+            if (str_starts_with($t, 'use ') && str_ends_with(rtrim($t), ';')) {
+                $lastUseIdx = $idx;
+            }
+        }
+
+        if ($lastUseIdx >= 0) {
+            array_splice($lines, $lastUseIdx + 1, 0, $useLines);
+        } elseif ($namespaceIdx >= 0) {
+            array_splice($lines, $namespaceIdx + 1, 0, array_merge([''], $useLines));
+        } elseif ($phpOpenIdx >= 0) {
+            array_splice($lines, $phpOpenIdx + 1, 0, array_merge([''], $useLines));
+        } else {
+            array_unshift($lines, ...$useLines);
+        }
+
+        return implode("\n", $lines);
     }
 
     // ── Validator reserved-keyword constraint scanner ─────────────────────────

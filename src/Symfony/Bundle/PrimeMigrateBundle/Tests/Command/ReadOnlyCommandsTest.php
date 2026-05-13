@@ -120,15 +120,16 @@ class ReadOnlyCommandsTest extends TestCase
     }
 
     /**
-     * SAFETY: forms command must never write any file.
+     * SAFETY: forms scan mode (no --fix) must never write any file.
+     * The --fix mode is tested separately in FormsCommandTest.
      */
-    public function testFormsCommandNeverWritesFiles(): void
+    public function testFormsCommandScanModeNeverWritesFiles(): void
     {
         $dir    = $this->makeDir(['Form.php' => "->add('name', 'text')\n->add('email', 'email')"]);
         $before = $this->dirChecksums($dir);
         $tester = $this->testerFor(new FormsCommand());
         $tester->execute(['--dir' => $dir], ['decorated' => false]);
-        $this->assertSame($before, $this->dirChecksums($dir), 'prime:migrate:forms must not write any file');
+        $this->assertSame($before, $this->dirChecksums($dir), 'prime:migrate:forms scan mode (no --fix) must not write any file');
         $this->removeDir($dir);
     }
 
