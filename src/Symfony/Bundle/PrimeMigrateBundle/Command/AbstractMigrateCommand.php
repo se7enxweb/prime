@@ -153,10 +153,11 @@ abstract class AbstractMigrateCommand extends Command
             if (!in_array(strtolower($f->getExtension()), $extensions, true)) {
                 return false;
             }
-            // Never scan the migrate-bundle's own test fixtures — they contain
-            // intentional string-alias examples that would be wrongly "fixed".
+            // Never scan the PrimeMigrateBundle's own source — it contains
+            // intentional string examples (maps, help text) that would be
+            // wrongly detected and corrupted by the fixers.
             $path = str_replace('\\', '/', $f->getPathname());
-            if (str_contains($path, 'PrimeMigrateBundle/Tests/')) {
+            if (str_contains($path, '/PrimeMigrateBundle/')) {
                 return false;
             }
             return true;

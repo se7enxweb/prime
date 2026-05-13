@@ -615,6 +615,96 @@ trait ScannerTrait
         return $issues;
     }
 
+    // ── Constraints auto-fixer ────────────────────────────────────────────────
+
+    /**
+     * Applies the constraints fix to a string of PHP source code.
+     *
+     * Replaces PHP-reserved constraint names with their Is* equivalents:
+     *   Constraints\True  → Constraints\IsTrue
+     *   Constraints\False → Constraints\IsFalse
+     *   Constraints\Null  → Constraints\IsNull
+     *   new True(         → new IsTrue(
+     *   new False(        → new IsFalse(
+     *   new Null(         → new IsNull(
+     *
+     * This method is PURE — it never writes a file.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyConstraintsFix(string $content): array
+    {
+        $count = 0;
+
+        // Namespace-qualified: Constraints\True / Constraints\False / Constraints\Null
+        $fixed = preg_replace_callback(
+            '/Constraints\\\\(True|False|Null)\b/',
+            static function (array $m) use (&$count): string {
+                ++$count;
+                return 'Constraints\\Is' . $m[1];
+            },
+            $content
+        );
+
+        // Bare: new True( / new False( / new Null(
+        $fixed = preg_replace_callback(
+            '/\bnew\s+(True|False|Null)\s*\(/',
+            static function (array $m) use (&$count): string {
+                ++$count;
+                return 'new Is' . $m[1] . '(';
+            },
+            $fixed ?? $content
+        );
+
+        return ['fixed' => $fixed ?? $content, 'count' => $count];
+    }
+
+    // ── Twig auto-fixer ───────────────────────────────────────────────────────
+
+    /**
+     * Applies the Twig legacy name fix to a string of PHP source code.
+     *
+     * Replaces every known Twig_* class reference with its Twig\ PSR-4 equivalent.
+     * References not in the known map are left unchanged.
+     *
+     * This method is PURE — it never writes a file.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyTwigFix(string $content): array
+    {
+        $count   = 0;
+        $twigMap = [
+            'Twig_Extension'         => 'Twig\\Extension\\AbstractExtension',
+            'Twig_SimpleFilter'      => 'Twig\\TwigFilter',
+            'Twig_SimpleFunction'    => 'Twig\\TwigFunction',
+            'Twig_SimpleTest'        => 'Twig\\TwigTest',
+            'Twig_Environment'       => 'Twig\\Environment',
+            'Twig_Loader_Filesystem' => 'Twig\\Loader\\FilesystemLoader',
+            'Twig_Loader_Array'      => 'Twig\\Loader\\ArrayLoader',
+            'Twig_Filter_Method'     => 'Twig\\TwigFilter',
+            'Twig_Function_Method'   => 'Twig\\TwigFunction',
+        ];
+
+        $classes = implode('|', array_map('preg_quote', array_keys($twigMap), array_fill(0, count($twigMap), '/')));
+
+        $fixed = preg_replace_callback(
+            '/(\\\\?)(' . $classes . ')\b/',
+            static function (array $m) use ($twigMap, &$count): string {
+                $prefix = $m[1]; // optional leading backslash — preserved
+                $cls    = $m[2];
+                if (!isset($twigMap[$cls])) {
+                    return $m[0];
+                }
+                ++$count;
+                return $prefix . $twigMap[$cls];
+            },
+            $content
+        );
+
+        return ['fixed' => $fixed ?? $content, 'count' => $count];
+    }
+
     // ── Aggregated file-level scan ────────────────────────────────────────────
 
     /**

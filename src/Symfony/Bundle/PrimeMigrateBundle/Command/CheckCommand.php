@@ -54,12 +54,12 @@ before touching any code to understand the full scope of work.
 <comment>This command is 100% read-only — it never modifies any file.</comment>
 
 After reviewing the summary, use the individual sub-commands for detail:
-  <info>php bin/console prime:migrate:nullable --fix</info>   — implicit nullable types (auto-fixer)
-  <info>php bin/console prime:migrate:forms --fix</info>       — string form type aliases (auto-fixer)
-  <info>php bin/console prime:migrate:constraints</info>       — reserved keyword constraints
-  <info>php bin/console prime:migrate:yaml</info>              — YAML !php/object: tags
-  <info>php bin/console prime:migrate:twig</info>              — Twig legacy class names
-  <info>php bin/console prime:migrate:report</info>            — full report (text/HTML/JSON)
+  <info>php bin/console prime:migrate:nullable --fix</info>      — implicit nullable types (auto-fixer)
+  <info>php bin/console prime:migrate:forms --fix</info>          — string form type aliases (auto-fixer)
+  <info>php bin/console prime:migrate:constraints --fix</info>    — reserved keyword constraints (auto-fixer)
+  <info>php bin/console prime:migrate:twig --fix</info>           — Twig legacy class names (auto-fixer)
+  <info>php bin/console prime:migrate:yaml</info>                 — YAML !php/object: tags
+  <info>php bin/console prime:migrate:report</info>               — full report (text/HTML/JSON)
 HELP)
             ->addDirOption()
         ;
@@ -189,10 +189,10 @@ HELP)
                 $output->writeln('Run <info>php bin/console prime:migrate:forms --fix ' . $dirArg . '</info> to auto-fix string form type aliases (preview with --dry-run first).');
             }
             if ($constraintCount > 0) {
-                $output->writeln('Run <info>php bin/console prime:migrate:constraints ' . $dirArg . '</info> to list reserved constraint names (True/False/Null → IsTrue/IsFalse/IsNull).');
+                $output->writeln('Run <info>php bin/console prime:migrate:constraints --fix ' . $dirArg . '</info> to auto-fix reserved constraint names (preview with --dry-run first).');
             }
             if ($twigCount > 0) {
-                $output->writeln('Run <info>php bin/console prime:migrate:twig ' . $dirArg . '</info> to list Twig_* legacy class references.');
+                $output->writeln('Run <info>php bin/console prime:migrate:twig --fix ' . $dirArg . '</info> to auto-fix known Twig_* class references (preview with --dry-run first).');
             }
             if ($yamlCount > 0) {
                 $output->writeln('Run <info>php bin/console prime:migrate:yaml ' . $dirArg . '</info> to list YAML !php/object: usages.');
