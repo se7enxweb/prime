@@ -103,7 +103,8 @@ class ScannerTraitTest extends TestCase
                 1,
             ],
             'namespaced class' => [
-                'public function setUser(?\App\Entity\User $user = null) {}',
+                // FQCN without leading ? — should be flagged as implicit nullable
+                'public function setUser(\App\Entity\User $user = null) {}',
                 1,
             ],
             'built-in array type' => [
@@ -119,7 +120,8 @@ class ScannerTraitTest extends TestCase
                 1,
             ],
             'multiple params in one line' => [
-                'function foo(?string $a = null, ?DateTime $b = null) {}',
+                // Two implicit nullable params (no ?) on one line — both should be flagged
+                'function foo(string $a = null, DateTime $b = null) {}',
                 2,
             ],
             'self type' => [
