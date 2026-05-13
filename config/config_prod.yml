@@ -1,0 +1,87 @@
+# config/config_prod.yml
+#
+# Production environment configuration.
+# Imported AFTER config.yml — values here override the base config.
+#
+# symfony1 equivalent: apps/site/config/app.yml env: prod section.
+# ──────────────────────────────────────────────────────────────────
+# Goals for production:
+#   - Maximum performance: caches on, debug off, strict mode off.
+#   - Minimal exposure: no profiler toolbar, no debug info in responses.
+#   - Stable logging: errors only, written to a persistent file.
+
+imports:
+    - { resource: config.yml }
+
+# ── Framework ──────────────────────────────────────────────────────────────────
+# Uncomment 'framework' and set 'secret' before deploying to production.
+# Generate a value with:  php -r "echo bin2hex(random_bytes(32));"
+#framework:
+#    secret: your-64-char-random-hex-string-goes-here
+
+# ── Twig ───────────────────────────────────────────────────────────────────────
+twig:
+    debug:            false   # no {% debug %} tag output
+    strict_variables: false   # undefined vars render as empty string (not exception)
+
+    # cache: Twig compiles templates to PHP files for speed.
+    # The kernel already sets the cache dir to var/cache/prod/twig; this is
+    # shown for reference — normally you do not need to set it manually.
+    #cache: "%kernel.cache_dir%/twig"
+
+# ── Monolog / Logging ──────────────────────────────────────────────────────────
+monolog:
+    handlers:
+        main:
+            type:  stream
+            path:  "%kernel.logs_dir%/%kernel.environment%.log"
+            level: error
+        console:
+            type:  console
+            process_psr_3_messages: false
+            channels: ["!event", "!doctrine"]
+
+# ── Doctrine (prod tuning) ─────────────────────────────────────────────────────
+# Uncomment ONE of the blocks below (matching whichever driver you chose in
+# config.yml), then remove the driver block from config.yml so it does not
+# conflict.
+#
+# OPTION A: SQLite in production (small/single-server apps)
+# The file path is the same as dev — var/data/prime.db — so no changes needed.
+# Ensure the file and its directory are writable by the PHP-FPM user (alpha):
+#   chown alpha:psaserv var/data/prime.db
+#   chmod 0664 var/data/prime.db
+#doctrine:
+#    dbal:
+#        driver: pdo_sqlite
+#        path:   "%kernel.root_dir%/var/data/prime.db"
+#    orm:
+#        auto_generate_proxy_classes: false   # use: php bin/console doctrine:generate:proxies
+#        # APCu caches require the apcu PHP extension (php85-pecl-apcu on cPanel/EasyApache)
+#        metadata_cache_driver: apcu
+#        query_cache_driver:    apcu
+#        result_cache_driver:   apcu
+#
+# OPTION B: MySQL/MariaDB in production
+# Override only the credentials here; driver/charset stay in config.yml.
+#doctrine:
+#    dbal:
+#        host:     127.0.0.1
+#        dbname:   prime_production
+#        user:     prime_user
+#        password: your-db-password
+#    orm:
+#        auto_generate_proxy_classes: false
+#        metadata_cache_driver: apcu
+#        query_cache_driver:    apcu
+#        result_cache_driver:   apcu
+
+# ── Swiftmailer (prod) ─────────────────────────────────────────────────────────
+# Uncomment if using SwiftmailerBundle.
+#swiftmailer:
+#    transport: smtp
+#    host:      mail.example.com
+#    port:      587
+#    encryption: tls
+#    username:  noreply@example.com
+#    password:  your-smtp-password

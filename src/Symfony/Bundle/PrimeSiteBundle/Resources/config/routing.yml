@@ -1,0 +1,47 @@
+# Symfony2 routing configuration for PrimeSiteBundle.
+#
+# Symfony2 equivalent of apps/site/config/routing.php (primer symfony1 project).
+#
+# symfony1 routing.php → Symfony2 routing.yml mapping
+# ──────────────────────────────────────────────────────────────────────────────
+#   $routing->connect('homepage', new sfRoute('/', [
+#       'module' => 'status', 'action' => 'homepage',
+#   ]));
+#     →  prime_site_homepage: { path: / }
+#
+#   $routing->connect('version', new sfRoute('/version', [
+#       'module' => 'status', 'action' => 'index',
+#   ]));
+#     →  prime_site_status: { path: /version }
+#
+# Note: symfony1 catch-all routes (/:module, /:module/:action) have no direct
+# Symfony2 equivalent. Symfony2 uses explicit route definitions; catch-alls are
+# expressed via route requirements with optional segments if needed.
+#
+# The _controller value uses the Bundle:Controller:action shorthand which
+# Symfony2 resolves via ControllerNameParser:
+#   PrimeSiteBundle:Status:homepage
+#     → Symfony\Bundle\PrimeSiteBundle\Controller\StatusController::homepageAction()
+#   PrimeSiteBundle:Status:index
+#     → Symfony\Bundle\PrimeSiteBundle\Controller\StatusController::indexAction()
+
+# Homepage — 301 permanent redirect to /version.
+# symfony1 equivalent: $routing->connect('homepage', new sfRoute('/', [...]))
+prime_site_homepage:
+    path:     /
+    defaults: { _controller: PrimeSiteBundle:Status:homepage }
+    methods:  [GET]
+
+# Status / version page — main installation check page.
+# symfony1 equivalent: $routing->connect('version', new sfRoute('/version', [...]))
+prime_site_status:
+    path:     /version
+    defaults: { _controller: PrimeSiteBundle:Status:index }
+    methods:  [GET]
+
+# Boot-error 503 preview — renders the 503 fallback with synthetic exception data.
+# Scenarios: ?scenario=cache (default) | ?scenario=generic
+prime_site_preview_boot_error:
+    path:     /503
+    defaults: { _controller: PrimeSiteBundle:Status:previewBootError }
+    methods:  [GET]

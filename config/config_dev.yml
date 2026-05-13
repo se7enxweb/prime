@@ -1,0 +1,77 @@
+# config/config_dev.yml
+#
+# Development environment configuration.
+# Imported AFTER config.yml — values here override the base config.
+#
+# symfony1 equivalent: apps/site/config/app.yml env: dev section + debug: true.
+# ───────────────────────────────────────────────────────────────────────────────
+# Goals for development:
+#   - Maximum visibility: debug on, strict templates, full profiler toolbar.
+#   - No caching: asset versioning off, Twig auto-reload on.
+#   - Verbose logging: every level captured, visible in the profiler.
+
+imports:
+    - { resource: config.yml }
+
+# ── Framework ──────────────────────────────────────────────────────────────────
+framework:
+    # router: show full route exceptions instead of generic 404/500 pages.
+    router:
+        strict_requirements: true
+
+    # profiler: enables the data-collector subsystem feeding the toolbar.
+    profiler:
+        only_exceptions: false   # collect on every request, not just exceptions
+
+# ── Twig ───────────────────────────────────────────────────────────────────────
+twig:
+    debug:            true    # enables {% debug %} tag, dump() function
+    strict_variables: true    # undefined variable = exception (catches typos fast)
+    auto_reload:      true    # re-compile templates on every request (no stale cache)
+
+# ── Web Profiler toolbar ───────────────────────────────────────────────────────
+# Requires WebProfilerBundle in registerBundles() (already included in dev).
+web_profiler:
+    toolbar:             true    # show the bottom debug toolbar on every page
+    intercept_redirects: false   # set true to pause on redirects and inspect state
+
+# ── Monolog / Logging ──────────────────────────────────────────────────────────
+monolog:
+    handlers:
+        main:
+            type:  stream
+            path:  "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug   # capture everything in dev
+        console:
+            type:  console
+            process_psr_3_messages: false
+            channels: ["!event", "!doctrine"]
+#        firephp:
+#            type:  firephp   # outputs to Firebug/browser extension
+#            level: info
+
+# ── Doctrine (dev tuning) ──────────────────────────────────────────────────────
+# Uncomment the block below after enabling a driver in config.yml.
+# In dev, proxies are regenerated on every request so entity changes take effect
+# immediately without running any console commands.
+#
+# SQLite tip: if you want a separate throw-away database per environment, change
+# the path here to use a different filename:
+#   path: "%kernel.root_dir%/var/data/prime_dev.db"
+# Reset it at any time with:
+#   rm var/data/prime_dev.db && php bin/console doctrine:schema:create
+#
+#doctrine:
+#    dbal:
+#        logging: true   # logs every SQL query to the Web Profiler
+#        # Override path for a dedicated dev database (SQLite only):
+#        #path: "%kernel.root_dir%/var/data/prime_dev.db"
+#    orm:
+#        auto_generate_proxy_classes: true   # regenerate entity proxies on every request
+
+# ── Swiftmailer (dev — catch all outgoing mail) ────────────────────────────────
+# Uncomment if using SwiftmailerBundle.
+# Redirects ALL outgoing email to a single address so you never spam real users.
+#swiftmailer:
+#    delivery_address: dev-mail@localhost
+#    disable_delivery:  false   # set true to suppress all outgoing mail entirely

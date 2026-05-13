@@ -1,0 +1,165 @@
+# config/config.yml
+#
+# Base application configuration — loaded in every environment.
+# Environment-specific files (config_prod.yml, config_dev.yml) are imported
+# AFTER this file and may override any value defined here.
+#
+# symfony1 equivalent: apps/site/config/app.yml + factories.yml
+# ──────────────────────────────────────────────────────────────
+# In symfony1 the framework was configured via a chain of YAML config files
+# processed by config-handler classes (sfApplicationConfiguration::getStandardHelpers,
+# sfFactoryConfigHandler, etc.).  In Symfony2/prime each bundle registers a DI
+# Extension that processes its config key via loadFromExtension() / load().
+#
+# Structure:
+#   config.yml          ← YOU ARE HERE — shared defaults (all envs)
+#   config_prod.yml     ← production overrides  (imported by PrimeKernel in prod)
+#   config_dev.yml      ← development overrides (imported by PrimeKernel in dev/test)
+#   routing.yml         ← top-level routing imports (all envs)
+
+# ── Framework ──────────────────────────────────────────────────────────────────
+# Docs: https://symfony.com/doc/2.8/reference/configuration/framework.html
+framework:
+
+    # secret: used to generate CSRF tokens and signed URIs.
+    # MUST be changed to a long random string in production.
+    # Generate one with:  php -r "echo bin2hex(random_bytes(32));"
+    secret: change-me-before-deploying-to-production
+
+    # templating: registers the Twig rendering engine.
+    # symfony1 equivalent: sfPHPView / sfTwigView plugin.
+    templating:
+        engines: [twig]
+
+    # router: reference to the routing resource loaded by the kernel.
+    # Uncomment and point to a standalone routing file if you move routes
+    # out of PrimeKernel::configureRoutes().
+    #router:
+    #    resource: "%kernel.root_dir%/config/routing.yml"
+
+    # default_locale: used by the translator and locale-aware components.
+    #default_locale: en
+
+    # translator: enable the Translator service and set the fallback locale.
+    #translator:
+    #    fallback: en
+
+    # session: configure PHP session handling.
+    #session:
+    #    handler_id:   ~        # null = native PHP session handler
+    #    cookie_secure: false   # set true when behind HTTPS only
+    #    cookie_httponly: true
+    #    gc_maxlifetime: 1440   # seconds (24 min default)
+
+    # form: enable the Form component and CSRF protection.
+    #form: ~
+
+    # csrf_protection: requires form to be enabled.
+    #csrf_protection: ~
+
+    # validation: enable the Validator component.
+    #validation:
+    #    enable_annotations: false
+
+    # serializer: enable the Serializer component.
+    #serializer:
+    #    enabled: false
+
+# ── Twig ───────────────────────────────────────────────────────────────────────
+# Docs: https://symfony.com/doc/2.8/reference/configuration/twig.html
+twig:
+    # debug and strict_variables are overridden per-environment below.
+    debug:            false
+    strict_variables: false
+
+    # globals: values available in every template as {{ variable_name }}.
+    # symfony1 equivalent: sfConfig::get('app_*') / $sf_data->getRaw('sf_user')
+    globals:
+        #app_name:    prime
+        #app_version: "%kernel.version%"
+
+    # form_themes: override default form widget rendering.
+    #form_themes:
+    #    - "form_div_layout.html.twig"
+
+    # paths: add extra template directories (searched before bundle Resources/views/).
+    # symfony1 equivalent: sfConfig::get('sf_template_dir') overrides.
+    #paths:
+    #    "%kernel.root_dir%/templates": ~
+
+# ── Monolog / Logging ──────────────────────────────────────────────────────────
+monolog:
+    channels: [app, security]
+    handlers:
+        main:
+            type:  stream
+            path:  "%kernel.logs_dir%/%kernel.environment%.log"
+            level: error
+        console:
+            type:  console
+            process_psr_3_messages: false
+            channels: ["!event", "!doctrine"]
+
+# ── Doctrine / Database ────────────────────────────────────────────────────────
+# Requires: doctrine/doctrine-bundle in composer.json
+# Step 1 — add to composer.json:
+#   "doctrine/doctrine-bundle": "^1.6",
+#   "doctrine/orm": "^2.5"
+# Step 2 — add to PrimeKernel::registerBundles():
+#   new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+# Step 3 — uncomment one of the driver blocks below, then run:
+#   php bin/console doctrine:database:create
+#   php bin/console doctrine:schema:create
+#
+# ┌─ OPTION A: SQLite — file-based, zero config, perfect for dev/small apps ─┐
+# │  The database is a single file stored under var/data/ so it is:           │
+# │   • excluded from web access (document root is public/, not project root) │
+# │   • writable by PHP-FPM (same ownership rules as var/cache/)              │
+# │   • easy to reset: delete the file and re-run doctrine:schema:create      │
+# │                                                                            │
+# │  %kernel.root_dir% resolves to the project root (the symfony/ directory). │
+# │  The path below therefore becomes: {project-root}/var/data/prime.db       │
+# └────────────────────────────────────────────────────────────────────────────┘
+#doctrine:
+#    dbal:
+#        driver:   pdo_sqlite
+#        path:     "%kernel.root_dir%/var/data/prime.db"
+#        # charset is irrelevant for SQLite but kept for parity:
+#        charset:  UTF8
+#    orm:
+#        auto_generate_proxy_classes: "%kernel.debug%"
+#        naming_strategy: doctrine.orm.naming_strategy.underscore
+#        auto_mapping: true
+#
+# After enabling, create the var/data/ directory and set permissions:
+#   mkdir -p var/data
+#   chown alpha:psaserv var/data
+#   chmod 0775 var/data
+#
+# ┌─ OPTION B: MySQL/MariaDB ──────────────────────────────────────────────────┐
+# │  Use this for staging and production. Override only host/dbname/user/pass  │
+# │  in config_prod.yml — keep the shared driver/charset here.                │
+# └────────────────────────────────────────────────────────────────────────────┘
+#doctrine:
+#    dbal:
+#        driver:   pdo_mysql
+#        host:     127.0.0.1
+#        port:     3306
+#        dbname:   prime
+#        user:     root
+#        password: ~
+#        charset:  UTF8
+#    orm:
+#        auto_generate_proxy_classes: "%kernel.debug%"
+#        naming_strategy: doctrine.orm.naming_strategy.underscore
+#        auto_mapping: true
+
+# ── Swiftmailer / Email ────────────────────────────────────────────────────────
+# Requires: symfony/swiftmailer-bundle in composer.json
+#swiftmailer:
+#    transport: smtp
+#    host:      127.0.0.1
+#    username:  ~
+#    password:  ~
+#    spool:
+#        type: memory   # 'file' for async delivery; specify 'path' when using file
