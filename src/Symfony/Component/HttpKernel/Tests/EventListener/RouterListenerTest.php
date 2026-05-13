@@ -51,7 +51,7 @@ class RouterListenerTest extends TestCase
         $this->assertEquals(0 === strpos($uri, 'https') ? 'https' : 'http', $context->getScheme());
     }
 
-    public function getPortData()
+    public static function getPortData()
     {
         return array(
             array(80, 443, 'http://localhost/', 80, 443),
@@ -149,7 +149,7 @@ class RouterListenerTest extends TestCase
         $listener->onKernelRequest(new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST));
     }
 
-    public function getLoggingParameterData()
+    public static function getLoggingParameterData()
     {
         return array(
             array(array('_route' => 'foo'), 'Matched route "foo".'),

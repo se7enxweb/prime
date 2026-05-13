@@ -147,7 +147,7 @@ class FormErrorIterator implements \RecursiveIterator, \SeekableIterator, \Array
      *
      * @return bool Whether that position exists
      */
-    public function offsetExists($position)
+    public function offsetExists($position): bool
     {
         return isset($this->errors[$position]);
     }
@@ -161,7 +161,7 @@ class FormErrorIterator implements \RecursiveIterator, \SeekableIterator, \Array
      *
      * @throws OutOfBoundsException If the given position does not exist
      */
-    public function offsetGet($position)
+    public function offsetGet($position): mixed
     {
         if (!isset($this->errors[$position])) {
             throw new OutOfBoundsException('The offset '.$position.' does not exist.');
@@ -175,7 +175,7 @@ class FormErrorIterator implements \RecursiveIterator, \SeekableIterator, \Array
      *
      * @throws BadMethodCallException
      */
-    public function offsetSet($position, $value)
+    public function offsetSet($position, $value): void
     {
         throw new BadMethodCallException('The iterator doesn\'t support modification of elements.');
     }
@@ -185,7 +185,7 @@ class FormErrorIterator implements \RecursiveIterator, \SeekableIterator, \Array
      *
      * @throws BadMethodCallException
      */
-    public function offsetUnset($position)
+    public function offsetUnset($position): void
     {
         throw new BadMethodCallException('The iterator doesn\'t support modification of elements.');
     }
@@ -226,7 +226,7 @@ class FormErrorIterator implements \RecursiveIterator, \SeekableIterator, \Array
      *
      * @return int The number of iterated elements
      */
-    public function count()
+    public function count(): int
     {
         return \count($this->errors);
     }

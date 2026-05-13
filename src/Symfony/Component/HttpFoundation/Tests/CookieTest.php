@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Cookie;
  */
 class CookieTest extends TestCase
 {
-    public function invalidNames()
+    public static function invalidNames()
     {
         return array(
             array(''),

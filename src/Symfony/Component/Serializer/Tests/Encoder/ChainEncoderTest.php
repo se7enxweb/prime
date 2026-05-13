@@ -110,7 +110,7 @@ class ChainEncoderTest extends TestCase
         $this->assertFalse($sut->needsNormalization(self::FORMAT_1));
     }
 
-    public function booleanProvider()
+    public static function booleanProvider()
     {
         return array(
             array(true),

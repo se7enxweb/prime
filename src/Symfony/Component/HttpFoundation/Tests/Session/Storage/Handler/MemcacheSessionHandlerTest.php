@@ -114,7 +114,7 @@ class MemcacheSessionHandlerTest extends TestCase
         }
     }
 
-    public function getOptionFixtures()
+    public static function getOptionFixtures()
     {
         return array(
             array(array('prefix' => 'session'), true),

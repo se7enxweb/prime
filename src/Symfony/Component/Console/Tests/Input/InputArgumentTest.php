@@ -52,7 +52,7 @@ class InputArgumentTest extends TestCase
         new InputArgument('foo', $mode);
     }
 
-    public function provideInvalidModes()
+    public static function provideInvalidModes()
     {
         return array(
             array('ANOTHER_ONE'),

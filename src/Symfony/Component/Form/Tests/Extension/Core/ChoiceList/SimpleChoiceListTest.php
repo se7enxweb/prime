@@ -63,7 +63,7 @@ class SimpleChoiceListTest extends AbstractChoiceListTest
         $this->assertSame(array($value), $this->list->getValuesForChoices(array($choice)));
     }
 
-    public function dirtyValuesProvider()
+    public static function dirtyValuesProvider()
     {
         return array(
             array(0, '0'),

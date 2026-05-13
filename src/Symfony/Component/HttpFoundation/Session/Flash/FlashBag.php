@@ -159,7 +159,7 @@ class FlashBag implements FlashBagInterface, \IteratorAggregate
      *
      * @return \ArrayIterator An \ArrayIterator instance
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.4 and will be removed in 3.0.', E_USER_DEPRECATED);
 

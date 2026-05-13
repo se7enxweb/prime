@@ -594,7 +594,7 @@ class UrlGeneratorTest extends TestCase
         $this->assertSame($expectedPath, UrlGenerator::getRelativePath($sourcePath, $targetPath));
     }
 
-    public function provideRelativePaths()
+    public static function provideRelativePaths()
     {
         return array(
             array(

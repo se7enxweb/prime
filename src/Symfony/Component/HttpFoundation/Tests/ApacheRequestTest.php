@@ -29,7 +29,7 @@ class ApacheRequestTest extends TestCase
         $this->assertEquals($expectedPathInfo, $request->getPathInfo(), '->getPathInfo() is correct');
     }
 
-    public function provideServerVars()
+    public static function provideServerVars()
     {
         return array(
             array(

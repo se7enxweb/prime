@@ -24,7 +24,7 @@ class ProcessUtilsTest extends TestCase
         $this->assertSame($result, ProcessUtils::escapeArgument($argument));
     }
 
-    public function dataArguments()
+    public static function dataArguments()
     {
         if ('\\' === \DIRECTORY_SEPARATOR) {
             return array(

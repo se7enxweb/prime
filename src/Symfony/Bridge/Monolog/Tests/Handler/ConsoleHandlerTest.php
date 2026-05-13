@@ -58,7 +58,7 @@ class ConsoleHandlerTest extends TestCase
         );
     }
 
-    public function provideVerbosityMappingTests()
+    public static function provideVerbosityMappingTests()
     {
         return array(
             array(OutputInterface::VERBOSITY_QUIET, Logger::ERROR, false),

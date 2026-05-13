@@ -171,7 +171,7 @@ class CsrfTokenManagerTest extends TestCase
         $this->assertSame('foo', $token->getId());
     }
 
-    public function getManagerGeneratorAndStorage()
+    public static function getManagerGeneratorAndStorage()
     {
         $data = array();
 

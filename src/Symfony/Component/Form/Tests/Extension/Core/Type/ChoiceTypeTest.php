@@ -2065,7 +2065,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertTrue($view->vars['placeholder_in_choices']);
     }
 
-    public function getOptionsWithPlaceholder()
+    public static function getOptionsWithPlaceholder()
     {
         return array(
             // single non-expanded
@@ -2129,7 +2129,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertFalse($view->vars['placeholder_in_choices']);
     }
 
-    public function getOptionsWithPlaceholderAndEmptyValue()
+    public static function getOptionsWithPlaceholderAndEmptyValue()
     {
         return array(
             // single non-expanded, not required
@@ -2425,7 +2425,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertEquals('All choices submitted must be NULL, strings or ints.', $form->getTransformationFailure()->getMessage());
     }
 
-    public function invalidNestedValueTestMatrix()
+    public static function invalidNestedValueTestMatrix()
     {
         return array(
             'non-multiple, non-expanded' => array(false, false, array(array())),
@@ -2617,7 +2617,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertSame($multiple ? (array) $valueWhitWhiteSpace : $valueWhitWhiteSpace, $form->getData());
     }
 
-    public function provideTrimCases()
+    public static function provideTrimCases()
     {
         return array(
             'Simple' => array(false, false),

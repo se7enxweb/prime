@@ -29,7 +29,7 @@ class TranslationSyncStatusTest extends TestCase
         }
     }
 
-    public function getTranslationDirectoriesData()
+    public static function getTranslationDirectoriesData()
     {
         $legacyTranslationsDir = $this->getLegacyTranslationsDirectory();
         $coreTranslationsDir = $this->getCoreTranslationsDirectory();

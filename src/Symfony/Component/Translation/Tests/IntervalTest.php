@@ -33,7 +33,7 @@ class IntervalTest extends TestCase
         Interval::test(1, 'foobar');
     }
 
-    public function getTests()
+    public static function getTests()
     {
         return array(
             array(true, 3, '{1,2, 3 ,4}'),

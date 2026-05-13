@@ -71,7 +71,7 @@ class ReflectionExtractorTest extends TestCase
         $this->assertEquals($type, $this->extractor->getTypes('Symfony\Component\PropertyInfo\Tests\Fixtures\Dummy', $property, array()));
     }
 
-    public function typesProvider()
+    public static function typesProvider()
     {
         return array(
             array('a', null),
@@ -95,7 +95,7 @@ class ReflectionExtractorTest extends TestCase
         $this->assertEquals($type, $this->extractor->getTypes('Symfony\Component\PropertyInfo\Tests\Fixtures\Php7Dummy', $property, array()));
     }
 
-    public function php7TypesProvider()
+    public static function php7TypesProvider()
     {
         return array(
             array('foo', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true))),
@@ -114,7 +114,7 @@ class ReflectionExtractorTest extends TestCase
         $this->assertEquals($type, $this->extractor->getTypes('Symfony\Component\PropertyInfo\Tests\Fixtures\Php71Dummy', $property, array()));
     }
 
-    public function php71TypesProvider()
+    public static function php71TypesProvider()
     {
         return array(
             array('foo', array(new Type(Type::BUILTIN_TYPE_ARRAY, true, null, true))),

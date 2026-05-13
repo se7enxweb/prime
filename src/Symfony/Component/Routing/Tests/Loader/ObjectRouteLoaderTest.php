@@ -51,7 +51,7 @@ class ObjectRouteLoaderTest extends TestCase
         $loader->load($resourceString);
     }
 
-    public function getBadResourceStrings()
+    public static function getBadResourceStrings()
     {
         return array(
             array('Foo'),

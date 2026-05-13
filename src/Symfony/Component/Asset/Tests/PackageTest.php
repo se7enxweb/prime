@@ -27,7 +27,7 @@ class PackageTest extends TestCase
         $this->assertEquals($expected, $package->getUrl($path));
     }
 
-    public function getConfigs()
+    public static function getConfigs()
     {
         return array(
             array('v1', '', 'http://example.com/foo', 'http://example.com/foo'),

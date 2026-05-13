@@ -16,7 +16,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 class DateTimeToStringTransformerTest extends TestCase
 {
-    public function dataProvider()
+    public static function dataProvider()
     {
         $data = array(
             array('Y-m-d H:i:s', '2010-02-03 16:05:06', '2010-02-03 16:05:06 UTC'),

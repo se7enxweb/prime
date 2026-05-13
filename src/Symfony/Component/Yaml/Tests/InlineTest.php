@@ -155,7 +155,7 @@ class InlineTest extends TestCase
         $this->assertSame($expected, Inline::parse($yaml, false, false, false, array('var' => 'var-value')));
     }
 
-    public function getDataForParseReferences()
+    public static function getDataForParseReferences()
     {
         return array(
             'scalar' => array('*var', 'var-value'),
@@ -252,7 +252,7 @@ class InlineTest extends TestCase
         $this->assertSame($expected, Inline::isHash($array));
     }
 
-    public function getDataForIsHash()
+    public static function getDataForIsHash()
     {
         return array(
             array(array(), false),
@@ -262,7 +262,7 @@ class InlineTest extends TestCase
         );
     }
 
-    public function getTestsForParse()
+    public static function getTestsForParse()
     {
         return array(
             array('', ''),
@@ -337,7 +337,7 @@ class InlineTest extends TestCase
         );
     }
 
-    public function getTestsForParseWithMapObjects()
+    public static function getTestsForParseWithMapObjects()
     {
         return array(
             array('', ''),
@@ -416,7 +416,7 @@ class InlineTest extends TestCase
         );
     }
 
-    public function getTestsForDump()
+    public static function getTestsForDump()
     {
         return array(
             array('null', null),

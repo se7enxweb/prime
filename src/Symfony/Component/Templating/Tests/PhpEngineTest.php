@@ -135,7 +135,7 @@ class PhpEngineTest extends TestCase
         $engine->render('foo.php', array($name => 'foo'));
     }
 
-    public function forbiddenParameterNames()
+    public static function forbiddenParameterNames()
     {
         return array(
             array('this'),

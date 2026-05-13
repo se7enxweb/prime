@@ -58,7 +58,7 @@ class PluralizationRulesTest extends TestCase
      *
      * @return array
      */
-    public function successLangcodes()
+    public static function successLangcodes()
     {
         return array(
             array('1', array('ay', 'bo', 'cgg', 'dz', 'id', 'ja', 'jbo', 'ka', 'kk', 'km', 'ko', 'ky')),
@@ -77,7 +77,7 @@ class PluralizationRulesTest extends TestCase
      *
      * @return array with nplural together with langcodes
      */
-    public function failingLangcodes()
+    public static function failingLangcodes()
     {
         return array(
             array('1', array('fa')),

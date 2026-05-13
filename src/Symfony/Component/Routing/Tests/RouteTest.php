@@ -133,7 +133,7 @@ class RouteTest extends TestCase
         $route->setRequirement('foo', $req);
     }
 
-    public function getInvalidRequirements()
+    public static function getInvalidRequirements()
     {
         return array(
            array(''),

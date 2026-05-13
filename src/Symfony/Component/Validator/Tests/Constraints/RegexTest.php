@@ -26,7 +26,7 @@ class RegexTest extends TestCase
         $this->assertSame('/^[0-9]+$/', $constraint->pattern);
     }
 
-    public function provideHtmlPatterns()
+    public static function provideHtmlPatterns()
     {
         return array(
             // HTML5 wraps the pattern in ^(?:pattern)$

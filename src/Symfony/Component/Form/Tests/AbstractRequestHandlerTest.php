@@ -44,7 +44,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $this->request = null;
     }
 
-    public function methodExceptGetProvider()
+    public static function methodExceptGetProvider()
     {
         return array(
             array('POST'),
@@ -54,7 +54,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         );
     }
 
-    public function methodProvider()
+    public static function methodProvider()
     {
         return array_merge(array(
             array('GET'),
@@ -338,7 +338,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         }
     }
 
-    public function getPostMaxSizeFixtures()
+    public static function getPostMaxSizeFixtures()
     {
         return array(
             array(pow(1024, 3) + 1, '1G', true, array('{{ max }}' => '1G')),

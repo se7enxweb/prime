@@ -49,7 +49,7 @@ class TwigExtractorTest extends TestCase
         }
     }
 
-    public function getExtractData()
+    public static function getExtractData()
     {
         return array(
             array('{{ "new key" | trans() }}', array('new key' => 'messages')),
@@ -104,7 +104,7 @@ class TwigExtractorTest extends TestCase
     /**
      * @return array
      */
-    public function resourcesWithSyntaxErrorsProvider()
+    public static function resourcesWithSyntaxErrorsProvider()
     {
         return array(
             array(__DIR__.'/../Fixtures'),
@@ -138,7 +138,7 @@ class TwigExtractorTest extends TestCase
     /**
      * @return array
      */
-    public function resourceProvider()
+    public static function resourceProvider()
     {
         $directory = __DIR__.'/../Fixtures/extractor/';
 

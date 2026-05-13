@@ -34,7 +34,7 @@ class RouteTest extends TestCase
         $this->assertEquals($route->$getter(), $value);
     }
 
-    public function getValidParameters()
+    public static function getValidParameters()
     {
         return array(
             array('value', '/Blog', 'getPath'),

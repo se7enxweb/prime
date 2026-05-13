@@ -78,7 +78,7 @@ class TranslatorTest extends TestCase
         $this->assertCount($count, $elements);
     }
 
-    public function getXpathLiteralTestData()
+    public static function getXpathLiteralTestData()
     {
         return array(
             array('foo', "'foo'"),
@@ -88,7 +88,7 @@ class TranslatorTest extends TestCase
         );
     }
 
-    public function getCssToXPathTestData()
+    public static function getCssToXPathTestData()
     {
         return array(
             array('*', '*'),
@@ -135,7 +135,7 @@ class TranslatorTest extends TestCase
         );
     }
 
-    public function getXmlLangTestData()
+    public static function getXmlLangTestData()
     {
         return array(
             array(':lang("EN")', array('first', 'second', 'third', 'fourth')),
@@ -150,7 +150,7 @@ class TranslatorTest extends TestCase
         );
     }
 
-    public function getHtmlIdsTestData()
+    public static function getHtmlIdsTestData()
     {
         return array(
             array('div', array('outer-div', 'li-div', 'foobar-div')),
@@ -273,7 +273,7 @@ class TranslatorTest extends TestCase
         );
     }
 
-    public function getHtmlShakespearTestData()
+    public static function getHtmlShakespearTestData()
     {
         return array(
             array('*', 246),

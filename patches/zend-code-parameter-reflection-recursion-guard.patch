@@ -1,0 +1,145 @@
+--- /dev/fd/63	2026-05-12 20:49:54.717002793 -0700
++++ vendor/zendframework/zend-code/src/Reflection/ParameterReflection.php	2026-05-12 20:48:35.647328220 -0700
+@@ -0,0 +1,142 @@
++<?php
++/**
++ * Zend Framework (http://framework.zend.com/)
++ *
++ * @link      http://github.com/zendframework/zf2 for the canonical source repository
++ * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
++ * @license   http://framework.zend.com/license/new-bsd New BSD License
++ */
++
++namespace Zend\Code\Reflection;
++
++use ReflectionParameter;
++
++class ParameterReflection extends ReflectionParameter implements ReflectionInterface
++{
++    /**
++     * @var bool
++     */
++    protected $isFromMethod = false;
++
++    /**
++     * Get declaring class reflection object
++     *
++     * @return ClassReflection
++     */
++    #[\ReturnTypeWillChange]
++    public function getDeclaringClass()
++    {
++        $phpReflection  = parent::getDeclaringClass();
++        $zendReflection = new ClassReflection($phpReflection->getName());
++        unset($phpReflection);
++
++        return $zendReflection;
++    }
++
++    /**
++     * Get class reflection object
++     *
++     * @return ClassReflection
++     */
++    #[\ReturnTypeWillChange]
++    public function getClass()
++    {
++        // ReflectionParameter::getClass() is deprecated since PHP 8.0; use parent::getType() (native PHP) instead
++        $type = parent::getType();
++        if (!($type instanceof \ReflectionNamedType) || $type->isBuiltin()) {
++            return null;
++        }
++
++        $className = $type->getName();
++        if (!class_exists($className) && !interface_exists($className)) {
++            return null;
++        }
++
++        return new ClassReflection($className);
++    }
++
++    /**
++     * Get declaring function reflection object
++     *
++     * @return FunctionReflection|MethodReflection
++     */
++    #[\ReturnTypeWillChange]
++    public function getDeclaringFunction()
++    {
++        $phpReflection = parent::getDeclaringFunction();
++        if ($phpReflection instanceof \ReflectionMethod) {
++            $zendReflection = new MethodReflection($this->getDeclaringClass()->getName(), $phpReflection->getName());
++        } else {
++            $zendReflection = new FunctionReflection($phpReflection->getName());
++        }
++        unset($phpReflection);
++
++        return $zendReflection;
++    }
++
++    /**
++     * Get parameter type
++     *
++     * @return string
++     */
++    #[\ReturnTypeWillChange]
++    public function getType()
++    {
++        // Use native getType() to avoid deprecated isArray()/isCallable()/getClass()
++        $nativeType = parent::getType();
++        if ($nativeType instanceof \ReflectionNamedType) {
++            if ($nativeType->getName() === 'array') {
++                return 'array';
++            }
++            if ($nativeType->getName() === 'callable') {
++                return 'callable';
++            }
++            if (!$nativeType->isBuiltin()) {
++                return $nativeType->getName();
++            }
++        }
++
++        // Guard against infinite recursion: FunctionReflection::getParameters()
++        // calls getType() on each ParameterReflection while building its info,
++        // and getDocBlock() triggers FunctionReflection which calls getParameters()
++        // again — causing unbounded recursion on PHP 8.5's tighter stack limits.
++        static $resolving = [];
++        $key = $this->getDeclaringClass() ? $this->getDeclaringClass()->getName() . '::' . $this->getDeclaringFunction()->getName() . '#' . $this->getPosition()
++                                          : $this->getDeclaringFunction()->getName() . '#' . $this->getPosition();
++        if (isset($resolving[$key])) {
++            return null;
++        }
++        $resolving[$key] = true;
++        try {
++            $docBlock = $this->getDeclaringFunction()->getDocBlock();
++            if (!$docBlock instanceof DocBlockReflection) {
++                return null;
++            }
++
++            $params = $docBlock->getTags('param');
++            if (isset($params[$this->getPosition()])) {
++                return $params[$this->getPosition()]->getType();
++            }
++        } finally {
++            unset($resolving[$key]);
++        }
++
++        return;
++    }
++
++    /**
++     * @return string
++     */
++    public function toString()
++    {
++        return parent::__toString();
++    }
++
++    /**
++     * @return string
++     */
++    public function __toString()
++    {
++        return parent::__toString();
++    }
++}

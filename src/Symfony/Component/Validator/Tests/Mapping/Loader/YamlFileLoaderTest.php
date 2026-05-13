@@ -51,7 +51,7 @@ class YamlFileLoaderTest extends TestCase
         $loader->loadClassMetadata($metadata);
     }
 
-    public function provideInvalidYamlFiles()
+    public static function provideInvalidYamlFiles()
     {
         return array(
             array('nonvalid-mapping.yml'),

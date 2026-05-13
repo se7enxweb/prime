@@ -41,7 +41,7 @@ class TemplateIterator implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         if (null !== $this->templates) {
             return $this->templates;

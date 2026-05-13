@@ -61,7 +61,7 @@ class CountryValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidCountries()
+    public static function getValidCountries()
     {
         return array(
             array('GB'),
@@ -87,7 +87,7 @@ class CountryValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidCountries()
+    public static function getInvalidCountries()
     {
         return array(
             array('foobar'),

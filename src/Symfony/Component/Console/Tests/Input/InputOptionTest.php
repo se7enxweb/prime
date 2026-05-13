@@ -89,7 +89,7 @@ class InputOptionTest extends TestCase
         new InputOption('foo', 'f', $mode);
     }
 
-    public function provideInvalidModes()
+    public static function provideInvalidModes()
     {
         return array(
             array('ANOTHER_ONE'),

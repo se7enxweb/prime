@@ -43,7 +43,7 @@ class StopwatchExtensionTest extends TestCase
         }
     }
 
-    public function getTimingTemplates()
+    public static function getTimingTemplates()
     {
         return array(
             array('{% stopwatch "foo" %}something{% endstopwatch %}', 'foo'),

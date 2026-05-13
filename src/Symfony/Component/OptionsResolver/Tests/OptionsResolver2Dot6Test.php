@@ -499,7 +499,7 @@ class OptionsResolver2Dot6Test extends TestCase
         $this->resolver->resolve(array('option' => $actualType));
     }
 
-    public function provideInvalidTypes()
+    public static function provideInvalidTypes()
     {
         return array(
             array(true, 'string', 'The option "option" with value true is expected to be of type "string", but is of type "boolean".'),

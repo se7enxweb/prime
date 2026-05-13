@@ -174,7 +174,7 @@ class BundleEntryReaderTest extends TestCase
         $this->reader->readEntry(self::RES_DIR, 'en_GB', array('Entries', 'Bam'), false);
     }
 
-    public function provideMergeableValues()
+    public static function provideMergeableValues()
     {
         return array(
             array('foo', null, 'foo'),

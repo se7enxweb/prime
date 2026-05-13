@@ -69,7 +69,7 @@ EOF;
         $this->assertEquals($expectedCatalogue, $actualCatalogue);
     }
 
-    public function resourcesProvider()
+    public static function resourcesProvider()
     {
         $directory = __DIR__.'/../Fixtures/Resources/views/';
         $splFiles = array();

@@ -50,12 +50,12 @@ class DateTimeToRfc3339TransformerTest extends TestCase
         );
     }
 
-    public function transformProvider()
+    public static function transformProvider()
     {
         return $this->allProvider();
     }
 
-    public function reverseTransformProvider()
+    public static function reverseTransformProvider()
     {
         return array_merge($this->allProvider(), array(
             // format without seconds, as appears in some browsers
@@ -144,7 +144,7 @@ class DateTimeToRfc3339TransformerTest extends TestCase
         $transformer->reverseTransform($date);
     }
 
-    public function invalidDateStringProvider()
+    public static function invalidDateStringProvider()
     {
         return array(
             'invalid month' => array('2010-2010-01'),

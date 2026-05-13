@@ -49,7 +49,7 @@ class ArrayNodeDefinitionTest extends TestCase
         $node->getNode();
     }
 
-    public function providePrototypeNodeSpecificCalls()
+    public static function providePrototypeNodeSpecificCalls()
     {
         return array(
             array('defaultValue', array(array())),
@@ -134,7 +134,7 @@ class ArrayNodeDefinitionTest extends TestCase
         }
     }
 
-    public function providePrototypedArrayNodeDefaults()
+    public static function providePrototypedArrayNodeDefaults()
     {
         return array(
             array(null, true, false, array(array())),
@@ -253,7 +253,7 @@ class ArrayNodeDefinitionTest extends TestCase
         $this->assertSame(array(), $node->getNode()->normalize(array('value' => null)));
     }
 
-    public function getEnableableNodeFixtures()
+    public static function getEnableableNodeFixtures()
     {
         return array(
             array(array('enabled' => true, 'foo' => 'bar'), array(true), 'true enables an enableable node'),

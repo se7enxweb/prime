@@ -39,7 +39,7 @@ class ExpressionLanguageTest extends TestCase
         $this->assertEquals($result, $expressionLanguage->evaluate($expression, $context));
     }
 
-    public function provider()
+    public static function provider()
     {
         $roles = array('ROLE_USER', 'ROLE_ADMIN');
         $user = new User('username', 'password', $roles);

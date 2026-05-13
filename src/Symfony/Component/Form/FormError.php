@@ -150,11 +150,17 @@ class FormError implements \Serializable
         ));
     }
 
-    /**
-     * Unserializes a serialized error.
-     *
-     * @param string $serialized The serialized error
-     */
+
+    public function __serialize(): array
+    {
+        return ['serialized' => $this->serialize()];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize($data['serialized']);
+    }
+
     public function unserialize($serialized)
     {
         list($this->message, $this->messageTemplate, $this->messageParameters, $this->messagePluralization, $this->cause) = unserialize($serialized);

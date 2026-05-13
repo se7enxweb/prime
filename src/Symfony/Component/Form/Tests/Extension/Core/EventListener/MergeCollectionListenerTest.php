@@ -49,7 +49,7 @@ abstract class MergeCollectionListenerTest extends TestCase
         return $this->getMockBuilder('Symfony\Component\Form\Test\FormInterface')->getMock();
     }
 
-    public function getBooleanMatrix1()
+    public static function getBooleanMatrix1()
     {
         return array(
             array(true),
@@ -57,7 +57,7 @@ abstract class MergeCollectionListenerTest extends TestCase
         );
     }
 
-    public function getBooleanMatrix2()
+    public static function getBooleanMatrix2()
     {
         return array(
             array(true, true),

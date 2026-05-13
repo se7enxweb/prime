@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Util\StringUtils;
  */
 class StringUtilsTest extends TestCase
 {
-    public function dataProviderTrue()
+    public static function dataProviderTrue()
     {
         return array(
             array('same', 'same'),
@@ -32,7 +32,7 @@ class StringUtilsTest extends TestCase
         );
     }
 
-    public function dataProviderFalse()
+    public static function dataProviderFalse()
     {
         return array(
             array('not1same', 'not2same'),

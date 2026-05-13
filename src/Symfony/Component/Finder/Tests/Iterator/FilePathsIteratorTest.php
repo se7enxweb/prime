@@ -32,7 +32,7 @@ class FilePathsIteratorTest extends RealIteratorTestCase
         }
     }
 
-    public function getSubPathData()
+    public static function getSubPathData()
     {
         $tmpDir = sys_get_temp_dir().'/symfony_finder';
 

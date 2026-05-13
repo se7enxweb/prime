@@ -373,7 +373,7 @@ class InputDefinitionTest extends TestCase
         $this->assertEquals($expectedSynopsis, $definition->getSynopsis(), $message ? '->getSynopsis() '.$message : '');
     }
 
-    public function getGetSynopsisData()
+    public static function getGetSynopsisData()
     {
         return array(
             array(new InputDefinition(array(new InputOption('foo'))), '[--foo]', 'puts optional options in square brackets'),

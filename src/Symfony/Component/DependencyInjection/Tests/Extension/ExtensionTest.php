@@ -26,7 +26,7 @@ class ExtensionTest extends TestCase
         $this->assertSame($enabled, $extension->isConfigEnabled(new ContainerBuilder(), array('enabled' => $enabled)));
     }
 
-    public function getResolvedEnabledFixtures()
+    public static function getResolvedEnabledFixtures()
     {
         return array(
             array(true),

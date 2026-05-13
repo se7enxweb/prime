@@ -71,7 +71,7 @@ class UrlValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidUrls()
+    public static function getValidUrls()
     {
         return array(
             array('http://a.pl'),
@@ -153,7 +153,7 @@ class UrlValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidUrls()
+    public static function getInvalidUrls()
     {
         return array(
             array('google.com'),
@@ -194,7 +194,7 @@ class UrlValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidCustomUrls()
+    public static function getValidCustomUrls()
     {
         return array(
             array('ftp://google.com'),
@@ -228,7 +228,7 @@ class UrlValidatorTest extends AbstractConstraintValidatorTest
         }
     }
 
-    public function getCheckDns()
+    public static function getCheckDns()
     {
         return array(array(true), array(false));
     }

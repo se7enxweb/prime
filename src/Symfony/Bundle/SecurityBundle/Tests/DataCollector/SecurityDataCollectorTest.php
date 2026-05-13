@@ -86,7 +86,7 @@ class SecurityDataCollectorTest extends TestCase
         $this->assertSame('hhamon', $collector->getUser());
     }
 
-    public function provideRoles()
+    public static function provideRoles()
     {
         return array(
             // Basic roles

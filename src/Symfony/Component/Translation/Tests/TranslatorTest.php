@@ -403,7 +403,7 @@ class TranslatorTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function getTransFileTests()
+    public static function getTransFileTests()
     {
         return array(
             array('csv', 'CsvFileLoader'),
@@ -418,7 +418,7 @@ class TranslatorTest extends TestCase
         );
     }
 
-    public function getTransTests()
+    public static function getTransTests()
     {
         return array(
             array('Symfony est super !', 'Symfony is great!', 'Symfony est super !', array(), 'fr', ''),
@@ -427,7 +427,7 @@ class TranslatorTest extends TestCase
         );
     }
 
-    public function getFlattenedTransTests()
+    public static function getFlattenedTransTests()
     {
         $messages = array(
             'symfony' => array(
@@ -450,7 +450,7 @@ class TranslatorTest extends TestCase
         );
     }
 
-    public function getTransChoiceTests()
+    public static function getTransChoiceTests()
     {
         return array(
             array('Il y a 0 pomme', '{0} There are no appless|{1} There is one apple|]1,Inf] There is %count% apples', '[0,1] Il y a %count% pomme|]1,Inf] Il y a %count% pommes', 0, array('%count%' => 0), 'fr', ''),
@@ -473,7 +473,7 @@ class TranslatorTest extends TestCase
         );
     }
 
-    public function getInvalidLocalesTests()
+    public static function getInvalidLocalesTests()
     {
         return array(
             array('fr FR'),
@@ -490,7 +490,7 @@ class TranslatorTest extends TestCase
         );
     }
 
-    public function getValidLocalesTests()
+    public static function getValidLocalesTests()
     {
         return array(
             array(''),
@@ -561,7 +561,7 @@ class TranslatorTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function dataProviderGetMessages()
+    public static function dataProviderGetMessages()
     {
         $resources = array(
             'en' => array(

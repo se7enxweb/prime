@@ -38,7 +38,7 @@ class LegacyRenderTokenParserTest extends TestCase
         $this->assertEquals($expected, $parser->parse($stream)->getNode('body')->getNode(0));
     }
 
-    public function getTestsForRender()
+    public static function getTestsForRender()
     {
         return array(
             array(

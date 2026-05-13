@@ -109,7 +109,7 @@ class FormView implements \ArrayAccess, \IteratorAggregate, \Countable
      * @return self The child view
      */
     #[\ReturnTypeWillChange]
-    public function offsetGet($name)
+    public function offsetGet($name): mixed
     {
         return $this->children[$name];
     }

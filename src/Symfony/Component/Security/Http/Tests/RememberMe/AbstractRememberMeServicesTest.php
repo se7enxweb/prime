@@ -104,7 +104,7 @@ class AbstractRememberMeServicesTest extends TestCase
         $this->assertSame($options['httponly'], $cookie->isHttpOnly());
     }
 
-    public function provideOptionsForLogout()
+    public static function provideOptionsForLogout()
     {
         return array(
             array(array('name' => 'foo', 'path' => '/', 'domain' => null, 'secure' => false, 'httponly' => true)),
@@ -245,7 +245,7 @@ class AbstractRememberMeServicesTest extends TestCase
         $service->loginSuccess($request, $response, $token);
     }
 
-    public function getPositiveRememberMeParameterValues()
+    public static function getPositiveRememberMeParameterValues()
     {
         return array(
             array('true'),

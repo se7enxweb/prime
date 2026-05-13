@@ -202,7 +202,7 @@ class FormTest extends TestCase
         );
     }
 
-    public function provideInitializeValues()
+    public static function provideInitializeValues()
     {
         return array(
             array(
@@ -546,7 +546,7 @@ class FormTest extends TestCase
         $this->assertEquals('http://localhost/foo/bar', $form->getUri(), '->getUri() returns path if no action defined');
     }
 
-    public function provideGetUriValues()
+    public static function provideGetUriValues()
     {
         return array(
             array(

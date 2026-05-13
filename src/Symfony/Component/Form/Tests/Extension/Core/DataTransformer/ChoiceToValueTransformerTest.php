@@ -35,7 +35,7 @@ class ChoiceToValueTransformerTest extends TestCase
         $this->transformerWithNull = null;
     }
 
-    public function transformProvider()
+    public static function transformProvider()
     {
         return array(
             // more extensive test set can be found in FormUtilTest
@@ -55,7 +55,7 @@ class ChoiceToValueTransformerTest extends TestCase
         $this->assertSame($outWithNull, $this->transformerWithNull->transform($inWithNull));
     }
 
-    public function reverseTransformProvider()
+    public static function reverseTransformProvider()
     {
         return array(
             // values are expected to be valid choice keys already and stay
@@ -76,7 +76,7 @@ class ChoiceToValueTransformerTest extends TestCase
         $this->assertSame($outWithNull, $this->transformerWithNull->reverseTransform($inWithNull));
     }
 
-    public function reverseTransformExpectsStringOrNullProvider()
+    public static function reverseTransformExpectsStringOrNullProvider()
     {
         return array(
             array(0),

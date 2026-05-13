@@ -95,7 +95,7 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function provideMaxSizeExceededTests()
+    public static function provideMaxSizeExceededTests()
     {
         // We have various interesting limit - size combinations to test.
         // Assume a limit of 1000 bytes (1 kB). Then the following table
@@ -186,7 +186,7 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function provideMaxSizeNotExceededTests()
+    public static function provideMaxSizeNotExceededTests()
     {
         return array(
             // limit in bytes
@@ -241,7 +241,7 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
         $this->validator->validate($this->path, $constraint);
     }
 
-    public function provideBinaryFormatTests()
+    public static function provideBinaryFormatTests()
     {
         return array(
             array(11, 10, null, '11', '10', 'bytes'),
@@ -433,7 +433,7 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function uploadedFileErrorProvider()
+    public static function uploadedFileErrorProvider()
     {
         $tests = array(
             array(UPLOAD_ERR_FORM_SIZE, 'uploadFormSizeErrorMessage'),

@@ -187,7 +187,7 @@ class FileTypeTest extends BaseTypeTest
         $this->assertSame(array(), $form->getViewData());
     }
 
-    public function requestHandlerProvider()
+    public static function requestHandlerProvider()
     {
         return array(
             array(new HttpFoundationRequestHandler()),

@@ -73,7 +73,7 @@ class GlobalVariablesTest extends TestCase
         $this->assertSame($expectedUser, $this->globals->getUser());
     }
 
-    public function getUserProvider()
+    public static function getUserProvider()
     {
         $user = $this->getMockBuilder('Symfony\Component\Security\Core\User\UserInterface')->getMock();
         $std = new \stdClass();

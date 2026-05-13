@@ -48,7 +48,7 @@ class BCryptPasswordEncoderTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder', new BCryptPasswordEncoder($cost));
     }
 
-    public function validRangeData()
+    public static function validRangeData()
     {
         $costs = range(4, 31);
         array_walk($costs, function (&$cost) { $cost = array($cost); });

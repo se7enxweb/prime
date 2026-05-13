@@ -30,7 +30,7 @@ class ResponseHeaderBagTest extends TestCase
         $this->assertEquals($expected, $bag->allPreserveCase(), '->allPreserveCase() gets all input keys in original case');
     }
 
-    public function provideAllPreserveCase()
+    public static function provideAllPreserveCase()
     {
         return array(
             array(
@@ -273,7 +273,7 @@ class ResponseHeaderBagTest extends TestCase
         $this->assertEquals(array('text/html'), $allHeaders['Content-type']);
     }
 
-    public function provideMakeDisposition()
+    public static function provideMakeDisposition()
     {
         return array(
             array('attachment', 'foo.html', 'foo.html', 'attachment; filename="foo.html"'),
@@ -297,7 +297,7 @@ class ResponseHeaderBagTest extends TestCase
         $headers->makeDisposition($disposition, $filename);
     }
 
-    public function provideMakeDispositionFail()
+    public static function provideMakeDispositionFail()
     {
         return array(
             array('attachment', 'foo%20bar.html'),

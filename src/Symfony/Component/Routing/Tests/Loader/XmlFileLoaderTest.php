@@ -124,7 +124,7 @@ class XmlFileLoaderTest extends TestCase
         $loader->load($filePath);
     }
 
-    public function getPathsToInvalidFiles()
+    public static function getPathsToInvalidFiles()
     {
         return array(array('nonvalidnode.xml'), array('nonvalidroute.xml'), array('nonvalid.xml'), array('missing_id.xml'), array('missing_path.xml'));
     }

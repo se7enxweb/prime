@@ -45,7 +45,7 @@ class CssSelectorTest extends TestCase
         }
     }
 
-    public function getCssToXPathWithoutPrefixTestData()
+    public static function getCssToXPathWithoutPrefixTestData()
     {
         return array(
             array('h1', 'h1'),

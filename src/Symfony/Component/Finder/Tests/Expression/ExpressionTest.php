@@ -43,7 +43,7 @@ class ExpressionTest extends TestCase
         $this->assertEquals($body, Expression::create($expr)->renderPattern());
     }
 
-    public function getTypeGuesserData()
+    public static function getTypeGuesserData()
     {
         return array(
             array('{foo}', Expression::TYPE_REGEX),
@@ -53,7 +53,7 @@ class ExpressionTest extends TestCase
         );
     }
 
-    public function getCaseSensitiveData()
+    public static function getCaseSensitiveData()
     {
         return array(
             array('{foo}m', true),
@@ -62,7 +62,7 @@ class ExpressionTest extends TestCase
         );
     }
 
-    public function getRegexRenderingData()
+    public static function getRegexRenderingData()
     {
         return array(
             array('{foo}m', 'foo'),

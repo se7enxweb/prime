@@ -616,7 +616,7 @@ class CachingFactoryDecoratorTest extends TestCase
         $this->assertSame($view2, $this->factory->createView($list, null, null, null, null, $attr2));
     }
 
-    public function provideSameChoices()
+    public static function provideSameChoices()
     {
         $object = (object) array('foo' => 'bar');
 
@@ -629,7 +629,7 @@ class CachingFactoryDecoratorTest extends TestCase
         );
     }
 
-    public function provideDistinguishedChoices()
+    public static function provideDistinguishedChoices()
     {
         return array(
             array(0, false),
@@ -647,7 +647,7 @@ class CachingFactoryDecoratorTest extends TestCase
         );
     }
 
-    public function provideSameKeyChoices()
+    public static function provideSameKeyChoices()
     {
         // Only test types here that can be used as array keys
         return array(
@@ -658,7 +658,7 @@ class CachingFactoryDecoratorTest extends TestCase
         );
     }
 
-    public function provideDistinguishedKeyChoices()
+    public static function provideDistinguishedKeyChoices()
     {
         // Only test types here that can be used as array keys
         return array(

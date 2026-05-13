@@ -33,7 +33,7 @@ class UndefinedFunctionFatalErrorHandlerTest extends TestCase
         $this->assertSame($error['line'], $exception->getLine());
     }
 
-    public function provideUndefinedFunctionData()
+    public static function provideUndefinedFunctionData()
     {
         return array(
             array(

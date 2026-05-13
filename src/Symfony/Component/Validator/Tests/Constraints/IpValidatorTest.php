@@ -73,7 +73,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidIpsV4()
+    public static function getValidIpsV4()
     {
         return array(
             array('0.0.0.0'),
@@ -99,7 +99,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidIpsV6()
+    public static function getValidIpsV6()
     {
         return array(
             array('2001:0db8:85a3:0000:0000:8a2e:0370:7334'),
@@ -136,7 +136,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidIpsAll()
+    public static function getValidIpsAll()
     {
         return array_merge($this->getValidIpsV4(), $this->getValidIpsV6());
     }
@@ -159,7 +159,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidIpsV4()
+    public static function getInvalidIpsV4()
     {
         return array(
             array('0'),
@@ -192,7 +192,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidPrivateIpsV4()
+    public static function getInvalidPrivateIpsV4()
     {
         return array(
             array('10.0.0.0'),
@@ -219,7 +219,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidReservedIpsV4()
+    public static function getInvalidReservedIpsV4()
     {
         return array(
             array('0.0.0.0'),
@@ -246,7 +246,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidPublicIpsV4()
+    public static function getInvalidPublicIpsV4()
     {
         return array_merge($this->getInvalidPrivateIpsV4(), $this->getInvalidReservedIpsV4());
     }
@@ -269,7 +269,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidIpsV6()
+    public static function getInvalidIpsV6()
     {
         return array(
             array('z001:0db8:85a3:0000:0000:8a2e:0370:7334'),
@@ -306,7 +306,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidPrivateIpsV6()
+    public static function getInvalidPrivateIpsV6()
     {
         return array(
             array('fdfe:dcba:9876:ffff:fdc6:c46b:bb8f:7d4c'),
@@ -333,7 +333,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidReservedIpsV6()
+    public static function getInvalidReservedIpsV6()
     {
         // Quoting after official filter documentation:
         // "FILTER_FLAG_NO_RES_RANGE = This flag does not apply to IPv6 addresses."
@@ -359,7 +359,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidPublicIpsV6()
+    public static function getInvalidPublicIpsV6()
     {
         return array_merge($this->getInvalidPrivateIpsV6(), $this->getInvalidReservedIpsV6());
     }
@@ -382,7 +382,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidIpsAll()
+    public static function getInvalidIpsAll()
     {
         return array_merge($this->getInvalidIpsV4(), $this->getInvalidIpsV6());
     }
@@ -405,7 +405,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidPrivateIpsAll()
+    public static function getInvalidPrivateIpsAll()
     {
         return array_merge($this->getInvalidPrivateIpsV4(), $this->getInvalidPrivateIpsV6());
     }
@@ -428,7 +428,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidReservedIpsAll()
+    public static function getInvalidReservedIpsAll()
     {
         return array_merge($this->getInvalidReservedIpsV4(), $this->getInvalidReservedIpsV6());
     }
@@ -451,7 +451,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidPublicIpsAll()
+    public static function getInvalidPublicIpsAll()
     {
         return array_merge($this->getInvalidPublicIpsV4(), $this->getInvalidPublicIpsV6());
     }

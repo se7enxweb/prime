@@ -48,7 +48,7 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
         $this->validator->validate(new \stdClass(), new Count(5));
     }
 
-    public function getThreeOrLessElements()
+    public static function getThreeOrLessElements()
     {
         return array(
             array($this->createCollection(array(1))),
@@ -58,7 +58,7 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    public function getFourElements()
+    public static function getFourElements()
     {
         return array(
             array($this->createCollection(array(1, 2, 3, 4))),
@@ -66,7 +66,7 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    public function getFiveOrMoreElements()
+    public static function getFiveOrMoreElements()
     {
         return array(
             array($this->createCollection(array(1, 2, 3, 4, 5))),

@@ -87,7 +87,7 @@ class ParameterBagTest extends TestCase
         $bag->get($path, null, true);
     }
 
-    public function getInvalidPaths()
+    public static function getInvalidPaths()
     {
         return array(
             array('foo[['),

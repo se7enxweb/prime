@@ -249,7 +249,7 @@ class RouteCollectionBuilderTest extends TestCase
         $this->assertEquals($expectedPath, $collection->get('test_route')->getPath());
     }
 
-    public function providePrefixTests()
+    public static function providePrefixTests()
     {
         $tests = array();
         // empty prefix is of course ok

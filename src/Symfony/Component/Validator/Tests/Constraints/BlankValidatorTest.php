@@ -58,7 +58,7 @@ class BlankValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidValues()
+    public static function getInvalidValues()
     {
         return array(
             array('foobar', '"foobar"'),

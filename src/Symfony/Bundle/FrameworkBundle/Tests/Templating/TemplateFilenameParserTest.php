@@ -43,7 +43,7 @@ class TemplateFilenameParserTest extends TestCase
         }
     }
 
-    public function getFilenameToTemplateProvider()
+    public static function getFilenameToTemplateProvider()
     {
         return array(
             array('/path/to/section/name.format.engine', new TemplateReference('', '/path/to/section', 'name', 'format', 'engine')),

@@ -51,7 +51,7 @@ class ArgvInputTest extends TestCase
         $this->assertEquals($expectedOptions, $input->getOptions(), $message);
     }
 
-    public function provideOptions()
+    public static function provideOptions()
     {
         return array(
             array(
@@ -175,7 +175,7 @@ class ArgvInputTest extends TestCase
         $input->bind($definition);
     }
 
-    public function provideInvalidInput()
+    public static function provideInvalidInput()
     {
         return array(
             array(
@@ -373,7 +373,7 @@ class ArgvInputTest extends TestCase
         $this->assertEquals($expected, $input->getParameterOption($key), '->getParameterOption() returns the expected value');
     }
 
-    public function provideGetParameterOptionValues()
+    public static function provideGetParameterOptionValues()
     {
         return array(
             array(array('app/console', 'foo:bar', '-edev'), '-e', 'dev'),

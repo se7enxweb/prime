@@ -98,7 +98,7 @@ class PhpDumperTest extends TestCase
         $dumper->dump();
     }
 
-    public function provideInvalidParameters()
+    public static function provideInvalidParameters()
     {
         return array(
             array(array('foo' => new Definition('stdClass'))),
@@ -186,7 +186,7 @@ class PhpDumperTest extends TestCase
         $dumper->dump();
     }
 
-    public function provideInvalidFactories()
+    public static function provideInvalidFactories()
     {
         return array(
             array(array('', 'method')),

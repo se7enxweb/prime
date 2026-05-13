@@ -437,7 +437,7 @@ class Button implements \IteratorAggregate, FormInterface
      *
      * @return \EmptyIterator Always returns an empty iterator
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \EmptyIterator();
     }

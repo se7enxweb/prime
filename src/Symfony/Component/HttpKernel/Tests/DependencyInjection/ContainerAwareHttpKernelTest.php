@@ -113,7 +113,7 @@ class ContainerAwareHttpKernelTest extends TestCase
         }
     }
 
-    public function getProviderTypes()
+    public static function getProviderTypes()
     {
         return array(
             array(HttpKernelInterface::MASTER_REQUEST),

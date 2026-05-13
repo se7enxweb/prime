@@ -49,7 +49,7 @@ class DateComparatorTest extends TestCase
         }
     }
 
-    public function getTestData()
+    public static function getTestData()
     {
         return array(
             array('< 2005-10-10', array(strtotime('2005-10-09')), array(strtotime('2005-10-15'))),

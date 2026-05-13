@@ -65,7 +65,7 @@ class ButtonTest extends TestCase
         $this->assertSame($result, $button->isDisabled());
     }
 
-    public function getDisabledStates()
+    public static function getDisabledStates()
     {
         return array(
             // parent, button, result

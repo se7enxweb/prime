@@ -84,7 +84,7 @@ class AllValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidArguments()
+    public static function getValidArguments()
     {
         return array(
             array(array(5, 6, 7)),

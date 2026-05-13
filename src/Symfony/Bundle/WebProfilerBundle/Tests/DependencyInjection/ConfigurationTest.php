@@ -29,7 +29,7 @@ class ConfigurationTest extends TestCase
         $this->assertEquals($results, $config);
     }
 
-    public function getDebugModes()
+    public static function getDebugModes()
     {
         return array(
             array(array(), array('intercept_redirects' => false, 'toolbar' => false, 'position' => 'bottom', 'excluded_ajax_paths' => '^/(app(_[\\w]+)?\\.php/)?_wdt')),

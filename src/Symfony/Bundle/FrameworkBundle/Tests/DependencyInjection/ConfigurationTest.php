@@ -55,7 +55,7 @@ class ConfigurationTest extends TestCase
         $this->assertEquals($sessionName, $config['session']['name']);
     }
 
-    public function getTestValidSessionName()
+    public static function getTestValidSessionName()
     {
         return array(
             array(null),
@@ -79,7 +79,7 @@ class ConfigurationTest extends TestCase
         );
     }
 
-    public function getTestInvalidSessionName()
+    public static function getTestInvalidSessionName()
     {
         return array(
             array('a.b'),
@@ -106,7 +106,7 @@ class ConfigurationTest extends TestCase
         $this->assertEquals($processedProxies, $config['trusted_proxies']);
     }
 
-    public function getTestValidTrustedProxiesData()
+    public static function getTestValidTrustedProxiesData()
     {
         return array(
             array(array('127.0.0.1'), array('127.0.0.1')),

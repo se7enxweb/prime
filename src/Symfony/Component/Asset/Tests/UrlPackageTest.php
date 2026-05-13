@@ -27,7 +27,7 @@ class UrlPackageTest extends TestCase
         $this->assertEquals($expected, $package->getUrl($path));
     }
 
-    public function getConfigs()
+    public static function getConfigs()
     {
         return array(
             array('http://example.net', '', 'http://example.com/foo', 'http://example.com/foo'),
@@ -61,7 +61,7 @@ class UrlPackageTest extends TestCase
         $this->assertEquals($expected, $package->getUrl($path));
     }
 
-    public function getContextConfigs()
+    public static function getContextConfigs()
     {
         return array(
             array(false, 'http://example.com', '', 'foo', 'http://example.com/foo?v1'),

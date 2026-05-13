@@ -234,7 +234,7 @@ class FormBuilder extends FormConfigBuilder implements \IteratorAggregate, FormB
      *
      * @return FormBuilderInterface[]
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         if ($this->locked) {
             throw new BadMethodCallException('FormBuilder methods cannot be accessed anymore once the builder is turned into a FormConfigInterface instance.');

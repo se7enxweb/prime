@@ -48,7 +48,7 @@ class SwitchUserTest extends WebTestCase
         $this->assertEquals('user_can_switch', $client->getProfile()->getCollector('security')->getUser());
     }
 
-    public function getTestParameters()
+    public static function getTestParameters()
     {
         return array(
             'unauthorized_user_cannot_switch' => array('user_cannot_switch_1', 'user_cannot_switch_1', 'user_cannot_switch_1', 403),

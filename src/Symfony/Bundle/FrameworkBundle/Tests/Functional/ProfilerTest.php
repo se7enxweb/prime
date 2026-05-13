@@ -36,7 +36,7 @@ class ProfilerTest extends WebTestCase
         $this->assertFalse($client->getProfile());
     }
 
-    public function getConfigs()
+    public static function getConfigs()
     {
         return array(
             array(false),

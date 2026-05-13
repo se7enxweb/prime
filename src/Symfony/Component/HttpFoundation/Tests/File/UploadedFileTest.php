@@ -248,7 +248,7 @@ class UploadedFileTest extends TestCase
         $this->assertFalse($file->isValid());
     }
 
-    public function uploadedFileErrorProvider()
+    public static function uploadedFileErrorProvider()
     {
         return array(
             array(UPLOAD_ERR_INI_SIZE),

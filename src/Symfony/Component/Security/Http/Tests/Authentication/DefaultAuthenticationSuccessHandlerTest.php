@@ -34,7 +34,7 @@ class DefaultAuthenticationSuccessHandlerTest extends TestCase
         $this->assertSame('http://localhost'.$redirectedUrl, $handler->onAuthenticationSuccess($request, $token)->getTargetUrl());
     }
 
-    public function getRequestRedirections()
+    public static function getRequestRedirections()
     {
         $session = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\SessionInterface')->getMock();
         $session->expects($this->once())->method('get')->with('_security.admin.target_path')->will($this->returnValue('/admin/dashboard'));

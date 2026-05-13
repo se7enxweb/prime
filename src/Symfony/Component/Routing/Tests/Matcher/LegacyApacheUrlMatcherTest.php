@@ -48,7 +48,7 @@ class LegacyApacheUrlMatcherTest extends TestCase
         $this->assertSame(var_export($expect, true), var_export($result, true));
     }
 
-    public function getMatchData()
+    public static function getMatchData()
     {
         return array(
             array(

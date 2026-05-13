@@ -48,7 +48,7 @@ class SymfonyStyleTest extends TestCase
         $this->assertStringEqualsFile($outputFilepath, $this->tester->getDisplay(true));
     }
 
-    public function inputCommandToOutputFilesProvider()
+    public static function inputCommandToOutputFilesProvider()
     {
         $baseDir = __DIR__.'/../Fixtures/Style/SymfonyStyle';
 

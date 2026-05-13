@@ -61,7 +61,7 @@ class RegexValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidValues()
+    public static function getValidValues()
     {
         return array(
             array(0),
@@ -89,7 +89,7 @@ class RegexValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidValues()
+    public static function getInvalidValues()
     {
         return array(
             array('abcd'),

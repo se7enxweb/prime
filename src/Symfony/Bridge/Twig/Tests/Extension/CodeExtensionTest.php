@@ -40,7 +40,7 @@ class CodeExtensionTest extends TestCase
         $this->assertEquals($this->getExtension()->abbrMethod($method), $abbr);
     }
 
-    public function getClassNameProvider()
+    public static function getClassNameProvider()
     {
         return array(
             array('F\Q\N\Foo', '<abbr title="F\Q\N\Foo">Foo</abbr>'),
@@ -48,7 +48,7 @@ class CodeExtensionTest extends TestCase
         );
     }
 
-    public function getMethodNameProvider()
+    public static function getMethodNameProvider()
     {
         return array(
             array('F\Q\N\Foo::Method', '<abbr title="F\Q\N\Foo">Foo</abbr>::Method()'),

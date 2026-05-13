@@ -658,7 +658,7 @@ class TimeTypeTest extends BaseTypeTest
         $this->assertSame('Empty second', $view['second']->vars['placeholder']);
     }
 
-    public function provideCompoundWidgets()
+    public static function provideCompoundWidgets()
     {
         return array(
             array('text'),
@@ -831,7 +831,7 @@ class TimeTypeTest extends BaseTypeTest
         $this->assertEquals($expectedData, $form->getData());
     }
 
-    public function provideEmptyData()
+    public static function provideEmptyData()
     {
         $expectedData = \DateTime::createFromFormat('Y-m-d H:i', '1970-01-01 21:23');
 

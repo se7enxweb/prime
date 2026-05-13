@@ -140,6 +140,12 @@ class BundleEntryReader implements BundleEntryReaderInterface
 
             // Then determine fallback locale
             $currentLocale = Locale::getFallback($currentLocale);
+
+            // Guard against cycles (e.g. locale_parse returning unexpected
+            // values on PHP 8.5 with non-standard system locales like en_US_POSIX)
+            if (!\is_string($currentLocale) || \in_array($currentLocale, $testedLocales, true)) {
+                break;
+            }
         }
 
         // Multi-valued entry was merged

@@ -153,7 +153,7 @@ class SessionTest extends TestCase
         $this->assertEquals(array(), $this->session->all());
     }
 
-    public function setProvider()
+    public static function setProvider()
     {
         return array(
             array('foo', 'bar', array('foo' => 'bar')),

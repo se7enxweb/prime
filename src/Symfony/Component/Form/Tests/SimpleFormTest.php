@@ -207,7 +207,7 @@ class SimpleFormTest extends AbstractFormTest
         $this->assertSame($result, $child->isDisabled());
     }
 
-    public function getDisabledStates()
+    public static function getDisabledStates()
     {
         return array(
             // parent, button, result

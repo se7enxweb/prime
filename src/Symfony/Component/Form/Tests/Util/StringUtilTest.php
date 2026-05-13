@@ -40,7 +40,7 @@ class StringUtilTest extends TestCase
         $this->assertSame("ab\ncd", StringUtil::trim($symbol));
     }
 
-    public function spaceProvider()
+    public static function spaceProvider()
     {
         return array(
             // separators
@@ -86,7 +86,7 @@ class StringUtilTest extends TestCase
         $this->assertSame($expectedBlockPrefix, $blockPrefix);
     }
 
-    public function fqcnToBlockPrefixProvider()
+    public static function fqcnToBlockPrefixProvider()
     {
         return array(
             array('TYPE', 'type'),

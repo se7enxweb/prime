@@ -50,7 +50,7 @@ class LengthValidatorTest extends AbstractConstraintValidatorTest
         $this->validator->validate(new \stdClass(), new Length(5));
     }
 
-    public function getThreeOrLessCharacters()
+    public static function getThreeOrLessCharacters()
     {
         return array(
             array(12),
@@ -64,7 +64,7 @@ class LengthValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    public function getFourCharacters()
+    public static function getFourCharacters()
     {
         return array(
             array(1234),
@@ -74,7 +74,7 @@ class LengthValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    public function getFiveOrMoreCharacters()
+    public static function getFiveOrMoreCharacters()
     {
         return array(
             array(12345),
@@ -88,7 +88,7 @@ class LengthValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    public function getOneCharset()
+    public static function getOneCharset()
     {
         return array(
             array('é', 'utf8', true),

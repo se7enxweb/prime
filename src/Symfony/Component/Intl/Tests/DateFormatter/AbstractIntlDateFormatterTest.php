@@ -64,7 +64,7 @@ abstract class AbstractIntlDateFormatterTest extends TestCase
         $this->assertIsIntlSuccess($formatter, $errorMessage, $errorCode);
     }
 
-    public function formatProvider()
+    public static function formatProvider()
     {
         $formatData = array(
             /* general */
@@ -277,7 +277,7 @@ abstract class AbstractIntlDateFormatterTest extends TestCase
         $this->assertIsIntlFailure($formatter, $errorMessage, $errorCode);
     }
 
-    public function formatErrorProvider()
+    public static function formatErrorProvider()
     {
         // With PHP 5.5 IntlDateFormatter accepts empty values ('0')
         if (\PHP_VERSION_ID >= 50500 || (\extension_loaded('intl') && method_exists('IntlDateFormatter', 'setTimeZone'))) {
@@ -304,7 +304,7 @@ abstract class AbstractIntlDateFormatterTest extends TestCase
         $this->assertSame($expected, $formatter->format($timestamp));
     }
 
-    public function formatWithTimezoneProvider()
+    public static function formatWithTimezoneProvider()
     {
         $data = array(
             array(0, 'UTC', '1970-01-01 00:00:00'),
@@ -355,7 +355,7 @@ abstract class AbstractIntlDateFormatterTest extends TestCase
         $this->assertEquals($expected, $formatter->format(0));
     }
 
-    public function formatTimezoneProvider()
+    public static function formatTimezoneProvider()
     {
         $cases = array(
             array('z', 'GMT', 'GMT'),
@@ -552,7 +552,7 @@ abstract class AbstractIntlDateFormatterTest extends TestCase
         $this->assertSame($expected, $formatter->format($timestamp));
     }
 
-    public function dateAndTimeTypeProvider()
+    public static function dateAndTimeTypeProvider()
     {
         return array(
             array(0, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'Thursday, January 1, 1970'),
@@ -609,7 +609,7 @@ abstract class AbstractIntlDateFormatterTest extends TestCase
         $this->assertIsIntlSuccess($formatter, $errorMessage, $errorCode);
     }
 
-    public function parseProvider()
+    public static function parseProvider()
     {
         return array_merge(
             $this->parseYearProvider(),
@@ -908,7 +908,7 @@ abstract class AbstractIntlDateFormatterTest extends TestCase
         $this->assertIsIntlFailure($formatter, $errorMessage, $errorCode);
     }
 
-    public function parseErrorProvider()
+    public static function parseErrorProvider()
     {
         return array(
             // 1 char month
@@ -963,7 +963,7 @@ abstract class AbstractIntlDateFormatterTest extends TestCase
         $this->assertEquals($expectedTimeZoneId, $formatter->getTimeZoneId());
     }
 
-    public function setTimeZoneIdProvider()
+    public static function setTimeZoneIdProvider()
     {
         $isPhp55 = \PHP_VERSION_ID >= 50500 || (\extension_loaded('intl') && method_exists('IntlDateFormatter', 'setTimeZone'));
 

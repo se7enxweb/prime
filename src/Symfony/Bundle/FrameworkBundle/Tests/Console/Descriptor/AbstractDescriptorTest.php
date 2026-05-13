@@ -31,7 +31,7 @@ abstract class AbstractDescriptorTest extends TestCase
         $this->assertDescription($expectedDescription, $routes);
     }
 
-    public function getDescribeRouteCollectionTestData()
+    public static function getDescribeRouteCollectionTestData()
     {
         return $this->getDescriptionTestData(ObjectsProvider::getRouteCollections());
     }
@@ -42,7 +42,7 @@ abstract class AbstractDescriptorTest extends TestCase
         $this->assertDescription($expectedDescription, $route);
     }
 
-    public function getDescribeRouteTestData()
+    public static function getDescribeRouteTestData()
     {
         return $this->getDescriptionTestData(ObjectsProvider::getRoutes());
     }
@@ -53,7 +53,7 @@ abstract class AbstractDescriptorTest extends TestCase
         $this->assertDescription($expectedDescription, $parameters);
     }
 
-    public function getDescribeContainerParametersTestData()
+    public static function getDescribeContainerParametersTestData()
     {
         return $this->getDescriptionTestData(ObjectsProvider::getContainerParameters());
     }
@@ -64,7 +64,7 @@ abstract class AbstractDescriptorTest extends TestCase
         $this->assertDescription($expectedDescription, $builder, $options);
     }
 
-    public function getDescribeContainerBuilderTestData()
+    public static function getDescribeContainerBuilderTestData()
     {
         return $this->getContainerBuilderDescriptionTestData(ObjectsProvider::getContainerBuilders());
     }
@@ -81,7 +81,7 @@ abstract class AbstractDescriptorTest extends TestCase
     /**
      * @group legacy
      */
-    public function provideLegacySynchronizedServiceDefinitionTestData()
+    public static function provideLegacySynchronizedServiceDefinitionTestData()
     {
         return $this->getDescriptionTestData(ObjectsProvider::getLegacyContainerDefinitions());
     }
@@ -92,7 +92,7 @@ abstract class AbstractDescriptorTest extends TestCase
         $this->assertDescription($expectedDescription, $definition);
     }
 
-    public function getDescribeContainerDefinitionTestData()
+    public static function getDescribeContainerDefinitionTestData()
     {
         return $this->getDescriptionTestData(ObjectsProvider::getContainerDefinitions());
     }
@@ -103,7 +103,7 @@ abstract class AbstractDescriptorTest extends TestCase
         $this->assertDescription($expectedDescription, $alias);
     }
 
-    public function getDescribeContainerAliasTestData()
+    public static function getDescribeContainerAliasTestData()
     {
         return $this->getDescriptionTestData(ObjectsProvider::getContainerAliases());
     }
@@ -114,7 +114,7 @@ abstract class AbstractDescriptorTest extends TestCase
         $this->assertDescription($expectedDescription, $parameter, $options);
     }
 
-    public function getDescribeContainerParameterTestData()
+    public static function getDescribeContainerParameterTestData()
     {
         $data = $this->getDescriptionTestData(ObjectsProvider::getContainerParameter());
 
@@ -130,7 +130,7 @@ abstract class AbstractDescriptorTest extends TestCase
         $this->assertDescription($expectedDescription, $eventDispatcher, $options);
     }
 
-    public function getDescribeEventDispatcherTestData()
+    public static function getDescribeEventDispatcherTestData()
     {
         return $this->getEventDispatcherDescriptionTestData(ObjectsProvider::getEventDispatchers());
     }
@@ -141,7 +141,7 @@ abstract class AbstractDescriptorTest extends TestCase
         $this->assertDescription($expectedDescription, $callable);
     }
 
-    public function getDescribeCallableTestData()
+    public static function getDescribeCallableTestData()
     {
         return $this->getDescriptionTestData(ObjectsProvider::getCallables());
     }

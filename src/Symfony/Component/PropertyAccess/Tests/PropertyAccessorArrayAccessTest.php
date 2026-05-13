@@ -29,7 +29,7 @@ abstract class PropertyAccessorArrayAccessTest extends TestCase
 
     abstract protected function getContainer(array $array);
 
-    public function getValidPropertyPaths()
+    public static function getValidPropertyPaths()
     {
         return array(
             array($this->getContainer(array('firstName' => 'Bernhard')), '[firstName]', 'Bernhard'),

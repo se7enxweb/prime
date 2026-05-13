@@ -33,7 +33,7 @@ class GlobTest extends TestCase
         }
     }
 
-    public function getToRegexData()
+    public static function getToRegexData()
     {
         return array(
             array('', array(''), array('f', '/')),

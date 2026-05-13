@@ -72,7 +72,7 @@ class LegacyBindRequestListenerTest extends TestCase
         unlink($this->uploadedFile->getRealPath());
     }
 
-    public function requestMethodProvider()
+    public static function requestMethodProvider()
     {
         return array(
             array('POST'),

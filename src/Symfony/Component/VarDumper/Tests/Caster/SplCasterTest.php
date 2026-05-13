@@ -18,7 +18,7 @@ use Symfony\Component\VarDumper\Test\VarDumperTestCase;
  */
 class SplCasterTest extends VarDumperTestCase
 {
-    public function getCastFileInfoTests()
+    public static function getCastFileInfoTests()
     {
         return array(
             array(__FILE__, <<<'EOTXT'
@@ -132,7 +132,7 @@ EOTXT;
         $this->assertDumpMatchesFormat($dump, $var);
     }
 
-    public function provideCastSplDoublyLinkedList()
+    public static function provideCastSplDoublyLinkedList()
     {
         return array(
             array(\SplDoublyLinkedList::IT_MODE_FIFO, 'IT_MODE_FIFO | IT_MODE_KEEP'),

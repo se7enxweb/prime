@@ -308,7 +308,7 @@ class QuestionHelperTest extends TestCase
         $this->assertEquals($expected, $dialog->ask($this->createInputInterfaceMock(), $this->createOutputInterface(), $question), 'confirmation question should '.($expected ? 'pass' : 'cancel'));
     }
 
-    public function getAskConfirmationData()
+    public static function getAskConfirmationData()
     {
         return array(
             array('', true),
@@ -386,7 +386,7 @@ class QuestionHelperTest extends TestCase
         $this->assertSame($expectedValue, $answer);
     }
 
-    public function simpleAnswerProvider()
+    public static function simpleAnswerProvider()
     {
         return array(
             array(0, 'My environment 1'),
@@ -421,7 +421,7 @@ class QuestionHelperTest extends TestCase
         $this->assertSame($expectedValue, $answer);
     }
 
-    public function specialCharacterInMultipleChoice()
+    public static function specialCharacterInMultipleChoice()
     {
         return array(
             array('.', array('.')),
@@ -453,7 +453,7 @@ class QuestionHelperTest extends TestCase
         $this->assertSame($expectedValue, $answer);
     }
 
-    public function mixedKeysChoiceListAnswerProvider()
+    public static function mixedKeysChoiceListAnswerProvider()
     {
         return array(
             array('0', '0'),
@@ -512,7 +512,7 @@ class QuestionHelperTest extends TestCase
         $dialog->ask($this->createInputInterfaceMock(), $this->createOutputInterface(), $question);
     }
 
-    public function answerProvider()
+    public static function answerProvider()
     {
         return array(
             array('env_1', 'env_1'),

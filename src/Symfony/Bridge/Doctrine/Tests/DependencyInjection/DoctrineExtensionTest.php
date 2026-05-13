@@ -76,7 +76,7 @@ class DoctrineExtensionTest extends TestCase
         $method->invoke($this->extension, $emConfigs, $bundles);
     }
 
-    public function getAutomappingData()
+    public static function getAutomappingData()
     {
         return array(
             array(
@@ -172,7 +172,7 @@ class DoctrineExtensionTest extends TestCase
         ), $expectedEm2));
     }
 
-    public function providerBasicDrivers()
+    public static function providerBasicDrivers()
     {
         return array(
             array('doctrine.orm.cache.apc.class',       array('type' => 'apc')),

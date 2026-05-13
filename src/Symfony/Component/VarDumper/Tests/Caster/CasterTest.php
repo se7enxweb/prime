@@ -43,7 +43,7 @@ class CasterTest extends VarDumperTestCase
         $this->assertSame($expectedDiff, array_diff_assoc($this->referenceArray, $filteredArray));
     }
 
-    public function provideFilter()
+    public static function provideFilter()
     {
         return array(
             array(

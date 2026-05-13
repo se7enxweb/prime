@@ -208,7 +208,7 @@ EOF;
         $this->assertEquals($expected, $this->dumper->dump($input));
     }
 
-    public function getEscapeSequences()
+    public static function getEscapeSequences()
     {
         return array(
             'empty string' => array('', "''"),

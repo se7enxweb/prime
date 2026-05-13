@@ -265,7 +265,7 @@ class ProcessTest extends TestCase
         $process->setInput($value);
     }
 
-    public function provideInvalidInputValues()
+    public static function provideInvalidInputValues()
     {
         return array(
             array(array()),
@@ -283,7 +283,7 @@ class ProcessTest extends TestCase
         $this->assertSame($expected, $process->getInput());
     }
 
-    public function provideInputValues()
+    public static function provideInputValues()
     {
         return array(
             array(null, null),
@@ -303,14 +303,14 @@ class ProcessTest extends TestCase
         $this->assertSame($expected, $process->getInput());
     }
 
-    public function provideLegacyInputValues()
+    public static function provideLegacyInputValues()
     {
         return array(
             array('stringifiable', new Stringifiable()),
         );
     }
 
-    public function chainedCommandsOutputProvider()
+    public static function chainedCommandsOutputProvider()
     {
         if ('\\' === \DIRECTORY_SEPARATOR) {
             return array(
@@ -391,7 +391,7 @@ class ProcessTest extends TestCase
         fclose($h);
     }
 
-    public function provideIncrementalOutput()
+    public static function provideIncrementalOutput()
     {
         return array(
             array('getOutput', 'getIncrementalOutput', 'php://stdout'),
@@ -949,7 +949,7 @@ class ProcessTest extends TestCase
         $process->{$method}();
     }
 
-    public function provideMethodsThatNeedARunningProcess()
+    public static function provideMethodsThatNeedARunningProcess()
     {
         return array(
             array('getOutput'),
@@ -981,7 +981,7 @@ class ProcessTest extends TestCase
         throw $e;
     }
 
-    public function provideMethodsThatNeedATerminatedProcess()
+    public static function provideMethodsThatNeedATerminatedProcess()
     {
         return array(
             array('hasBeenSignaled'),
@@ -1014,7 +1014,7 @@ class ProcessTest extends TestCase
         throw $e;
     }
 
-    public function provideWrongSignal()
+    public static function provideWrongSignal()
     {
         return array(
             array(-4),
@@ -1119,7 +1119,7 @@ class ProcessTest extends TestCase
         $p->{$startMethod}(function () {});
     }
 
-    public function provideStartMethods()
+    public static function provideStartMethods()
     {
         return array(
             array('start', 'Symfony\Component\Process\Exception\LogicException', 'Output has been disabled, enable it to allow the use of a callback.'),
@@ -1142,7 +1142,7 @@ class ProcessTest extends TestCase
         $p->{$fetchMethod}();
     }
 
-    public function provideOutputFetchingMethods()
+    public static function provideOutputFetchingMethods()
     {
         return array(
             array('getOutput'),
@@ -1179,7 +1179,7 @@ class ProcessTest extends TestCase
         $this->assertTrue(true, 'A call to signal() is not expected to cause wait() to throw a RuntimeException');
     }
 
-    public function responsesCodeProvider()
+    public static function responsesCodeProvider()
     {
         return array(
             //expected output / getter / code to execute
@@ -1189,7 +1189,7 @@ class ProcessTest extends TestCase
         );
     }
 
-    public function pipesCodeProvider()
+    public static function pipesCodeProvider()
     {
         $variations = array(
             'fwrite(STDOUT, $in = file_get_contents(\'php://stdin\')); fwrite(STDERR, $in);',
@@ -1232,7 +1232,7 @@ class ProcessTest extends TestCase
         $process->stop();
     }
 
-    public function provideVariousIncrementals()
+    public static function provideVariousIncrementals()
     {
         return array(
             array('php://stdout', 'getIncrementalOutput'),

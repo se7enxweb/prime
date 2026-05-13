@@ -106,7 +106,7 @@ class FormLoginTest extends WebTestCase
         $this->assertStringContainsString('You\'re browsing to path "/protected_resource".', $text);
     }
 
-    public function getConfigs()
+    public static function getConfigs()
     {
         return array(
             array('config.yml'),

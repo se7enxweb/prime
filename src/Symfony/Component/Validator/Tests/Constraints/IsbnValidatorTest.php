@@ -30,7 +30,7 @@ class IsbnValidatorTest extends AbstractConstraintValidatorTest
         return new IsbnValidator();
     }
 
-    public function getValidIsbn10()
+    public static function getValidIsbn10()
     {
         return array(
             array('2723442284'),
@@ -49,7 +49,7 @@ class IsbnValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    public function getInvalidIsbn10()
+    public static function getInvalidIsbn10()
     {
         return array(
             array('27234422841', Isbn::TOO_LONG_ERROR),
@@ -69,7 +69,7 @@ class IsbnValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    public function getValidIsbn13()
+    public static function getValidIsbn13()
     {
         return array(
             array('978-2723442282'),
@@ -87,7 +87,7 @@ class IsbnValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    public function getInvalidIsbn13()
+    public static function getInvalidIsbn13()
     {
         return array(
             array('978-27234422821', Isbn::TOO_LONG_ERROR),
@@ -107,7 +107,7 @@ class IsbnValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    public function getValidIsbn()
+    public static function getValidIsbn()
     {
         return array_merge(
             $this->getValidIsbn10(),

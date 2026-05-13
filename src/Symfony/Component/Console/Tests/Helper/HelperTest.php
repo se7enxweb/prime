@@ -16,7 +16,7 @@ use Symfony\Component\Console\Helper\Helper;
 
 class HelperTest extends TestCase
 {
-    public function formatTimeProvider()
+    public static function formatTimeProvider()
     {
         return array(
             array(0,      '< 1 sec'),

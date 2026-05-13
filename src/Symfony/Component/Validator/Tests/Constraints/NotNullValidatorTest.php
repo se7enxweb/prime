@@ -37,7 +37,7 @@ class NotNullValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidValues()
+    public static function getValidValues()
     {
         return array(
             array(0),

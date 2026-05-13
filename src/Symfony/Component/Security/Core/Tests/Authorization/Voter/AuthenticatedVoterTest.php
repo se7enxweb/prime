@@ -34,7 +34,7 @@ class AuthenticatedVoterTest extends TestCase
         $this->assertSame($expected, $voter->vote($this->getToken($authenticated), null, $attributes));
     }
 
-    public function getVoteTests()
+    public static function getVoteTests()
     {
         return array(
             array('fully', array(), VoterInterface::ACCESS_ABSTAIN),

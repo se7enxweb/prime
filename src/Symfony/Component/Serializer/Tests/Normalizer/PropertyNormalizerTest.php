@@ -299,7 +299,7 @@ class PropertyNormalizerTest extends TestCase
         );
     }
 
-    public function provideCallbacks()
+    public static function provideCallbacks()
     {
         return array(
             array(

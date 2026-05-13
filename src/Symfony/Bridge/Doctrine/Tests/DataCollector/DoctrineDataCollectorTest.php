@@ -119,7 +119,7 @@ class DoctrineDataCollectorTest extends TestCase
         $this->assertEquals($explainable, $collectedQueries['default'][0]['explainable']);
     }
 
-    public function paramProvider()
+    public static function paramProvider()
     {
         $tests = array(
             array('some value', array(), 'some value', true),

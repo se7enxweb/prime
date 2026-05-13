@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class LegacyTemplatingAssetHelperPassTest extends TestCase
 {
-    public function getScopesTests()
+    public static function getScopesTests()
     {
         return array(
             array('container'),

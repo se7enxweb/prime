@@ -85,7 +85,7 @@ class XmlUtilsTest extends TestCase
         $this->assertSame($expected, XmlUtils::convertDomElementToArray($dom->documentElement, $checkPrefix));
     }
 
-    public function getDataForConvertDomToArray()
+    public static function getDataForConvertDomToArray()
     {
         return array(
             array(null, ''),
@@ -116,7 +116,7 @@ class XmlUtilsTest extends TestCase
         $this->assertSame($expected, XmlUtils::phpize($value));
     }
 
-    public function getDataForPhpize()
+    public static function getDataForPhpize()
     {
         return array(
             array('', ''),

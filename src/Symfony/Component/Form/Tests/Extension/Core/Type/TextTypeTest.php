@@ -41,7 +41,7 @@ class TextTypeTest extends BaseTypeTest
         $this->assertNull($form->getData());
     }
 
-    public function provideZeros()
+    public static function provideZeros()
     {
         return array(
             array(0, '0'),

@@ -25,7 +25,7 @@ class AnnotatedControllerTest extends WebTestCase
         $this->assertSame($expectedValue, $client->getResponse()->getContent());
     }
 
-    public function getRoutes()
+    public static function getRoutes()
     {
         return array(
             array('/null_request', 'Symfony\Component\HttpFoundation\Request'),

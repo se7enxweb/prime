@@ -95,7 +95,7 @@ class ExpressionLanguageTest extends TestCase
         $expressionLanguage->parse('node.', array('node'));
     }
 
-    public function shortCircuitProviderEvaluate()
+    public static function shortCircuitProviderEvaluate()
     {
         $object = $this->getMockBuilder('stdClass')->setMethods(array('foo'))->getMock();
         $object->expects($this->never())->method('foo');
@@ -108,7 +108,7 @@ class ExpressionLanguageTest extends TestCase
         );
     }
 
-    public function shortCircuitProviderCompile()
+    public static function shortCircuitProviderCompile()
     {
         return array(
             array('false and foo', array('foo' => 'foo'), false),
@@ -207,7 +207,7 @@ class ExpressionLanguageTest extends TestCase
         $registerCallback($el);
     }
 
-    public function getRegisterCallbacks()
+    public static function getRegisterCallbacks()
     {
         return array(
             array(

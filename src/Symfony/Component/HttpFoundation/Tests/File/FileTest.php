@@ -108,7 +108,7 @@ class FileTest extends TestCase
         @unlink($targetPath);
     }
 
-    public function getFilenameFixtures()
+    public static function getFilenameFixtures()
     {
         return array(
             array('original.gif', 'original.gif'),

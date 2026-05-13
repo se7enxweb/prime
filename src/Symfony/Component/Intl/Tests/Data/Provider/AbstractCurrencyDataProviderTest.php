@@ -690,7 +690,7 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
         }
     }
 
-    public function provideCurrencies()
+    public static function provideCurrencies()
     {
         return array_map(
             function ($currency) { return array($currency); },
@@ -714,7 +714,7 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
         $this->assertIsNumeric($this->dataProvider->getRoundingIncrement($currency));
     }
 
-    public function provideCurrenciesWithNumericEquivalent()
+    public static function provideCurrenciesWithNumericEquivalent()
     {
         return array_map(
             function ($value) { return array($value); },
@@ -730,7 +730,7 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
         $this->assertSame(static::$alpha3ToNumeric[$currency], $this->dataProvider->getNumericCode($currency));
     }
 
-    public function provideCurrenciesWithoutNumericEquivalent()
+    public static function provideCurrenciesWithoutNumericEquivalent()
     {
         return array_map(
             function ($value) { return array($value); },
@@ -748,7 +748,7 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
         $this->dataProvider->getNumericCode($currency);
     }
 
-    public function provideValidNumericCodes()
+    public static function provideValidNumericCodes()
     {
         $numericToAlpha3 = $this->getNumericToAlpha3Mapping();
 
@@ -773,7 +773,7 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
         $this->assertEquals($expected, $actual);
     }
 
-    public function provideInvalidNumericCodes()
+    public static function provideInvalidNumericCodes()
     {
         $validNumericCodes = array_keys($this->getNumericToAlpha3Mapping());
         $invalidNumericCodes = array_diff(range(0, 1000), $validNumericCodes);

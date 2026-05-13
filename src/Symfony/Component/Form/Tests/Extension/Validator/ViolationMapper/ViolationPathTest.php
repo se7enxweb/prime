@@ -19,7 +19,7 @@ use Symfony\Component\Form\Extension\Validator\ViolationMapper\ViolationPath;
  */
 class ViolationPathTest extends TestCase
 {
-    public function providePaths()
+    public static function providePaths()
     {
         return array(
             array('children[address]', array(
@@ -107,7 +107,7 @@ class ViolationPathTest extends TestCase
         }
     }
 
-    public function provideParents()
+    public static function provideParents()
     {
         return array(
             array('children[address]', null),

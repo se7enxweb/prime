@@ -19,7 +19,7 @@ use Symfony\Component\Form\ButtonBuilder;
  */
 class ButtonBuilderTest extends TestCase
 {
-    public function getValidNames()
+    public static function getValidNames()
     {
         return array(
             array('reset'),
@@ -39,7 +39,7 @@ class ButtonBuilderTest extends TestCase
         $this->assertInstanceOf('\Symfony\Component\Form\ButtonBuilder', new ButtonBuilder($name));
     }
 
-    public function getInvalidNames()
+    public static function getInvalidNames()
     {
         return array(
             array(''),

@@ -1035,7 +1035,7 @@ class Form implements \IteratorAggregate, FormInterface
      *
      * @return \Traversable|FormInterface[]
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return $this->children;
     }

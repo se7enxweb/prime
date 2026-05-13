@@ -223,7 +223,7 @@ class ViolationPath implements \IteratorAggregate, PropertyPathInterface
      *
      * @return ViolationPathIterator
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new ViolationPathIterator($this);
     }

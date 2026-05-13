@@ -385,7 +385,7 @@ class PropertyPathMapperTest extends TestCase
         $this->mapper->mapFormsToData(array($form), $article);
     }
 
-    public function provideDate()
+    public static function provideDate()
     {
         $data = array(
             '\DateTime' => array(new \DateTime()),

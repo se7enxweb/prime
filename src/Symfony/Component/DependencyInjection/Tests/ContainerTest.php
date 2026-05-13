@@ -37,7 +37,7 @@ class ContainerTest extends TestCase
         $this->assertEquals($expected, Container::camelize($id), sprintf('Container::camelize("%s")', $id));
     }
 
-    public function dataForTestCamelize()
+    public static function dataForTestCamelize()
     {
         return array(
             array('foo_bar', 'FooBar'),
@@ -61,7 +61,7 @@ class ContainerTest extends TestCase
         $this->assertEquals($expected, Container::underscore($id), sprintf('Container::underscore("%s")', $id));
     }
 
-    public function dataForTestUnderscore()
+    public static function dataForTestUnderscore()
     {
         return array(
             array('FooBar', 'foo_bar'),
@@ -672,7 +672,7 @@ class ContainerTest extends TestCase
         $this->assertFalse($c->isScopeActive('foo'));
     }
 
-    public function getLegacyInvalidParentScopes()
+    public static function getLegacyInvalidParentScopes()
     {
         return array(
             array(ContainerInterface::SCOPE_PROTOTYPE),
@@ -680,7 +680,7 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function getLegacyBuiltInScopes()
+    public static function getLegacyBuiltInScopes()
     {
         return array(
             array(ContainerInterface::SCOPE_CONTAINER),

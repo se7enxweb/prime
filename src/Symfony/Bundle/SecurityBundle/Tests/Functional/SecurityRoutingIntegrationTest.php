@@ -112,7 +112,7 @@ class SecurityRoutingIntegrationTest extends WebTestCase
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
     }
 
-    public function getConfigs()
+    public static function getConfigs()
     {
         return array(array('config.yml'), array('routes_as_path.yml'));
     }

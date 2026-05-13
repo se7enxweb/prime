@@ -101,7 +101,7 @@ class CsrfFormLoginTest extends WebTestCase
         $this->assertStringContainsString('You\'re browsing to path "/protected-resource".', $text);
     }
 
-    public function getConfigs()
+    public static function getConfigs()
     {
         return array(
             array('config.yml'),

@@ -239,7 +239,7 @@ class ParameterBagTest extends TestCase
         }
     }
 
-    public function stringsWithSpacesProvider()
+    public static function stringsWithSpacesProvider()
     {
         return array(
             array('bar', '%foo%', 'Parameters must be wrapped by %.'),

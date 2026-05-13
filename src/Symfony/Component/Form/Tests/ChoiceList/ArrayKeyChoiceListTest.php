@@ -103,7 +103,7 @@ class ArrayKeyChoiceListTest extends AbstractChoiceListTest
         $this->assertSame($converted, $list->getChoices());
     }
 
-    public function provideConvertibleChoices()
+    public static function provideConvertibleChoices()
     {
         return array(
             array(array(0 => 'Label'), array(0 => 0)),
@@ -132,7 +132,7 @@ class ArrayKeyChoiceListTest extends AbstractChoiceListTest
         $this->list->getValuesForChoices($choices);
     }
 
-    public function provideInvalidChoices()
+    public static function provideInvalidChoices()
     {
         return array(
             array(array(new \stdClass())),
@@ -154,7 +154,7 @@ class ArrayKeyChoiceListTest extends AbstractChoiceListTest
         $this->assertSame(array($converted), $list->getValues());
     }
 
-    public function provideConvertibleValues()
+    public static function provideConvertibleValues()
     {
         return array(
             array(0, '0'),

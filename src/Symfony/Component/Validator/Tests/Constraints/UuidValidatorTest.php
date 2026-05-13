@@ -80,7 +80,7 @@ class UuidValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidStrictUuids()
+    public static function getValidStrictUuids()
     {
         return array(
             array('216fff40-98d9-11e3-a5e2-0800200c9a66'), // Version 1 UUID in lowercase
@@ -113,7 +113,7 @@ class UuidValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidStrictUuids()
+    public static function getInvalidStrictUuids()
     {
         return array(
             array('216fff40-98d9-11e3-a5e2_0800200c9a66', Uuid::INVALID_CHARACTERS_ERROR),
@@ -173,7 +173,7 @@ class UuidValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidNonStrictUuids()
+    public static function getValidNonStrictUuids()
     {
         return array(
             array('216fff40-98d9-11e3-a5e2-0800200c9a66'),    // Version 1 UUID in lowercase
@@ -208,7 +208,7 @@ class UuidValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidNonStrictUuids()
+    public static function getInvalidNonStrictUuids()
     {
         return array(
             array('216fff40-98d9-11e3-a5e2_0800200c9a66', Uuid::INVALID_CHARACTERS_ERROR),

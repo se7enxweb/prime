@@ -151,7 +151,7 @@ class ControllerResolverTest extends BaseControllerResolverTest
         parent::testGetControllerOnNonUndefinedFunction($controller);
     }
 
-    public function getUndefinedControllers()
+    public static function getUndefinedControllers()
     {
         return array(
             array('foo', '\LogicException', 'Unable to parse the controller name "foo".'),

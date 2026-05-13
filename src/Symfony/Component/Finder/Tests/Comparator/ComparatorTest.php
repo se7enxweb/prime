@@ -56,7 +56,7 @@ class ComparatorTest extends TestCase
         }
     }
 
-    public function getTestData()
+    public static function getTestData()
     {
         return array(
             array('<', '1000', array('500', '999'), array('1000', '1500')),

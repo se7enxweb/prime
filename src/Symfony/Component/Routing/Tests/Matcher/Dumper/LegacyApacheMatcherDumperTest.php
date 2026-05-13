@@ -45,7 +45,7 @@ class LegacyApacheMatcherDumperTest extends TestCase
         $this->assertEquals($dest, $r->invoke(null, $src, $char, $with), $message);
     }
 
-    public function provideEscapeFixtures()
+    public static function provideEscapeFixtures()
     {
         return array(
             array('foo', 'foo', ' ', '-', 'Preserve string that should not be escaped'),

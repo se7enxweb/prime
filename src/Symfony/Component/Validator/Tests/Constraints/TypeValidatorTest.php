@@ -75,7 +75,7 @@ class TypeValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidValues()
+    public static function getValidValues()
     {
         $object = new \stdClass();
         $file = $this->createFile();
@@ -131,7 +131,7 @@ class TypeValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidValues()
+    public static function getInvalidValues()
     {
         $object = new \stdClass();
         $file = $this->createFile();

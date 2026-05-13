@@ -40,7 +40,7 @@ class DefinitionDecoratorTest extends TestCase
         $this->assertEquals(array($changeKey => true), $def->getChanges());
     }
 
-    public function getPropertyTests()
+    public static function getPropertyTests()
     {
         return array(
             array('class', 'class'),
@@ -67,7 +67,7 @@ class DefinitionDecoratorTest extends TestCase
         $this->assertEquals(array($changeKey => true), $def->getChanges());
     }
 
-    public function provideLegacyPropertyTests()
+    public static function provideLegacyPropertyTests()
     {
         return array(
             array('factoryClass', 'factory_class'),

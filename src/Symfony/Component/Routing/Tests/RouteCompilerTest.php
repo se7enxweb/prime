@@ -32,7 +32,7 @@ class RouteCompilerTest extends TestCase
         $this->assertEquals($tokens, $compiled->getTokens(), $name.' (tokens)');
     }
 
-    public function provideCompileData()
+    public static function provideCompileData()
     {
         return array(
             array(
@@ -189,7 +189,7 @@ class RouteCompilerTest extends TestCase
         $route->compile();
     }
 
-    public function getVariableNamesStartingWithADigit()
+    public static function getVariableNamesStartingWithADigit()
     {
         return array(
            array('09'),
@@ -217,7 +217,7 @@ class RouteCompilerTest extends TestCase
         $this->assertEquals($hostTokens, $compiled->getHostTokens(), $name.' (host tokens)');
     }
 
-    public function provideCompileWithHostData()
+    public static function provideCompileWithHostData()
     {
         return array(
             array(

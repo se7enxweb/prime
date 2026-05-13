@@ -45,7 +45,7 @@ class BicValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidBics()
+    public static function getValidBics()
     {
         // http://formvalidation.io/validators/bic/
         return array(
@@ -75,7 +75,7 @@ class BicValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidBics()
+    public static function getInvalidBics()
     {
         return array(
             array('DEUTD', Bic::INVALID_LENGTH_ERROR),

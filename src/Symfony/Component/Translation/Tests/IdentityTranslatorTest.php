@@ -72,7 +72,7 @@ class IdentityTranslatorTest extends TestCase
         $this->assertEquals('pt_BR', $translator->getLocale());
     }
 
-    public function getTransTests()
+    public static function getTransTests()
     {
         return array(
             array('Symfony is great!', 'Symfony is great!', array()),
@@ -80,7 +80,7 @@ class IdentityTranslatorTest extends TestCase
         );
     }
 
-    public function getTransChoiceTests()
+    public static function getTransChoiceTests()
     {
         return array(
             array('There are no apples', '{0} There are no apples|{1} There is one apple|]1,Inf] There are %count% apples', 0, array('%count%' => 0)),

@@ -68,6 +68,17 @@ class EnvParametersResource implements SelfCheckingResourceInterface, \Serializa
         return serialize(array('prefix' => $this->prefix, 'variables' => $this->variables));
     }
 
+
+    public function __serialize(): array
+    {
+        return ['serialized' => $this->serialize()];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize($data['serialized']);
+    }
+
     public function unserialize($serialized)
     {
         $unserialized = unserialize($serialized);

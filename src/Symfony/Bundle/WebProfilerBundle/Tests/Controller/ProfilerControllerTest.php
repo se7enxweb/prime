@@ -36,7 +36,7 @@ class ProfilerControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function getEmptyTokenCases()
+    public static function getEmptyTokenCases()
     {
         return array(
             array(null),

@@ -57,7 +57,7 @@ class ApcClassLoaderTest extends TestCase
         $this->assertTrue(class_exists($className), $message);
     }
 
-    public function getLoadClassTests()
+    public static function getLoadClassTests()
     {
         return array(
            array('\\Apc\\Namespaced\\Foo', 'Apc\\Namespaced\\Foo',   '->loadClass() loads Apc\Namespaced\Foo class'),
@@ -81,7 +81,7 @@ class ApcClassLoaderTest extends TestCase
         $this->assertTrue(class_exists($className), $message);
     }
 
-    public function getLoadClassFromFallbackTests()
+    public static function getLoadClassFromFallbackTests()
     {
         return array(
            array('\\Apc\\Namespaced\\Baz',    'Apc\\Namespaced\\Baz',    '->loadClass() loads Apc\Namespaced\Baz class'),
@@ -105,7 +105,7 @@ class ApcClassLoaderTest extends TestCase
         $this->assertTrue(class_exists($className), $message);
     }
 
-    public function getLoadClassNamespaceCollisionTests()
+    public static function getLoadClassNamespaceCollisionTests()
     {
         return array(
            array(
@@ -157,7 +157,7 @@ class ApcClassLoaderTest extends TestCase
         $this->assertTrue(class_exists($className), $message);
     }
 
-    public function getLoadClassPrefixCollisionTests()
+    public static function getLoadClassPrefixCollisionTests()
     {
         return array(
            array(

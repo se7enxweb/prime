@@ -184,7 +184,7 @@ class FlattenExceptionTest extends TestCase
         ), $flattened->toArray());
     }
 
-    public function flattenDataProvider()
+    public static function flattenDataProvider()
     {
         return array(
             array(new \Exception('test', 123)),

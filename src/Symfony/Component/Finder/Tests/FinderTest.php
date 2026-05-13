@@ -618,7 +618,7 @@ class FinderTest extends Iterator\RealIteratorTestCase
         $this->assertIterator($filenames, $finder->in(sys_get_temp_dir())->getIterator());
     }
 
-    public function getContainsTestData()
+    public static function getContainsTestData()
     {
         return array(
             array('', '', array()),
@@ -634,7 +634,7 @@ class FinderTest extends Iterator\RealIteratorTestCase
         );
     }
 
-    public function getRegexNameTestData()
+    public static function getRegexNameTestData()
     {
         return array(
             array('~.+\\.p.+~i'),
@@ -673,7 +673,7 @@ class FinderTest extends Iterator\RealIteratorTestCase
         $this->assertNotInstanceOf('Symfony\Component\Finder\Adapter\PhpAdapter', $adapters[0]);
     }
 
-    public function getTestPathData()
+    public static function getTestPathData()
     {
         return array(
             array('', '', array()),

@@ -281,7 +281,7 @@ class PrototypedArrayNodeTest extends TestCase
         $this->assertEquals($expected, $normalized);
     }
 
-    public function getDataForKeyRemovedLeftValueOnly()
+    public static function getDataForKeyRemovedLeftValueOnly()
     {
         $scalarValue = new ScalarNode('value');
 

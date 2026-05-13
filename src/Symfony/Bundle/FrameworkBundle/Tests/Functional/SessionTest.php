@@ -126,7 +126,7 @@ class SessionTest extends WebTestCase
         $this->assertStringContainsString('Welcome back client2, nice to meet you.', $crawler2->text());
     }
 
-    public function getConfigs()
+    public static function getConfigs()
     {
         return array(
             // configfile, insulate

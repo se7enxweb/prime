@@ -83,7 +83,7 @@ class AccessDecisionManagerTest extends TestCase
         $this->assertSame($expected, $manager->decide($token, array('ROLE_FOO', 'ROLE_BAR')));
     }
 
-    public function getStrategiesWith2RolesTests()
+    public static function getStrategiesWith2RolesTests()
     {
         $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')->getMock();
 
@@ -115,7 +115,7 @@ class AccessDecisionManagerTest extends TestCase
         return $voter;
     }
 
-    public function getStrategyTests()
+    public static function getStrategyTests()
     {
         return array(
             // affirmative

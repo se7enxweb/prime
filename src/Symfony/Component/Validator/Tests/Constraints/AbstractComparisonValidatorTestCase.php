@@ -68,7 +68,7 @@ abstract class AbstractComparisonValidatorTestCase extends AbstractConstraintVal
         return $result;
     }
 
-    public function provideInvalidConstraintOptions()
+    public static function provideInvalidConstraintOptions()
     {
         return array(
             array(null),
@@ -104,7 +104,7 @@ abstract class AbstractComparisonValidatorTestCase extends AbstractConstraintVal
     /**
      * @return array
      */
-    public function provideAllValidComparisons()
+    public static function provideAllValidComparisons()
     {
         // The provider runs before setUp(), so we need to manually fix
         // the default timezone
@@ -159,7 +159,7 @@ abstract class AbstractComparisonValidatorTestCase extends AbstractConstraintVal
     /**
      * @return array
      */
-    public function provideAllInvalidComparisons()
+    public static function provideAllInvalidComparisons()
     {
         // The provider runs before setUp(), so we need to manually fix
         // the default timezone

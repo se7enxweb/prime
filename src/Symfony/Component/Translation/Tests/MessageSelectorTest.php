@@ -45,7 +45,7 @@ class MessageSelectorTest extends TestCase
         $selector->choose($id, $number, 'en');
     }
 
-    public function getNonMatchingMessages()
+    public static function getNonMatchingMessages()
     {
         return array(
             array('{0} There are no apples|{1} There is one apple', 2),
@@ -55,7 +55,7 @@ class MessageSelectorTest extends TestCase
         );
     }
 
-    public function getChooseTests()
+    public static function getChooseTests()
     {
         return array(
             array('There are no apples', '{0} There are no apples|{1} There is one apple|]1,Inf] There are %count% apples', 0),

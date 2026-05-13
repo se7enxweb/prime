@@ -39,7 +39,7 @@ class LoggerDataCollectorTest extends TestCase
         }
     }
 
-    public function getCollectTestData()
+    public static function getCollectTestData()
     {
         return array(
             array(

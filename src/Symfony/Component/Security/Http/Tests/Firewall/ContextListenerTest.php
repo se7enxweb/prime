@@ -168,7 +168,7 @@ class ContextListenerTest extends TestCase
         $listener->handle($event);
     }
 
-    public function provideInvalidToken()
+    public static function provideInvalidToken()
     {
         return array(
             array('foo'),

@@ -90,7 +90,7 @@ class ClassNotFoundFatalErrorHandlerTest extends TestCase
         );
     }
 
-    public function provideClassNotFoundData()
+    public static function provideClassNotFoundData()
     {
         $prefixes = array('Symfony\Component\Debug\Exception\\' => realpath(__DIR__.'/../../Exception'));
 

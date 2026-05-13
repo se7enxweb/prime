@@ -28,7 +28,7 @@ class FragmentTest extends WebTestCase
         $this->assertEquals('bar txt--html--es--fr', $client->getResponse()->getContent());
     }
 
-    public function getConfigs()
+    public static function getConfigs()
     {
         return array(
             array(false),

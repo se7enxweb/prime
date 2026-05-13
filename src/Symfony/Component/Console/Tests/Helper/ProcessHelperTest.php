@@ -46,7 +46,7 @@ class ProcessHelperTest extends TestCase
         $this->assertTrue($executed);
     }
 
-    public function provideCommandsAndOutput()
+    public static function provideCommandsAndOutput()
     {
         $successOutputVerbose = <<<'EOT'
   RUN  php -r "echo 42;"

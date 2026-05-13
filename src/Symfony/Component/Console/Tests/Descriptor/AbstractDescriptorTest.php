@@ -58,27 +58,27 @@ abstract class AbstractDescriptorTest extends TestCase
         $this->assertDescription($expectedDescription, $application);
     }
 
-    public function getDescribeInputArgumentTestData()
+    public static function getDescribeInputArgumentTestData()
     {
         return $this->getDescriptionTestData(ObjectsProvider::getInputArguments());
     }
 
-    public function getDescribeInputOptionTestData()
+    public static function getDescribeInputOptionTestData()
     {
         return $this->getDescriptionTestData(ObjectsProvider::getInputOptions());
     }
 
-    public function getDescribeInputDefinitionTestData()
+    public static function getDescribeInputDefinitionTestData()
     {
         return $this->getDescriptionTestData(ObjectsProvider::getInputDefinitions());
     }
 
-    public function getDescribeCommandTestData()
+    public static function getDescribeCommandTestData()
     {
         return $this->getDescriptionTestData(ObjectsProvider::getCommands());
     }
 
-    public function getDescribeApplicationTestData()
+    public static function getDescribeApplicationTestData()
     {
         return $this->getDescriptionTestData(ObjectsProvider::getApplications());
     }

@@ -52,7 +52,7 @@ class ParserTest extends TestCase
         $this->assertEquals($node, $parser->parse($lexer->tokenize($expression), $names));
     }
 
-    public function getParseData()
+    public static function getParseData()
     {
         $arguments = new Node\ArgumentsNode();
         $arguments->addElement(new Node\ConstantNode('arg1'));
@@ -177,7 +177,7 @@ class ParserTest extends TestCase
         $parser->parse($lexer->tokenize($expr), $names);
     }
 
-    public function getInvalidPostfixData()
+    public static function getInvalidPostfixData()
     {
         return array(
             array(

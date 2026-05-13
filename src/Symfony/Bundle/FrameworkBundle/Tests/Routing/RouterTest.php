@@ -205,7 +205,7 @@ class RouterTest extends TestCase
         $this->assertSame($value, $route->getDefault('foo'));
     }
 
-    public function getNonStringValues()
+    public static function getNonStringValues()
     {
         return array(array(null), array(false), array(true), array(new \stdClass()), array(array('foo', 'bar')), array(array(array())));
     }

@@ -124,7 +124,7 @@ class HttpKernelTest extends TestCase
         $this->assertFalse($response->headers->has('X-Status-Code'));
     }
 
-    public function getStatusCodes()
+    public static function getStatusCodes()
     {
         return array(
             array(200, 404),

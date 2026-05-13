@@ -175,7 +175,7 @@ class CheckboxTypeTest extends BaseTypeTest
         $this->assertEquals($checked, $view->vars['checked']);
     }
 
-    public function provideCustomModelTransformerData()
+    public static function provideCustomModelTransformerData()
     {
         return array(
             array('checked', true),

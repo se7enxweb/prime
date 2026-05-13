@@ -35,7 +35,7 @@ class PropertyAccessorTest extends TestCase
         $this->propertyAccessor = new PropertyAccessor();
     }
 
-    public function getPathsWithUnexpectedType()
+    public static function getPathsWithUnexpectedType()
     {
         return array(
             array('', 'foobar'),
@@ -49,7 +49,7 @@ class PropertyAccessorTest extends TestCase
         );
     }
 
-    public function getPathsWithMissingProperty()
+    public static function getPathsWithMissingProperty()
     {
         return array(
             array((object) array('firstName' => 'Bernhard'), 'lastName'),
@@ -69,7 +69,7 @@ class PropertyAccessorTest extends TestCase
         );
     }
 
-    public function getPathsWithMissingIndex()
+    public static function getPathsWithMissingIndex()
     {
         return array(
             array(array('firstName' => 'Bernhard'), '[lastName]'),
@@ -437,7 +437,7 @@ class PropertyAccessorTest extends TestCase
         $this->assertFalse($this->propertyAccessor->isWritable($objectOrArray, $path));
     }
 
-    public function getValidPropertyPaths()
+    public static function getValidPropertyPaths()
     {
         return array(
             array(array('Bernhard', 'Schussek'), '[0]', 'Bernhard'),
@@ -499,7 +499,7 @@ class PropertyAccessorTest extends TestCase
         $this->assertSame('Updated', $obj->publicProperty['foo']['bar']);
     }
 
-    public function getReferenceChainObjectsForSetValue()
+    public static function getReferenceChainObjectsForSetValue()
     {
         return array(
             array(array('a' => array('b' => array('c' => 'old-value'))), '[a][b][c]', 'new-value'),
@@ -520,7 +520,7 @@ class PropertyAccessorTest extends TestCase
         $this->assertEquals($value, $this->propertyAccessor->getValue($object, $path));
     }
 
-    public function getReferenceChainObjectsForIsWritable()
+    public static function getReferenceChainObjectsForIsWritable()
     {
         return array(
             array(new TestClassIsWritable(array('a' => array('b' => 'old-value'))), 'value[a][b]', false),

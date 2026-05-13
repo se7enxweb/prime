@@ -34,7 +34,7 @@ class StaticVersionStrategyTest extends TestCase
         $this->assertEquals($formatted, $staticVersionStrategy->applyVersion($path));
     }
 
-    public function getConfigs()
+    public static function getConfigs()
     {
         return array(
             array('test-path', 'v1', null),

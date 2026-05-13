@@ -237,7 +237,7 @@ class FormPassTest extends TestCase
         $container->compile();
     }
 
-    public function privateTaggedServicesProvider()
+    public static function privateTaggedServicesProvider()
     {
         return array(
             array('my.type', 'form.type', 'The service "my.type" must be public as form types are lazy-loaded'),

@@ -54,7 +54,7 @@ class CssSelectorConverterTest extends TestCase
         $this->assertEquals($xpath, $converter->toXPath($css, ''), '->parse() parses an input string and returns a node');
     }
 
-    public function getCssToXPathWithoutPrefixTestData()
+    public static function getCssToXPathWithoutPrefixTestData()
     {
         return array(
             array('h1', 'h1'),

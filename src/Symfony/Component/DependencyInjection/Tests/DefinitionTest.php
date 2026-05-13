@@ -212,7 +212,7 @@ class DefinitionTest extends TestCase
         $def->setDeprecated(false, $message);
     }
 
-    public function invalidDeprecationMessageProvider()
+    public static function invalidDeprecationMessageProvider()
     {
         return array(
             "With \rs" => array("invalid \r message %service_id%"),

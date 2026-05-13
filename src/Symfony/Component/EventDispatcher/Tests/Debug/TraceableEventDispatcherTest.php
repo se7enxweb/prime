@@ -128,7 +128,7 @@ class TraceableEventDispatcherTest extends TestCase
         $this->assertEquals(array(), $tdispatcher->getNotCalledListeners());
     }
 
-    public function isWrappedDataProvider()
+    public static function isWrappedDataProvider()
     {
         return array(
             array(false),

@@ -31,7 +31,7 @@ class HttpFoundationExtensionTest extends TestCase
         $this->assertEquals($expected, $extension->generateAbsoluteUrl($path));
     }
 
-    public function getGenerateAbsoluteUrlData()
+    public static function getGenerateAbsoluteUrlData()
     {
         return array(
             array('http://localhost/foo.png', '/foo.png', '/foo/bar.html'),
@@ -83,7 +83,7 @@ class HttpFoundationExtensionTest extends TestCase
         $this->assertEquals($path, $extension->generateAbsoluteUrl($path));
     }
 
-    public function getGenerateAbsoluteUrlRequestContextData()
+    public static function getGenerateAbsoluteUrlRequestContextData()
     {
         return array(
             array('/foo.png', '/foo', 'localhost', 'http', 80, 443, 'http://localhost/foo.png'),
@@ -128,7 +128,7 @@ class HttpFoundationExtensionTest extends TestCase
         $this->assertEquals($expected, $extension->generateRelativePath($path));
     }
 
-    public function getGenerateRelativePathData()
+    public static function getGenerateRelativePathData()
     {
         return array(
             array('../foo.png', '/foo.png', '/foo/bar.html'),

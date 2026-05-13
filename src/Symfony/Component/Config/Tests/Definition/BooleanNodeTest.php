@@ -38,7 +38,7 @@ class BooleanNodeTest extends TestCase
         $this->assertSame($value, $node->finalize($value));
     }
 
-    public function getValidValues()
+    public static function getValidValues()
     {
         return array(
             array(false),
@@ -57,7 +57,7 @@ class BooleanNodeTest extends TestCase
         $node->normalize($value);
     }
 
-    public function getInvalidValues()
+    public static function getInvalidValues()
     {
         return array(
             array(null),

@@ -110,7 +110,7 @@ class RouterTest extends TestCase
         $this->assertInstanceOf('Symfony\\Component\\Routing\\Matcher\\UrlMatcher', $this->router->getMatcher());
     }
 
-    public function provideMatcherOptionsPreventingCaching()
+    public static function provideMatcherOptionsPreventingCaching()
     {
         return array(
             array('cache_dir'),
@@ -132,7 +132,7 @@ class RouterTest extends TestCase
         $this->assertInstanceOf('Symfony\\Component\\Routing\\Generator\\UrlGenerator', $this->router->getGenerator());
     }
 
-    public function provideGeneratorOptionsPreventingCaching()
+    public static function provideGeneratorOptionsPreventingCaching()
     {
         return array(
             array('cache_dir'),

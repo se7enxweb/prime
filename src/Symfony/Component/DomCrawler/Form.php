@@ -301,7 +301,7 @@ class Form extends Link implements \ArrayAccess
      *
      * @return bool true if the field exists, false otherwise
      */
-    public function offsetExists($name)
+    public function offsetExists($name): bool
     {
         return $this->has($name);
     }
@@ -315,7 +315,7 @@ class Form extends Link implements \ArrayAccess
      *
      * @throws \InvalidArgumentException if the field does not exist
      */
-    public function offsetGet($name)
+    public function offsetGet($name): mixed
     {
         return $this->fields->get($name);
     }
@@ -328,7 +328,7 @@ class Form extends Link implements \ArrayAccess
      *
      * @throws \InvalidArgumentException if the field does not exist
      */
-    public function offsetSet($name, $value)
+    public function offsetSet($name, $value): void
     {
         $this->fields->set($name, $value);
     }
@@ -338,7 +338,7 @@ class Form extends Link implements \ArrayAccess
      *
      * @param string $name The field name
      */
-    public function offsetUnset($name)
+    public function offsetUnset($name): void
     {
         $this->fields->remove($name);
     }

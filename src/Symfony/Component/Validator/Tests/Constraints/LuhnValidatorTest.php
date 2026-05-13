@@ -51,7 +51,7 @@ class LuhnValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidNumbers()
+    public static function getValidNumbers()
     {
         return array(
             array('42424242424242424242'),
@@ -92,7 +92,7 @@ class LuhnValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidNumbers()
+    public static function getInvalidNumbers()
     {
         return array(
             array('1234567812345678', Luhn::CHECKSUM_FAILED_ERROR),
@@ -115,7 +115,7 @@ class LuhnValidatorTest extends AbstractConstraintValidatorTest
         $this->validator->validate($number, $constraint);
     }
 
-    public function getInvalidTypes()
+    public static function getInvalidTypes()
     {
         return array(
             array(0),

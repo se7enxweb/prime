@@ -94,7 +94,7 @@ class AuthorizationCheckerTest extends TestCase
         $this->assertSame($decide, $this->authorizationChecker->isGranted('ROLE_FOO'));
     }
 
-    public function isGrantedProvider()
+    public static function isGrantedProvider()
     {
         return array(array(true), array(false));
     }

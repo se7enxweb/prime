@@ -55,7 +55,7 @@ class LegacyApcUniversalClassLoaderTest extends TestCase
         $this->assertTrue(class_exists($className), $message);
     }
 
-    public function getLoadClassTests()
+    public static function getLoadClassTests()
     {
         return array(
            array('\\LegacyApc\\Namespaced\\Foo', 'LegacyApc\\Namespaced\\Foo',   '->loadClass() loads LegacyApc\Namespaced\Foo class'),
@@ -77,7 +77,7 @@ class LegacyApcUniversalClassLoaderTest extends TestCase
         $this->assertTrue(class_exists($className), $message);
     }
 
-    public function getLoadClassFromFallbackTests()
+    public static function getLoadClassFromFallbackTests()
     {
         return array(
            array('\\LegacyApc\\Namespaced\\Baz',    'LegacyApc\\Namespaced\\Baz',    '->loadClass() loads LegacyApc\Namespaced\Baz class'),
@@ -100,7 +100,7 @@ class LegacyApcUniversalClassLoaderTest extends TestCase
         $this->assertTrue(class_exists($className), $message);
     }
 
-    public function getLoadClassNamespaceCollisionTests()
+    public static function getLoadClassNamespaceCollisionTests()
     {
         return array(
            array(
@@ -150,7 +150,7 @@ class LegacyApcUniversalClassLoaderTest extends TestCase
         $this->assertTrue(class_exists($className), $message);
     }
 
-    public function getLoadClassPrefixCollisionTests()
+    public static function getLoadClassPrefixCollisionTests()
     {
         return array(
            array(

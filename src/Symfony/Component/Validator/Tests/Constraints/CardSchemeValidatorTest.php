@@ -69,7 +69,7 @@ class CardSchemeValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getValidNumbers()
+    public static function getValidNumbers()
     {
         return array(
             array('AMEX', '378282246310005'),
@@ -119,7 +119,7 @@ class CardSchemeValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    public function getInvalidNumbers()
+    public static function getInvalidNumbers()
     {
         return array(
             array('VISA', '42424242424242424242', CardScheme::INVALID_FORMAT_ERROR),

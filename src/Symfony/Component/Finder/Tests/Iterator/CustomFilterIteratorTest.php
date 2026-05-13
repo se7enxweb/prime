@@ -36,7 +36,7 @@ class CustomFilterIteratorTest extends IteratorTestCase
         $this->assertIterator($expected, $iterator);
     }
 
-    public function getAcceptData()
+    public static function getAcceptData()
     {
         return array(
             array(array(function (\SplFileInfo $fileinfo) { return false; }), array()),

@@ -100,7 +100,7 @@ class UsernamePasswordFormAuthenticationListenerTest extends TestCase
         $listener->handle($event);
     }
 
-    public function postOnlyDataProvider()
+    public static function postOnlyDataProvider()
     {
         return array(
             array(true),
@@ -108,7 +108,7 @@ class UsernamePasswordFormAuthenticationListenerTest extends TestCase
         );
     }
 
-    public function getUsernameForLength()
+    public static function getUsernameForLength()
     {
         return array(
             array(str_repeat('x', SecurityContextInterface::MAX_USERNAME_LENGTH + 1), false),

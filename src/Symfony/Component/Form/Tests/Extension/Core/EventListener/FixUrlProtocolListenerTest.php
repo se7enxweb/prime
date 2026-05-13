@@ -41,7 +41,7 @@ class FixUrlProtocolListenerTest extends TestCase
         $this->assertEquals('http://www.symfony.com', $event->getData());
     }
 
-    public function provideUrlsWithSupportedProtocols()
+    public static function provideUrlsWithSupportedProtocols()
     {
         return array(
             array('ftp://www.symfony.com'),

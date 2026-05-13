@@ -64,7 +64,7 @@ class EmailValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidEmails()
+    public static function getValidEmails()
     {
         return array(
             array('fabien@symfony.com'),
@@ -90,7 +90,7 @@ class EmailValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidEmails()
+    public static function getInvalidEmails()
     {
         return array(
             array('example'),
@@ -134,7 +134,7 @@ class EmailValidatorTest extends AbstractConstraintValidatorTest
         }
     }
 
-    public function getDnsChecks()
+    public static function getDnsChecks()
     {
         return array(
             array('MX', false),
@@ -181,7 +181,7 @@ class EmailValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function provideCheckTypes()
+    public static function provideCheckTypes()
     {
         return array(
             array('checkMX', Email::MX_CHECK_FAILED_ERROR),

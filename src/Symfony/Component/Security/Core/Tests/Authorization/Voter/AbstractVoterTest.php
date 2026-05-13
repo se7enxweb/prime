@@ -32,7 +32,7 @@ class AbstractVoterTest extends TestCase
     /**
      * @return array
      */
-    public function getTests()
+    public static function getTests()
     {
         return array(
             array(array('EDIT'), VoterInterface::ACCESS_GRANTED, new \stdClass(), 'ACCESS_GRANTED if attribute and class are supported and attribute grants access'),
@@ -66,7 +66,7 @@ class AbstractVoterTest extends TestCase
     /**
      * @return array
      */
-    public function getSupportsAttributeData()
+    public static function getSupportsAttributeData()
     {
         return array(
             'positive_string_edit' => array(

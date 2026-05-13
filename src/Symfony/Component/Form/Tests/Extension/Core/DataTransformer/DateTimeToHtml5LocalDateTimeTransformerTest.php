@@ -21,7 +21,7 @@ class DateTimeToHtml5LocalDateTimeTransformerTest extends TestCase
         $this->assertEquals($expected->format('c'), $actual instanceof \DateTime ? $actual->format('c') : $actual, $message);
     }
 
-    public function transformProvider()
+    public static function transformProvider()
     {
         return array(
             array('UTC', 'UTC', '2010-02-03 04:05:06 UTC', '2010-02-03T04:05:06'),
@@ -33,7 +33,7 @@ class DateTimeToHtml5LocalDateTimeTransformerTest extends TestCase
         );
     }
 
-    public function reverseTransformProvider()
+    public static function reverseTransformProvider()
     {
         return array(
             // format without seconds, as appears in some browsers

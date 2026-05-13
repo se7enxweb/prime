@@ -69,7 +69,7 @@ class ClassMapGeneratorTest extends TestCase
         $this->assertEqualsNormalized($expected, ClassMapGenerator::createMap($directory));
     }
 
-    public function getTestCreateMapTests()
+    public static function getTestCreateMapTests()
     {
         $data = array(
             array(__DIR__.'/Fixtures/Namespaced', array(

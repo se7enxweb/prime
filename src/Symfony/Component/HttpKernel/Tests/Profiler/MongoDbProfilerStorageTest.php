@@ -47,7 +47,7 @@ class MongoDbProfilerStorageTest extends AbstractProfilerStorageTest
 {
     private $storage;
 
-    public function getDsns()
+    public static function getDsns()
     {
         return array(
             array('mongodb://localhost/symfony_tests/profiler_data', array(

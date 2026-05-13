@@ -66,7 +66,7 @@ class DbalSessionHandler implements \SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function open($savePath, $sessionName)
+    public function open($savePath, $sessionName): bool
     {
         return true;
     }
@@ -74,7 +74,7 @@ class DbalSessionHandler implements \SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function close()
+    public function close(): bool
     {
         return true;
     }
@@ -82,7 +82,7 @@ class DbalSessionHandler implements \SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function destroy($sessionId)
+    public function destroy($sessionId): bool
     {
         // delete the record associated with this id
         $sql = "DELETE FROM $this->table WHERE $this->idCol = :id";
@@ -101,7 +101,7 @@ class DbalSessionHandler implements \SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function gc($maxlifetime)
+    public function gc($maxlifetime): int|false
     {
         // delete the session records that have expired
         $sql = "DELETE FROM $this->table WHERE $this->timeCol < :time";
@@ -120,7 +120,7 @@ class DbalSessionHandler implements \SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function read($sessionId)
+    public function read($sessionId): string|false
     {
         $sql = "SELECT $this->dataCol FROM $this->table WHERE $this->idCol = :id";
 
@@ -145,7 +145,7 @@ class DbalSessionHandler implements \SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function write($sessionId, $data)
+    public function write($sessionId, $data): bool
     {
         $encoded = base64_encode($data);
 

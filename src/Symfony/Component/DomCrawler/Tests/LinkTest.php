@@ -101,7 +101,7 @@ class LinkTest extends TestCase
         $this->assertEquals($expected, $link->getUri());
     }
 
-    public function getGetUriTests()
+    public static function getGetUriTests()
     {
         return array(
             array('/foo', 'http://localhost/bar/foo/', 'http://localhost/foo'),

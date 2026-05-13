@@ -1329,7 +1329,7 @@ class HttpCacheTest extends HttpCacheTestCase
         Request::setTrustedProxies(array());
     }
 
-    public function getTrustedProxyData()
+    public static function getTrustedProxyData()
     {
         return array(
             array(array()),
@@ -1359,7 +1359,7 @@ class HttpCacheTest extends HttpCacheTestCase
         Request::setTrustedProxies(array());
     }
 
-    public function getForwardedData()
+    public static function getForwardedData()
     {
         return array(
             array(null, 'for="10.0.0.1";host="localhost";proto=http'),

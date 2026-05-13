@@ -68,7 +68,7 @@ class ClassCollectionLoaderTest extends TestCase
         $this->assertEquals($expected, array_map(function ($class) { return $class->getName(); }, $ordered));
     }
 
-    public function getDifferentOrders()
+    public static function getDifferentOrders()
     {
         return array(
             array(array(
@@ -126,7 +126,7 @@ class ClassCollectionLoaderTest extends TestCase
         $this->assertEquals($expected, array_map(function ($class) { return $class->getName(); }, $ordered));
     }
 
-    public function getDifferentOrdersForTraits()
+    public static function getDifferentOrdersForTraits()
     {
         return array(
             array(array(
@@ -176,7 +176,7 @@ class ClassCollectionLoaderTest extends TestCase
         $this->assertEquals('<?php '.$expected, ClassCollectionLoader::fixNamespaceDeclarations('<?php '.$source));
     }
 
-    public function getFixNamespaceDeclarationsData()
+    public static function getFixNamespaceDeclarationsData()
     {
         return array(
             array("namespace;\nclass Foo {}\n", "namespace\n{\nclass Foo {}\n}"),
@@ -198,7 +198,7 @@ class ClassCollectionLoaderTest extends TestCase
         ClassCollectionLoader::enableTokenizer(true);
     }
 
-    public function getFixNamespaceDeclarationsDataWithoutTokenizer()
+    public static function getFixNamespaceDeclarationsDataWithoutTokenizer()
     {
         return array(
             array("namespace;\nclass Foo {}\n", "namespace\n{\nclass Foo {}\n}\n"),

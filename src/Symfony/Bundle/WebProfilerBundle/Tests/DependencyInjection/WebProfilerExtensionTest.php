@@ -103,7 +103,7 @@ class WebProfilerExtensionTest extends TestCase
         $this->assertSaneContainer($this->getDumpedContainer());
     }
 
-    public function getDebugModes()
+    public static function getDebugModes()
     {
         return array(
             array(false, false, false, false),

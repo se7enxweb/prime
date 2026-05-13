@@ -30,7 +30,7 @@ class IssnValidatorTest extends AbstractConstraintValidatorTest
         return new IssnValidator();
     }
 
-    public function getValidLowerCasedIssn()
+    public static function getValidLowerCasedIssn()
     {
         return array(
             array('2162-321x'),
@@ -43,7 +43,7 @@ class IssnValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    public function getValidNonHyphenatedIssn()
+    public static function getValidNonHyphenatedIssn()
     {
         return array(
             array('2162321X'),
@@ -70,7 +70,7 @@ class IssnValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    public function getValidIssn()
+    public static function getValidIssn()
     {
         return array_merge(
             $this->getValidLowerCasedIssn(),
@@ -79,7 +79,7 @@ class IssnValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    public function getInvalidIssn()
+    public static function getInvalidIssn()
     {
         return array(
             array(0, Issn::TOO_SHORT_ERROR),

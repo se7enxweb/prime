@@ -30,7 +30,7 @@ class CommentHandlerTest extends AbstractHandlerTest
         $this->assertRemainingContent($reader, $remainingContent);
     }
 
-    public function getHandleValueTestData()
+    public static function getHandleValueTestData()
     {
         return array(
             // 2nd argument only exists for inherited method compatibility

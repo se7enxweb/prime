@@ -50,7 +50,7 @@ class ClassLoaderTest extends TestCase
         $this->assertTrue(class_exists($className), $message);
     }
 
-    public function getLoadClassTests()
+    public static function getLoadClassTests()
     {
         return array(
             array('\\Namespaced2\\Foo', 'Namespaced2\\Foo',   '->loadClass() loads Namespaced2\Foo class'),
@@ -70,7 +70,7 @@ class ClassLoaderTest extends TestCase
         $this->assertFalse(class_exists($className), $message);
     }
 
-    public function getLoadNonexistentClassTests()
+    public static function getLoadNonexistentClassTests()
     {
         return array(
             array('\\Pearlike3_Bar', '\\Pearlike3_Bar', '->loadClass() loads non existing Pearlike3_Bar class with a leading slash'),
@@ -141,7 +141,7 @@ class ClassLoaderTest extends TestCase
         $this->assertTrue(class_exists($className), $message);
     }
 
-    public function getLoadClassFromFallbackTests()
+    public static function getLoadClassFromFallbackTests()
     {
         return array(
             array('\\Namespaced2\\Baz',    'Namespaced2\\Baz',    '->loadClass() loads Namespaced2\Baz class'),
@@ -163,7 +163,7 @@ class ClassLoaderTest extends TestCase
         $this->assertTrue(class_exists($className), $message);
     }
 
-    public function getLoadClassNamespaceCollisionTests()
+    public static function getLoadClassNamespaceCollisionTests()
     {
         return array(
             array(

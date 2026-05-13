@@ -29,7 +29,7 @@ class TranslationFilesTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function provideTranslationFiles()
+    public static function provideTranslationFiles()
     {
         return array_map(
             function ($filePath) { return (array) $filePath; },

@@ -113,7 +113,7 @@ class FormExtensionDivLayoutTest extends AbstractDivLayoutTest
         );
     }
 
-    public function isSelectedChoiceProvider()
+    public static function isSelectedChoiceProvider()
     {
         // The commented cases should not be necessary anymore, because the
         // choice lists should assure that both values passed here are always
@@ -170,7 +170,7 @@ class FormExtensionDivLayoutTest extends AbstractDivLayoutTest
         $this->assertSame('<form name="form" method="get" action="0">', $html);
     }
 
-    public function isRootFormProvider()
+    public static function isRootFormProvider()
     {
         return array(
             array(true, new FormView()),

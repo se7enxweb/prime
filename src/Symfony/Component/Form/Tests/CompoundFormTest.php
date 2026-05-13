@@ -587,7 +587,7 @@ class CompoundFormTest extends AbstractFormTest
         ));
     }
 
-    public function requestMethodProvider()
+    public static function requestMethodProvider()
     {
         return array(
             array('POST'),

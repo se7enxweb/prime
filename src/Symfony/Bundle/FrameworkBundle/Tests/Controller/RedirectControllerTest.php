@@ -90,7 +90,7 @@ class RedirectControllerTest extends TestCase
         $this->assertEquals($expectedCode, $returnResponse->getStatusCode());
     }
 
-    public function provider()
+    public static function provider()
     {
         return array(
             array(true, false, 301, array('additional-parameter' => 'value')),
@@ -151,7 +151,7 @@ class RedirectControllerTest extends TestCase
         $this->assertRedirectUrl($returnValue, $expectedUrl);
     }
 
-    public function urlRedirectProvider()
+    public static function urlRedirectProvider()
     {
         return array(
             // Standard ports
@@ -199,7 +199,7 @@ class RedirectControllerTest extends TestCase
         $this->assertRedirectUrl($returnValue, $expectedUrl);
     }
 
-    public function pathQueryParamsProvider()
+    public static function pathQueryParamsProvider()
     {
         return array(
             array('http://www.example.com/base/redirect-path', '/redirect-path',  ''),

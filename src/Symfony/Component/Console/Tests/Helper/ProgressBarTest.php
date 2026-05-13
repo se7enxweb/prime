@@ -639,7 +639,7 @@ class ProgressBarTest extends TestCase
      *
      * @return array
      */
-    public function provideFormat()
+    public static function provideFormat()
     {
         return array(
             array('normal'),

@@ -130,7 +130,7 @@ class CookieJarTest extends TestCase
         $this->assertEquals($values, array_keys($cookieJar->allValues($uri)), '->allValues() returns the cookie for a given URI');
     }
 
-    public function provideAllValuesValues()
+    public static function provideAllValuesValues()
     {
         return array(
             array('http://www.example.com', array('foo_nothing', 'foo_domain')),

@@ -69,6 +69,11 @@ final class Locale extends \Locale
     {
         if (\function_exists('locale_parse')) {
             $localeSubTags = locale_parse($locale);
+            // locale_parse() returns [] for special tags like 'root' in PHP 8+;
+            // treat them as terminal nodes with no fallback.
+            if (empty($localeSubTags)) {
+                return null;
+            }
             if (1 === \count($localeSubTags)) {
                 if (self::$defaultFallback === $localeSubTags['language']) {
                     return 'root';

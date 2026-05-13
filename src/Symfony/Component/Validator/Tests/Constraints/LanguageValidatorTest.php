@@ -61,7 +61,7 @@ class LanguageValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidLanguages()
+    public static function getValidLanguages()
     {
         return array(
             array('en'),
@@ -87,7 +87,7 @@ class LanguageValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidLanguages()
+    public static function getInvalidLanguages()
     {
         return array(
             array('EN'),

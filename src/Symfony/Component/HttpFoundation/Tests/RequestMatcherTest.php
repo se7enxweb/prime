@@ -32,7 +32,7 @@ class RequestMatcherTest extends TestCase
         $this->assertSame($isMatch, $matcher->matches($request));
     }
 
-    public function getMethodData()
+    public static function getMethodData()
     {
         return array(
             array('get', 'get', true),
@@ -78,7 +78,7 @@ class RequestMatcherTest extends TestCase
         $this->assertSame($isMatch, $matcher->matches($request));
     }
 
-    public function getHostData()
+    public static function getHostData()
     {
         return array(
             array('.*\.example\.com', true),

@@ -67,7 +67,7 @@ class DateTimeValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidDateTimes()
+    public static function getValidDateTimes()
     {
         return array(
             array('2010-01-01 01:02:03'),
@@ -93,7 +93,7 @@ class DateTimeValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidDateTimes()
+    public static function getInvalidDateTimes()
     {
         return array(
             array('foobar', DateTime::INVALID_FORMAT_ERROR),

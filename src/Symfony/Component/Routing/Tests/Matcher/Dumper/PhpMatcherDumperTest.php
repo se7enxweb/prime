@@ -93,7 +93,7 @@ class PhpMatcherDumperTest extends TestCase
         $this->assertStringEqualsFile($basePath.$fixture, $dumper->dump($options), '->dump() correctly dumps routes as optimized PHP code.');
     }
 
-    public function getRouteCollections()
+    public static function getRouteCollections()
     {
         /* test case 1 */
 

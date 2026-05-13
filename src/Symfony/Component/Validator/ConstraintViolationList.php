@@ -110,7 +110,7 @@ class ConstraintViolationList implements \IteratorAggregate, ConstraintViolation
      *
      * @return \ArrayIterator|ConstraintViolationInterface[]
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->violations);
     }

@@ -34,7 +34,7 @@ class Psr4ClassLoaderTest extends TestCase
     /**
      * @return array
      */
-    public function getLoadClassTests()
+    public static function getLoadClassTests()
     {
         return array(
             array('Acme\\DemoLib\\Foo'),
@@ -62,7 +62,7 @@ class Psr4ClassLoaderTest extends TestCase
     /**
      * @return array
      */
-    public function getLoadNonexistentClassTests()
+    public static function getLoadNonexistentClassTests()
     {
         return array(
             array('Acme\\DemoLib\\I_Do_Not_Exist'),

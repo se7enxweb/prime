@@ -360,7 +360,7 @@ class ResolvedFormTypeTest extends TestCase
         new ResolvedFormType($this->type);
     }
 
-    public function provideValidNames()
+    public static function provideValidNames()
     {
         return array(
             array('text'),
@@ -369,7 +369,7 @@ class ResolvedFormTypeTest extends TestCase
         );
     }
 
-    public function provideInvalidNames()
+    public static function provideInvalidNames()
     {
         return array(
             array('my-type'),
@@ -416,7 +416,7 @@ class ResolvedFormTypeTest extends TestCase
         $this->assertSame($blockPrefix, $resolvedType->getBlockPrefix());
     }
 
-    public function provideTypeClassBlockPrefixTuples()
+    public static function provideTypeClassBlockPrefixTuples()
     {
         return array(
             array(__NAMESPACE__.'\Fixtures\FooType', 'foo'),

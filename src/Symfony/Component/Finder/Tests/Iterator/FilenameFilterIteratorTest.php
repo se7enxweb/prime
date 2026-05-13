@@ -27,7 +27,7 @@ class FilenameFilterIteratorTest extends IteratorTestCase
         $this->assertIterator($expected, $iterator);
     }
 
-    public function getAcceptData()
+    public static function getAcceptData()
     {
         return array(
             array(array('test.*'), array(), array('test.php', 'test.py')),

@@ -75,7 +75,7 @@ class CurrencyValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidCurrencies()
+    public static function getValidCurrencies()
     {
         return array(
             array('EUR'),
@@ -103,7 +103,7 @@ class CurrencyValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidCurrencies()
+    public static function getInvalidCurrencies()
     {
         return array(
             array('EN'),

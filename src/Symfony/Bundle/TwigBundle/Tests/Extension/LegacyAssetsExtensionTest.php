@@ -55,7 +55,7 @@ class LegacyAssetsExtensionTest extends TestCase
         $this->assertEquals($relativeUrl, $extension->getAssetUrl($path, $packageName, true));
     }
 
-    public function provideGetAssetUrlArguments()
+    public static function provideGetAssetUrlArguments()
     {
         return array(
             array('/path/to/asset', 'package-name', false, '/bundle-name/path/to/asset', '/bundle-name/path/to/asset', 'http', 'symfony.com', 80, null),

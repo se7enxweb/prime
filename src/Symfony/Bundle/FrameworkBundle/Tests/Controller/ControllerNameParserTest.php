@@ -99,7 +99,7 @@ class ControllerNameParserTest extends TestCase
         }
     }
 
-    public function getMissingControllersTest()
+    public static function getMissingControllersTest()
     {
         return array(
             array('FooBundle:Fake:index'),          // a normal bundle
@@ -129,7 +129,7 @@ class ControllerNameParserTest extends TestCase
         }
     }
 
-    public function getInvalidBundleNameTests()
+    public static function getInvalidBundleNameTests()
     {
         return array(
             'Alternative will be found using levenshtein' => array('FoodBundle:Default:index', 'FooBundle:Default:index'),

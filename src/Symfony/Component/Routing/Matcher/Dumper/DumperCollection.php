@@ -78,7 +78,7 @@ class DumperCollection implements \IteratorAggregate
      *
      * @return \Iterator|DumperCollection[]|DumperRoute[] The iterator
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->children);
     }

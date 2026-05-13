@@ -38,7 +38,7 @@ class CallbackTransformerTest extends TestCase
         new CallbackTransformer($transformCallback, $reverseTransformCallback);
     }
 
-    public function invalidCallbacksProvider()
+    public static function invalidCallbacksProvider()
     {
         return array(
             array(null, function () {}),

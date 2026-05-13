@@ -104,7 +104,7 @@ abstract class UserPasswordValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function emptyPasswordData()
+    public static function emptyPasswordData()
     {
         return array(
             array(null),

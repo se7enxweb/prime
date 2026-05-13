@@ -93,7 +93,7 @@ class RegexTest extends TestCase
         $this->assertEquals($expected, $expr->renderPattern());
     }
 
-    public function getHasFlagsData()
+    public static function getHasFlagsData()
     {
         return array(
             array('~^abc~', true, false),
@@ -104,7 +104,7 @@ class RegexTest extends TestCase
         );
     }
 
-    public function getHasJokersData()
+    public static function getHasJokersData()
     {
         return array(
             array('~.*abc~', true, false),
@@ -115,7 +115,7 @@ class RegexTest extends TestCase
         );
     }
 
-    public function getSetFlagsData()
+    public static function getSetFlagsData()
     {
         return array(
             array('~abc~', true, false, '~^abc~'),
@@ -125,7 +125,7 @@ class RegexTest extends TestCase
         );
     }
 
-    public function getSetJokersData()
+    public static function getSetJokersData()
     {
         return array(
             array('~abc~', true, false, '~.*abc~'),
@@ -135,7 +135,7 @@ class RegexTest extends TestCase
         );
     }
 
-    public function getReplaceJokersTestData()
+    public static function getReplaceJokersTestData()
     {
         return array(
             array('~.abc~', '@abc'),

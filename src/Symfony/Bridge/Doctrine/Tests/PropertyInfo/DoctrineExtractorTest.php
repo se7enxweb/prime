@@ -109,7 +109,7 @@ class DoctrineExtractorTest extends TestCase
         $this->assertEquals($expectedTypes, $actualTypes);
     }
 
-    public function typesProvider()
+    public static function typesProvider()
     {
         return array(
             array('id', array(new Type(Type::BUILTIN_TYPE_INT))),

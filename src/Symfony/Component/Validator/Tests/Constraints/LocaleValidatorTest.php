@@ -60,7 +60,7 @@ class LocaleValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getValidLocales()
+    public static function getValidLocales()
     {
         return array(
             array('en'),
@@ -89,7 +89,7 @@ class LocaleValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getInvalidLocales()
+    public static function getInvalidLocales()
     {
         return array(
             array('EN'),

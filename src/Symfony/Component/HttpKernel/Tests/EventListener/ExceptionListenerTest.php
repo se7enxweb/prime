@@ -91,7 +91,7 @@ class ExceptionListenerTest extends TestCase
         $this->assertCount(3, $logger->getLogs('critical'));
     }
 
-    public function provider()
+    public static function provider()
     {
         if (!class_exists('Symfony\Component\HttpFoundation\Request')) {
             return array(array(null, null));

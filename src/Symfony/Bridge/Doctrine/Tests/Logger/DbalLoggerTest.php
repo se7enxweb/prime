@@ -39,7 +39,7 @@ class DbalLoggerTest extends TestCase
         $dbalLogger->startQuery($sql, $params);
     }
 
-    public function getLogFixtures()
+    public static function getLogFixtures()
     {
         return array(
             array('SQL', null, array()),

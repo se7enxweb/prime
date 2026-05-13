@@ -25,7 +25,7 @@ class VoterTest extends TestCase
         $this->token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')->getMock();
     }
 
-    public function getTests()
+    public static function getTests()
     {
         return array(
             array(array('EDIT'), VoterInterface::ACCESS_GRANTED, new \stdClass(), 'ACCESS_GRANTED if attribute and class are supported and attribute grants access'),

@@ -19,7 +19,7 @@ use Symfony\Component\Form\FormConfigBuilder;
  */
 class FormConfigTest extends TestCase
 {
-    public function getHtml4Ids()
+    public static function getHtml4Ids()
     {
         return array(
             array('z0'),

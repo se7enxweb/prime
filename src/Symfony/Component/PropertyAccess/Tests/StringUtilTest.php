@@ -16,7 +16,7 @@ use Symfony\Component\PropertyAccess\StringUtil;
 
 class StringUtilTest extends TestCase
 {
-    public function singularifyProvider()
+    public static function singularifyProvider()
     {
         // see http://english-zone.com/spelling/plurals.html
         // see http://www.scribd.com/doc/3271143/List-of-100-Irregular-Plural-Nouns-in-English

@@ -19,7 +19,7 @@ use Symfony\Component\Intl\Util\Version;
  */
 class VersionTest extends TestCase
 {
-    public function normalizeProvider()
+    public static function normalizeProvider()
     {
         return array(
             array(null, '1', '1'),
@@ -53,7 +53,7 @@ class VersionTest extends TestCase
         $this->assertSame($result, Version::normalize($version, $precision));
     }
 
-    public function compareProvider()
+    public static function compareProvider()
     {
         return array(
             array(null, '1', '==', '1', true),

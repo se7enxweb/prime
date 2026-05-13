@@ -51,7 +51,7 @@ class YamlFileLoaderTest extends TestCase
         $loader->load($filePath);
     }
 
-    public function getPathsToInvalidFiles()
+    public static function getPathsToInvalidFiles()
     {
         return array(
             array('nonvalid.yml'),

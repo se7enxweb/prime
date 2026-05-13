@@ -124,7 +124,7 @@ class Session implements SessionInterface, \IteratorAggregate, \Countable
      *
      * @return \ArrayIterator An \ArrayIterator instance
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->storage->getBag($this->attributeName)->all());
     }
@@ -134,7 +134,7 @@ class Session implements SessionInterface, \IteratorAggregate, \Countable
      *
      * @return int The number of attributes
      */
-    public function count()
+    public function count(): int
     {
         return \count($this->storage->getBag($this->attributeName)->all());
     }

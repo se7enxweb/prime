@@ -35,7 +35,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    public function getTenToTwenty()
+    public static function getTenToTwenty()
     {
         return array(
             array(10.00001),
@@ -49,7 +49,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    public function getLessThanTen()
+    public static function getLessThanTen()
     {
         return array(
             array(9.99999, '9.99999'),
@@ -59,7 +59,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    public function getMoreThanTwenty()
+    public static function getMoreThanTwenty()
     {
         return array(
             array(20.000001, '20.000001'),
@@ -182,7 +182,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    public function getTenthToTwentiethMarch2014()
+    public static function getTenthToTwentiethMarch2014()
     {
         // The provider runs before setUp(), so we need to manually fix
         // the default timezone
@@ -205,7 +205,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
         return $tests;
     }
 
-    public function getSoonerThanTenthMarch2014()
+    public static function getSoonerThanTenthMarch2014()
     {
         // The provider runs before setUp(), so we need to manually fix
         // the default timezone
@@ -226,7 +226,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
         return $tests;
     }
 
-    public function getLaterThanTwentiethMarch2014()
+    public static function getLaterThanTwentiethMarch2014()
     {
         // The provider runs before setUp(), so we need to manually fix
         // the default timezone

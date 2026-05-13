@@ -180,7 +180,7 @@ class NamespacedAttributeBagTest extends TestCase
         $this->assertEquals(array(), $this->bag->all());
     }
 
-    public function attributesProvider()
+    public static function attributesProvider()
     {
         return array(
             array('hello', 'world', true),

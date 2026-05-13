@@ -37,7 +37,7 @@ class ExpressionVoterTest extends TestCase
         $this->assertSame($expected, $voter->vote($this->getToken($roles, $tokenExpectsGetRoles), null, $attributes));
     }
 
-    public function getVoteTests()
+    public static function getVoteTests()
     {
         return array(
             array(array(), array(), VoterInterface::ACCESS_ABSTAIN, false, false),

@@ -60,7 +60,7 @@ class ValidatorTypeGuesserTest extends TestCase
         $this->guesser = new ValidatorTypeGuesser($this->metadataFactory);
     }
 
-    public function guessRequiredProvider()
+    public static function guessRequiredProvider()
     {
         return array(
             array(new NotNull(), new ValueGuess(true, Guess::HIGH_CONFIDENCE)),
@@ -120,7 +120,7 @@ class ValidatorTypeGuesserTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function maxLengthTypeProvider()
+    public static function maxLengthTypeProvider()
     {
         return array(
             array('double'),

@@ -154,7 +154,7 @@ class PropertyPath implements \IteratorAggregate, PropertyPathInterface
      *
      * @return PropertyPathIteratorInterface
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new PropertyPathIterator($this);
     }

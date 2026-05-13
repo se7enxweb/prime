@@ -153,7 +153,7 @@ class ContainerBuilderTest extends TestCase
         $builder->setDefinition($id, new Definition('Foo'));
     }
 
-    public function provideBadId()
+    public static function provideBadId()
     {
         return [
             [''],

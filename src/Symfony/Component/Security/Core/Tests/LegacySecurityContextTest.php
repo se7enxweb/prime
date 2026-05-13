@@ -70,7 +70,7 @@ class LegacySecurityContextTest extends TestCase
         $this->assertEquals($return, $this->securityContext->isGranted($attributes, $object));
     }
 
-    public function isGrantedDelegationProvider()
+    public static function isGrantedDelegationProvider()
     {
         return array(
             array(array(), new \stdClass(), true),
@@ -102,7 +102,7 @@ class LegacySecurityContextTest extends TestCase
         new SecurityContext($first, $second);
     }
 
-    public function oldConstructorSignatureFailuresProvider()
+    public static function oldConstructorSignatureFailuresProvider()
     {
         $tokenStorage = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')->getMock();
         $authorizationChecker = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface')->getMock();

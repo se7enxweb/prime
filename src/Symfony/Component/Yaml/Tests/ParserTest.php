@@ -38,7 +38,7 @@ class ParserTest extends TestCase
         $this->assertEquals($expected, var_export($this->parser->parse($yaml), true), $comment);
     }
 
-    public function getDataFormSpecifications()
+    public static function getDataFormSpecifications()
     {
         $parser = new Parser();
         $path = __DIR__.'/Fixtures';
@@ -101,7 +101,7 @@ EOF;
         $this->assertEquals('foo', $this->parser->parse($yaml));
     }
 
-    public function getBlockChompingTests()
+    public static function getBlockChompingTests()
     {
         $tests = array();
 
@@ -468,7 +468,7 @@ EOF;
         $this->assertEquals($expected, $this->parser->parse($yaml, false, false, true));
     }
 
-    public function getObjectForMapTests()
+    public static function getObjectForMapTests()
     {
         $tests = array();
 
@@ -541,7 +541,7 @@ YAML;
         $this->parser->parse($yaml, true, false);
     }
 
-    public function invalidDumpedObjectProvider()
+    public static function invalidDumpedObjectProvider()
     {
         $yamlTag = <<<'EOF'
 foo: !!php/object:O:30:"Symfony\Tests\Component\Yaml\B":1:{s:1:"b";s:3:"foo";}
@@ -981,7 +981,7 @@ EOT;
         $this->assertSame($expectedParserResult, $this->parser->parse($yaml));
     }
 
-    public function getCommentLikeStringInScalarBlockData()
+    public static function getCommentLikeStringInScalarBlockData()
     {
         $tests = array();
 
@@ -1175,7 +1175,7 @@ EOT
         $this->parser->parse($yaml);
     }
 
-    public function parserThrowsExceptionWithCorrectLineNumberProvider()
+    public static function parserThrowsExceptionWithCorrectLineNumberProvider()
     {
         return array(
             array(
