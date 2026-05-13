@@ -782,6 +782,458 @@ trait ScannerTrait
         return ['fixed' => $fixed ?? $content, 'count' => $count];
     }
 
+    // ── PHPUnit 11 compatibility scanner ──────────────────────────────────────
+
+    /**
+     * Scans PHP test source for data-provider methods that are not declared static.
+     *
+     * PHPUnit 11 requires every method referenced by @dataProvider or
+     * #[DataProvider(…)] to be declared `public static`.
+     * Non-static providers still execute in PHPUnit 10 but produce a deprecation;
+     * in PHPUnit 11 they are treated as errors.
+     *
+     * Detects:
+     *   @dataProvider methodName        ← docblock annotation (any indentation)
+     *   #[DataProvider('methodName')]   ← PHP 8 attribute
+     *
+     * For each referenced provider name it then searches the same file content for
+     * a non-static `public function methodName(` declaration.
+     *
+     * Returns [ 'line' => int, 'snippet' => string, 'method' => string ]
+     */
+    public static function scanPhpunit(string $content): array
+    {
+        $issues = [];
+        $lines  = explode("\n", $content);
+
+        // ── Collect all data-provider method names referenced in this file ─────
+        $providers = [];
+        foreach ($lines as $line) {
+            // @dataProvider methodName  (docblock)
+            if (preg_match('/@dataProvider\s+(\w+)/', $line, $m)) {
+                $providers[$m[1]] = true;
+            }
+            // #[DataProvider('methodName')]  (PHP 8 attribute)
+            if (preg_match('/#\[(?:\w+\\\\)*DataProvider\s*\(\s*[\'"](\w+)[\'"]\s*\)\s*]/', $line, $m)) {
+                $providers[$m[1]] = true;
+            }
+        }
+
+        if (empty($providers)) {
+            return [];
+        }
+
+        // ── Find non-static declarations of those provider methods ────────────
+        foreach ($lines as $idx => $line) {
+            // Match `public function name(` without `static` on the same line.
+            // The negative lookahead ensures `static` is not already present
+            // somewhere on the line before the `function` keyword.
+            if (preg_match('/\bpublic\b(?!\s+static)\s+function\s+(\w+)\s*\(/i', $line, $m)) {
+                $methodName = $m[1];
+                if (isset($providers[$methodName])) {
+                    $issues[] = [
+                        'line'    => $idx + 1,
+                        'snippet' => rtrim($line),
+                        'method'  => $methodName,
+                    ];
+                }
+            }
+        }
+
+        return $issues;
+    }
+
+    /**
+     * Applies the PHPUnit data-provider fix to a string of PHP source.
+     *
+     * Inserts `static` into every `public function methodName(` declaration
+     * where methodName is referenced by @dataProvider or #[DataProvider(…)].
+     *
+     * This method is PURE — it returns the fixed string, never writes a file.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyPhpunitFix(string $content): array
+    {
+        $lines = explode("\n", $content);
+
+        // Collect provider names (same logic as scanPhpunit)
+        $providers = [];
+        foreach ($lines as $line) {
+            if (preg_match('/@dataProvider\s+(\w+)/', $line, $m)) {
+                $providers[$m[1]] = true;
+            }
+            if (preg_match('/#\[(?:\w+\\\\)*DataProvider\s*\(\s*[\'"](\w+)[\'"]\s*\)\s*]/', $line, $m)) {
+                $providers[$m[1]] = true;
+            }
+        }
+
+        if (empty($providers)) {
+            return ['fixed' => $content, 'count' => 0];
+        }
+
+        $count = 0;
+
+        // Replace `public function name(` → `public static function name(`
+        // only for methods whose name is in the providers set.
+        $fixed = preg_replace_callback(
+            '/\b(public)\b((?!\s+static)\s+)function\s+(\w+)\s*\(/i',
+            static function (array $m) use ($providers, &$count): string {
+                $methodName = $m[3];
+                if (isset($providers[$methodName])) {
+                    ++$count;
+                    // Preserve original whitespace between public and function.
+                    return $m[1] . $m[2] . 'static function ' . $methodName . '(';
+                }
+                return $m[0];
+            },
+            $content
+        );
+
+        return ['fixed' => $fixed ?? $content, 'count' => $count];
+    }
+
+    // ── Return-type compatibility scanner ─────────────────────────────────────
+
+    /**
+     * Map of well-known PHP built-in interface / parent-class short names
+     * to the methods they require and the PHP 8+ return type for each.
+     *
+     * Used by scanReturnTypeCompat() and applyReturnTypeCompatFix().
+     *
+     * @return array<string, array<string, string>>
+     */
+    private static function interfaceReturnTypeMap(): array
+    {
+        return [
+            // PHP core interfaces
+            'Countable'               => ['count'         => 'int'],
+            'Stringable'              => ['__toString'    => 'string'],
+            'IteratorAggregate'       => ['getIterator'   => '\\Traversable'],
+            'Iterator'                => [
+                'current' => 'mixed', 'key' => 'mixed',
+                'next'    => 'void',  'rewind' => 'void', 'valid' => 'bool',
+            ],
+            'ArrayAccess'             => [
+                'offsetExists' => 'bool',  'offsetGet'    => 'mixed',
+                'offsetSet'    => 'void',  'offsetUnset'  => 'void',
+            ],
+            'JsonSerializable'        => ['jsonSerialize' => 'mixed'],
+            // Session storage
+            'SessionHandlerInterface' => [
+                'open'    => 'bool',   'close'   => 'bool',
+                'read'    => 'string|false', 'write' => 'bool',
+                'destroy' => 'bool',   'gc'      => 'int|false',
+            ],
+            // PDO subclasses
+            'PDO'                     => [
+                'beginTransaction' => 'bool',
+                'rollBack'         => 'bool',
+                'getAttribute'     => 'mixed',
+                'prepare'          => '\\PDOStatement|false',
+            ],
+        ];
+    }
+
+    /**
+     * Collects the set of (interface/parent short name → method → returnType)
+     * entries that apply to the class declared in $content.
+     *
+     * Returns [] when the class does not implement any of the known interfaces.
+     *
+     * @return array<string, string>  methodName → expectedReturnType
+     */
+    private static function resolveMethodReturnTypes(string $content): array
+    {
+        $map = self::interfaceReturnTypeMap();
+        $applicable = [];
+
+        foreach (explode("\n", $content) as $line) {
+            // Matches: class Foo [extends Bar] [implements A, B, C] [{|EOL]
+            if (!preg_match('/\bclass\s+\w+(?:\s+extends\s+(\w+))?(?:\s+implements\s+(.+?))?(?:\s*\{|$)/', $line, $m)) {
+                continue;
+            }
+
+            $declaredNames = [];
+
+            // extends ClassName → treat as if implements for PDO etc.
+            if (!empty($m[1])) {
+                $declaredNames[] = trim($m[1]);
+            }
+
+            // implements A, B\C, \D\E  → use the short (last) name
+            if (!empty($m[2])) {
+                foreach (preg_split('/\s*,\s*/', $m[2]) as $fqcn) {
+                    $parts = explode('\\', trim($fqcn));
+                    $declaredNames[] = end($parts);
+                }
+            }
+
+            foreach ($declaredNames as $name) {
+                if (isset($map[$name])) {
+                    foreach ($map[$name] as $method => $type) {
+                        $applicable[$method] = $type;
+                    }
+                }
+            }
+
+            break; // only care about the first class declaration
+        }
+
+        return $applicable;
+    }
+
+    /**
+     * Scans PHP source for methods that are missing required return type
+     * declarations because they implement a well-known PHP interface.
+     *
+     * Detects methods like `public function count()` on a class implementing
+     * Countable that lack the `: int` return type required by PHP 8.1+.
+     *
+     * Returns [ 'line' => int, 'snippet' => string, 'method' => string,
+     *            'expectedType' => string ]
+     */
+    public static function scanReturnTypeCompat(string $content): array
+    {
+        $applicable = self::resolveMethodReturnTypes($content);
+
+        if (empty($applicable)) {
+            return [];
+        }
+
+        $issues = [];
+        foreach (explode("\n", $content) as $idx => $line) {
+            // Match `public [static] function name(...)` with NO colon-return-type
+            // Single-line signatures only (multi-line signatures are uncommon for built-in methods).
+            if (!preg_match('/\bpublic\b.*\bfunction\s+(\w+)\s*\([^)]*\)\s*(?:\{|;|$)/i', $line, $m)) {
+                continue;
+            }
+            if (preg_match('/\)\s*:\s*\S/', $line)) {
+                continue; // already has a return type
+            }
+
+            $methodName = $m[1];
+            if (isset($applicable[$methodName])) {
+                $issues[] = [
+                    'line'         => $idx + 1,
+                    'snippet'      => rtrim($line),
+                    'method'       => $methodName,
+                    'expectedType' => $applicable[$methodName],
+                ];
+            }
+        }
+
+        return $issues;
+    }
+
+    /**
+     * Adds missing return type declarations to methods identified by
+     * scanReturnTypeCompat().
+     *
+     * This method is PURE — it returns the fixed string, never writes a file.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyReturnTypeCompatFix(string $content): array
+    {
+        $applicable = self::resolveMethodReturnTypes($content);
+
+        if (empty($applicable)) {
+            return ['fixed' => $content, 'count' => 0];
+        }
+
+        $count = 0;
+        $lines = explode("\n", $content);
+        $result = [];
+
+        foreach ($lines as $line) {
+            if (
+                preg_match('/(\bpublic\b.*\bfunction\s+(\w+)\s*\([^)]*\))(\s*)(\{|;|$)/i', $line, $m) &&
+                !preg_match('/\)\s*:\s*\S/', $line)
+            ) {
+                $methodName = $m[2];
+                if (isset($applicable[$methodName])) {
+                    $returnType = $applicable[$methodName];
+                    // Insert ': ReturnType' between the closing ')' and the '{' or ';'
+                    $line = preg_replace(
+                        '/(\bpublic\b.*\bfunction\s+' . preg_quote($methodName, '/') . '\s*\([^)]*\))(\s*)(\{|;|$)/i',
+                        '$1: ' . $returnType . '$2$3',
+                        $line
+                    );
+                    ++$count;
+                }
+            }
+
+            $result[] = $line;
+        }
+
+        return ['fixed' => implode("\n", $result), 'count' => $count];
+    }
+
+    // ── Serializable interface scanner ────────────────────────────────────────
+
+    /**
+     * Scans PHP source for classes that implement the deprecated \Serializable
+     * interface without also providing __serialize() / __unserialize() methods.
+     *
+     * PHP 8.1 deprecated implementing Serializable alone; classes must either
+     * drop the interface and use __serialize()/__unserialize() exclusively, or
+     * implement both sets of methods.
+     *
+     * Returns [ 'line' => int, 'snippet' => string, 'class' => string ]
+     */
+    public static function scanSerializable(string $content): array
+    {
+        $issues = [];
+        $lines  = explode("\n", $content);
+
+        $hasSerialize   = (bool) preg_match('/\bfunction\s+__serialize\s*\(/i', $content);
+        $hasUnserialize = (bool) preg_match('/\bfunction\s+__unserialize\s*\(/i', $content);
+
+        if ($hasSerialize && $hasUnserialize) {
+            return []; // already migrated
+        }
+
+        foreach ($lines as $idx => $line) {
+            // Detect: implements ... \Serializable  or  extends ... \Serializable
+            if (preg_match('/(?:implements|extends)\s+[^{]*\\\\?Serializable\b/', $line)) {
+                if (preg_match('/\bclass\s+(\w+)/', $line, $m)) {
+                    $issues[] = [
+                        'line'    => $idx + 1,
+                        'snippet' => rtrim($line),
+                        'class'   => $m[1],
+                    ];
+                } elseif ($issues === []) {
+                    // class name on a previous line – use the line as-is
+                    $issues[] = [
+                        'line'    => $idx + 1,
+                        'snippet' => rtrim($line),
+                        'class'   => '(unknown)',
+                    ];
+                }
+            }
+
+            // Also detect `interface Foo extends \Serializable`
+            if (preg_match('/\binterface\s+(\w+)\s+extends\s+[^{]*\\\\?Serializable\b/', $line, $m)) {
+                $issues[] = [
+                    'line'    => $idx + 1,
+                    'snippet' => rtrim($line),
+                    'class'   => $m[1],
+                ];
+            }
+        }
+
+        return $issues;
+    }
+
+    /**
+     * Adds __serialize() / __unserialize() bridge methods that delegate to the
+     * existing serialize() / unserialize() methods, suppressing the Serializable
+     * deprecation while maintaining backward compatibility.
+     *
+     * Skips files that already have __serialize() / __unserialize(), or that
+     * have no serialize() method (unexpected / nothing to bridge).
+     *
+     * This method is PURE — it returns the fixed string, never writes a file.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applySerializableFix(string $content): array
+    {
+        // Already migrated
+        if (preg_match('/\bfunction\s+__serialize\s*\(/i', $content) &&
+            preg_match('/\bfunction\s+__unserialize\s*\(/i', $content)) {
+            return ['fixed' => $content, 'count' => 0];
+        }
+
+        // Nothing to bridge — no serialize() method to wrap
+        if (!preg_match('/\bpublic\s+function\s+serialize\s*\(\s*\)/i', $content)) {
+            return ['fixed' => $content, 'count' => 0];
+        }
+
+        // Find the closing brace of the serialize() method and insert the bridge after it
+        $bridge = <<<'PHP'
+
+    public function __serialize(): array
+    {
+        return ['serialized' => $this->serialize()];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize($data['serialized']);
+    }
+PHP;
+
+        // Insert the bridge immediately before the unserialize() method declaration.
+        $fixed = preg_replace(
+            '/([ \t]*)(?:\/\*\*[^*]*\*+(?:[^*\/][^*]*\*+)*\/\s*)?' .  // optional docblock
+            '(public\s+function\s+unserialize\s*\()/i',
+            $bridge . "\n\n" . '$1$2',
+            $content,
+            1,
+            $count
+        );
+
+        if ($count === 0 || $fixed === null) {
+            return ['fixed' => $content, 'count' => 0];
+        }
+
+        return ['fixed' => $fixed, 'count' => 1];
+    }
+
+    // ── Optional-before-required parameter scanner ───────────────────────────
+
+    /**
+     * Scans PHP source for function/method parameters that have a default value
+     * but are followed by one or more required (no-default) parameters.
+     *
+     * PHP 8.0 deprecated this pattern and PHP 9 will make it an error.
+     * Auto-fixing is intentionally NOT provided because the correct remediation
+     * is context-dependent (reorder parameters, remove the default value, or
+     * change the required parameter to optional).
+     *
+     * Returns [ 'line' => int, 'snippet' => string, 'param' => string ]
+     */
+    public static function scanOptionalBeforeRequired(string $content): array
+    {
+        $issues = [];
+
+        foreach (explode("\n", $content) as $idx => $line) {
+            // Match function/method signatures that fit on one line
+            if (!preg_match('/\bfunction\s+\w+\s*\(([^)]+)\)/i', $line, $m)) {
+                continue;
+            }
+
+            $paramList = $m[1];
+
+            // Split by comma (simple; won't handle nested generics/defaults with commas)
+            $params    = array_map('trim', explode(',', $paramList));
+            $seenOptional = null;
+
+            foreach ($params as $param) {
+                if ($param === '' || str_starts_with($param, '...')) {
+                    continue; // variadic always last
+                }
+                $hasDefault = str_contains($param, '=');
+
+                if ($hasDefault) {
+                    $seenOptional = $param;
+                } elseif ($seenOptional !== null) {
+                    // A required param comes AFTER an optional one
+                    $issues[] = [
+                        'line'    => $idx + 1,
+                        'snippet' => rtrim($line),
+                        'param'   => trim(preg_replace('/.*\$/', '$', $seenOptional) ?? $seenOptional),
+                    ];
+                    $seenOptional = null; // report only once per signature
+                }
+            }
+        }
+
+        return $issues;
+    }
+
     // ── Aggregated file-level scan ────────────────────────────────────────────
 
     /**

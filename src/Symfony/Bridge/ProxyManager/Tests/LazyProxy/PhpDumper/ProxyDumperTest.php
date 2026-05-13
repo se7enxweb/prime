@@ -82,7 +82,7 @@ class ProxyDumperTest extends TestCase
     /**
      * @return array
      */
-    public function getProxyCandidates()
+    public static function getProxyCandidates()
     {
         $definitions = array(
             array(new Definition(__CLASS__), true),

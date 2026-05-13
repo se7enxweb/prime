@@ -739,7 +739,7 @@ class GetConstructorArgsWithDefaultValueDummy
     protected $foo;
     protected $bar;
 
-    public function __construct($foo = array(), $bar)
+    public function __construct($bar, $foo = array())
     {
         $this->foo = $foo;
         $this->bar = $bar;

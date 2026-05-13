@@ -155,6 +155,16 @@ abstract class AbstractToken implements TokenInterface
         list($this->user, $this->authenticated, $this->roles, $this->attributes) = unserialize($serialized);
     }
 
+    public function __serialize(): array
+    {
+        return ['serialized' => $this->serialize()];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize($data['serialized']);
+    }
+
     /**
      * Returns the token attributes.
      *

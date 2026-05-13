@@ -242,7 +242,7 @@ class JsonResponseTest extends TestCase
 if (interface_exists('JsonSerializable', false)) {
     class JsonSerializableObject implements \JsonSerializable
     {
-        public function jsonSerialize()
+        public function jsonSerialize(): mixed
         {
             throw new \Exception('This error is expected');
         }

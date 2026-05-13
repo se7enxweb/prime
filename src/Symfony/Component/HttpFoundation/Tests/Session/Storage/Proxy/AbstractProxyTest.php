@@ -22,28 +22,34 @@ class ConcreteProxy extends AbstractProxy
 
 class ConcreteSessionHandlerInterfaceProxy extends AbstractProxy implements \SessionHandlerInterface
 {
-    public function open($savePath, $sessionName)
+    public function open(string $savePath, string $sessionName): bool
     {
+        return false;
     }
 
-    public function close()
+    public function close(): bool
     {
+        return false;
     }
 
-    public function read($id)
+    public function read(string $id): string|false
     {
+        return false;
     }
 
-    public function write($id, $data)
+    public function write(string $id, string $data): bool
     {
+        return false;
     }
 
-    public function destroy($id)
+    public function destroy(string $id): bool
     {
+        return false;
     }
 
-    public function gc($maxlifetime)
+    public function gc(int $maxLifetime): int|false
     {
+        return 0;
     }
 }
 

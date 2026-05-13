@@ -182,10 +182,26 @@ class AbstractTokenTest extends TestCase
         $this->assertSame($user, $token->getUser());
     }
 
-    public function getUsers()
+    public static function getUsers()
     {
-        $user = $this->getMockBuilder('Symfony\Component\Security\Core\User\UserInterface')->getMock();
-        $advancedUser = $this->getMockBuilder('Symfony\Component\Security\Core\User\AdvancedUserInterface')->getMock();
+        $user = new class implements \Symfony\Component\Security\Core\User\UserInterface {
+            public function getRoles(): array { return []; }
+            public function getPassword(): ?string { return null; }
+            public function getSalt(): ?string { return null; }
+            public function getUsername(): string { return 'user'; }
+            public function eraseCredentials(): void {}
+        };
+        $advancedUser = new class implements \Symfony\Component\Security\Core\User\AdvancedUserInterface {
+            public function getRoles(): array { return []; }
+            public function getPassword(): ?string { return null; }
+            public function getSalt(): ?string { return null; }
+            public function getUsername(): string { return 'advanced'; }
+            public function eraseCredentials(): void {}
+            public function isAccountNonExpired(): bool { return true; }
+            public function isAccountNonLocked(): bool { return true; }
+            public function isCredentialsNonExpired(): bool { return true; }
+            public function isEnabled(): bool { return true; }
+        };
 
         return array(
             array($advancedUser),
@@ -211,10 +227,26 @@ class AbstractTokenTest extends TestCase
         $this->assertFalse($token->isAuthenticated());
     }
 
-    public function getUserChanges()
+    public static function getUserChanges()
     {
-        $user = $this->getMockBuilder('Symfony\Component\Security\Core\User\UserInterface')->getMock();
-        $advancedUser = $this->getMockBuilder('Symfony\Component\Security\Core\User\AdvancedUserInterface')->getMock();
+        $user = new class implements \Symfony\Component\Security\Core\User\UserInterface {
+            public function getRoles(): array { return []; }
+            public function getPassword(): ?string { return null; }
+            public function getSalt(): ?string { return null; }
+            public function getUsername(): string { return 'user'; }
+            public function eraseCredentials(): void {}
+        };
+        $advancedUser = new class implements \Symfony\Component\Security\Core\User\AdvancedUserInterface {
+            public function getRoles(): array { return []; }
+            public function getPassword(): ?string { return null; }
+            public function getSalt(): ?string { return null; }
+            public function getUsername(): string { return 'advanced'; }
+            public function eraseCredentials(): void {}
+            public function isAccountNonExpired(): bool { return true; }
+            public function isAccountNonLocked(): bool { return true; }
+            public function isCredentialsNonExpired(): bool { return true; }
+            public function isEnabled(): bool { return true; }
+        };
 
         return array(
             array(

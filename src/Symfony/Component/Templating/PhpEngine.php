@@ -176,44 +176,44 @@ class PhpEngine implements EngineInterface, \ArrayAccess
      *
      * @throws \InvalidArgumentException if the helper is not defined
      */
-    public function offsetGet($name)
+    public function offsetGet(mixed $offset): mixed
     {
-        return $this->get($name);
+        return $this->get($offset);
     }
 
     /**
      * Returns true if the helper is defined.
      *
-     * @param string $name The helper name
+     * @param string $offset The helper name
      *
      * @return bool true if the helper is defined, false otherwise
      */
-    public function offsetExists($name)
+    public function offsetExists(mixed $offset): bool
     {
-        return isset($this->helpers[$name]);
+        return isset($this->helpers[$offset]);
     }
 
     /**
      * Sets a helper.
      *
-     * @param HelperInterface $name  The helper instance
-     * @param string          $value An alias
+     * @param mixed $offset The helper name
+     * @param mixed $value  An alias
      */
-    public function offsetSet($name, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
-        $this->set($name, $value);
+        $this->set($offset, $value);
     }
 
     /**
      * Removes a helper.
      *
-     * @param string $name The helper name
+     * @param mixed $offset The helper name
      *
      * @throws \LogicException
      */
-    public function offsetUnset($name)
+    public function offsetUnset(mixed $offset): void
     {
-        throw new \LogicException(sprintf('You can\'t unset a helper (%s).', $name));
+        throw new \LogicException(sprintf('You can\'t unset a helper (%s).', $offset));
     }
 
     /**

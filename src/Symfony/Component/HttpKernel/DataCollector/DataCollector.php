@@ -40,6 +40,16 @@ abstract class DataCollector implements DataCollectorInterface, \Serializable
         $this->data = unserialize($data);
     }
 
+    public function __serialize(): array
+    {
+        return ['serialized' => $this->serialize()];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize($data['serialized']);
+    }
+
     /**
      * Converts a PHP variable to a string.
      *

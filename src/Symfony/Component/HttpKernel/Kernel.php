@@ -765,4 +765,14 @@ abstract class Kernel implements KernelInterface, TerminableInterface
 
         $this->__construct($environment, $debug);
     }
+
+    public function __serialize(): array
+    {
+        return ['serialized' => $this->serialize()];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize($data['serialized']);
+    }
 }
