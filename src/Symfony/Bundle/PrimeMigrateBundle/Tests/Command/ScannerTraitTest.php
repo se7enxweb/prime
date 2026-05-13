@@ -346,12 +346,18 @@ class ScannerTraitTest extends TestCase
     public static function provideFormNegative(): array
     {
         return [
-            'FQCN TextType' => ['->add(\'name\', TextType::class)'],
-            'comment line' => ['// ->add(\'name\', \'text\')'],
-            'docblock' => [' * ->add(\'name\', \'text\')'],
-            'blank line' => [''],
-            'no form add call' => ['$x = "text";'],
-            'variable not string literal' => ['->add("name", $type)'],
+            'FQCN TextType'                  => ['->add(\'name\', TextType::class)'],
+            'comment line'                   => ['// ->add(\'name\', \'text\')'],
+            'docblock'                       => [' * ->add(\'name\', \'text\')'],
+            'blank line'                     => [''],
+            'no form add call'               => ['$x = "text";'],
+            'variable not string literal'    => ['->add("name", $type)'],
+            // Regression: arbitrary comma-preceded strings must not be flagged
+            'compact with file'              => ['compact(\'type\', \'message\', \'file\', \'line\')'],
+            'array with url and time'        => ['return array(\'token\', \'url\', \'time\');'],
+            'setAttribute collection'        => ['$el->setAttribute(\'type\', \'collection\');'],
+            'double-quoted in sprintf string' => ['sprintf(\'descendant::input[contains(%s, "submit")]\', $t)'],
+            'exception with locale arg'      => ['throw new Ex(__METHOD__, \'locale\', $v, \'msg\');'],
         ];
     }
 
@@ -537,6 +543,56 @@ class ScannerTraitTest extends TestCase
         $pass1  = Scanner::applyFormsFix($code);
         $pass2  = Scanner::applyFormsFix($pass1['fixed']);
         $this->assertSame(0, $pass2['count'], 'Running fixer twice must produce no more changes');
+    }
+
+    /**
+     * Regression: compact() calls contain comma-preceded string literals that
+     * happen to match form type alias names ('file', 'line', 'time', 'url', …).
+     * The fixer must NOT rewrite them.
+     */
+    public function testApplyFormsFixDoesNotRewriteCompactArgs(): void
+    {
+        $code   = "<?php\ncompact('type', 'message', 'file', 'line', 'backtrace');\n";
+        $result = Scanner::applyFormsFix($code);
+        $this->assertSame(0, $result['count'], 'compact() args must not be touched');
+        $this->assertSame($code, $result['fixed']);
+    }
+
+    /**
+     * Regression: array() / return array() literals whose values happen to
+     * match form type alias names ('url', 'time', …) must not be rewritten.
+     */
+    public function testApplyFormsFixDoesNotRewriteArrayValues(): void
+    {
+        $code   = "<?php\nreturn array('token', 'url', 'time', 'method');\n";
+        $result = Scanner::applyFormsFix($code);
+        $this->assertSame(0, $result['count'], 'Array string values must not be touched');
+        $this->assertSame($code, $result['fixed']);
+    }
+
+    /**
+     * Regression: setAttribute() / generic method calls whose second argument
+     * happens to equal a form type alias ('collection', 'locale', …) must not
+     * be rewritten.
+     */
+    public function testApplyFormsFixDoesNotRewriteArbitraryMethodArgs(): void
+    {
+        $code   = "<?php\n\$el->setAttribute('type', 'collection');\n";
+        $result = Scanner::applyFormsFix($code);
+        $this->assertSame(0, $result['count'], 'setAttribute() args must not be touched');
+        $this->assertSame($code, $result['fixed']);
+    }
+
+    /**
+     * Regression: double-quoted strings inside sprintf()/other calls that
+     * contain alias names (e.g. "submit", "button") must not be rewritten.
+     */
+    public function testApplyFormsFixDoesNotRewriteDoubleQuotedInSprintf(): void
+    {
+        $code   = "<?php\n\$x = sprintf('contains(%s, \"submit\") or contains(%1\$s, \"button\")', \$t);\n";
+        $result = Scanner::applyFormsFix($code);
+        $this->assertSame(0, $result['count'], 'Double-quoted strings inside sprintf must not be touched');
+        $this->assertSame($code, $result['fixed']);
     }
 
     // ════════════════════════════════════════════════════════════════════════

@@ -312,17 +312,29 @@ trait ScannerTrait
         $aliases = implode('|', array_keys($typeMap));
         $lines   = explode("\n", $content);
 
-        // Pattern: string alias in the TYPE position only — not the field-name position.
+        // Pattern: string alias in the TYPE position only.
         //
         // Handles two call shapes:
-        //   (a) Comma-preceded  →  ->add('fieldName', 'type')  /  ->add('f', 'type', [...])
-        //       The alias is after a comma, so it is NOT the first positional argument.
-        //   (b) Function-opened →  createForm('type', $data)  /  setType('type')
-        //       The alias IS the first argument but follows a named function open-paren.
         //
-        // This avoids false-positives where a field name equals a type alias,
-        // e.g. ->add('email', 'email') previously matched 'email' twice (field + type).
-        $re = '/(?:,\s*|(?:createForm|setType|create)\s*\(\s*)[\'"](' . $aliases . ')[\'"](?:\s*,|\s*\))/';
+        //   (A) ->add( 'fieldName', 'alias' )
+        //       The type is specifically the SECOND argument to ->add().  We
+        //       consume the opening `->add(` and the field-name string literal
+        //       before matching the alias, so arbitrary comma-preceded strings
+        //       (compact(), array(), setAttribute(), etc.) are never matched.
+        //
+        //   (B) createForm( 'alias', … )  /  setType( 'alias', … )
+        //       The alias IS the first argument but follows a named function
+        //       open-paren that is specific to form factory calls.
+        //
+        // The two shapes are joined with | so a single preg_match_all covers both.
+        $re = '/'
+            // Shape A: ->add( 'fieldName' , 'alias'
+            . '(?:->add\s*\(\s*(?:\'[^\']*\'|"[^"]*")\s*,\s*)'
+            . '[\'"]('. $aliases . ')[\'"](?=\s*(?:,|\)))'
+            // Shape B: createForm( 'alias'  /  setType( 'alias'
+            . '|(?:(?:createForm|setType)\s*\(\s*)'
+            . '[\'"]('. $aliases . ')[\'"](?=\s*(?:,|\)))'
+            . '/';
 
         foreach ($lines as $idx => $line) {
             $trimmed = ltrim($line);
@@ -331,7 +343,8 @@ trait ScannerTrait
             }
             if (preg_match_all($re, $line, $matches, PREG_SET_ORDER)) {
                 foreach ($matches as $m) {
-                    $alias = $m[1];
+                    // Group 1 = Shape A match, Group 2 = Shape B match (one is empty).
+                    $alias = $m[1] !== '' ? $m[1] : $m[2];
                     $issues[] = [
                         'line'    => $idx + 1,
                         'snippet' => rtrim($line),
@@ -389,9 +402,21 @@ trait ScannerTrait
         $aliases = implode('|', array_keys($typeMap));
 
         // Same two-shape pattern as scanForms() — matches the TYPE position only.
-        // Group 1: the leading `,\s*` or `function(\s*` prefix (reconstructed verbatim).
-        // Group 2: the matched alias.
-        $re = '/(,\s*|(?:createForm|setType|create)\s*\(\s*)[\'"](' . $aliases . ')[\'"](?=\s*(?:,|\)))/';
+        //
+        // Capturing groups:
+        //   Shape A: (1) = `->add( 'fieldName', ` prefix  (2) = alias  (3) = ''
+        //   Shape B: (1) = `createForm( ` prefix           (2) = ''     (3) = alias
+        //
+        // Group 1 is always the prefix to reconstruct verbatim in the replacement.
+        // Groups 2 and 3 are mutually exclusive; we take whichever is non-empty.
+        $re = '/'
+            // Shape A — capture prefix + field-name so they are preserved verbatim
+            . '(->add\s*\(\s*(?:\'[^\']*\'|"[^"]*")\s*,\s*)'
+            . '[\'"]('. $aliases . ')[\'"](?=\s*(?:,|\)))'
+            // Shape B
+            . '|((?:createForm|setType)\s*\(\s*)'
+            . '[\'"]('. $aliases . ')[\'"](?=\s*(?:,|\)))'
+            . '/';
 
         $count       = 0;
         $usedAliases = [];
@@ -399,12 +424,14 @@ trait ScannerTrait
         $fixed = preg_replace_callback(
             $re,
             static function (array $m) use ($typeMap, &$count, &$usedAliases): string {
-                $prefix             = $m[1]; // comma+whitespace or function-open prefix
-                $alias              = $m[2];
+                // Shape A: groups 1 (prefix) + 2 (alias)
+                // Shape B: groups 3 (prefix) + 4 (alias)
+                $prefix = $m[1] !== '' ? $m[1] : $m[3];
+                $alias  = $m[2] !== '' ? $m[2] : $m[4];
                 $usedAliases[$alias] = true;
                 ++$count;
 
-                return $prefix . $typeMap[$alias]; // e.g. ', TextType::class'
+                return $prefix . $typeMap[$alias];
             },
             $content
         );
