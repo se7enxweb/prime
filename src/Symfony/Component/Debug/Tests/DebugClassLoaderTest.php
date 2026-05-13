@@ -110,6 +110,9 @@ class DebugClassLoaderTest extends TestCase
         if (defined('HHVM_VERSION')) {
             $this->markTestSkipped('HHVM is not handled in this test case.');
         }
+        if (\PHP_VERSION_ID >= 80000) {
+            $this->markTestSkipped('Method signature incompatibility is a fatal error in PHP 8.0+, cannot be caught.');
+        }
 
         ErrorHandler::register();
 
