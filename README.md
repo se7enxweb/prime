@@ -323,6 +323,28 @@ php bin/console debug:container                     # show service container
 php bin/console generate:bundle                     # scaffold a new bundle
 php bin/console doctrine:migrations:migrate         # run database migrations
 
+# ── Migration Helpers (prime:migrate:*) ───────────────────────────────────────
+# Run all checks (scan only — nothing written):
+php bin/console prime:migrate:check --dir=src/
+
+# Full migration workflow (always dry-run first, then apply):
+php bin/console prime:migrate:nullable    --dir=src/ --fix --dry-run   # preview
+php bin/console prime:migrate:nullable    --dir=src/ --fix             # apply: implicit nullable → ?Type
+
+php bin/console prime:migrate:forms       --dir=src/ --fix --dry-run   # preview
+php bin/console prime:migrate:forms       --dir=src/ --fix             # apply: 'text' → TextType::class
+
+php bin/console prime:migrate:constraints --dir=src/ --fix --dry-run   # preview
+php bin/console prime:migrate:constraints --dir=src/ --fix             # apply: Constraints\True → IsTrue
+
+php bin/console prime:migrate:twig        --dir=src/ --fix --dry-run   # preview
+php bin/console prime:migrate:twig        --dir=src/ --fix             # apply: Twig_* → Twig\ PSR-4
+
+php bin/console prime:migrate:yaml        --dir=src/ --fix --dry-run   # preview
+php bin/console prime:migrate:yaml        --dir=src/ --fix             # apply: strip !php/object: tags
+
+php bin/console prime:migrate:report      --dir=src/ --format=html --output=report.html
+
 # ── Composer ─────────────────────────────────────────────────────────────────
 composer install                                    # install packages from composer.json
 composer require vendor/package-name                # add a Packagist package

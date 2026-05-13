@@ -1582,11 +1582,39 @@ Scans for usages of the PHP-reserved Validator constraint names `True`, `False`,
 8 keywords; 7x Prime provides `class_alias()` compatibility shims, but PHP code that
 `use`s the old names should be updated.
 
+The command operates in three modes:
+
 ```bash
+# Read-only scan — lists every affected file and line (nothing is written)
 php bin/console prime:migrate:constraints --dir=src/
+
+# Preview the fix without writing (dry run)
+php bin/console prime:migrate:constraints --dir=src/ --fix --dry-run
+
+# Apply the fix (writes files)
+php bin/console prime:migrate:constraints --dir=src/ --fix
 ```
 
-**Example output:**
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `--dir=PATH` | Directory to scan (default: `src/`) |
+| `--fix` | Apply replacements and write files |
+| `--dry-run` | Show what would change without writing (requires `--fix`) |
+
+**What the fixer replaces:**
+
+| Pattern | Replacement |
+|---------|-------------|
+| `Constraints\True` | `Constraints\IsTrue` |
+| `Constraints\False` | `Constraints\IsFalse` |
+| `Constraints\Null` | `Constraints\IsNull` |
+| `new True(` | `new IsTrue(` |
+| `new False(` | `new IsFalse(` |
+| `new Null(` | `new IsNull(` |
+
+**Example scan output:**
 
 ```
 Validator Reserved Keyword Constraint Scanner
@@ -1606,7 +1634,14 @@ Migrate to:
 
 YAML / XML configuration files do not need to be updated.
 The old names continue to work via class_alias() in 7x Prime.
+
+To fix automatically:
+  php bin/console prime:migrate:constraints --dir=src/ --fix --dry-run   (preview first)
+  php bin/console prime:migrate:constraints --dir=src/ --fix              (apply)
 ```
+
+> **IMPORTANT:** Commit or stash your changes before running with `--fix`.
+> Review the result with `git diff src/` before committing.
 
 ---
 
@@ -1617,21 +1652,36 @@ deserialisation of PHP objects is blocked by passing `['allowed_classes' => fals
 `unserialize()`. Any YAML that relied on this feature will no longer produce PHP objects
 at parse time.
 
-```bash
-# Scan the default app/config and src directories
-php bin/console prime:migrate:yaml
+The `--fix` option strips the `!php/object:` tag prefix, leaving the serialised value as
+a plain YAML string. Any consuming code that relies on the value being a PHP object must
+be updated to call `unserialize()` explicitly.
 
-# Scan a specific directory
+```bash
+# Read-only scan — lists every affected file and line (nothing is written)
 php bin/console prime:migrate:yaml --dir=app/config
 php bin/console prime:migrate:yaml --dir=app/fixtures
+
+# Preview the fix without writing (dry run)
+php bin/console prime:migrate:yaml --dir=app/fixtures --fix --dry-run
+
+# Apply the fix (writes files)
+php bin/console prime:migrate:yaml --dir=app/fixtures --fix
 ```
 
-**Example output:**
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `--dir=PATH` | Directory to scan (default: `src/`) |
+| `--fix` | Strip `!php/object:` tags and write files |
+| `--dry-run` | Show what would change without writing (requires `--fix`) |
+
+**Example scan output:**
 
 ```
 YAML PHP Object Deserialisation Scanner
 =======================================
-Scanning: app/config/, src/
+Scanning: app/fixtures/
 
  app/fixtures/users.yml
    Line 7:  admin: !php/object: "O:4:\"User\":1:{...}"
@@ -1639,10 +1689,21 @@ Scanning: app/config/, src/
 Found 1 YAML file with PHP object tags.
 
 These values will no longer deserialise to PHP objects in 7x Prime.
-Replace with scalar/array data and reconstruct objects in application code.
+
+The --fix option strips the !php/object: tag, leaving each value as a plain
+YAML string. Consuming code must call unserialize() explicitly if object
+reconstruction is still required.
+
+To fix automatically:
+  php bin/console prime:migrate:yaml --dir=app/fixtures --fix --dry-run   (preview first)
+  php bin/console prime:migrate:yaml --dir=app/fixtures --fix              (apply)
 
 Reference: MIGRATION.md — Step 7 (YAML Object Deserialisation)
 ```
+
+> **IMPORTANT:** After `--fix`, update any application code that reads these YAML values —
+> they will be plain strings and must be passed to `unserialize()` if PHP object
+> reconstruction is still needed.
 
 ---
 
@@ -1652,11 +1713,55 @@ Scans PHP source files for references to the Twig 1.x `Twig_*` class naming conv
 The `se7enxweb/twig` package provides a compatibility shim for these names, but migrating
 to the `Twig\…` PSR-4 namespace is recommended for forward compatibility.
 
+The command operates in three modes:
+
 ```bash
+# Read-only scan — lists every affected file and line (nothing is written)
 php bin/console prime:migrate:twig --dir=src/
+
+# Preview the fix without writing (dry run)
+php bin/console prime:migrate:twig --dir=src/ --fix --dry-run
+
+# Apply the fix (writes files)
+php bin/console prime:migrate:twig --dir=src/ --fix
 ```
 
-**Example output:**
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `--dir=PATH` | Directory to scan (default: `src/`) |
+| `--fix` | Apply known-replacement rewrites and write files |
+| `--dry-run` | Show what would change without writing (requires `--fix`) |
+
+**Known-replacement map (19 entries — all handled automatically):**
+
+| Legacy name | PSR-4 replacement |
+|---|---|
+| `Twig_Extension` | `Twig\Extension\AbstractExtension` |
+| `Twig_SimpleFilter` | `Twig\TwigFilter` |
+| `Twig_SimpleFunction` | `Twig\TwigFunction` |
+| `Twig_SimpleTest` | `Twig\TwigTest` |
+| `Twig_Environment` | `Twig\Environment` |
+| `Twig_Loader_Filesystem` | `Twig\Loader\FilesystemLoader` |
+| `Twig_Loader_Array` | `Twig\Loader\ArrayLoader` |
+| `Twig_Filter_Method` | `Twig\TwigFilter` |
+| `Twig_Function_Method` | `Twig\TwigFunction` |
+| `Twig_Node` | `Twig\Node\Node` |
+| `Twig_Error_Runtime` | `Twig\Error\RuntimeError` |
+| `Twig_Error_Loader` | `Twig\Error\LoaderError` |
+| `Twig_Error_Syntax` | `Twig\Error\SyntaxError` |
+| `Twig_Template` | `Twig\Template` |
+| `Twig_Extension_Core` | `Twig\Extension\CoreExtension` |
+| `Twig_Extension_Escaper` | `Twig\Extension\EscaperExtension` |
+| `Twig_Extension_Optimizer` | `Twig\Extension\OptimizerExtension` |
+| `Twig_LoaderInterface` | `Twig\Loader\LoaderInterface` |
+| `Twig_Markup` | `Twig\Markup` |
+
+The leading backslash (`\Twig_Extension`) is preserved in the output.
+References not in the map are noted as requiring manual review.
+
+**Example scan output:**
 
 ```
 Twig Legacy Class Reference Scanner
@@ -1664,21 +1769,19 @@ Twig Legacy Class Reference Scanner
 Scanning: src/
 
  src/MyBundle/Twig/AppExtension.php
-   Line 7:   class AppExtension extends \Twig_Extension
-   Line 28:  return new \Twig_SimpleFilter('myfilter', …)
+   Line 7:   \Twig_Extension  → Twig\Extension\AbstractExtension
+   Line 28:  \Twig_SimpleFilter  → Twig\TwigFilter
 
 Found 1 file with Twig legacy class references.
 
-Recommended migration:
-  \Twig_Extension           → Twig\Extension\AbstractExtension
-  \Twig_SimpleFilter        → Twig\TwigFilter
-  \Twig_SimpleFunction      → Twig\TwigFunction
-  \Twig_SimpleTest          → Twig\TwigTest
-  \Twig_Environment         → Twig\Environment
-  \Twig_Loader_Filesystem   → Twig\Loader\FilesystemLoader
-
-Legacy names continue to work via the se7enxweb/twig compatibility layer.
+To fix automatically (known Twig_* names only — review unknown references manually):
+  php bin/console prime:migrate:twig --dir=src/ --fix --dry-run   (preview first)
+  php bin/console prime:migrate:twig --dir=src/ --fix              (apply)
 ```
+
+> **IMPORTANT:** Commit or stash your changes before running with `--fix`.
+> Review the result with `git diff src/` before committing.
+> Twig names **not** in the map above are left unchanged — review them manually.
 
 ---
 
@@ -1757,20 +1860,35 @@ php bin/console prime:migrate:forms --dir=src/ --fix              # apply
 git diff src/
 git add -A && git commit -m "Fix: FQCN form type names for Symfony 3.0+ (prime:migrate:forms)"
 
-# 6. Fix Twig legacy class references (if any)
-#    Use `prime:migrate:twig` output as your checklist.
+# 6. Fix Validator reserved constraint names (automated)
+php bin/console prime:migrate:constraints --dir=src/ --fix --dry-run   # preview
+php bin/console prime:migrate:constraints --dir=src/ --fix              # apply
+git diff src/
+git add -A && git commit -m "Fix: IsTrue/IsFalse/IsNull constraint names (prime:migrate:constraints)"
 
-# 7. Re-scan to confirm all issues resolved
+# 7. Fix Twig legacy class references (automated for known names)
+php bin/console prime:migrate:twig --dir=src/ --fix --dry-run   # preview
+php bin/console prime:migrate:twig --dir=src/ --fix              # apply (known names only)
+git diff src/
+git add -A && git commit -m "Fix: Twig PSR-4 class names (prime:migrate:twig)"
+
+# 8. Fix YAML !php/object: tags (automated — consuming code still needs updating)
+php bin/console prime:migrate:yaml --dir=app/fixtures --fix --dry-run   # preview
+php bin/console prime:migrate:yaml --dir=app/fixtures --fix              # apply
+git diff app/
+git add -A && git commit -m "Fix: strip YAML php/object tags (prime:migrate:yaml)"
+
+# 9. Re-scan to confirm all issues resolved
 php bin/console prime:migrate:check --dir=src/
 # Target: all checks show [OK]
 
-# 8. Run your application's own tests
+# 10. Run your application's own tests
 php /root/.config/composer/vendor/bin/phpunit --no-coverage -c phpunit.xml.dist src/
 
-# 9. Run the full 7x Prime framework test suite
+# 11. Run the full 7x Prime framework test suite
 php /root/.config/composer/vendor/bin/phpunit --no-coverage -c phpunit.xml.dist
 
-# 10. Deploy
+# 12. Deploy
 composer install --no-dev --optimize-autoloader
 php bin/console cache:clear --env=prod
 php bin/console cache:warmup --env=prod

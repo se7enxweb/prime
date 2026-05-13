@@ -219,3 +219,65 @@ class by its old fully-qualified name
 update references to
 `Symfony\Component\PropertyInfo\Tests\Fixtures\OmittedParamTagTypeDocBlock`.
 (This class is a test fixture only; no production code references it.)
+
+---
+
+PrimeBundleMigration — Auto-Fix Commands
+-----------------------------------------
+
+7x Prime ships `PrimeMigrateBundle` with auto-fix commands to assist the
+migration from Symfony 2.x applications.  All commands are in the
+`prime:migrate:*` namespace.
+
+### Available commands
+
+| Command | Scan | `--fix` | Purpose |
+|---------|:----:|:-------:|---------|
+| `prime:migrate:check` | ✓ | — | Run all checks; print consolidated summary |
+| `prime:migrate:nullable` | ✓ | ✓ | Fix implicit nullable types (`Type $p = null` → `?Type $p = null`) |
+| `prime:migrate:forms` | ✓ | ✓ | Replace string form type aliases with FQCN class constants |
+| `prime:migrate:constraints` | ✓ | ✓ | Replace `Constraints\True/False/Null` with `IsTrue/IsFalse/IsNull` |
+| `prime:migrate:twig` | ✓ | ✓ | Replace `Twig_*` legacy class names with `Twig\…` PSR-4 equivalents |
+| `prime:migrate:yaml` | ✓ | ✓ | Strip `!php/object:` YAML tags (leaves value as plain string) |
+| `prime:migrate:report` | ✓ | — | Generate text / HTML / JSON migration status report |
+
+### General pattern
+
+Every fixable command follows the same three-mode contract:
+
+```bash
+# 1. Read-only scan — see what needs fixing
+php bin/console prime:migrate:<command> --dir=src/
+
+# 2. Dry run — preview changes without writing any file
+php bin/console prime:migrate:<command> --dir=src/ --fix --dry-run
+
+# 3. Apply — write the changes
+php bin/console prime:migrate:<command> --dir=src/ --fix
+```
+
+Always commit your work-in-progress before running `--fix` and review the
+result with `git diff src/` before committing.
+
+### YAML `--fix` note
+
+`prime:migrate:yaml --fix` strips the `!php/object:` tag, leaving each value
+as a plain YAML string.  This is the mechanical part of the fix.  After
+applying it, also update any application code that previously relied on the
+value being a PHP object — those code paths must now call `unserialize()`
+explicitly.
+
+### Twig `--fix` note
+
+`prime:migrate:twig --fix` rewrites every `Twig_*` reference that appears in
+the 19-entry known-replacement map.  References to names **not** in the map
+are left unchanged and reported as requiring manual review.  Run
+`prime:migrate:twig --dir=src/` (scan mode) after `--fix` to confirm no
+unhandled references remain.
+
+### Forms `--fix` note
+
+`prime:migrate:forms --fix` rewrites string type aliases to FQCN constants
+**and** injects the required `use` statements.  The `use` injection anchors
+on top-level `use` lines only (column 0), so it will not misfire inside class
+bodies that contain `use TraitName;` statements.

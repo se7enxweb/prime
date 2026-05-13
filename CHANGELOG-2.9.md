@@ -45,6 +45,89 @@ It is NOT affiliated with Fabien Potencier or the upstream Symfony project.
  * Removed all PHP 5.x version-guard dead code from
    `NativeSessionStorage` (`PHP_VERSION_ID` blocks for PHP < 5.4 / 5.5).
 
+### PrimeMigrateBundle — Migration Helper Commands
+
+A new bundle `Symfony\Bundle\PrimeMigrateBundle` ships with 7x Prime 2.9 to assist
+developers migrating existing Symfony 2.x applications to this release.  All commands
+live under the `prime:migrate:*` namespace.
+
+#### Commands
+
+ * **`prime:migrate:check`** — consolidated compatibility scan (all checks in one pass).
+   Prints a one-line summary per check with issue counts and suggests the correct
+   `--fix` command for each failing check.  Supports `--verbose` for per-file detail.
+
+ * **`prime:migrate:nullable`** — implicit nullable type scanner and auto-fixer.
+   Detects `SomeType $param = null` signatures and rewrites them to `?SomeType $param = null`.
+   Supports `--fix` (write files) and `--fix --dry-run` (preview without writing).
+
+ * **`prime:migrate:forms`** — string form type alias scanner and auto-fixer.
+   Detects `->add('name', 'text')` style calls and rewrites them to FQCN
+   (`TextType::class`).  Injects the required `use` statements alphabetically.
+   Supports `--fix` and `--fix --dry-run`.
+   *Bug fix (2.9.0):* `injectUseStatements()` now anchors on top-level `use` lines
+   only (column 0) — prevents spurious injection inside class bodies after
+   `use TraitName;` trait-use statements.
+
+ * **`prime:migrate:constraints`** — reserved-keyword Validator constraint name
+   scanner and auto-fixer.  Detects `Constraints\True`, `Constraints\False`,
+   `Constraints\Null` (and the bare `new True(` form) and rewrites them to the
+   canonical `IsTrue` / `IsFalse` / `IsNull` equivalents.
+   Supports `--fix` and `--fix --dry-run`.
+
+ * **`prime:migrate:twig`** — Twig 1.x `Twig_*` legacy class reference scanner
+   and auto-fixer.  Detects Twig 1.x underscore-namespace class names and rewrites
+   them to the Twig 2+ `Twig\…` PSR-4 equivalents.
+   Supports `--fix` and `--fix --dry-run`.
+   Known-replacement map (19 entries):
+
+   | Legacy name | PSR-4 replacement |
+   |---|---|
+   | `Twig_Extension` | `Twig\Extension\AbstractExtension` |
+   | `Twig_SimpleFilter` | `Twig\TwigFilter` |
+   | `Twig_SimpleFunction` | `Twig\TwigFunction` |
+   | `Twig_SimpleTest` | `Twig\TwigTest` |
+   | `Twig_Environment` | `Twig\Environment` |
+   | `Twig_Loader_Filesystem` | `Twig\Loader\FilesystemLoader` |
+   | `Twig_Loader_Array` | `Twig\Loader\ArrayLoader` |
+   | `Twig_Filter_Method` | `Twig\TwigFilter` |
+   | `Twig_Function_Method` | `Twig\TwigFunction` |
+   | `Twig_Node` | `Twig\Node\Node` |
+   | `Twig_Error_Runtime` | `Twig\Error\RuntimeError` |
+   | `Twig_Error_Loader` | `Twig\Error\LoaderError` |
+   | `Twig_Error_Syntax` | `Twig\Error\SyntaxError` |
+   | `Twig_Template` | `Twig\Template` |
+   | `Twig_Extension_Core` | `Twig\Extension\CoreExtension` |
+   | `Twig_Extension_Escaper` | `Twig\Extension\EscaperExtension` |
+   | `Twig_Extension_Optimizer` | `Twig\Extension\OptimizerExtension` |
+   | `Twig_LoaderInterface` | `Twig\Loader\LoaderInterface` |
+   | `Twig_Markup` | `Twig\Markup` |
+
+   References not in the map are left unchanged and noted as requiring manual
+   review.  The leading backslash (`\Twig_Extension`) is preserved in the output.
+
+ * **`prime:migrate:yaml`** — YAML `!php/object:` tag scanner and auto-fixer.
+   Detects `!php/object:` and `!!php/object:` YAML tags and strips the tag prefix,
+   leaving the serialised string as a plain YAML value.  Consuming code must then
+   call `unserialize()` explicitly.  Supports `--fix` and `--fix --dry-run`.
+
+ * **`prime:migrate:report`** — full migration status report.  Supports `--format`
+   (text, html, json) and `--output` (save to file).
+
+#### Self-Scan Exclusion
+
+All `prime:migrate:*` file iterators exclude the entire
+`src/Symfony/Bundle/PrimeMigrateBundle/` tree from scans.  Command source files
+contain the old names as literal strings (in maps, help text, and test fixtures)
+and must never be scanned or auto-fixed.
+
+#### Test Suite
+
+ * `ScannerTraitTest` covers all scanner and fixer methods: `scanNullable`,
+   `scanForms`, `scanConstraints`, `scanYaml`, `scanTwig`, `applyConstraintsFix`,
+   `applyYamlFix`, `applyTwigFix`, `injectUseStatements`, and all non-static helpers.
+ * 223 tests, 483 assertions — 0 failures, 0 errors under PHP 8.5.6 / PHPUnit 11.5.
+
 ### Dependency Changes
 
  * Replaced `twig/twig` with `se7enxweb/twig` (`~1.34|~2.4`).

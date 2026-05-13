@@ -1810,6 +1810,27 @@ php bin/console doctrine:fixtures:load              # load data fixtures
 php bin/console generate:bundle                     # scaffold a new bundle
 php bin/console generate:controller                 # scaffold a controller
 
+# ── Migration Helpers (prime:migrate:*) ───────────────────────────────────────
+# All commands support --dir=PATH (default: src/)
+# Fixable commands support --fix (apply) and --fix --dry-run (preview)
+
+php bin/console prime:migrate:check    --dir=src/             # run all checks; show summary + fix suggestions
+php bin/console prime:migrate:nullable --dir=src/             # scan implicit nullable types
+php bin/console prime:migrate:nullable --dir=src/ --fix       # auto-fix implicit nullable types
+php bin/console prime:migrate:forms    --dir=src/             # scan string form type aliases
+php bin/console prime:migrate:forms    --dir=src/ --fix       # auto-fix string form type aliases + inject use statements
+php bin/console prime:migrate:constraints --dir=src/          # scan reserved constraint names (True/False/Null)
+php bin/console prime:migrate:constraints --dir=src/ --fix    # auto-fix Constraints\True → Constraints\IsTrue etc.
+php bin/console prime:migrate:twig     --dir=src/             # scan Twig_* legacy class names
+php bin/console prime:migrate:twig     --dir=src/ --fix       # auto-fix known Twig_* → Twig\ PSR-4 names
+php bin/console prime:migrate:yaml     --dir=src/             # scan YAML !php/object: tags
+php bin/console prime:migrate:yaml     --dir=src/ --fix       # strip !php/object: tags (values become plain strings)
+php bin/console prime:migrate:report   --dir=src/             # full text report
+php bin/console prime:migrate:report   --dir=src/ --format=html --output=report.html  # HTML report
+
+# Always preview before writing: add --dry-run to any --fix command
+php bin/console prime:migrate:nullable --dir=src/ --fix --dry-run
+
 # ── Composer ─────────────────────────────────────────────────────────────────
 composer install                                    # install packages
 composer require vendor/package                     # add a package
