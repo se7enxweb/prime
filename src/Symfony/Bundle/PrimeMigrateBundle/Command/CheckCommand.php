@@ -58,7 +58,7 @@ After reviewing the summary, use the individual sub-commands for detail:
   <info>php bin/console prime:migrate:forms --fix</info>          — string form type aliases (auto-fixer)
   <info>php bin/console prime:migrate:constraints --fix</info>    — reserved keyword constraints (auto-fixer)
   <info>php bin/console prime:migrate:twig --fix</info>           — Twig legacy class names (auto-fixer)
-  <info>php bin/console prime:migrate:yaml</info>                 — YAML !php/object: tags
+  <info>php bin/console prime:migrate:yaml --fix</info>            — YAML !php/object: tags (auto-fixer)
   <info>php bin/console prime:migrate:report</info>               — full report (text/HTML/JSON)
 HELP)
             ->addDirOption()
@@ -195,7 +195,7 @@ HELP)
                 $output->writeln('Run <info>php bin/console prime:migrate:twig --fix ' . $dirArg . '</info> to auto-fix known Twig_* class references (preview with --dry-run first).');
             }
             if ($yamlCount > 0) {
-                $output->writeln('Run <info>php bin/console prime:migrate:yaml ' . $dirArg . '</info> to list YAML !php/object: usages.');
+                $output->writeln('Run <info>php bin/console prime:migrate:yaml --fix ' . $dirArg . '</info> to auto-fix YAML !php/object: tags (preview with --dry-run first).');
             }
         }
 

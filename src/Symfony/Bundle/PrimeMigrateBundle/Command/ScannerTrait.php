@@ -565,6 +565,36 @@ trait ScannerTrait
         return $issues;
     }
 
+    // ── YAML auto-fixer ───────────────────────────────────────────────────────
+
+    /**
+     * Applies the YAML !php/object: fix to YAML source content.
+     *
+     * Strips the !php/object: or !!php/object: tag prefix, leaving the
+     * serialised value as a plain YAML string. Any consuming code that
+     * relied on the value being a PHP object must be updated to call
+     * unserialize() explicitly.
+     *
+     * This method is PURE — it never writes a file.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyYamlFix(string $content): array
+    {
+        $count = 0;
+
+        $fixed = preg_replace_callback(
+            '/!{1,2}php\/object:\s*/',
+            static function (array $m) use (&$count): string {
+                ++$count;
+                return '';
+            },
+            $content
+        );
+
+        return ['fixed' => $fixed ?? $content, 'count' => $count];
+    }
+
     // ── Twig legacy class reference scanner ───────────────────────────────────
 
     /**
@@ -582,15 +612,25 @@ trait ScannerTrait
 
         // Canonical migration map for display hints
         $twigMap = [
-            'Twig_Extension'         => 'Twig\\Extension\\AbstractExtension',
-            'Twig_SimpleFilter'      => 'Twig\\TwigFilter',
-            'Twig_SimpleFunction'    => 'Twig\\TwigFunction',
-            'Twig_SimpleTest'        => 'Twig\\TwigTest',
-            'Twig_Environment'       => 'Twig\\Environment',
-            'Twig_Loader_Filesystem' => 'Twig\\Loader\\FilesystemLoader',
-            'Twig_Loader_Array'      => 'Twig\\Loader\\ArrayLoader',
-            'Twig_Filter_Method'     => 'Twig\\TwigFilter',
-            'Twig_Function_Method'   => 'Twig\\TwigFunction',
+            'Twig_Extension'           => 'Twig\\Extension\\AbstractExtension',
+            'Twig_SimpleFilter'        => 'Twig\\TwigFilter',
+            'Twig_SimpleFunction'      => 'Twig\\TwigFunction',
+            'Twig_SimpleTest'          => 'Twig\\TwigTest',
+            'Twig_Environment'         => 'Twig\\Environment',
+            'Twig_Loader_Filesystem'   => 'Twig\\Loader\\FilesystemLoader',
+            'Twig_Loader_Array'        => 'Twig\\Loader\\ArrayLoader',
+            'Twig_Filter_Method'       => 'Twig\\TwigFilter',
+            'Twig_Function_Method'     => 'Twig\\TwigFunction',
+            'Twig_Node'                => 'Twig\\Node\\Node',
+            'Twig_Error_Runtime'       => 'Twig\\Error\\RuntimeError',
+            'Twig_Error_Loader'        => 'Twig\\Error\\LoaderError',
+            'Twig_Error_Syntax'        => 'Twig\\Error\\SyntaxError',
+            'Twig_Template'            => 'Twig\\Template',
+            'Twig_Extension_Core'      => 'Twig\\Extension\\CoreExtension',
+            'Twig_Extension_Escaper'   => 'Twig\\Extension\\EscaperExtension',
+            'Twig_Extension_Optimizer' => 'Twig\\Extension\\OptimizerExtension',
+            'Twig_LoaderInterface'     => 'Twig\\Loader\\LoaderInterface',
+            'Twig_Markup'              => 'Twig\\Markup',
         ];
 
         foreach ($lines as $idx => $line) {
@@ -675,15 +715,25 @@ trait ScannerTrait
     {
         $count   = 0;
         $twigMap = [
-            'Twig_Extension'         => 'Twig\\Extension\\AbstractExtension',
-            'Twig_SimpleFilter'      => 'Twig\\TwigFilter',
-            'Twig_SimpleFunction'    => 'Twig\\TwigFunction',
-            'Twig_SimpleTest'        => 'Twig\\TwigTest',
-            'Twig_Environment'       => 'Twig\\Environment',
-            'Twig_Loader_Filesystem' => 'Twig\\Loader\\FilesystemLoader',
-            'Twig_Loader_Array'      => 'Twig\\Loader\\ArrayLoader',
-            'Twig_Filter_Method'     => 'Twig\\TwigFilter',
-            'Twig_Function_Method'   => 'Twig\\TwigFunction',
+            'Twig_Extension'           => 'Twig\\Extension\\AbstractExtension',
+            'Twig_SimpleFilter'        => 'Twig\\TwigFilter',
+            'Twig_SimpleFunction'      => 'Twig\\TwigFunction',
+            'Twig_SimpleTest'          => 'Twig\\TwigTest',
+            'Twig_Environment'         => 'Twig\\Environment',
+            'Twig_Loader_Filesystem'   => 'Twig\\Loader\\FilesystemLoader',
+            'Twig_Loader_Array'        => 'Twig\\Loader\\ArrayLoader',
+            'Twig_Filter_Method'       => 'Twig\\TwigFilter',
+            'Twig_Function_Method'     => 'Twig\\TwigFunction',
+            'Twig_Node'                => 'Twig\\Node\\Node',
+            'Twig_Error_Runtime'       => 'Twig\\Error\\RuntimeError',
+            'Twig_Error_Loader'        => 'Twig\\Error\\LoaderError',
+            'Twig_Error_Syntax'        => 'Twig\\Error\\SyntaxError',
+            'Twig_Template'            => 'Twig\\Template',
+            'Twig_Extension_Core'      => 'Twig\\Extension\\CoreExtension',
+            'Twig_Extension_Escaper'   => 'Twig\\Extension\\EscaperExtension',
+            'Twig_Extension_Optimizer' => 'Twig\\Extension\\OptimizerExtension',
+            'Twig_LoaderInterface'     => 'Twig\\Loader\\LoaderInterface',
+            'Twig_Markup'              => 'Twig\\Markup',
         ];
 
         $classes = implode('|', array_map('preg_quote', array_keys($twigMap), array_fill(0, count($twigMap), '/')));

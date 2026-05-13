@@ -678,6 +678,49 @@ class ScannerTraitTest extends TestCase
     }
 
     // ════════════════════════════════════════════════════════════════════════
+    // applyYamlFix
+    // ════════════════════════════════════════════════════════════════════════
+
+    public function testApplyYamlFixStripsSingleBangTag(): void
+    {
+        $yaml   = 'key: !php/object: "O:4:\\"User\\":0:{}"';
+        $result = Scanner::applyYamlFix($yaml);
+        $this->assertSame(1, $result['count']);
+        $this->assertStringNotContainsString('!php/object:', $result['fixed']);
+        $this->assertStringContainsString('"O:4:', $result['fixed']);
+    }
+
+    public function testApplyYamlFixStripsDoubleBangTag(): void
+    {
+        $yaml   = 'key: !!php/object: "O:4:\\"User\\":0:{}"';
+        $result = Scanner::applyYamlFix($yaml);
+        $this->assertSame(1, $result['count']);
+        $this->assertStringNotContainsString('!!php/object:', $result['fixed']);
+    }
+
+    public function testApplyYamlFixCountsMultipleOccurrences(): void
+    {
+        $yaml   = "a: !php/object: \"O:1:{}\"\nb: !!php/object: \"O:2:{}\"\nc: normal_value\n";
+        $result = Scanner::applyYamlFix($yaml);
+        $this->assertSame(2, $result['count']);
+    }
+
+    public function testApplyYamlFixLeavesCleanYamlUnchanged(): void
+    {
+        $yaml   = "database:\n  host: localhost\n  port: 3306\n";
+        $result = Scanner::applyYamlFix($yaml);
+        $this->assertSame(0, $result['count']);
+        $this->assertSame($yaml, $result['fixed']);
+    }
+
+    public function testApplyYamlFixReturnsZeroCountOnEmpty(): void
+    {
+        $result = Scanner::applyYamlFix('');
+        $this->assertSame(0, $result['count']);
+        $this->assertSame('', $result['fixed']);
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
     // scanTwig
     // ════════════════════════════════════════════════════════════════════════
 
@@ -701,6 +744,16 @@ class ScannerTraitTest extends TestCase
             'Twig_SimpleFunction' => ['return new \\Twig_SimpleFunction("f", [$this, "m"]);', 'Twig_SimpleFunction'],
             'Twig_Environment' => ['$env = new Twig_Environment($loader);', 'Twig_Environment'],
             'Twig_Loader_Filesystem' => ['$loader = new \\Twig_Loader_Filesystem($path);', 'Twig_Loader_Filesystem'],
+            'Twig_Node' => ['public function isUrlGenerationSafe(\\Twig_Node $node) {}', 'Twig_Node'],
+            'Twig_Error_Runtime' => ['throw new Twig_Error_Runtime(\'msg\', 0, null)', 'Twig_Error_Runtime'],
+            'Twig_Error_Loader' => ['throw new \\Twig_Error_Loader(\'msg\')', 'Twig_Error_Loader'],
+            'Twig_Error_Syntax' => ['throw new Twig_Error_Syntax(\'msg\')', 'Twig_Error_Syntax'],
+            'Twig_Template' => ['is_subclass_of($c, \'Twig_Template\')', 'Twig_Template'],
+            'Twig_Extension_Core' => ["'Twig_Extension_Core'", 'Twig_Extension_Core'],
+            'Twig_Extension_Escaper' => ["'Twig_Extension_Escaper'", 'Twig_Extension_Escaper'],
+            'Twig_Extension_Optimizer' => ["'Twig_Extension_Optimizer'", 'Twig_Extension_Optimizer'],
+            'Twig_LoaderInterface' => ['implements \\Twig_LoaderInterface', 'Twig_LoaderInterface'],
+            'Twig_Markup' => ['instanceof Twig_Markup', 'Twig_Markup'],
         ];
     }
 
@@ -869,6 +922,7 @@ class ScannerTraitTest extends TestCase
         Scanner::scanConstraints('new Constraints\\True()');
         Scanner::scanYaml('x: !php/object: ""');
         Scanner::scanTwig('new \\Twig_Extension()');
+        Scanner::applyYamlFix('key: !php/object: "O:0:{}"');
 
         // None of those calls should have created or modified any file.
         $this->assertFileDoesNotExist($sentinel);
@@ -878,6 +932,7 @@ class ScannerTraitTest extends TestCase
         $this->assertIsArray(Scanner::scanConstraints(''));
         $this->assertIsArray(Scanner::scanYaml(''));
         $this->assertIsArray(Scanner::scanTwig(''));
+        $this->assertIsArray(Scanner::applyYamlFix(''));
     }
 
     // ════════════════════════════════════════════════════════════════════════
