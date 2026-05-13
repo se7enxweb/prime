@@ -147,9 +147,19 @@ abstract class AbstractMigrateCommand extends Command
         }
 
         return new \CallbackFilterIterator($it, static function (\SplFileInfo $f) use ($extensions): bool {
-            return $f->isFile()
-                && $f->isReadable()
-                && in_array(strtolower($f->getExtension()), $extensions, true);
+            if (!$f->isFile() || !$f->isReadable()) {
+                return false;
+            }
+            if (!in_array(strtolower($f->getExtension()), $extensions, true)) {
+                return false;
+            }
+            // Never scan the migrate-bundle's own test fixtures — they contain
+            // intentional string-alias examples that would be wrongly "fixed".
+            $path = str_replace('\\', '/', $f->getPathname());
+            if (str_contains($path, 'PrimeMigrateBundle/Tests/')) {
+                return false;
+            }
+            return true;
         });
     }
 

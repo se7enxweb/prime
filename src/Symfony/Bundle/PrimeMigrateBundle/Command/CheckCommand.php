@@ -188,6 +188,15 @@ HELP)
             if ($formsCount > 0) {
                 $output->writeln('Run <info>php bin/console prime:migrate:forms --fix ' . $dirArg . '</info> to auto-fix string form type aliases (preview with --dry-run first).');
             }
+            if ($constraintCount > 0) {
+                $output->writeln('Run <info>php bin/console prime:migrate:constraints ' . $dirArg . '</info> to list reserved constraint names (True/False/Null → IsTrue/IsFalse/IsNull).');
+            }
+            if ($twigCount > 0) {
+                $output->writeln('Run <info>php bin/console prime:migrate:twig ' . $dirArg . '</info> to list Twig_* legacy class references.');
+            }
+            if ($yamlCount > 0) {
+                $output->writeln('Run <info>php bin/console prime:migrate:yaml ' . $dirArg . '</info> to list YAML !php/object: usages.');
+            }
         }
 
         $output->writeln('');
