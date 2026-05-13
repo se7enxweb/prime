@@ -307,7 +307,7 @@ abstract class AbstractCloner implements ClonerInterface
      *
      * @internal
      */
-    public function handleError($type, $msg, $file, $line, $context)
+    public function handleError($type, $msg, $file, $line)
     {
         if (E_RECOVERABLE_ERROR === $type || E_USER_ERROR === $type) {
             // Cloner never dies
@@ -315,7 +315,7 @@ abstract class AbstractCloner implements ClonerInterface
         }
 
         if ($this->prevErrorHandler) {
-            return \call_user_func($this->prevErrorHandler, $type, $msg, $file, $line, $context);
+            return \call_user_func($this->prevErrorHandler, $type, $msg, $file, $line);
         }
 
         return false;

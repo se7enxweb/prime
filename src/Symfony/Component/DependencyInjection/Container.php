@@ -408,7 +408,9 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
             }
 
             // update global map
-            $this->services = \call_user_func_array('array_diff_key', $services);
+            // array_values() is required for PHP 8.1+ compat: string keys in $services
+            // would be treated as named arguments by call_user_func_array, causing a TypeError
+            $this->services = \call_user_func_array('array_diff_key', array_values($services));
             array_shift($services);
 
             // add stack entry for this scope so we can restore the removed services later
@@ -454,7 +456,8 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
         }
 
         // update global map
-        $this->services = \call_user_func_array('array_diff_key', $services);
+        // array_values() is required for PHP 8.1+ compat (string keys become named args)
+        $this->services = \call_user_func_array('array_diff_key', array_values($services));
 
         // check if we need to restore services of a previous scope of this type
         if (isset($this->scopeStacks[$name]) && \count($this->scopeStacks[$name]) > 0) {
