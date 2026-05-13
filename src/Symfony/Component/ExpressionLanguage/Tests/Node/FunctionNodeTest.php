@@ -17,14 +17,14 @@ use Symfony\Component\ExpressionLanguage\Node\Node;
 
 class FunctionNodeTest extends AbstractNodeTest
 {
-    public function getEvaluateData()
+    public static function getEvaluateData()
     {
         return array(
             array('bar', new FunctionNode('foo', new Node(array(new ConstantNode('bar')))), array(), array('foo' => $this->getCallables())),
         );
     }
 
-    public function getCompileData()
+    public static function getCompileData()
     {
         return array(
             array('foo("bar")', new FunctionNode('foo', new Node(array(new ConstantNode('bar')))), array('foo' => $this->getCallables())),

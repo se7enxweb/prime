@@ -15,7 +15,7 @@ use Symfony\Component\ExpressionLanguage\Node\ConstantNode;
 
 class ConstantNodeTest extends AbstractNodeTest
 {
-    public function getEvaluateData()
+    public static function getEvaluateData()
     {
         return array(
             array(false, new ConstantNode(false)),
@@ -28,7 +28,7 @@ class ConstantNodeTest extends AbstractNodeTest
         );
     }
 
-    public function getCompileData()
+    public static function getCompileData()
     {
         return array(
             array('false', new ConstantNode(false)),

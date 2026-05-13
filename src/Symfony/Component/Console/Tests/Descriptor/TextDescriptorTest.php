@@ -17,7 +17,7 @@ use Symfony\Component\Console\Tests\Fixtures\DescriptorCommandMbString;
 
 class TextDescriptorTest extends AbstractDescriptorTest
 {
-    public function getDescribeCommandTestData()
+    public static function getDescribeCommandTestData()
     {
         return $this->getDescriptionTestData(array_merge(
             ObjectsProvider::getCommands(),
@@ -25,7 +25,7 @@ class TextDescriptorTest extends AbstractDescriptorTest
         ));
     }
 
-    public function getDescribeApplicationTestData()
+    public static function getDescribeApplicationTestData()
     {
         return $this->getDescriptionTestData(array_merge(
             ObjectsProvider::getApplications(),

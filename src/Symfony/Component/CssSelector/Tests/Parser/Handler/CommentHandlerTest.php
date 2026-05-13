@@ -39,7 +39,7 @@ class CommentHandlerTest extends AbstractHandlerTest
         );
     }
 
-    public function getDontHandleValueTestData()
+    public static function getDontHandleValueTestData()
     {
         return array(
             array('>'),

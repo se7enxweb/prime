@@ -59,7 +59,7 @@ class NotIdenticalToValidatorTest extends AbstractComparisonValidatorTestCase
         );
     }
 
-    public function provideAllInvalidComparisons()
+    public static function provideAllInvalidComparisons()
     {
         $this->setDefaultTimezone('UTC');
 

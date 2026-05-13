@@ -40,7 +40,7 @@ class IdenticalToValidatorTest extends AbstractComparisonValidatorTestCase
         return IdenticalTo::NOT_IDENTICAL_ERROR;
     }
 
-    public function provideAllValidComparisons()
+    public static function provideAllValidComparisons()
     {
         $this->setDefaultTimezone('UTC');
 

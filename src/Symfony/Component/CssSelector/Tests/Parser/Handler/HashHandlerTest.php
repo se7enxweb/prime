@@ -18,7 +18,7 @@ use Symfony\Component\CssSelector\Parser\Tokenizer\TokenizerPatterns;
 
 class HashHandlerTest extends AbstractHandlerTest
 {
-    public function getHandleValueTestData()
+    public static function getHandleValueTestData()
     {
         return array(
             array('#id', new Token(Token::TYPE_HASH, 'id', 0), ''),
@@ -29,7 +29,7 @@ class HashHandlerTest extends AbstractHandlerTest
         );
     }
 
-    public function getDontHandleValueTestData()
+    public static function getDontHandleValueTestData()
     {
         return array(
             array('id'),

@@ -28,14 +28,14 @@ class ArrayNodeTest extends AbstractNodeTest
         $this->assertNotEquals($this->createArrayNode(), $unserializedNode);
     }
 
-    public function getEvaluateData()
+    public static function getEvaluateData()
     {
         return array(
             array(array('b' => 'a', 'b'), $this->getArrayNode()),
         );
     }
 
-    public function getCompileData()
+    public static function getCompileData()
     {
         return array(
             array('array("b" => "a", 0 => "b")', $this->getArrayNode()),

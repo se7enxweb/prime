@@ -15,7 +15,7 @@ use Symfony\Component\ExpressionLanguage\Node\ArgumentsNode;
 
 class ArgumentsNodeTest extends ArrayNodeTest
 {
-    public function getCompileData()
+    public static function getCompileData()
     {
         return array(
             array('"a", "b"', $this->getArrayNode()),

@@ -16,7 +16,7 @@ use Symfony\Component\CssSelector\Node\ElementNode;
 
 class AttributeNodeTest extends AbstractNodeTest
 {
-    public function getToStringConversionTestData()
+    public static function getToStringConversionTestData()
     {
         return array(
             array(new AttributeNode(new ElementNode(), null, 'attribute', 'exists', null), 'Attribute[Element[*][attribute]]'),
@@ -25,7 +25,7 @@ class AttributeNodeTest extends AbstractNodeTest
         );
     }
 
-    public function getSpecificityValueTestData()
+    public static function getSpecificityValueTestData()
     {
         return array(
             array(new AttributeNode(new ElementNode(), null, 'attribute', 'exists', null), 10),
