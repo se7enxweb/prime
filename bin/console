@@ -1,0 +1,81 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * This file is part of the prime package.
+ * (c) 2004-2026 7x <info@se7enx.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * prime 2.9 — CLI console entry point.
+ *
+ * Symfony2 equivalent of the standard app/console script.
+ *
+ * symfony1 primer equivalent
+ * ───────────────────────────
+ * In symfony1 CLI tasks were invoked via:
+ *   php symfony cache:clear
+ *   php symfony help
+ *
+ * In Symfony2 the console script bootstraps the kernel and hands control to
+ * Symfony\Bundle\FrameworkBundle\Console\Application, which discovers all
+ * commands registered by installed bundles.
+ *
+ * Usage
+ * ──────
+ *   php bin/console                          # list all available commands
+ *   php bin/console cache:clear              # clear prod cache
+ *   php bin/console cache:clear --env=dev    # clear dev cache
+ *   php bin/console cache:warmup             # warm up the cache
+ *   php bin/console debug:router             # show registered routes
+ *   php bin/console container:debug          # list services in the DI container
+ *   php bin/console twig:lint <file>         # lint a Twig template
+ *
+ * Environment selection (mirrors symfony1 SF_ENV / SF_DEBUG constants)
+ * ──────────────────────────────────────────────────────────────────────
+ *   --env=prod   production  (debug=false, default)
+ *   --env=dev    development (debug=true)
+ *   --env=test   test        (debug=true)
+ *   --no-debug   force debug=false regardless of env
+ */
+
+// ── Autoloader ───────────────────────────────────────────────────────────────
+// bin/console lives in bin/ — one level below the project root.
+// vendor/autoload.php is at the project root.
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Bundle\PrimeSiteBundle\PrimeKernel;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Debug\Debug;
+
+// ── Parse --env / --no-debug before the kernel boots ─────────────────────────
+// ArgvInput lets us inspect CLI flags without consuming them from argv,
+// so the Application still receives the full argument list.
+$input = new ArgvInput();
+
+$env   = $input->getParameterOption(['--env', '-e'], 'prod');
+$debug = !$input->hasParameterOption(['--no-debug', '']) && $env !== 'prod';
+
+if ($debug) {
+    // symfony1: SF_DEBUG=true enables the debug exception handler and the bar.
+    // Symfony2: Debug::enable() registers the same two handlers.
+    Debug::enable();
+}
+
+// ── Kernel bootstrap ─────────────────────────────────────────────────────────
+// symfony1: $configuration = ProjectConfiguration::getApplicationConfiguration(
+//               'site', $env, $debug);
+// Symfony2: PrimeKernel wraps the same concept (env + debug flag).
+$kernel = new PrimeKernel($env, $debug);
+
+// ── Console application ───────────────────────────────────────────────────────
+// symfony1: php symfony <task>  →  sfTaskApplication dispatches to sfTask subclasses.
+// Symfony2: Application discovers commands from all registered bundles via
+//           the kernel's container (tagged services with console.command).
+$application = new Application($kernel);
+$application->run($input);

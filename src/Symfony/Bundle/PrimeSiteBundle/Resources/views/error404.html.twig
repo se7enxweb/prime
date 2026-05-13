@@ -1,0 +1,51 @@
+{% extends 'PrimeSiteBundle::layout.html.twig' %}
+
+{#
+ # error404 — Not Found view.
+ #
+ # Symfony2 Twig equivalent of:
+ #   apps/site/templates/error404.php  (primer symfony1)
+ #
+ # symfony1 error page mechanism
+ # ──────────────────────────────
+ #   symfony1 places error pages in apps/{app}/templates/error{N}.php.
+ #   The front controller catches sfError404Exception and renders error404.php
+ #   using sfPHPView inside the application layout.
+ #
+ # Symfony2 equivalent
+ # ────────────────────
+ #   Symfony2 exception handling uses the TwigBundle error templates located
+ #   at Resources/views/Exception/error404.html.twig (TwigBundle convention).
+ #   This template mirrors that structure but lives inside PrimeSiteBundle so
+ #   it can be referenced explicitly or used as an override base.
+ #
+ #   To register this as the Symfony2 404 error page, override the TwigBundle
+ #   template by placing a copy at:
+ #     app/Resources/TwigBundle/views/Exception/error404.html.twig
+ #
+ # Available variables (injected by Symfony2 exception handler)
+ # ─────────────────────────────────────────────────────────────
+ #   status_code    — HTTP status code (404)
+ #   status_text    — HTTP status text ('Not Found')
+ #   exception      — \Exception instance (only in debug mode)
+ #}
+
+{% block title %}404 Not Found — prime{% endblock %}
+
+{% block body %}
+<style>
+  .sf-404 { text-align: center; padding: 3.5rem 1rem; }
+  .sf-404 h2 { font-size: 5rem; font-weight: 800; color: #e0e0e0; line-height: 1; }
+  .sf-404 p  { color: #888; margin-top: .6rem; font-size: .9rem; }
+  .sf-404 a  { color: #1a237e; text-decoration: none; }
+  .sf-404 a:hover { text-decoration: underline; }
+</style>
+
+<div class="sf-404">
+  <h2>404</h2>
+  {# symfony1: htmlspecialchars($_SERVER['REQUEST_URI'] ?? '/')               #}
+  {# Symfony2: app.request.pathInfo (auto-escaped by Twig)                    #}
+  <p>No page found at <code>{{ app.request.pathInfo }}</code></p>
+  <p style="margin-top:1rem"><a href="{{ path('prime_site_homepage') }}">&#8592; Back to home</a></p>
+</div>
+{% endblock %}

@@ -22,6 +22,7 @@
     ],
     "require": {
         "php": "^8.0",
+        "se7enxweb/php-parser": "dev-0.9-php8-compat",
         "ext-xml": "*",
         "doctrine/common": "~2.4",
         "se7enxweb/twig": "~1.34|~2.4",
@@ -29,7 +30,8 @@
         "symfony/security-acl": "~2.7|~3.0.0",
         "symfony/polyfill-ctype": "~1.8",
         "symfony/polyfill-intl-icu": "~1.0",
-        "symfony/polyfill-mbstring": "~1.0"
+        "symfony/polyfill-mbstring": "~1.0",
+        "symfony/monolog-bundle": "~2.7"
     },
     "replace": {
         "symfony/asset": "self.version",
@@ -89,9 +91,10 @@
         "ocramius/proxy-manager": "~0.4|~1.0|~2.0",
         "egulias/email-validator": "~1.2,>=1.2.1",
         "sensio/framework-extra-bundle": "^3.0.2",
-        "phpunit/phpunit": "^11.5"
+        "phpdocumentor/reflection": "~1.0",
+        "phpdocumentor/reflection-docblock": "~2.0"
     },
-    "conflict": {
+    "conflict": {},
     "autoload": {
         "psr-4": {
             "Symfony\\Bridge\\Doctrine\\": "src/Symfony/Bridge/Doctrine/",
@@ -110,6 +113,9 @@
         ]
     },
     "autoload-dev": {
+        "psr-4": {
+            "Symfony\\Bridge\\PhpUnit\\": "src/Symfony/Bridge/PhpUnit/"
+        },
         "files": [ "src/Symfony/Component/VarDumper/Resources/functions/dump.php" ]
     },
     "minimum-stability": "dev",

@@ -1,51 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
-         backupGlobals="false"
-         colors="true"
-         bootstrap="vendor/autoload.php"
->
-    <php>
-        <ini name="error_reporting" value="-1" />
-        <ini name="intl.default_locale" value="en" />
-        <ini name="intl.error_level" value="0" />
-        <ini name="memory_limit" value="-1" />
-    </php>
-
-    <testsuites>
-        <testsuite name="Symfony Test Suite">
-            <directory>./src/Symfony/Bridge/*/Tests/</directory>
-            <directory>./src/Symfony/Component/*/Tests/</directory>
-            <directory>./src/Symfony/Component/*/*/Tests/</directory>
-            <directory>./src/Symfony/Bundle/*/Tests/</directory>
-        </testsuite>
-    </testsuites>
-
-    <groups>
-        <exclude>
-            <group>benchmark</group>
-            <group>intl-data</group>
-        </exclude>
-    </groups>
-
-    <coverage>
-        <include>
-            <directory>./src/Symfony/</directory>
-        </include>
-        <exclude>
-            <directory>./src/Symfony/Bridge/*/Tests</directory>
-            <directory>./src/Symfony/Component/*/Tests</directory>
-            <directory>./src/Symfony/Component/*/*/Tests</directory>
-            <directory>./src/Symfony/Bundle/*/Tests</directory>
-            <directory>./src/Symfony/Bundle/*/Resources</directory>
-            <directory>./src/Symfony/Component/*/Resources</directory>
-            <directory>./src/Symfony/Component/*/*/Resources</directory>
-            <directory>./src/Symfony/Bridge/*/vendor</directory>
-            <directory>./src/Symfony/Bundle/*/vendor</directory>
-            <directory>./src/Symfony/Component/*/vendor</directory>
-            <directory>./src/Symfony/Component/*/*/vendor</directory>
-        </exclude>
-    </coverage>
-
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd" backupGlobals="false" colors="true" bootstrap="vendor/autoload.php">
+  <php>
+    <ini name="error_reporting" value="-1"/>
+    <ini name="intl.default_locale" value="en"/>
+    <ini name="intl.error_level" value="0"/>
+    <ini name="memory_limit" value="-1"/>
+    <ini name="opcache.enable_cli" value="0"/>
+    <ini name="zend.exception_ignore_args" value="0"/>
+    <!-- Disable the Symfony 2.8 DeprecationErrorHandler which is incompatible with PHPUnit 11 -->
+    <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
+  </php>
+  <testsuites>
+    <testsuite name="Symfony Test Suite">
+      <directory>./src/Symfony/Bridge/*/Tests/</directory>
+      <directory>./src/Symfony/Component/*/Tests/</directory>
+      <directory>./src/Symfony/Component/*/*/Tests/</directory>
+      <directory>./src/Symfony/Bundle/*/Tests/</directory>
+      <!-- Exclude abstract base test classes to suppress PHPUnit 11 "is abstract" warnings -->
+      <exclude>./src/Symfony/Bridge/Doctrine/Tests/Form/ChoiceList/AbstractEntityChoiceListCompositeIdTest.php</exclude>
+      <exclude>./src/Symfony/Bridge/Doctrine/Tests/Form/ChoiceList/AbstractEntityChoiceListSingleAssociationToIntIdTest.php</exclude>
+      <exclude>./src/Symfony/Bridge/Doctrine/Tests/Form/ChoiceList/AbstractEntityChoiceListSingleIntIdTest.php</exclude>
+      <exclude>./src/Symfony/Bridge/Doctrine/Tests/Form/ChoiceList/AbstractEntityChoiceListSingleStringIdTest.php</exclude>
+      <exclude>./src/Symfony/Bridge/Doctrine/Tests/Form/ChoiceList/AbstractEntityChoiceListTest.php</exclude>
+      <exclude>./src/Symfony/Bundle/FrameworkBundle/Tests/Console/Descriptor/AbstractDescriptorTest.php</exclude>
+      <exclude>./src/Symfony/Bundle/FrameworkBundle/Tests/DependencyInjection/FrameworkExtensionTest.php</exclude>
+      <exclude>./src/Symfony/Bundle/SecurityBundle/Tests/DependencyInjection/CompleteConfigurationTest.php</exclude>
+      <exclude>./src/Symfony/Component/Console/Tests/Descriptor/AbstractDescriptorTest.php</exclude>
+      <exclude>./src/Symfony/Component/CssSelector/Tests/Node/AbstractNodeTest.php</exclude>
+      <exclude>./src/Symfony/Component/CssSelector/Tests/Parser/Handler/AbstractHandlerTest.php</exclude>
+      <exclude>./src/Symfony/Component/EventDispatcher/Tests/AbstractEventDispatcherTest.php</exclude>
+      <exclude>./src/Symfony/Component/ExpressionLanguage/Tests/Node/AbstractNodeTest.php</exclude>
+      <exclude>./src/Symfony/Component/Form/Tests/AbstractBootstrap3HorizontalLayoutTest.php</exclude>
+      <exclude>./src/Symfony/Component/Form/Tests/AbstractBootstrap3LayoutTest.php</exclude>
+      <exclude>./src/Symfony/Component/Form/Tests/AbstractDivLayoutTest.php</exclude>
+      <exclude>./src/Symfony/Component/Form/Tests/AbstractFormTest.php</exclude>
+      <exclude>./src/Symfony/Component/Form/Tests/AbstractLayoutTest.php</exclude>
+      <exclude>./src/Symfony/Component/Form/Tests/AbstractRequestHandlerTest.php</exclude>
+      <exclude>./src/Symfony/Component/Form/Tests/AbstractTableLayoutTest.php</exclude>
+      <exclude>./src/Symfony/Component/Form/Tests/ChoiceList/AbstractChoiceListTest.php</exclude>
+      <exclude>./src/Symfony/Component/Form/Tests/Extension/Core/ChoiceList/AbstractChoiceListTest.php</exclude>
+      <exclude>./src/Symfony/Component/Form/Tests/Extension/Core/EventListener/MergeCollectionListenerTest.php</exclude>
+      <exclude>./src/Symfony/Component/Form/Tests/Extension/Core/Type/BaseTypeTest.php</exclude>
+      <exclude>./src/Symfony/Component/Form/Tests/Extension/Validator/Type/BaseValidatorExtensionTest.php</exclude>
+      <exclude>./src/Symfony/Component/HttpKernel/Tests/Profiler/AbstractProfilerStorageTest.php</exclude>
+      <exclude>./src/Symfony/Component/Intl/Tests/Collator/AbstractCollatorTest.php</exclude>
+      <exclude>./src/Symfony/Component/Intl/Tests/Data/Provider/AbstractCurrencyDataProviderTest.php</exclude>
+      <exclude>./src/Symfony/Component/Intl/Tests/Data/Provider/AbstractDataProviderTest.php</exclude>
+      <exclude>./src/Symfony/Component/Intl/Tests/Data/Provider/AbstractLanguageDataProviderTest.php</exclude>
+      <exclude>./src/Symfony/Component/Intl/Tests/Data/Provider/AbstractLocaleDataProviderTest.php</exclude>
+      <exclude>./src/Symfony/Component/Intl/Tests/Data/Provider/AbstractRegionDataProviderTest.php</exclude>
+      <exclude>./src/Symfony/Component/Intl/Tests/Data/Provider/AbstractScriptDataProviderTest.php</exclude>
+      <exclude>./src/Symfony/Component/Intl/Tests/DateFormatter/AbstractIntlDateFormatterTest.php</exclude>
+      <exclude>./src/Symfony/Component/Intl/Tests/Globals/AbstractIntlGlobalsTest.php</exclude>
+      <exclude>./src/Symfony/Component/Intl/Tests/Locale/AbstractLocaleTest.php</exclude>
+      <exclude>./src/Symfony/Component/Intl/Tests/NumberFormatter/AbstractNumberFormatterTest.php</exclude>
+      <exclude>./src/Symfony/Component/PropertyAccess/Tests/PropertyAccessorArrayAccessTest.php</exclude>
+      <exclude>./src/Symfony/Component/PropertyAccess/Tests/PropertyAccessorCollectionTest.php</exclude>
+      <exclude>./src/Symfony/Component/Routing/Tests/Loader/AbstractAnnotationLoaderTest.php</exclude>
+      <exclude>./src/Symfony/Component/Security/Core/Tests/Validator/Constraints/UserPasswordValidatorTest.php</exclude>
+      <exclude>./src/Symfony/Component/Translation/Tests/Catalogue/AbstractOperationTest.php</exclude>
+      <exclude>./src/Symfony/Component/Validator/Tests/Constraints/AbstractConstraintValidatorTest.php</exclude>
+      <exclude>./src/Symfony/Component/Validator/Tests/Constraints/CollectionValidatorTest.php</exclude>
+      <exclude>./src/Symfony/Component/Validator/Tests/Constraints/CountValidatorTest.php</exclude>
+      <exclude>./src/Symfony/Component/Validator/Tests/Constraints/FileValidatorTest.php</exclude>
+      <exclude>./src/Symfony/Component/Validator/Tests/Mapping/Loader/StaticMethodLoaderTest.php</exclude>
+      <exclude>./src/Symfony/Component/Validator/Tests/Validator/Abstract2Dot5ApiTest.php</exclude>
+      <exclude>./src/Symfony/Component/Validator/Tests/Validator/AbstractLegacyApiTest.php</exclude>
+      <exclude>./src/Symfony/Component/Validator/Tests/Validator/AbstractValidatorTest.php</exclude>
+    </testsuite>
+  </testsuites>
+  <groups>
+    <exclude>
+      <group>benchmark</group>
+      <group>intl-data</group>
+    </exclude>
+  </groups>
+  <source>
+    <include>
+      <directory>./src/Symfony/</directory>
+    </include>
+    <exclude>
+      <directory>./src/Symfony/Bridge/*/Tests</directory>
+      <directory>./src/Symfony/Component/*/Tests</directory>
+      <directory>./src/Symfony/Component/*/*/Tests</directory>
+      <directory>./src/Symfony/Bundle/*/Tests</directory>
+      <directory>./src/Symfony/Bundle/*/Resources</directory>
+      <directory>./src/Symfony/Component/*/Resources</directory>
+      <directory>./src/Symfony/Component/*/*/Resources</directory>
+      <directory>./src/Symfony/Bridge/*/vendor</directory>
+      <directory>./src/Symfony/Bundle/*/vendor</directory>
+      <directory>./src/Symfony/Component/*/vendor</directory>
+      <directory>./src/Symfony/Component/*/*/vendor</directory>
+    </exclude>
+  </source>
 </phpunit>

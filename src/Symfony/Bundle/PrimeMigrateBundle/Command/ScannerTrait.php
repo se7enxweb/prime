@@ -1,0 +1,517 @@
+<?php
+
+/*
+ * This file is part of the prime package.
+ * (c) 2004-2026 7x <info@se7enx.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Symfony\Bundle\PrimeMigrateBundle\Command;
+
+/**
+ * ScannerTrait — stateless static scanning methods shared across all migrate commands.
+ *
+ * Each method:
+ *   - Takes a file path and its text content.
+ *   - Returns an array of issue records: [ ['line' => int, 'snippet' => string, ...] ]
+ *   - Never writes, modifies, or deletes anything.
+ *
+ * The methods are intentionally static so they can be called from both command
+ * execute() methods (interactive) and from ReportCommand (batch).
+ *
+ * @author 7x <info@se7enx.com>
+ */
+trait ScannerTrait
+{
+    // ── Implicit nullable type scanner ────────────────────────────────────────
+
+    /**
+     * Scans PHP source content for implicit nullable parameter declarations.
+     *
+     * Detects the PHP 8.4+ deprecated pattern:
+     *   SomeType $param = null           ← implicit nullable
+     *
+     * Returns an array of:
+     *   [ 'line' => int, 'snippet' => string, 'param' => string, 'type' => string ]
+     *
+     * The 'type' value is the raw type-hint string so NullableCommand can
+     * prepend '?' when applying a fix.
+     *
+     * Excluded patterns (do not flag):
+     *   ?SomeType $param = null          ← already explicitly nullable
+     *   SomeType|null $param = null      ← union type (PHP 8.0+)
+     *   SomeType|AnotherType $param = null  ← union type
+     *   mixed $param = null              ← 'mixed' is inherently nullable
+     *   null $param = null               ← nonsensical but won't break
+     */
+    public static function scanNullable(string $content): array
+    {
+        $issues = [];
+        $lines  = explode("\n", $content);
+
+        /*
+         * We process the file line-by-line looking for function/method
+         * signature lines that contain implicit nullable parameters.
+         *
+         * Pattern breakdown:
+         *   (?<!\?)          — negative lookbehind: not preceded by '?'
+         *   (?<![|&])        — not preceded by '|' or '&' (union/intersection)
+         *   (?<!\s)          — gives us the position just after any type start
+         *
+         * We use a positive-lookahead form instead for clarity:
+         *
+         *   \b(TYPEHINT)\s+(\$VARNAME)\s*=\s*null\b
+         *
+         * where TYPEHINT does NOT start with '?' and is NOT preceded by '|'/'&'.
+         *
+         * The regex is applied per-line so line numbers are accurate.
+         */
+
+        // Matches a type hint followed by $var = null
+        // Group 1: the type-hint string (without leading ?)
+        // Group 2: the variable name
+        $re = '~
+            (?<!\?)             # not already nullable
+            (?<![|&])           # not preceded by | or & (union or intersection type)
+            \b
+            (                   # capture the type hint
+                (?:\\\\?[A-Za-z_][A-Za-z0-9_]*(?:\\\\[A-Za-z_][A-Za-z0-9_]*)*)
+                |array|string|int|float|bool|callable|iterable|object|self|static|parent
+            )
+            \s+
+            (\$[A-Za-z_][A-Za-z0-9_]*)   # variable name
+            \s*=\s*null                    # = null default
+            \b
+        ~x';
+
+        // Scalar built-ins for which adding '?' makes no semantic sense or is wrong.
+        // PHP visibility / modifier keywords that appear before property declarations
+        // must NOT be treated as type hints (Bug: `protected $foo = null` was matched
+        // with type=protected, producing the syntax error `protected ?$foo = null`).
+        // Statement keywords that appear before `$var = null` assignments also excluded.
+        $skipTypes = [
+            'mixed', 'void', 'never', 'null', 'false', 'true',
+            'public', 'protected', 'private', 'static', 'abstract', 'final', 'readonly',
+            'return', 'echo', 'print', 'throw', 'yield',
+        ];
+
+        foreach ($lines as $idx => $line) {
+            $lineNo = $idx + 1;
+
+            // Skip comment lines and blank lines quickly.
+            $trimmed = ltrim($line);
+            if ($trimmed === '' || str_starts_with($trimmed, '//') || str_starts_with($trimmed, '*')) {
+                continue;
+            }
+
+            if (preg_match_all($re, $line, $matches, PREG_SET_ORDER)) {
+                foreach ($matches as $m) {
+                    $type  = $m[1];
+                    $param = $m[2];
+
+                    // Skip excluded types.
+                    if (in_array(strtolower($type), $skipTypes, true)) {
+                        continue;
+                    }
+
+                    // Find where in the line this match starts.
+                    $pos    = strpos($line, $m[0]);
+                    $before = $pos > 0 ? $line[$pos - 1] : ' ';
+
+                    // Skip union/intersection types.
+                    if ($before === '|' || $before === '&') {
+                        continue;
+                    }
+
+                    // Bug fix: handle `?\ClassName` false positives.
+                    // The regex optionally skips a leading `\` in the type group, so for
+                    // `?\Exception $e = null` it captures `Exception` (starting after `\`).
+                    // The char before the match-start is `\`, not `?`, so the `(?<!\?)`
+                    // lookbehind in the regex lets it through. We correct that here:
+                    //   char[-1] = `?`              → already nullable: ?Type
+                    //   char[-1] = `\`, char[-2]=`?` → already nullable: ?\Type
+                    //   char[-1] is a word char (a-z, A-Z, 0-9, _) → trailing part of a
+                    //       FQCN (e.g. `\Environment` inside `?Twig\Environment`). The
+                    //       full-name match was blocked by the `(?<!\?)` lookbehind, so
+                    //       PCRE found this trailing segment instead. Skip it.
+                    if ($before === '?') {
+                        continue;
+                    }
+                    if ($before === '\\' && $pos > 1 && $line[$pos - 2] === '?') {
+                        continue;
+                    }
+                    if (ctype_alnum($before) || $before === '_') {
+                        continue; // inside a FQCN segment, not a standalone type
+                    }
+
+                    $issues[] = [
+                        'line'    => $lineNo,
+                        'snippet' => rtrim($line),
+                        'type'    => $type,
+                        'param'   => $param,
+                    ];
+                }
+            }
+        }
+
+        return $issues;
+    }
+
+    /**
+     * Applies the nullable fix to a string of PHP source code.
+     *
+     * Replaces every un-prefixed `TypeHint $param = null` with
+     * `?TypeHint $param = null`.
+     *
+     * This method is PURE (returns the fixed string, never writes a file).
+     * The caller decides whether to write the result.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyNullableFix(string $content): array
+    {
+        $skipTypes = [
+            'mixed', 'void', 'never', 'null', 'false', 'true',
+            'public', 'protected', 'private', 'static', 'abstract', 'final', 'readonly',
+            'return', 'echo', 'print', 'throw', 'yield',
+        ];
+
+        $re = '~
+            (?<!\?)
+            (?<![|&])
+            \b
+            (
+                (?:\\\\?[A-Za-z_][A-Za-z0-9_]*(?:\\\\[A-Za-z_][A-Za-z0-9_]*)*)
+                |array|string|int|float|bool|callable|iterable|object|self|static|parent
+            )
+            (\s+)
+            (\$[A-Za-z_][A-Za-z0-9_]*)
+            (\s*=\s*null\b)
+        ~x';
+
+        $count = 0;
+
+        // We need offset information to detect the `?\ClassName` false-positive, so
+        // we use PREG_OFFSET_CAPTURE via a manual loop rather than preg_replace_callback.
+        $lines  = explode("\n", $content);
+        $result = [];
+
+        foreach ($lines as $line) {
+            if (preg_match_all($re, $line, $allMatches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
+                // Process matches in reverse order so offsets remain valid as we insert chars.
+                $allMatches = array_reverse($allMatches);
+                foreach ($allMatches as $m) {
+                    $type      = $m[1][0];
+                    $matchPos  = $m[0][1]; // byte offset of the full match
+
+                    if (in_array(strtolower($type), $skipTypes, true)) {
+                        continue;
+                    }
+
+                    $before    = $matchPos > 0 ? $line[$matchPos - 1] : ' ';
+
+                    // Skip union/intersection.
+                    if ($before === '|' || $before === '&') {
+                        continue;
+                    }
+
+                    // Handle `?\ClassName`: regex matched `ClassName`, char before = `\`.
+                    if ($before === '?') {
+                        continue; // already nullable: ?Type
+                    }
+                    if ($before === '\\' && $matchPos > 1 && $line[$matchPos - 2] === '?') {
+                        continue; // already nullable: ?\Type
+                    }
+                    // Trailing FQCN segment: e.g. `\Environment` inside `Twig\Environment`
+                    // when the full-name match was blocked by `(?<!\?)`. Skip it.
+                    if (ctype_alnum($before) || $before === '_') {
+                        continue;
+                    }
+
+                    // For FQCN with leading `\` (non-nullable), the `\` is immediately
+                    // before the match. Insert `?` before the `\`.
+                    $insertPos = ($before === '\\') ? $matchPos - 1 : $matchPos;
+                    $line = substr($line, 0, $insertPos) . '?' . substr($line, $insertPos);
+                    ++$count;
+                }
+            }
+            $result[] = $line;
+        }
+
+        $fixed = implode("\n", $result);
+
+        return ['fixed' => $fixed, 'count' => $count];
+    }
+
+    // ── Form type string alias scanner ────────────────────────────────────────
+
+    /**
+     * Returns the canonical map of Symfony 2.x string form type aliases
+     * to their FQCN equivalents.
+     *
+     * Used by FormsCommand and ReportCommand.
+     *
+     * @return array<string, string>
+     */
+    public static function formTypeMap(): array
+    {
+        return [
+            'text'        => 'TextType::class',
+            'textarea'    => 'TextareaType::class',
+            'integer'     => 'IntegerType::class',
+            'number'      => 'NumberType::class',
+            'money'       => 'MoneyType::class',
+            'email'       => 'EmailType::class',
+            'password'    => 'PasswordType::class',
+            'url'         => 'UrlType::class',
+            'search'      => 'SearchType::class',
+            'percent'     => 'PercentType::class',
+            'range'       => 'RangeType::class',
+            'checkbox'    => 'CheckboxType::class',
+            'radio'       => 'RadioType::class',
+            'choice'      => 'ChoiceType::class',
+            'date'        => 'DateType::class',
+            'datetime'    => 'DateTimeType::class',
+            'time'        => 'TimeType::class',
+            'birthday'    => 'BirthdayType::class',
+            'file'        => 'FileType::class',
+            'hidden'      => 'HiddenType::class',
+            'submit'      => 'SubmitType::class',
+            'button'      => 'ButtonType::class',
+            'reset'       => 'ResetType::class',
+            'collection'  => 'CollectionType::class',
+            'repeated'    => 'RepeatedType::class',
+            'entity'      => 'EntityType::class',
+            'form'        => 'FormType::class',
+            'locale'      => 'LocaleType::class',
+            'language'    => 'LanguageType::class',
+            'country'     => 'CountryType::class',
+            'timezone'    => 'TimezoneType::class',
+            'currency'    => 'CurrencyType::class',
+        ];
+    }
+
+    /**
+     * Scans PHP source content for string-based form type aliases.
+     *
+     * Detects:
+     *   ->add('field', 'text')          → TextType::class
+     *   ->add('field', 'email', [...])
+     *   $builder->add('f', 'choice')
+     *   createForm('form_type_name', ...)
+     *   setType('text')
+     *
+     * Returns [ 'line' => int, 'snippet' => string, 'alias' => string, 'fqcn' => string ]
+     */
+    public static function scanForms(string $content): array
+    {
+        $issues  = [];
+        $typeMap = self::formTypeMap();
+        $aliases = implode('|', array_keys($typeMap));
+        $lines   = explode("\n", $content);
+
+        // Pattern: string literal containing a known alias used as a form type
+        // Covers ->add(..., 'alias') / ->add(..., 'alias', [...]) / createForm('alias')
+        $re = '/[\'"](' . $aliases . ')[\'"](?:\s*,|\s*\))/';
+
+        foreach ($lines as $idx => $line) {
+            $trimmed = ltrim($line);
+            if ($trimmed === '' || str_starts_with($trimmed, '//') || str_starts_with($trimmed, '*')) {
+                continue;
+            }
+            if (preg_match_all($re, $line, $matches, PREG_SET_ORDER)) {
+                foreach ($matches as $m) {
+                    $alias = $m[1];
+                    $issues[] = [
+                        'line'    => $idx + 1,
+                        'snippet' => rtrim($line),
+                        'alias'   => $alias,
+                        'fqcn'    => $typeMap[$alias],
+                    ];
+                }
+            }
+        }
+
+        return $issues;
+    }
+
+    // ── Validator reserved-keyword constraint scanner ─────────────────────────
+
+    /**
+     * Scans PHP source content for PHP-reserved Validator constraint names.
+     *
+     * Detects:
+     *   use Symfony\Component\Validator\Constraints\True;
+     *   use Symfony\Component\Validator\Constraints\False;
+     *   use Symfony\Component\Validator\Constraints\Null;
+     *   new True() / new False() / new Null()
+     *   Constraints\True  / Constraints\False / Constraints\Null
+     *
+     * Returns [ 'line' => int, 'snippet' => string, 'old' => string, 'new' => string ]
+     */
+    public static function scanConstraints(string $content): array
+    {
+        $issues = [];
+        $lines  = explode("\n", $content);
+        $map    = [
+            'True'  => 'IsTrue',
+            'False' => 'IsFalse',
+            'Null'  => 'IsNull',
+        ];
+
+        $re = '/\b(Constraints\\\\(True|False|Null)\b|\\buse\s+[^;]*\\\\(True|False|Null)\s*;|\\bnew\s+(True|False|Null)\s*\()/';
+
+        foreach ($lines as $idx => $line) {
+            $trimmed = ltrim($line);
+            if ($trimmed === '' || str_starts_with($trimmed, '//') || str_starts_with($trimmed, '*')) {
+                continue;
+            }
+            if (preg_match_all($re, $line, $matches, PREG_SET_ORDER)) {
+                foreach ($matches as $m) {
+                    // Determine which keyword was matched
+                    $old = $m[2] ?: $m[3] ?: $m[4] ?: '';
+                    if ($old === '' || !isset($map[$old])) {
+                        continue;
+                    }
+                    $issues[] = [
+                        'line'    => $idx + 1,
+                        'snippet' => rtrim($line),
+                        'old'     => $old,
+                        'new'     => $map[$old],
+                    ];
+                }
+            }
+        }
+
+        return $issues;
+    }
+
+    // ── YAML !php/object: scanner ─────────────────────────────────────────────
+
+    /**
+     * Scans YAML source content for PHP object deserialisation tags.
+     *
+     * Detects:
+     *   !php/object: "O:4:..."
+     *   !!php/object: "..."
+     *
+     * Returns [ 'line' => int, 'snippet' => string ]
+     */
+    public static function scanYaml(string $content): array
+    {
+        $issues = [];
+        $lines  = explode("\n", $content);
+        $re     = '/!{1,2}php\/object:/';
+
+        foreach ($lines as $idx => $line) {
+            if (preg_match($re, $line)) {
+                $issues[] = [
+                    'line'    => $idx + 1,
+                    'snippet' => rtrim($line),
+                ];
+            }
+        }
+
+        return $issues;
+    }
+
+    // ── Twig legacy class reference scanner ───────────────────────────────────
+
+    /**
+     * Scans PHP source content for Twig 1.x `Twig_*` class naming convention.
+     *
+     * Returns [ 'line' => int, 'snippet' => string, 'class' => string ]
+     */
+    public static function scanTwig(string $content): array
+    {
+        $issues = [];
+        $lines  = explode("\n", $content);
+
+        // Match Twig_Xxx class names (with optional leading backslash)
+        $re = '/\\\\?(Twig_[A-Za-z_][A-Za-z0-9_]*)/';
+
+        // Canonical migration map for display hints
+        $twigMap = [
+            'Twig_Extension'         => 'Twig\\Extension\\AbstractExtension',
+            'Twig_SimpleFilter'      => 'Twig\\TwigFilter',
+            'Twig_SimpleFunction'    => 'Twig\\TwigFunction',
+            'Twig_SimpleTest'        => 'Twig\\TwigTest',
+            'Twig_Environment'       => 'Twig\\Environment',
+            'Twig_Loader_Filesystem' => 'Twig\\Loader\\FilesystemLoader',
+            'Twig_Loader_Array'      => 'Twig\\Loader\\ArrayLoader',
+            'Twig_Filter_Method'     => 'Twig\\TwigFilter',
+            'Twig_Function_Method'   => 'Twig\\TwigFunction',
+        ];
+
+        foreach ($lines as $idx => $line) {
+            $trimmed = ltrim($line);
+            if ($trimmed === '' || str_starts_with($trimmed, '//') || str_starts_with($trimmed, '*')) {
+                continue;
+            }
+            if (preg_match_all($re, $line, $matches, PREG_SET_ORDER)) {
+                foreach ($matches as $m) {
+                    $cls     = $m[1];
+                    $suggestion = $twigMap[$cls] ?? null;
+                    $issues[] = [
+                        'line'       => $idx + 1,
+                        'snippet'    => rtrim($line),
+                        'class'      => $cls,
+                        'suggestion' => $suggestion,
+                    ];
+                }
+            }
+        }
+
+        return $issues;
+    }
+
+    // ── Aggregated file-level scan ────────────────────────────────────────────
+
+    /**
+     * Runs a single scanner callback over all files produced by an iterator.
+     *
+     * @param \Iterator        $files    Iterator of \SplFileInfo objects
+     * @param callable         $scanner  static method reference e.g. [ScannerTrait::class, 'scanNullable']
+     * @param string           $baseDir  Used to produce relative paths in results
+     *
+     * @return array<string, array>  Keyed by relative file path; value is the array of issues for that file.
+     */
+    protected function scanFiles(\Iterator $files, callable $scanner, string $baseDir): array
+    {
+        $results = [];
+
+        foreach ($files as $fileInfo) {
+            /** @var \SplFileInfo $fileInfo */
+            $content = @file_get_contents($fileInfo->getPathname());
+            if ($content === false) {
+                continue; // unreadable — skip silently
+            }
+
+            $issues = $scanner($content);
+            if (!empty($issues)) {
+                $rel           = $this->relativePath($fileInfo->getPathname(), $baseDir);
+                $results[$rel] = $issues;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Counts all issues across all files from a scanFiles() result.
+     */
+    protected function countIssues(array $scanResults): int
+    {
+        return array_sum(array_map('count', $scanResults));
+    }
+
+    /**
+     * Counts unique files that have at least one issue.
+     */
+    protected function countFiles(array $scanResults): int
+    {
+        return count($scanResults);
+    }
+}

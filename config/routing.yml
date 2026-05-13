@@ -1,0 +1,49 @@
+# config/routing.yml
+#
+# Top-level routing configuration.
+# Imported by PrimeKernel::configureRoutes() in every environment.
+#
+# symfony1 equivalent: apps/site/config/routing.php / routing.yml
+# ─────────────────────────────────────────────────────────────────
+# Route definitions are loaded in order — first match wins.
+# Prefix each import with a path prefix to namespace its routes.
+#
+# Available route types:
+#   annotation — scans controller files for @Route annotations
+#   yaml       — loads a .yml file with route definitions
+#   xml        — loads a .xml file
+#   php        — loads a .php file returning a RouteCollection
+
+# ── PrimeSiteBundle — default site routes ────────────────────────────────────
+# Defines:
+#   prime_site_homepage  GET /         → PrimeSiteBundle:Status:homepage
+#   prime_site_status    GET /version  → PrimeSiteBundle:Status:index
+prime_site:
+    resource: "@PrimeSiteBundle/Resources/config/routing.yml"
+    prefix:   /
+
+# ── Example: add a second bundle's routes under a prefix ─────────────────────
+# Uncomment and adjust to mount another bundle's routing at a sub-path.
+#my_bundle:
+#    resource: "@MyBundle/Resources/config/routing.yml"
+#    prefix:   /my-section
+
+# ── Example: annotation-based routes ─────────────────────────────────────────
+# Scans all controllers in the given namespace for @Route / #[Route] attributes.
+# Requires sensio/framework-extra-bundle (already in vendor/).
+#prime_site_annotations:
+#    resource: "@PrimeSiteBundle/Controller/"
+#    type:     annotation
+
+# ── Example: static pages ─────────────────────────────────────────────────────
+# Simple one-off routes defined directly here (no controller file needed when
+# using TemplateController from FrameworkBundle).
+#about:
+#    path:     /about
+#    defaults:
+#        _controller: FrameworkBundle:Template:template
+#        template:    PrimeSiteBundle:Page:about.html.twig
+
+# ── Dev-only routes (profiler / toolbar) ─────────────────────────────────────
+# These are imported conditionally in PrimeKernel::configureRoutes() only when
+# $this->isDebug() is true — no need to duplicate them here.

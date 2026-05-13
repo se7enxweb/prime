@@ -132,3 +132,90 @@ Symfony 2.8 applications will work with only minor adjustments.
    ```
 
    Run `php -l` on your own extension classes and update accordingly.
+
+---
+
+PHP 8.4 / PHP 8.5 Vendor Compatibility Notes
+---------------------------------------------
+
+The following vendor libraries shipped with 7x Prime 2.9 have been patched
+for PHP 8.1–8.5 compatibility.  No action is required for applications that
+use these libraries only through the Symfony/7x API.  The notes below are
+relevant if you **directly extend or instantiate** the patched vendor classes.
+
+### ZendFramework Bridge — ParameterReflection
+
+`ParameterReflection::getType()` and `ParameterReflection::getClass()` no
+longer call the PHP 8.1-deprecated `ReflectionParameter::isArray()`,
+`isCallable()`, or `getClass()` methods.  If you subclass
+`Zend\Code\Reflection\ParameterReflection` and override these methods, ensure
+your overrides also avoid the deprecated calls.
+
+`ParameterReflection::getClass()` delegates to `parent::getType()` (the native
+`ReflectionParameter`) to avoid infinite recursion.  Any subclass that
+previously relied on `$this->getType()` calling back into `getClass()` will
+see different (corrected) behaviour.
+
+### OcramiusProxyManager — Proxy Initializer Properties
+
+Generated proxy classes now declare `$initializer` and `$cloner` as
+`?\Closure` (nullable Closure) rather than `\Closure`.  Existing serialised
+proxy objects or hand-written stubs that expect a non-nullable `\Closure`
+type declaration will fail a strict type check under PHP 8.  Regenerate any
+cached proxies after upgrading.
+
+The `ParameterGenerator` class now uses `ReflectionParameter::getType()`
+instead of `isArray()` / `isCallable()` / `getClass()`.  Proxy method
+signatures for nullable and union-typed parameters are generated correctly
+under PHP 8.1+.
+
+### DoctrineBridge — ProxyGenerator
+
+The ProxyGenerator template has been updated: generated proxy stubs declare
+`$initializer` and `$cloner` as `?\Closure` (nullable).  Delete your Doctrine
+proxy cache directory after upgrading so stale proxies are regenerated:
+
+```
+rm -rf var/cache/*/doctrine/orm/Proxies/*
+```
+
+### DoctrineDBAL — SQLite Driver
+
+The SQLite PDO driver now detects the PHP 8.4 `Pdo\Sqlite` subclass in
+addition to the legacy `PDO` instance.  No application-level change is
+needed.  If you use `sqliteCreateFunction()` directly on the connection's PDO
+instance, note that the call is now guarded with `@` to suppress errors when
+the method is unavailable on non-SQLite connections.
+
+### DoctrineORM — SqlWalker / UnitOfWork
+
+These are internal fixes with no public API impact.  If you extend
+`SqlWalker` and access `$resultAlias` directly, note that it is now
+correctly `null` (not `''`) when no alias is present — null-coalescing is
+applied only at array-access sites.
+
+### SensioFrameworkExtraBundle — ParamConverterListener
+
+`ParamConverterListener` no longer calls the PHP 8.1-deprecated
+`ReflectionParameter::getClass()`.  If you implement a custom
+`ParamConverterInterface` and rely on `ParamConverter` receiving a
+`ReflectionClass` object from `getClass()`, verify your converter still
+works correctly — the listener now derives the class from
+`ReflectionNamedType::getName()` instead.
+
+### Process Component — PTY Reads
+
+The `UnixPipes` class now uses `@fread()` to suppress EIO (errno=5) notices
+on PTY file descriptors.  This is an internal implementation detail.  If you
+have custom error handlers that trap `E_NOTICE` / `E_WARNING` for all
+`fread()` calls, the PTY-related notices will no longer reach your handler.
+
+### PropertyInfo — PhpDocExtractor Test Fixture
+
+`OmittedParamTagTypeDocBlock` has been moved from the test file into
+`Tests/Fixtures/OmittedParamTagTypeDocBlock.php`.  If you reference this
+class by its old fully-qualified name
+`Symfony\Component\PropertyInfo\Tests\PhpDocExtractors\OmittedParamTagTypeDocBlock`,
+update references to
+`Symfony\Component\PropertyInfo\Tests\Fixtures\OmittedParamTagTypeDocBlock`.
+(This class is a test fixture only; no production code references it.)

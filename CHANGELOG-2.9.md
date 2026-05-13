@@ -82,3 +82,102 @@ It is NOT affiliated with Fabien Potencier or the upstream Symfony project.
    - `session.cookie_httponly = 1`
    - `session.cookie_samesite = Lax`
    - `session.use_strict_mode = 1`
+
+### PHP 8.5 / PHPUnit 11 Compatibility (test suite — zero failures/errors)
+
+The following fixes were made to vendor libraries and test files to achieve a
+clean PHPUnit 11.5 run under PHP 8.5.6 (0 errors, 0 failures, 0 warnings,
+0 deprecations attributable to framework code).
+
+#### ZendFramework Bridge (zend-code)
+
+ * **ParameterReflection::getClass()** — eliminated infinite recursion: the
+   method previously called `$this->getType()`, which called `$this->getClass()`
+   in turn.  Fixed by delegating to the native `parent::getType()` (i.e.
+   `ReflectionParameter::getType()`).
+ * **ParameterReflection::getType()** — removed calls to the PHP 8.1-deprecated
+   `ReflectionParameter::isArray()`, `isCallable()`, and `getClass()` methods.
+   Introspection now uses `parent::getType()` exclusively.
+ * **ClassReflection::getStartLine()** — added `#[\ReturnTypeWillChange]`
+   attribute to suppress the PHP 8.1 covariant-return-type deprecation notice.
+
+#### OcramiusProxyManager
+
+ * **ParameterGenerator::extractParameterType()** — replaced deprecated
+   `isArray()` / `isCallable()` / `getClass()` calls with `getType()`-based
+   introspection for PHP 8.1+ compatibility.
+ * **ParameterGenerator::getGeneratedType()** — corrected handling of the
+   nullable-type prefix (`?`) when generating proxy method signatures.
+ * **SetProxyInitializer (LazyLoadingGhost)** — changed `setType('Closure')`
+   to `setType('?Closure')`: the `$initializer` property is nullable and PHP
+   8 enforces that the declared type matches.
+ * **SetProxyInitializer (LazyLoadingValueHolder)** — same nullable Closure
+   fix as above.
+
+#### DoctrineBridge (doctrine/common — ProxyGenerator)
+
+ * **ProxyGenerator template** — updated the generated proxy class stub to
+   declare `$initializer` and `$cloner` as `?\Closure` (nullable) instead of
+   `\Closure`, matching PHP 8 property-type strictness for null-initialised
+   properties.
+
+#### SensioFrameworkExtraBundle
+
+ * **ParamConverterListener** — replaced all uses of the PHP 8.1-deprecated
+   `ReflectionParameter::getClass()` with `getType()`-based logic throughout
+   the listener, including handling of union types and built-in types.
+
+#### DoctrineDBAL (doctrine/dbal — PDOSqlite)
+
+ * **PDOSqlite\\Driver** — PHP 8.4 split the monolithic `PDO` class into
+   dedicated driver subclasses (e.g. `Pdo\Sqlite`).  The driver now detects
+   `instanceof \Pdo\Sqlite` in addition to the legacy path, and falls back
+   gracefully via `@$pdo->sqliteCreateFunction()` when the method may not
+   exist.
+
+#### DoctrineORM
+
+ * **SqlWalker** — corrected `$resultAlias` handling: the variable correctly
+   stays `null` when not set; null-coalescing (`?? ''`) is applied only at
+   the array-access points in `scalarResultAliasMap`, preventing lookup
+   corruption that caused 26 test errors.
+ * **UnitOfWork** — reverted an erroneous `continue 2` (which targeted a
+   non-existent outer loop level) back to `break` inside a `switch` statement
+   nested within a `foreach`.
+
+#### Process Component
+
+ * **UnixPipes::readPipes()** — prefixed `fread()` with the error-suppression
+   operator (`@fread(...)`) to silence the `EAGAIN` / EIO (errno=5) notice
+   that PHP 8.5 emits when reading from a closed PTY file descriptor during
+   process teardown.
+
+#### Finder Component (tests)
+
+ * **SortableIteratorTest** — replaced `file_get_contents(self::toAbsolute('.git'))`
+   with `touch(self::toAbsolute('.git'))`.  Reading a directory path via
+   `file_get_contents()` triggers a deprecation/warning in PHP 8.5 and was
+   semantically wrong (the test only needed the path to exist, not its
+   contents).
+
+#### Translation Component (tests)
+
+ * **JsonFileDumperTest** — removed an obsolete `if (PHP_VERSION_ID < 50400)`
+   guard that skipped the entire test on PHP < 5.4.  The `json_encode()`
+   flags parameter has been supported since PHP 5.3.0; under PHP 8.5 the
+   guard evaluated to `false` and the test body was never reached, causing
+   it to be permanently marked incomplete.
+
+#### PropertyInfo Component (tests)
+
+ * **PhpDocExtractorTest / OmittedParamTagTypeDocBlock** — moved the
+   `OmittedParamTagTypeDocBlock` class out of the test file and into its own
+   dedicated fixture file (`Tests/Fixtures/OmittedParamTagTypeDocBlock.php`).
+   The phpdocumentor/reflection library uses a PHP 5-era PHPParser (v1.x) to
+   parse source files for docblock extraction.  When it was directed at the
+   test file — which contains the PHP 8.0 attribute syntax
+   `#[\PHPUnit\Framework\Attributes\DataProvider(...)]` — it caught a
+   `PHPParser_Error` and echoed `Parse Error: Syntax error, unexpected
+   T_NS_SEPARATOR, expecting T_FUNCTION on line 33` to stdout, polluting the
+   PHPUnit progress output.  The new fixture file contains only PHP 5-
+   compatible syntax, eliminating the parse-error noise entirely.

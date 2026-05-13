@@ -1,0 +1,183 @@
+{% extends 'PrimeSiteBundle::layout.html.twig' %}
+
+{#
+ # Status/index — Success view.
+ #
+ # Symfony2 Twig equivalent of:
+ #   apps/site/modules/status/templates/indexSuccess.php  (primer symfony1)
+ #
+ # symfony1 template conventions → Symfony2 Twig equivalents
+ # ─────────────────────────────────────────────────────────────────────────────
+ #   Template naming: {action}{viewName}.php (indexSuccess.php)
+ #     → Twig: Resources/views/{Controller}/{action}.html.twig (Status/index.html.twig)
+ #
+ #   Variables injected by sfMicroDispatcher::render() / sfPHPView::render()
+ #   via $this->varName assignments in statusActions::executeIndex()
+ #     → Variables passed from StatusController::indexAction() render() call
+ #
+ #   <?php echo htmlspecialchars($var) ?>
+ #     → {{ var }}  (Twig auto-escapes output by default)
+ #
+ #   <?php echo $allOk ? 'yes' : 'no' ?>
+ #     → {{ allOk ? 'yes' : 'no' }}
+ #
+ #   <?php foreach ($checks as $class => $ok): ?> ... <?php endforeach ?>
+ #     → {% for class, ok in checks %} ... {% endfor %}
+ #
+ #   <?php if ($composerInstalled): ?> ... <?php else: ?> ... <?php endif ?>
+ #     → {% if composerInstalled %} ... {% else %} ... {% endif %}
+ #
+ # Available variables (from StatusController::indexAction)
+ # ─────────────────────────────────────────────────────────
+ #   phpVersion        — PHP_VERSION string
+ #   sfVersion         — prime framework version string
+ #   gitBranch         — current git branch name
+ #   gitCommit         — last git commit (short hash + subject)
+ #   checks            — associative array: FQCN → bool (class exists?)
+ #   allOk             — bool: true when all checks pass
+ #   composerJson      — bool: composer.json present
+ #   composerInstalled — bool: vendor/autoload.php present
+ #   composerPackages  — associative array: package-name → version
+ #   title             — page title string
+ #   sf_app            — application name (symfony1: $sf_app)
+ #   sf_env            — environment string (symfony1: $sf_env)
+ #   sf_debug          — debug flag (symfony1: $sf_debug)
+ #   sf_route          — matched route name (symfony1: $sf_route)
+ #}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<style>
+  .sf-status-banner {
+    border-radius: 6px;
+    padding: 1.1rem 1.4rem;
+    margin-bottom: 1.4rem;
+    background: {{ allOk ? '#2e7d32' : '#c62828' }};
+    color: #fff;
+  }
+  .sf-status-banner h2 { font-size: 1rem; font-weight: 700; letter-spacing: .3px; }
+  .sf-status-banner p  { font-size: .82rem; opacity: .85; margin-top: .25rem; }
+
+  .sf-card {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    margin-bottom: 1.2rem;
+    overflow: hidden;
+  }
+  .sf-card-head {
+    background: #f5f5f5;
+    border-bottom: 1px solid #e8e8e8;
+    padding: .5rem 1rem;
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    color: #666;
+  }
+  .sf-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  .sf-table th,
+  .sf-table td { padding: .5rem 1rem; border-bottom: 1px solid #f0f0f0; text-align: left; }
+  .sf-table tr:last-child th,
+  .sf-table tr:last-child td { border-bottom: none; }
+  .sf-table th { font-weight: 600; color: #555; width: 44%; }
+  .ok   { color: #2e7d32; font-weight: 700; }
+  .fail { color: #c62828; font-weight: 700; }
+  .badge {
+    display: inline-block;
+    font-size: .7rem;
+    padding: .1rem .45rem;
+    border-radius: 10px;
+    background: #e8eaf6;
+    color: #283593;
+    font-weight: 700;
+    vertical-align: middle;
+    margin-left: .3rem;
+  }
+</style>
+
+{# ── Status banner ──────────────────────────────────────────────────────── #}
+{# symfony1: <?php echo $allOk ? '&#10003; ...' : '&#10007; ...' ?>         #}
+<div class="sf-status-banner">
+  <h2>{{ allOk ? '&#10003; All checks passed' : '&#10007; Some checks failed' }}</h2>
+  <p>Matched route: <strong>{{ sf_route }}</strong>
+     &nbsp;&bull;&nbsp; env: <strong>{{ sf_env }}</strong></p>
+</div>
+
+{# ── Environment card ───────────────────────────────────────────────────── #}
+<div class="sf-card">
+  <div class="sf-card-head">Environment</div>
+  <table class="sf-table">
+    <tr>
+      <th>PHP Version</th>
+      <td>{{ phpVersion }}</td>
+    </tr>
+    <tr>
+      <th>Framework Version</th>
+      <td>
+        {{ sfVersion }}
+        <span class="badge">branch {{ gitBranch }}</span>
+      </td>
+    </tr>
+    <tr>
+      <th>Git Branch</th>
+      <td>{{ gitBranch }}</td>
+    </tr>
+    <tr>
+      <th>Last Commit</th>
+      <td>{{ gitCommit }}</td>
+    </tr>
+    <tr>
+      <th>App / Bundle / Action</th>
+      {# symfony1: $sf_app / status / index                                  #}
+      {# Symfony2: app name / controller name / action name                  #}
+      <td>{{ sf_app }} / Status / index</td>
+    </tr>
+  </table>
+</div>
+
+{# ── Core class checks card ─────────────────────────────────────────────── #}
+{# symfony1: foreach ($checks as $class => $ok)                              #}
+{# Symfony2 Twig: {% for class, ok in checks %}                              #}
+<div class="sf-card">
+  <div class="sf-card-head">Core Class Checks</div>
+  <table class="sf-table">
+    {% for class, ok in checks %}
+    <tr>
+      <th>{{ class }}</th>
+      <td class="{{ ok ? 'ok' : 'fail' }}">{{ ok ? 'OK' : 'FAIL' }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+{# ── Composer card ──────────────────────────────────────────────────────── #}
+<div class="sf-card">
+  <div class="sf-card-head">Composer</div>
+  <table class="sf-table">
+    <tr>
+      <th>composer.json</th>
+      <td class="{{ composerJson ? 'ok' : 'fail' }}">{{ composerJson ? 'Present' : 'Not found' }}</td>
+    </tr>
+    <tr>
+      <th>vendor/autoload.php</th>
+      <td class="{{ composerInstalled ? 'ok' : 'fail' }}">
+        {% if composerInstalled %}
+          Loaded &mdash; {{ composerPackages|length }} package{{ composerPackages|length != 1 ? 's' : '' }} installed
+        {% else %}
+          Not installed &mdash; run <code>composer install</code>
+        {% endif %}
+      </td>
+    </tr>
+    {% if composerPackages %}
+      {% for pkg, ver in composerPackages %}
+      <tr>
+        <th style="padding-left:1.75rem;color:#777;font-weight:500">{{ pkg }}</th>
+        <td>{{ ver }}</td>
+      </tr>
+      {% endfor %}
+    {% endif %}
+  </table>
+</div>
+{% endblock %}

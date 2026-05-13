@@ -1,0 +1,29 @@
+# config/dev_access.yml
+#
+# IP allowlist for the development front controller (public/index_dev.php).
+#
+# Only addresses listed here (plus 127.0.0.1 / ::1 which are always allowed)
+# can reach index_dev.php. All other visitors receive a 403 Forbidden.
+#
+# Find your current browser IP at: https://whatismyip.com
+# Find the server outbound IP with: curl -s https://icanhazip.com
+#
+# Format: one IP address per list item. Both IPv4 and IPv6 are supported.
+# CIDR ranges are NOT supported here — list individual addresses only.
+#
+# After editing this file, no cache clear is needed — it is read on every
+# request to index_dev.php before the kernel boots.
+
+allowed_ips:
+
+    # ── Localhost (always safe to keep) ────────────────────────────────────
+    - '127.0.0.1'           # IPv4 loopback
+    - '::1'                 # IPv6 loopback
+    - '::ffff:127.0.0.1'    # IPv4-mapped IPv6 loopback
+
+    # ── Developer / office IPs ─────────────────────────────────────────────
+    - '50.191.224.82'       # developer workstation
+
+    # Add more IPs below as needed:
+    # - '10.0.0.5'          # office NAT gateway
+    # - '192.168.1.100'     # local VM / Docker host

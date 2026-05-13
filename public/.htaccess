@@ -1,0 +1,77 @@
+# prime — Apache virtual host configuration for public/ web root
+#
+# Symfony2 equivalent of primer's public/.htaccess (symfony1 project).
+#
+# symfony1 primer .htaccess notes
+# ────────────────────────────────
+# The primer .htaccess inherits eZ Publish rewrite conventions (var/storage,
+# design/, share/icons/ etc.) that do not apply to a Symfony2 project.
+# This file replaces those rules with the standard Symfony2 / Apache pattern:
+# every request that does not match a real file or directory is rewritten to
+# the front controller (index.php).
+#
+# Apache requirements
+# ────────────────────
+#   mod_rewrite   — URL rewriting (AllowOverride FileInfo or All in vhost)
+#   mod_mime      — AddHandler (optional; for cPanel / shared hosting)
+#
+# cPanel / shared hosting
+# ────────────────────────
+# The PHP handler block at the bottom (ea-php85) mirrors the format generated
+# by cPanel's MultiPHP Manager. Adjust the handler name to match your server's
+# installed PHP version (ea-php80, ea-php81, ea-php82, ea-php83, ea-php84,
+# ea-php85).
+
+# ── Rewrite engine ────────────────────────────────────────────────────────────
+Options -MultiViews
+RewriteEngine On
+
+# Serve the document root index directly when the URI is exactly /.
+DirectoryIndex index.php
+
+# ── Static file pass-throughs ─────────────────────────────────────────────────
+# Files that exist on disk are served directly without invoking the front
+# controller. This covers CSS, JS, images, fonts, etc. placed in public/.
+#
+# symfony1 equivalent: the eZ Publish-specific RewriteRule ^ lines that
+# pass through var/storage, design/, share/icons/ etc.
+# In Symfony2 all public assets are placed directly in public/ (or symlinked
+# via the assets:install command), so a single -f/-d check is sufficient.
+
+# Serve favicon.ico and favicon.png directly (no PHP involvement).
+RewriteRule ^favicon\.(ico|png)$ - [L]
+
+# Serve robots.txt and sitemap.xml directly.
+RewriteRule ^robots\.txt$ - [L]
+RewriteRule ^sitemap\.xml$ - [L]
+
+# Pass any request that maps to an existing file or directory straight through.
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# ── Front controller rewrite ──────────────────────────────────────────────────
+# All remaining requests are handled by the Symfony2 front controller.
+# symfony1 equivalent: RewriteRule .* index.php
+#
+# The [QSA] flag preserves any query string already present in the request.
+# The [L] flag stops processing further rules after this one matches.
+RewriteRule ^ index.php [QSA,L]
+
+# ── Security — deny direct access to PHP files outside the front controller ───
+# Prevents direct execution of PHP files cached or placed elsewhere in public/.
+# This is especially important on shared hosting where open_basedir is not set.
+<FilesMatch "\.php$">
+    # Allow only the two front controllers through; deny everything else.
+    <If "%{REQUEST_URI} !~ m#^/index(_dev)?\.php#">
+        Require all denied
+    </If>
+</FilesMatch>
+
+# ── PHP handler (cPanel / shared hosting) ─────────────────────────────────────
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the "ea-php85" package as the default "PHP" programming language.
+<IfModule mime_module>
+    AddHandler application/x-httpd-ea-php85 .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit

@@ -1,0 +1,121 @@
+{#
+ # Application layout — base decorator template.
+ #
+ # Symfony2 Twig equivalent of apps/site/templates/layout.php (primer symfony1).
+ #
+ # symfony1 → Twig mapping
+ # ─────────────────────────────────────────────────────────────────────────────
+ #   sfPHPView::decorate() renders action template into $content, then
+ #   includes this layout with $content injected.
+ #     → Twig template inheritance: child templates extend this layout and
+ #       fill {% block body %} with their rendered output.
+ #
+ #   <?php echo $content ?>
+ #     → {% block body %}{% endblock %}
+ #
+ #   <?php echo htmlspecialchars($title ?? 'symfony 1.5') ?>
+ #     → {{ title|default('prime 2.9') }}  (auto-escaped by Twig)
+ #
+ #   <?php echo htmlspecialchars($sf_app ?? '') ?>/<?php echo ... $sf_env ... ?>
+ #     → {{ sf_app|default('') }}/{{ sf_env|default('') }}
+ #
+ # Available blocks
+ # ─────────────────
+ #   title       — <title> content (defaults to 'prime 2.9')
+ #   stylesheets — additional <link> / <style> tags in <head>
+ #   body        — main page content (filled by child templates)
+ #   javascripts — scripts at end of <body>
+ #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ title|default('prime 2.9') }}{% endblock %}</title>
+  {% block stylesheets %}{% endblock %}
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      background: #f0f2f5;
+      color: #2c2c2c;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ──────────────────────────────────────────────── */
+    .sf-header {
+      background: #1a237e;
+      color: #fff;
+      padding: .9rem 1.75rem;
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+    }
+    .sf-header-logo {
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .sf-header-logo em {
+      font-style: normal;
+      color: #7986cb;
+    }
+    .sf-header-pill {
+      font-size: .72rem;
+      background: rgba(255,255,255,.15);
+      border-radius: 20px;
+      padding: .2rem .65rem;
+      letter-spacing: .3px;
+    }
+    .sf-header-env {
+      margin-left: auto;
+      font-size: .72rem;
+      opacity: .6;
+      font-family: monospace;
+    }
+
+    /* ── Main ────────────────────────────────────────────────── */
+    .sf-main {
+      flex: 1;
+      max-width: 780px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.75rem 1.25rem;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    .sf-footer {
+      background: #fff;
+      border-top: 1px solid #e0e0e0;
+      text-align: center;
+      padding: .85rem 1rem;
+      font-size: .78rem;
+      color: #999;
+    }
+    .sf-footer a { color: #1a237e; text-decoration: none; }
+    .sf-footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header class="sf-header">
+    <span class="sf-header-logo">7x <em>Prime</em></span>
+    <span class="sf-header-pill">2.9-dev &bull; PHP 8.x Compatible</span>
+    <span class="sf-header-env">{{ sf_app|default('') }}/{{ sf_env|default('') }}</span>
+  </header>
+
+  <main class="sf-main">
+    {% block body %}{% endblock %}
+  </main>
+
+  <footer class="sf-footer">
+    &copy; 2004 &ndash; 2026 <a href="https://se7enx.com">7x</a>
+    &mdash; <a href="https://github.com/se7enxweb/prime">7x Prime 2.9 on GitHub</a>
+  </footer>
+
+  {% block javascripts %}{% endblock %}
+</body>
+</html>
