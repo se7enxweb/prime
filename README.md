@@ -23,15 +23,16 @@
 8. [Quick Start](#8-quick-start)
 9. [Main Features](#9-main-features)
 10. [Building Pages, Routes, and DB Results](#10-building-pages-routes-and-db-results)
-11. [Installation](#11-installation)
-12. [Key CLI Reference](#12-key-cli-reference)
-13. [Issue Tracker](#13-issue-tracker)
-14. [Where to Get More Help](#14-where-to-get-more-help)
-15. [How to Contribute](#15-how-to-contribute)
-16. [Donate & Support](#16-donate--support)
-17. [PHPUnit 11 Test Suite](#17-phpunit-11-test-suite)
-18. [Copyright](#18-copyright)
-19. [License](#19-license)
+11. [Your First Bundle](#11-your-first-bundle)
+12. [Installation](#12-installation)
+13. [Key CLI Reference](#13-key-cli-reference)
+14. [Issue Tracker](#14-issue-tracker)
+15. [Where to Get More Help](#15-where-to-get-more-help)
+16. [How to Contribute](#16-how-to-contribute)
+17. [Donate & Support](#17-donate--support)
+18. [PHPUnit 11 Test Suite](#18-phpunit-11-test-suite)
+19. [Copyright](#19-copyright)
+20. [License](#20-license)
 
 ---
 
@@ -288,7 +289,199 @@ class BlogController extends Controller
 
 ---
 
-## 11. Installation
+## 11. Your First Bundle
+
+A **Bundle** is the primary extension point in 7x Prime — a self-contained plugin that contributes
+routes, controllers, Twig templates, services, Doctrine entities, console commands, and more to
+the application.
+
+### 11.1 Generating the Scaffold
+
+```bash
+php bin/console generate:bundle
+```
+
+Answer the interactive prompts:
+
+| Prompt | Example value |
+|--------|---------------|
+| Bundle namespace | `Acme/BlogBundle` |
+| Bundle name | `AcmeBlogBundle` |
+| Target directory | `src/` |
+| Configuration format | `yml` |
+
+This creates:
+
+```
+src/Acme/BlogBundle/
+├── AcmeBlogBundle.php          ← bundle class (registers itself)
+├── Controller/
+│   └── DefaultController.php  ← starter controller
+├── DependencyInjection/
+│   ├── AcmeBlogExtension.php  ← loads services.yml into the DI container
+│   └── Configuration.php      ← config tree definition (optional)
+├── Resources/
+│   ├── config/
+│   │   ├── routing.yml         ← bundle-local route definitions
+│   │   └── services.yml        ← service definitions
+│   └── views/
+│       └── Default/
+│           └── index.html.twig ← starter template
+└── Tests/
+    └── Controller/
+        └── DefaultControllerTest.php
+```
+
+### 11.2 Registering the Bundle
+
+Add the bundle to `app/AppKernel.php`:
+
+```php
+// app/AppKernel.php
+public function registerBundles(): array
+{
+    $bundles = [
+        // … core bundles …
+        new Acme\BlogBundle\AcmeBlogBundle(),
+    ];
+
+    return $bundles;
+}
+```
+
+Mount its routes in `app/config/routing.yml`:
+
+```yaml
+acme_blog:
+    resource: "@AcmeBlogBundle/Resources/config/routing.yml"
+    prefix:   /blog
+```
+
+### 11.3 Adding a Service
+
+Define services in `Resources/config/services.yml`:
+
+```yaml
+services:
+    acme_blog.post_manager:
+        class: Acme\BlogBundle\Service\PostManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+```
+
+Inject it into a controller via `$this->get()` or constructor injection:
+
+```php
+namespace Acme\BlogBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
+
+class BlogController extends Controller
+{
+    public function indexAction(): Response
+    {
+        $posts = $this->get('acme_blog.post_manager')->findLatest(10);
+
+        return $this->render('@AcmeBlog/Blog/index.html.twig', ['posts' => $posts]);
+    }
+}
+```
+
+### 11.4 Customising Templates
+
+**Override a bundle template** by copying it into `app/Resources/`:
+
+```
+app/Resources/
+└── AcmeBlogBundle/
+    └── views/
+        └── Blog/
+            └── index.html.twig   ← overrides @AcmeBlog/Blog/index.html.twig
+```
+
+Twig's lookup order: `app/Resources/BundleName/views/` first, then `src/Bundle/Resources/views/`.
+Any file placed under `app/Resources/` wins automatically — no configuration required.
+
+**Extend the global base layout** using Twig block inheritance:
+
+```twig
+{# src/AcmeBlogBundle/Resources/views/Blog/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Blog{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/acmeblog/css/blog.css') }}">
+{% endblock %}
+
+{% block body %}
+    {% for post in posts %}
+        <article>
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.excerpt }}</p>
+            <a href="{{ path('acme_blog_show', {slug: post.slug}) }}">Read more</a>
+        </article>
+    {% endfor %}
+{% endblock %}
+```
+
+**Publish bundle assets** (CSS, JS, images) to `web/bundles/`:
+
+```bash
+php bin/console assets:install --symlink web/
+```
+
+This symlinks `src/AcmeBlogBundle/Resources/public/` → `web/bundles/acmeblog/`,
+making files available at `/bundles/acmeblog/css/blog.css`.
+
+### 11.5 Full Bundle Directory Reference
+
+```
+src/Acme/BlogBundle/
+├── AcmeBlogBundle.php
+├── Command/                    ← console commands (auto-discovered)
+│   └── ImportPostsCommand.php
+├── Controller/                 ← HTTP controllers
+│   └── BlogController.php
+├── DependencyInjection/        ← DI extension + optional configuration tree
+│   ├── AcmeBlogExtension.php
+│   └── Configuration.php
+├── Entity/                     ← Doctrine entities
+│   └── Post.php
+├── Form/                       ← form type classes
+│   └── PostType.php
+├── Repository/                 ← Doctrine entity repositories
+│   └── PostRepository.php
+├── Resources/
+│   ├── config/
+│   │   ├── doctrine/           ← Doctrine XML/YAML mapping (if not using annotations)
+│   │   ├── routing.yml
+│   │   ├── routing_dev.yml
+│   │   └── services.yml
+│   ├── public/                 ← static assets published to web/bundles/acmeblog/
+│   │   ├── css/
+│   │   └── js/
+│   ├── translations/           ← XLIFF / YAML translation catalogues
+│   │   └── messages.en.yml
+│   └── views/                  ← Twig templates
+│       ├── Blog/
+│       │   ├── index.html.twig
+│       │   └── show.html.twig
+│       └── layout.html.twig    ← optional bundle-level base layout
+├── Service/                    ← business-logic service classes
+│   └── PostManager.php
+├── Tests/                      ← PHPUnit tests mirroring src/ structure
+│   ├── Controller/
+│   └── Service/
+└── Validator/                  ← custom constraint classes (optional)
+    └── Constraint/
+```
+
+---
+
+## 12. Installation
 
 See **[INSTALL.md](INSTALL.md)** for the full step-by-step guide covering:
 
@@ -305,7 +498,7 @@ See **[INSTALL.md](INSTALL.md)** for the full step-by-step guide covering:
 
 ---
 
-## 12. Key CLI Reference
+## 13. Key CLI Reference
 
 ```bash
 # ── Test Suite ───────────────────────────────────────────────────────────────
@@ -352,7 +545,7 @@ composer audit                                      # check for security advisor
 
 ---
 
-## 13. Issue Tracker
+## 14. Issue Tracker
 
 Submit bugs, feature requests, and improvements at:
 **https://github.com/se7enxweb/prime/issues**
@@ -362,7 +555,7 @@ If you discover a security issue, please report it responsibly by email to
 
 ---
 
-## 14. Where to Get More Help
+## 15. Where to Get More Help
 
 | Resource | URL |
 |----------|-----|
@@ -387,7 +580,7 @@ If you discover a security issue, please report it responsibly by email to
 
 ---
 
-## 15. How to Contribute
+## 16. How to Contribute
 
 Everyone is encouraged to contribute. To get started:
 
@@ -414,7 +607,7 @@ Bug reports, feature requests, and discussions are welcome via the
 
 ---
 
-## 16. Donate & Support
+## 17. Donate & Support
 
 7x Prime is free and open-source. If it has saved you migration time, upgrade costs,
 or kept a production application running, please consider supporting the project:
@@ -432,7 +625,7 @@ Every contribution funds:
 
 ---
 
-## 17. PHPUnit 11 Test Suite
+## 18. PHPUnit 11 Test Suite
 
 7x Prime ships a complete test suite covering every component, bridge, and bundle in the
 framework, verified to pass with **PHPUnit 11.5** on **PHP 8.5.6** — zero errors, zero
@@ -624,7 +817,7 @@ test helpers, and CI integration patterns.
 
 ---
 
-## 18. Copyright
+## 19. Copyright
 
 ```
 Copyright (C) 2004–2026 7x (se7enx.com). All rights reserved.
@@ -634,7 +827,7 @@ See CONTRIBUTORS.md for the full contributor list.
 
 ---
 
-## 19. License
+## 20. License
 
 7x Prime is released under the **MIT License**.
 See [LICENSE](LICENSE) for the full licence text.
