@@ -19,7 +19,7 @@ class MarkdownDescriptorTest extends AbstractDescriptorTest
 {
     public static function getDescribeCommandTestData()
     {
-        return $this->getDescriptionTestData(array_merge(
+        return self::getDescriptionTestData(array_merge(
             ObjectsProvider::getCommands(),
             array('command_mbstring' => new DescriptorCommandMbString())
         ));
@@ -27,7 +27,7 @@ class MarkdownDescriptorTest extends AbstractDescriptorTest
 
     public static function getDescribeApplicationTestData()
     {
-        return $this->getDescriptionTestData(array_merge(
+        return self::getDescriptionTestData(array_merge(
             ObjectsProvider::getApplications(),
             array('application_mbstring' => new DescriptorApplicationMbString())
         ));
@@ -38,7 +38,7 @@ class MarkdownDescriptorTest extends AbstractDescriptorTest
         return new MarkdownDescriptor();
     }
 
-    protected function getFormat()
+    protected static function getFormat()
     {
         return 'md';
     }

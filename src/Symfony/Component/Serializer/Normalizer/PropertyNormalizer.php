@@ -60,7 +60,6 @@ class PropertyNormalizer extends AbstractNormalizer
 
             // Override visibility
             if (!$property->isPublic()) {
-                $property->setAccessible(true);
             }
 
             $attributeValue = $property->getValue($object);
@@ -116,7 +115,6 @@ class PropertyNormalizer extends AbstractNormalizer
 
                 // Override visibility
                 if (!$property->isPublic()) {
-                    $property->setAccessible(true);
                 }
 
                 $property->setValue($object, $value);

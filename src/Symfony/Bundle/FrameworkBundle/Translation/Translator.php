@@ -90,6 +90,8 @@ class Translator extends BaseTranslator implements WarmableInterface
 
         $locales = array_merge($this->getFallbackLocales(), array($this->getLocale()), $this->resourceLocales);
         foreach (array_unique($locales) as $locale) {
+            $locale = (string) $locale;
+
             // reset catalogue in case it's already loaded during the dump of the other locales.
             if (isset($this->catalogues[$locale])) {
                 unset($this->catalogues[$locale]);

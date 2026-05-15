@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormConfigBuilder;
 
@@ -65,17 +67,14 @@ class FormConfigTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getHtml4Ids
-     */
-    public function testNameAcceptsOnlyNamesValidAsIdsInHtml4($name, $expectedException = null)
+    #[DataProvider('getHtml4Ids')]    public function testNameAcceptsOnlyNamesValidAsIdsInHtml4($name, $expectedException = null)
     {
         $dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')->getMock();
 
         if (null !== $expectedException && method_exists($this, 'expectException')) {
             $this->expectException($expectedException);
         } elseif (null !== $expectedException) {
-            $this->setExpectedException($expectedException);
+            $this->expectException($expectedException);
         }
 
         $formConfigBuilder = new FormConfigBuilder($name, null, $dispatcher);

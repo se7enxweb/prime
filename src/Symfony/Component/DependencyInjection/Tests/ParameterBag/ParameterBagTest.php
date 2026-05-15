@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\DependencyInjection\Tests\ParameterBag;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Exception\ParameterCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
@@ -225,10 +227,7 @@ class ParameterBagTest extends TestCase
         $this->assertEquals(array('bar' => array('ding' => 'I\'m a bar %%foo %%bar', 'zero' => null)), $bag->get('foo'), '->escapeValue() escapes % by doubling it');
     }
 
-    /**
-     * @dataProvider stringsWithSpacesProvider
-     */
-    public function testResolveStringWithSpacesReturnsString($expected, $test, $description)
+    #[DataProvider('stringsWithSpacesProvider')]    public function testResolveStringWithSpacesReturnsString($expected, $test, $description)
     {
         $bag = new ParameterBag(array('foo' => 'bar'));
 

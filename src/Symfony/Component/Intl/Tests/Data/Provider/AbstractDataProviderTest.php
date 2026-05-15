@@ -673,20 +673,20 @@ abstract class AbstractDataProviderTest extends TestCase
         Locale::setDefaultFallback('en');
     }
 
-    public function provideLocales()
+    public static function provideLocales()
     {
         return array_map(
             function ($locale) { return array($locale); },
-            $this->getLocales()
+            self::getLocales()
         );
     }
 
-    public function provideLocaleAliases()
+    public static function provideLocaleAliases()
     {
         return array_map(
             function ($alias, $ofLocale) { return array($alias, $ofLocale); },
-            array_keys($this->getLocaleAliases()),
-            $this->getLocaleAliases()
+            array_keys(self::getLocaleAliases()),
+            self::getLocaleAliases()
         );
     }
 
@@ -698,12 +698,12 @@ abstract class AbstractDataProviderTest extends TestCase
         );
     }
 
-    protected function getLocales()
+    protected static function getLocales()
     {
         return self::$locales;
     }
 
-    protected function getLocaleAliases()
+    protected static function getLocaleAliases()
     {
         return self::$localeAliases;
     }
@@ -726,7 +726,7 @@ abstract class AbstractDataProviderTest extends TestCase
     protected function createEntryReader()
     {
         $entryReader = new BundleEntryReader($this->createBundleReader());
-        $entryReader->setLocaleAliases($this->getLocaleAliases());
+        $entryReader->setLocaleAliases(self::getLocaleAliases());
 
         return $entryReader;
     }

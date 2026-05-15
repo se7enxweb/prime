@@ -21,8 +21,14 @@ class JsonResponseTest extends TestCase
         parent::setUp();
 
         if (!\defined('HHVM_VERSION')) {
-            $this->iniSet('serialize_precision', 14);
+            ini_set('serialize_precision', 14);
         }
+    }
+
+    protected function tearDown(): void
+    {
+        ini_restore('serialize_precision');
+        parent::tearDown();
     }
 
     public function testConstructorEmptyCreatesJsonObject()

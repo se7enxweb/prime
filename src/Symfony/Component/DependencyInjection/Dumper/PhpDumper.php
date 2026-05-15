@@ -293,7 +293,7 @@ class PhpDumper extends Dumper
         $inlinedDefinitions = $this->getInlinedDefinitions($definition);
 
         foreach ($inlinedDefinitions as $definition) {
-            if (false === $nbOccurrences->contains($definition)) {
+            if (false === $nbOccurrences->offsetExists($definition)) {
                 $nbOccurrences->offsetSet($definition, 1);
             } else {
                 $i = $nbOccurrences->offsetGet($definition);
@@ -302,7 +302,7 @@ class PhpDumper extends Dumper
         }
 
         foreach ($inlinedDefinitions as $sDefinition) {
-            if ($processed->contains($sDefinition)) {
+            if ($processed->offsetExists($sDefinition)) {
                 continue;
             }
             $processed->offsetSet($sDefinition);
@@ -475,7 +475,7 @@ class PhpDumper extends Dumper
         $code = '';
         $processed = new \SplObjectStorage();
         foreach ($this->getInlinedDefinitions($definition) as $iDefinition) {
-            if ($processed->contains($iDefinition)) {
+            if ($processed->offsetExists($iDefinition)) {
                 continue;
             }
             $processed->offsetSet($iDefinition);
@@ -519,7 +519,7 @@ class PhpDumper extends Dumper
 
         if (\is_array($callable)) {
             if ($callable[0] instanceof Reference
-                || ($callable[0] instanceof Definition && $this->definitionVariables->contains($callable[0]))) {
+                || ($callable[0] instanceof Definition && $this->definitionVariables->offsetExists($callable[0]))) {
                 return sprintf("        %s->%s(\$%s);\n", $this->dumpValue($callable[0]), $callable[1], $variableName);
             }
 
@@ -756,7 +756,7 @@ EOF;
                 }
 
                 if ($callable[0] instanceof Reference
-                    || ($callable[0] instanceof Definition && $this->definitionVariables->contains($callable[0]))) {
+                    || ($callable[0] instanceof Definition && $this->definitionVariables->offsetExists($callable[0]))) {
                     return sprintf("        $return{$instantiation}%s->%s(%s);\n", $this->dumpValue($callable[0]), $callable[1], $arguments ? implode(', ', $arguments) : '');
                 }
 
@@ -1187,7 +1187,7 @@ EOF;
      */
     private function getInlinedDefinitions(Definition $definition)
     {
-        if (false === $this->inlinedDefinitions->contains($definition)) {
+        if (false === $this->inlinedDefinitions->offsetExists($definition)) {
             $definitions = array_merge(
                 $this->getDefinitionsFromArguments($definition->getArguments()),
                 $this->getDefinitionsFromArguments($definition->getMethodCalls()),
@@ -1293,7 +1293,7 @@ EOF;
 
             return sprintf('array(%s)', implode(', ', $code));
         } elseif ($value instanceof Definition) {
-            if (null !== $this->definitionVariables && $this->definitionVariables->contains($value)) {
+            if (null !== $this->definitionVariables && $this->definitionVariables->offsetExists($value)) {
                 return $this->dumpValue($this->definitionVariables->offsetGet($value), $interpolate);
             }
             if ($value->getMethodCalls()) {

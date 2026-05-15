@@ -27,14 +27,14 @@ class HttpKernelExtensionTest extends TestCase
     {
         $this->expectException(\Twig\Error\RuntimeError::class);
 
-        $renderer = $this->getFragmentHandler($this->throwException(new \Exception('foo')));
+        $renderer = $this->getFragmentHandler(fn() => throw new \Exception('foo'));
 
         $this->renderTemplate($renderer);
     }
 
     public function testRenderFragment()
     {
-        $renderer = $this->getFragmentHandler($this->returnValue(new Response('html')));
+$renderer = $this->getFragmentHandler(fn() => new Response('html'));
 
         $response = $this->renderTemplate($renderer);
 
@@ -53,33 +53,34 @@ class HttpKernelExtensionTest extends TestCase
             $this->expectException('InvalidArgumentException');
             $this->expectExceptionMessage('The "inline" renderer does not exist.');
         } else {
-            $this->setExpectedException('InvalidArgumentException', 'The "inline" renderer does not exist.');
+            $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('The "inline" renderer does not exist.');
         }
 
         $renderer->render('/foo');
     }
 
-    protected function getFragmentHandler($return)
+    protected function getFragmentHandler(callable $callback)
     {
         $strategy = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Fragment\\FragmentRendererInterface')->getMock();
-        $strategy->expects($this->once())->method('getName')->will($this->returnValue('inline'));
-        $strategy->expects($this->once())->method('render')->will($return);
+        $strategy->expects($this->once())->method('getName')->willReturn('inline');
+        $strategy->expects($this->once())->method('render')->willReturnCallback($callback);
 
         $context = $this->getMockBuilder('Symfony\\Component\\HttpFoundation\\RequestStack')
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        $context->expects($this->any())->method('getCurrentRequest')->will($this->returnValue(Request::create('/')));
+$context->expects($this->any())->method('getCurrentRequest')->willReturn(Request::create('/'));
 
         return new FragmentHandler($context, array($strategy), false);
     }
 
     protected function renderTemplate(FragmentHandler $renderer, $template = '{{ render("foo") }}')
     {
-        $loader = new ArrayLoader(array('index' => $template));
-        $twig = new Environment($loader, array('debug' => true, 'cache' => false));
-        $twig->addExtension(new HttpKernelExtension($renderer));
+$loader = new ArrayLoader(array('index' => $template));
+$twig = new Environment($loader, array('debug' => true, 'cache' => false));
+$twig->addExtension(new HttpKernelExtension($renderer));
 
         return $twig->render('index');
     }

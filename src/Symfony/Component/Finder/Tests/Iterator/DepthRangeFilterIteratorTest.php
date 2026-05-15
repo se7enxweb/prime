@@ -11,14 +11,13 @@
 
 namespace Symfony\Component\Finder\Tests\Iterator;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Finder\Iterator\DepthRangeFilterIterator;
 
 class DepthRangeFilterIteratorTest extends RealIteratorTestCase
 {
-    /**
-     * @dataProvider getAcceptData
-     */
-    public function testAccept($minDepth, $maxDepth, $expected)
+    #[DataProvider('getAcceptData')]    public function testAccept($minDepth, $maxDepth, $expected)
     {
         $inner = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->toAbsolute(), \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
 
@@ -73,11 +72,11 @@ class DepthRangeFilterIteratorTest extends RealIteratorTestCase
         );
 
         return array(
-            array(0, 0, $this->toAbsolute($lessThan1)),
-            array(0, 1, $this->toAbsolute($lessThanOrEqualTo1)),
+            array(0, 0, self::toAbsolute($lessThan1)),
+            array(0, 1, self::toAbsolute($lessThanOrEqualTo1)),
             array(2, PHP_INT_MAX, array()),
-            array(1, PHP_INT_MAX, $this->toAbsolute($graterThanOrEqualTo1)),
-            array(1, 1, $this->toAbsolute($equalTo1)),
+            array(1, PHP_INT_MAX, self::toAbsolute($graterThanOrEqualTo1)),
+            array(1, 1, self::toAbsolute($equalTo1)),
         );
     }
 }

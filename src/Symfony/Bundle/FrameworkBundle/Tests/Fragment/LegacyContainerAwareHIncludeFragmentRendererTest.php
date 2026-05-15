@@ -11,12 +11,14 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Fragment;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Fragment\ContainerAwareHIncludeFragmentRenderer;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyContainerAwareHIncludeFragmentRendererTest extends TestCase
 {
@@ -25,9 +27,10 @@ class LegacyContainerAwareHIncludeFragmentRendererTest extends TestCase
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
         $container->expects($this->once())
             ->method('get')
-            ->will($this->returnValue($this->getMockBuilder('Twig\Environment')->disableOriginalConstructor()->getMock()))
+            ->willReturn($this->getMockBuilder('Twig\Environment')->disableOriginalConstructor()->getMock())
+
         ;
         $renderer = new ContainerAwareHIncludeFragmentRenderer($container);
-        $renderer->render('/', Request::create('/'));
+$renderer->render('/', Request::create('/'));
     }
 }

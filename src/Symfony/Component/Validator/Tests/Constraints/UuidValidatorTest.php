@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\Constraints\Uuid;
 use Symfony\Component\Validator\Constraints\UuidValidator;
 use Symfony\Component\Validator\Validation;
@@ -50,7 +52,7 @@ class UuidValidatorTest extends AbstractConstraintValidatorTest
     {
         $this->expectException(\Symfony\Component\Validator\Exception\UnexpectedTypeException::class);
 
-        $constraint = $this->getMockForAbstractClass('Symfony\\Component\\Validator\\Constraint');
+        $constraint = $this->createMock('Symfony\\Component\\Validator\\Constraint');
 
         $this->validator->validate('216fff40-98d9-11e3-a5e2-0800200c9a66', $constraint);
     }
@@ -64,10 +66,7 @@ class UuidValidatorTest extends AbstractConstraintValidatorTest
         $this->validator->validate(new \stdClass(), new Uuid());
     }
 
-    /**
-     * @dataProvider getValidStrictUuids
-     */
-    public function testValidStrictUuids($uuid, $versions = null)
+    #[DataProvider('getValidStrictUuids')]    public function testValidStrictUuids($uuid, $versions = null)
     {
         $constraint = new Uuid();
 
@@ -92,10 +91,7 @@ class UuidValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidStrictUuids
-     */
-    public function testInvalidStrictUuids($uuid, $code, $versions = null)
+    #[DataProvider('getInvalidStrictUuids')]    public function testInvalidStrictUuids($uuid, $code, $versions = null)
     {
         $constraint = new Uuid(array(
             'message' => 'testMessage',
@@ -159,10 +155,7 @@ class UuidValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getValidNonStrictUuids
-     */
-    public function testValidNonStrictUuids($uuid)
+    #[DataProvider('getValidNonStrictUuids')]    public function testValidNonStrictUuids($uuid)
     {
         $constraint = new Uuid(array(
             'strict' => false,
@@ -190,10 +183,7 @@ class UuidValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidNonStrictUuids
-     */
-    public function testInvalidNonStrictUuids($uuid, $code)
+    #[DataProvider('getInvalidNonStrictUuids')]    public function testInvalidNonStrictUuids($uuid, $code)
     {
         $constraint = new Uuid(array(
             'strict' => false,

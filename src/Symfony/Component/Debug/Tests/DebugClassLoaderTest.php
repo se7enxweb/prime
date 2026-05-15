@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Debug\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Debug\DebugClassLoader;
 use Symfony\Component\Debug\ErrorHandler;
@@ -26,7 +28,7 @@ class DebugClassLoaderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->errorReporting = error_reporting(E_ALL | E_STRICT);
+        $this->errorReporting = error_reporting(E_ALL | 0);
         $this->loader = new ClassLoader();
         spl_autoload_register(array($this->loader, 'loadClass'), true, true);
         DebugClassLoader::enable();
@@ -48,7 +50,6 @@ class DebugClassLoaderTest extends TestCase
             if (is_array($function) && $function[0] instanceof DebugClassLoader) {
                 $reflClass = new \ReflectionClass($function[0]);
                 $reflProp = $reflClass->getProperty('classLoader');
-                $reflProp->setAccessible(true);
 
                 $this->assertNotInstanceOf('Symfony\Component\Debug\DebugClassLoader', $reflProp->getValue($function[0]));
 
@@ -117,13 +118,13 @@ class DebugClassLoaderTest extends TestCase
         ErrorHandler::register();
 
         try {
-            // Trigger autoloading + E_STRICT at compile time
+            // Trigger autoloading + 0 at compile time
             // which in turn triggers $errorHandler->handle()
             // that again triggers autoloading for ContextErrorException.
             // Error stacking works around the bug above and everything is fine.
 
             eval('
-                namespace '.__NAMESPACE__.';
+                namespace '.__NAMESPACE__.');
                 class ChildTestingStacking extends TestingStacking { function foo($bar) {} }
             ');
             $this->fail('ContextErrorException expected');
@@ -134,7 +135,7 @@ class DebugClassLoaderTest extends TestCase
             $this->assertStringStartsWith(__FILE__, $exception->getFile());
             if (\PHP_VERSION_ID < 70000) {
                 $this->assertMatchesRegularExpression('/^Runtime Notice: Declaration/', $exception->getMessage());
-                $this->assertEquals(E_STRICT, $exception->getSeverity());
+                $this->assertEquals(0, $exception->getSeverity());
             } else {
                 $this->assertMatchesRegularExpression('/^Warning: Declaration/', $exception->getMessage());
                 $this->assertEquals(E_WARNING, $exception->getSeverity());
@@ -196,10 +197,7 @@ class DebugClassLoaderTest extends TestCase
         $this->assertTrue(class_exists(__NAMESPACE__.'\Fixtures\ClassAlias', true));
     }
 
-    /**
-     * @dataProvider provideDeprecatedSuper
-     */
-    public function testDeprecatedSuper($class, $super, $type)
+    #[DataProvider('provideDeprecatedSuper')]    public function testDeprecatedSuper($class, $super, $type)
     {
         set_error_handler(function () { return false; });
         $e = error_reporting(0);

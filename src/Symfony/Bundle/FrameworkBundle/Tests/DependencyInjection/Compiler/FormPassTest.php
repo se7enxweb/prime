@@ -11,6 +11,9 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\DependencyInjection\Compiler;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\FormPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -68,11 +71,7 @@ class FormPassTest extends TestCase
             'my.type2' => 'my.type2',
         ), $extDefinition->getArgument(1));
     }
-
-    /**
-     * @group legacy
-     */
-    public function testUseCustomAliasIfSet()
+    #[Group('legacy')]    public function testUseCustomAliasIfSet()
     {
         $container = new ContainerBuilder();
         $container->addCompilerPass(new FormPass());
@@ -140,11 +139,7 @@ class FormPassTest extends TestCase
             ),
         ), $extDefinition->getArgument(2));
     }
-
-    /**
-     * @group legacy
-     */
-    public function testAliasOptionForTaggedTypeExtensions()
+    #[Group('legacy')]    public function testAliasOptionForTaggedTypeExtensions()
     {
         $container = new ContainerBuilder();
         $container->addCompilerPass(new FormPass());
@@ -207,11 +202,7 @@ class FormPassTest extends TestCase
             'my.guesser2',
         ), $extDefinition->getArgument(3));
     }
-
-    /**
-     * @dataProvider privateTaggedServicesProvider
-     */
-    public function testPrivateTaggedServices($id, $tagName, $expectedExceptionMessage)
+    #[DataProvider('privateTaggedServicesProvider')]    public function testPrivateTaggedServices($id, $tagName, $expectedExceptionMessage)
     {
         $container = new ContainerBuilder();
         $container->addCompilerPass(new FormPass());
@@ -231,7 +222,8 @@ class FormPassTest extends TestCase
             $this->expectException('InvalidArgumentException');
             $this->expectExceptionMessage($expectedExceptionMessage);
         } else {
-            $this->setExpectedException('InvalidArgumentException', $expectedExceptionMessage);
+            $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage($expectedExceptionMessage);
         }
 
         $container->compile();

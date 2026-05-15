@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\DataTransformer;
 
+
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
@@ -34,7 +38,7 @@ class DateTimeToStringTransformerTest extends TestCase
 
             // different day representations
             array('Y-m-j', '2010-02-3', '2010-02-03 00:00:00 UTC'),
-            array('z', '33', '1970-02-03 00:00:00 UTC'),
+            // 'z' (day of year) without year context no longer parses in PHP 8.x
 
             // not bijective
             // this will not work as PHP will use actual date to replace missing info
@@ -65,10 +69,7 @@ class DateTimeToStringTransformerTest extends TestCase
         return $data;
     }
 
-    /**
-     * @dataProvider dataProvider
-     */
-    public function testTransform($format, $output, $input)
+    #[DataProvider('dataProvider')]    public function testTransform($format, $output, $input)
     {
         $transformer = new DateTimeToStringTransformer('UTC', 'UTC', $format);
 
@@ -95,8 +96,8 @@ class DateTimeToStringTransformerTest extends TestCase
         $this->assertEquals($output, $transformer->transform($input));
     }
 
+    #[RequiresPhp('5.5')]
     /**
-     * @requires PHP 5.5
      */
     public function testTransformDateTimeImmutable()
     {
@@ -113,15 +114,12 @@ class DateTimeToStringTransformerTest extends TestCase
     {
         $transformer = new DateTimeToStringTransformer();
 
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('Symfony\Component\Form\Exception\TransformationFailedException');
+        $this->expectException('Symfony\Component\Form\Exception\TransformationFailedException');
 
         $transformer->transform('1234');
     }
 
-    /**
-     * @dataProvider dataProvider
-     */
-    public function testReverseTransform($format, $input, $output)
+    #[DataProvider('dataProvider')]    public function testReverseTransform($format, $input, $output)
     {
         $reverseTransformer = new DateTimeToStringTransformer('UTC', 'UTC', $format);
 
@@ -152,7 +150,7 @@ class DateTimeToStringTransformerTest extends TestCase
     {
         $reverseTransformer = new DateTimeToStringTransformer();
 
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('Symfony\Component\Form\Exception\TransformationFailedException');
+        $this->expectException('Symfony\Component\Form\Exception\TransformationFailedException');
 
         $reverseTransformer->reverseTransform(1234);
     }
@@ -161,7 +159,7 @@ class DateTimeToStringTransformerTest extends TestCase
     {
         $reverseTransformer = new DateTimeToStringTransformer();
 
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('Symfony\Component\Form\Exception\TransformationFailedException');
+        $this->expectException('Symfony\Component\Form\Exception\TransformationFailedException');
 
         $reverseTransformer->reverseTransform('2010-2010-2010');
     }
@@ -170,7 +168,7 @@ class DateTimeToStringTransformerTest extends TestCase
     {
         $reverseTransformer = new DateTimeToStringTransformer();
 
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('Symfony\Component\Form\Exception\TransformationFailedException');
+        $this->expectException('Symfony\Component\Form\Exception\TransformationFailedException');
 
         $reverseTransformer->reverseTransform('2010-04-31');
     }

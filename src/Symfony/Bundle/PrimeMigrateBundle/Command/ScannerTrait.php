@@ -781,470 +781,1276 @@ trait ScannerTrait
 
         return ['fixed' => $fixed ?? $content, 'count' => $count];
     }
-
-    // ── PHPUnit 11 compatibility scanner ──────────────────────────────────────
+    // ── MockBuilder::setMethods() → onlyMethods() scanner ───────────────────
 
     /**
-     * Scans PHP test source for data-provider methods that are not declared static.
+     * Scans for deprecated MockBuilder::setMethods() calls.
+     * PHPUnit 10+ removed setMethods(); the replacement is onlyMethods().
      *
-     * PHPUnit 11 requires every method referenced by @dataProvider or
-     * #[DataProvider(…)] to be declared `public static`.
-     * Non-static providers still execute in PHPUnit 10 but produce a deprecation;
-     * in PHPUnit 11 they are treated as errors.
-     *
-     * Detects:
-     *   @dataProvider methodName        ← docblock annotation (any indentation)
-     *   #[DataProvider('methodName')]   ← PHP 8 attribute
-     *
-     * For each referenced provider name it then searches the same file content for
-     * a non-static `public function methodName(` declaration.
-     *
-     * Returns [ 'line' => int, 'snippet' => string, 'method' => string ]
+     * Returns [ 'line' => int, 'snippet' => string ]
      */
-    public static function scanPhpunit(string $content): array
+    public static function scanSetMethods(string $content): array
     {
-        $issues = [];
-        $lines  = explode("\n", $content);
-
-        // ── Collect all data-provider method names referenced in this file ─────
-        $providers = [];
-        foreach ($lines as $line) {
-            // @dataProvider methodName  (docblock)
-            if (preg_match('/@dataProvider\s+(\w+)/', $line, $m)) {
-                $providers[$m[1]] = true;
-            }
-            // #[DataProvider('methodName')]  (PHP 8 attribute)
-            if (preg_match('/#\[(?:\w+\\\\)*DataProvider\s*\(\s*[\'"](\w+)[\'"]\s*\)\s*]/', $line, $m)) {
-                $providers[$m[1]] = true;
-            }
-        }
-
-        if (empty($providers)) {
+        // Only match ->setMethods( if the file also contains getMockBuilder or createMock
+        // to avoid false positives in production code (e.g. Route::setMethods())
+        if (!str_contains($content, 'getMockBuilder') && !str_contains($content, 'createMock')) {
             return [];
         }
-
-        // ── Find non-static declarations of those provider methods ────────────
-        foreach ($lines as $idx => $line) {
-            // Match `public function name(` without `static` on the same line.
-            // The negative lookahead ensures `static` is not already present
-            // somewhere on the line before the `function` keyword.
-            if (preg_match('/\bpublic\b(?!\s+static)\s+function\s+(\w+)\s*\(/i', $line, $m)) {
-                $methodName = $m[1];
-                if (isset($providers[$methodName])) {
-                    $issues[] = [
-                        'line'    => $idx + 1,
-                        'snippet' => rtrim($line),
-                        'method'  => $methodName,
-                    ];
-                }
+        $issues = [];
+        foreach (explode("\n", $content) as $idx => $line) {
+            if (str_contains($line, '->setMethods(')) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
             }
         }
-
         return $issues;
     }
 
     /**
-     * Applies the PHPUnit data-provider fix to a string of PHP source.
-     *
-     * Inserts `static` into every `public function methodName(` declaration
-     * where methodName is referenced by @dataProvider or #[DataProvider(…)].
-     *
-     * This method is PURE — it returns the fixed string, never writes a file.
+     * Replaces ->onlyMethods( with ->onlyMethods( throughout the file.
+     * Special case:  is removed (null means "mock all methods",
+     * which is now the default behaviour with getMockBuilder()).
      *
      * @return array{fixed: string, count: int}
      */
-    public static function applyPhpunitFix(string $content): array
+    public static function applySetMethodsFix(string $content): array
     {
-        $lines = explode("\n", $content);
-
-        // Collect provider names (same logic as scanPhpunit)
-        $providers = [];
-        foreach ($lines as $line) {
-            if (preg_match('/@dataProvider\s+(\w+)/', $line, $m)) {
-                $providers[$m[1]] = true;
-            }
-            if (preg_match('/#\[(?:\w+\\\\)*DataProvider\s*\(\s*[\'"](\w+)[\'"]\s*\)\s*]/', $line, $m)) {
-                $providers[$m[1]] = true;
-            }
-        }
-
-        if (empty($providers)) {
+        // Only fix files that have MockBuilder/createMock context to avoid
+        // false positives in production code (e.g. Route::setMethods())
+        if (!str_contains($content, 'getMockBuilder') && !str_contains($content, 'createMock')) {
             return ['fixed' => $content, 'count' => 0];
         }
 
-        $count = 0;
+        //  → remove the entire chained call (line-level)
+        $fixed = preg_replace('/\s*->setMethods\(\s*null\s*\)/', '', $content, -1, $countNull);
 
-        // Replace `public function name(` → `public static function name(`
-        // only for methods whose name is in the providers set.
-        $fixed = preg_replace_callback(
-            '/\b(public)\b((?!\s+static)\s+)function\s+(\w+)\s*\(/i',
-            static function (array $m) use ($providers, &$count): string {
-                $methodName = $m[3];
-                if (isset($providers[$methodName])) {
-                    ++$count;
-                    // Preserve original whitespace between public and function.
-                    return $m[1] . $m[2] . 'static function ' . $methodName . '(';
+        // ->onlyMethods([...]) or ->onlyMethods(['foo','bar']) → ->onlyMethods(...)
+        $fixed = preg_replace('/->setMethods\(/', '->onlyMethods(', $fixed, -1, $countRename);
+
+        $count = (int)$countNull + (int)$countRename;
+        return ['fixed' => $fixed ?? $content, 'count' => $count];
+    }
+
+    // ── assertFileDoesNotExist() → assertFileDoesNotExist() scanner ────────────
+
+    /**
+     * Scans for removed PHPUnit assertFileDoesNotExist() calls (renamed in PHPUnit 9.1).
+     *
+     * Returns [ 'line' => int, 'snippet' => string ]
+     */
+    public static function scanAssertFileNotExists(string $content): array
+    {
+        $issues = [];
+        foreach (explode("\n", $content) as $idx => $line) {
+            if (preg_match('/\bassertFileNotExists\s*\(/', $line)) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
+            }
+        }
+        return $issues;
+    }
+
+    /**
+     * Replaces assertFileDoesNotExist( → assertFileDoesNotExist(.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyAssertFileNotExistsFix(string $content): array
+    {
+        $fixed = preg_replace('/\bassertFileNotExists\s*\(/', 'assertFileDoesNotExist(', $content, -1, $count);
+        return ['fixed' => $fixed ?? $content, 'count' => (int)$count];
+    }
+
+    // ── PHPUnit\Util\XML → native DOM scanner ────────────────────────────────
+
+    /**
+     * Scans for removed PHPUnit\Util\XML class usages (removed in PHPUnit 10).
+     * The loadfile() call is replaceable with DOMDocument::load() + validate.
+     *
+     * Returns [ 'line' => int, 'snippet' => string ]
+     */
+    public static function scanUtilXml(string $content): array
+    {
+        $issues = [];
+        foreach (explode("\n", $content) as $idx => $line) {
+            if (preg_match('/PHPUnit(?:_Util_XML|\\\\Util\\\\XML)/', $line)) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
+            }
+        }
+        return $issues;
+    }
+
+    /**
+     * Replaces PHPUnit\Util\XML::loadfile($file, false, false, true) with
+     * a DOMDocument::load() equivalent that validates against XML schema.
+     * Also removes the surrounding PHPUnit_Util_XML class_exists guard block.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyUtilXmlFix(string $content): array
+    {
+        // Replace the if/else guard that checks PHPUnit_Util_XML + calls one or the other
+        // Pattern:
+        //   if (class_exists('PHPUnit_Util_XML')) {
+        //       \PHPUnit_Util_XML::loadfile($filePath, false, false, true);
+        //   } else {
+        //       \PHPUnit\Util\XML::loadfile($filePath, false, false, true);
+        //   }
+        $replacement = <<<'PHP'
+$doc = new \DOMDocument();
+            $this->assertTrue($doc->load($filePath), sprintf('"%s" is not a valid XML file.', $filePath));
+PHP;
+
+        $fixed = preg_replace(
+            '/if\s*\(class_exists\([\'"]PHPUnit_Util_XML[\'"]\)\)\s*\{[^}]*\}\s*else\s*\{[^}]*\}/',
+            rtrim($replacement),
+            $content,
+            -1,
+            $count
+        );
+
+        if ((int)$count === 0) {
+            // Fallback: just replace bare calls to either class
+            $fixed = preg_replace(
+                '/\\\\?PHPUnit(?:_Util_XML|\\\\Util\\\\XML)::loadfile\([^)]+\);/',
+                '$doc = new \\DOMDocument(); $doc->load($filePath);',
+                $content,
+                -1,
+                $count
+            );
+        }
+
+        return ['fixed' => $fixed ?? $content, 'count' => (int)$count];
+    }
+
+    // ── SplObjectStorage::contains() → offsetExists() scanner ───────────────
+
+    /**
+     * Scans for SplObjectStorage::contains() which is deprecated since PHP 8.5.
+     * The replacement is offsetExists().
+     *
+     * Returns [ 'line' => int, 'snippet' => string ]
+     */
+    public static function scanSplContains(string $content): array
+    {
+        $issues = [];
+        // Only scan files that actually use SplObjectStorage
+        if (!str_contains($content, 'SplObjectStorage')) {
+            return $issues;
+        }
+        foreach (explode("\n", $content) as $idx => $line) {
+            if (preg_match('/\$\w+->contains\(/', $line)) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
+            }
+        }
+        return $issues;
+    }
+
+    /**
+     * Replaces $foo->contains($x) with $foo->offsetExists($x) ONLY in files
+     * that declare or use SplObjectStorage.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applySplContainsFix(string $content): array
+    {
+        if (!preg_match('/SplObjectStorage/', $content)) {
+            return ['fixed' => $content, 'count' => 0];
+        }
+        $fixed = preg_replace('/(\$\w+)->contains\(/', '$1->offsetExists(', $content, -1, $count);
+        return ['fixed' => $fixed ?? $content, 'count' => (int)$count];
+    }
+
+    // ── Implicit nullable parameter scanner ──────────────────────────────────
+
+    /**
+     * Scans for implicitly nullable parameters: `Type $param = null` where Type
+     * is not already prefixed with `?`. PHP 8.4 deprecated this pattern.
+     *
+     * Returns [ 'line' => int, 'snippet' => string, 'param' => string ]
+     */
+    public static function scanImplicitNullable(string $content): array
+    {
+        $issues = [];
+        foreach (explode("\n", $content) as $idx => $line) {
+            // Match: SomeType $varName = null  (not preceded by ? or \)
+            if (preg_match_all(
+                '/(?<![?\\\\])\b([A-Z][A-Za-z0-9_\\\\]*|\bstring\b|\bint\b|\bfloat\b|\bbool\b|\barray\b|\bcallable\b|\biterable\b|\bobject\b)\s+(\$\w+)\s*=\s*null(?!\w)/',
+                $line,
+                $matches,
+                PREG_SET_ORDER
+            )) {
+                foreach ($matches as $m) {
+                    $issues[] = [
+                        'line'    => $idx + 1,
+                        'snippet' => rtrim($line),
+                        'param'   => $m[2],
+                    ];
                 }
+            }
+        }
+        return $issues;
+    }
+
+    /**
+     * Adds `?` before non-nullable typed parameters that default to null.
+     * Only modifies function/method signature lines.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyImplicitNullableFix(string $content): array
+    {
+        // Match function/method signature lines containing Type $var = null
+        $fixed = preg_replace_callback(
+            '/^([ \t]*(?:(?:abstract|final|static|public|protected|private)\s+)*function\s+\w+\s*\()(.*)(\)(?:\s*:\s*\S+)?\s*[{;]?\s*)$/m',
+            static function (array $m): string {
+                // Replace unqualified nullable params in the params list
+                // (?<![?\]) ensures we don't re-add ? before already-nullable or backslash-prefixed types
+                $params = preg_replace(
+                    '/(?<![?\\\\])(\b(?:[A-Z][A-Za-z0-9_\\\\]*|string|int|float|bool|array|callable|iterable|object)\b)\s+(\$\w+)(\s*=\s*null)(?=\s*[,)])/',
+                    '?$1 $2$3',
+                    $m[2],
+                    -1,
+                    $count
+                );
+                return $m[1] . $params . $m[3];
+            },
+            $content,
+            -1,
+            $count
+        );
+        // $count from preg_replace_callback counts outer matches, not inner; use string diff
+        $innerCount = substr_count($fixed ?? $content, '?') - substr_count($content, '?');
+        return ['fixed' => $fixed ?? $content, 'count' => max(0, $innerCount)];
+    }
+
+    // ── assertEquals() null message deprecation scanner ─────────────────────
+
+    /**
+     * Scans for assertEquals/assertSame/etc calls passing null as the $message arg.
+     * PHP 8+ requires $message to be string, passing null triggers TypeError.
+     *
+     * Returns [ 'line' => int, 'snippet' => string ]
+     */
+    public static function scanAssertNullMessage(string $content): array
+    {
+        $issues = [];
+        foreach (explode("\n", $content) as $idx => $line) {
+            // Detect: assert* call whose line ends with , null) or , null);
+            // Use line-end pattern to avoid [^)]+ failing on nested parens.
+            if (preg_match('/\$(?:this->|self::)assert\w+/', $line)
+                && preg_match('/,\s*null\s*\)\s*;?\s*$/', $line)
+            ) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
+            }
+        }
+        return $issues;
+    }
+
+    /**
+     * Replaces assertXxx(..., null) → assertXxx(..., '') for the message argument.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyAssertNullMessageFix(string $content): array
+    {
+        $lines = explode("\n", $content);
+        $count = 0;
+        foreach ($lines as &$line) {
+            if (!preg_match('/\$(?:this->|self::)assert\w+/', $line)) {
+                continue;
+            }
+            // Pattern 1: ..., null) at end of line
+            if (preg_match('/,\s*null\s*\)\s*;?\s*$/', $line)) {
+                $new = preg_replace('/,\s*null(\s*\)\s*;?\s*)$/', ", ''$1", $line);
+                if ($new !== $line) { $line = $new; ++$count; continue; }
+            }
+            // Pattern 2: ..., null, somethingElse) — null as non-last message arg
+            if (preg_match('/,\s*null\s*,/', $line)) {
+                $new = preg_replace('/,\s*null\s*,/', ", '',", $line);
+                if ($new !== $line) { $line = $new; ++$count; }
+            }
+        }
+        return ['fixed' => implode("\n", $lines), 'count' => $count];
+    }
+
+    // ── at(N) → any() ────────────────────────────────────────────────────────
+
+    /**
+     * Scans for $this->at(N) invocation matchers removed in PHPUnit 10.
+     * Replacement: $this->any() (or a more specific willReturn sequence if needed).
+     */
+    public static function scanAtMethod(string $content): array
+    {
+        $issues = [];
+        foreach (explode("\n", $content) as $idx => $line) {
+            if (preg_match('/\$this->at\s*\(/', $line)) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
+            }
+        }
+        return $issues;
+    }
+
+    /**
+     * Replaces $this->at(N) with $this->any().
+     * Note: this loses call-order verification – restructure tests for stricter ordering.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyAtMethodFix(string $content): array
+    {
+        $fixed = preg_replace('/\$this->at\s*\([^)]*\)/', '$this->any()', $content, -1, $count);
+        return ['fixed' => $fixed ?? $content, 'count' => (int)$count];
+    }
+
+    // ── setAccessible(true) removal ──────────────────────────────────────────
+
+    /**
+     * Scans for ->setAccessible(true) which is a no-op since PHP 8.1 and
+     * deprecated since PHP 8.5. Removing it is safe.
+     */
+    public static function scanSetAccessible(string $content): array
+    {
+        $issues = [];
+        foreach (explode("\n", $content) as $idx => $line) {
+            if (preg_match('/->setAccessible\s*\(\s*true\s*\)/', $line)) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
+            }
+        }
+        return $issues;
+    }
+
+    /**
+     * Removes entire lines containing ->setAccessible(true).
+     * setAccessible(false) is intentionally NOT touched.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applySetAccessibleFix(string $content): array
+    {
+        $lines = explode("\n", $content);
+        $out   = [];
+        $count = 0;
+        foreach ($lines as $line) {
+            if (preg_match('/->setAccessible\s*\(\s*true\s*\)/', $line)) {
+                ++$count;
+                // Drop the line entirely
+            } else {
+                $out[] = $line;
+            }
+        }
+        return ['fixed' => implode("\n", $out), 'count' => $count];
+    }
+
+    // ── assertContains(string, string) → assertStringContainsString ──────────
+
+    /**
+     * Scans for assertContains/assertNotContains where the needle is a string
+     * literal and the haystack is NOT an array literal. PHPUnit 10 requires the
+     * haystack to be Traversable|array; use assertStringContainsString for
+     * string-in-string checks.
+     *
+     * Also detects the reverse: assertStringContainsString/assertStringNotContainsString
+     * where the haystack is a known array-returning method call (e.g. getAlternatives()).
+     */
+    public static function scanAssertContainsString(string $content): array
+    {
+        $issues = [];
+        // Known array-returning method suffixes that should use assertContains, not assertStringContainsString
+        $arrayMethods = 'getAlternatives|getNames|getCountries|getLanguages|getLocales'
+            . '|getCommands|getOptions|getArguments|getBundles|getKeys|getValues'
+            . '|getTags|getExtensions|getPlugins|getFiles|getPaths|getItems|getList'
+            . '|getResults|getErrors|getWarnings|getGroups|getRoles|getPermissions'
+            . '|getParameter|getUsages|getPrefixes|getCurrencies|getGroups|getTemplates'
+            . '|getMetadata|getClassNames|getMessages|getProperties|getMethods'
+            . '|getConstraints|getAttributes|getHierarchy|getResourcesByType'
+            . '|getResources|getNamespaces|getClasses|getDecoratedService|getBindings';
+        // Known array variable names (plural nouns typically hold arrays)
+        $arrayVarPattern = '/\$(?:countries|languages|locales|currencies|groups|resources'
+            . '|prefixes|paths|files|items|keys|values|tags|options|choices|errors'
+            . '|warnings|messages|results|classes|names|roles|bundles|extensions'
+            . '|plugins|commands|arguments|attributes|constraints|properties|methods'
+            . '|countryCodes|classCodes|usages|templates|namespaces|classNames'
+            . '|decoratedServices|bindings)\b/';
+
+        foreach (explode("\n", $content) as $idx => $line) {
+            // Case A: assertContains/assertNotContains with string literal needle and non-array haystack
+            // Exclude: explicit array literal   assertContains(x, [...]  or array(...)
+            // Exclude: known array-returning methods  ->getAlternatives() etc.
+            // Exclude: array-element access  $var['key'] or $var[$idx]
+            // Exclude: known array variable names
+            if (preg_match('/\bassert(?:Not)?Contains\s*\(\s*[\'"]/', $line)
+                && !preg_match('/\bassert(?:Not)?Contains\s*\([^,]+,\s*(?:\[|array\s*\()/', $line)
+                && !preg_match('/->(?:' . $arrayMethods . ')\s*\(/', $line)
+                && !preg_match('/\$\w+\[/', $line)
+                && !preg_match($arrayVarPattern, $line)
+            ) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line), 'case' => 'A'];
+                continue;
+            }
+            // Case B: assertStringContainsString/assertStringNotContainsString with array-returning method
+            if (preg_match('/\bassertString(?:Not)?ContainsString\s*\(/', $line)
+                && preg_match('/->(?:' . $arrayMethods . ')\s*\(/', $line)
+            ) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line), 'case' => 'B'];
+            }
+        }
+        return $issues;
+    }
+
+    /**
+     * Fixes assertContains ↔ assertStringContainsString mismatches.
+     *   Case A: assertContains('str', $nonArray)    → assertStringContainsString
+     *   Case B: assertStringContainsString($x, $arrayMethod()) → assertContains
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyAssertContainsStringFix(string $content): array
+    {
+        $arrayMethods = 'getAlternatives|getNames|getCountries|getLanguages|getLocales'
+            . '|getCommands|getOptions|getArguments|getBundles|getKeys|getValues'
+            . '|getTags|getExtensions|getPlugins|getFiles|getPaths|getItems|getList'
+            . '|getResults|getErrors|getWarnings|getGroups|getRoles|getPermissions'
+            . '|getParameter|getUsages|getPrefixes|getCurrencies|getGroups|getTemplates'
+            . '|getMetadata|getClassNames|getMessages|getProperties|getMethods'
+            . '|getConstraints|getAttributes|getHierarchy|getResourcesByType'
+            . '|getResources|getNamespaces|getClasses|getDecoratedService|getBindings';
+        $arrayVarPattern = '/\$(?:countries|languages|locales|currencies|groups|resources'
+            . '|prefixes|paths|files|items|keys|values|tags|options|choices|errors'
+            . '|warnings|messages|results|classes|names|roles|bundles|extensions'
+            . '|plugins|commands|arguments|attributes|constraints|properties|methods'
+            . '|countryCodes|classCodes|usages|templates|namespaces|classNames'
+            . '|decoratedServices|bindings)\b/';
+
+        $lines = explode("\n", $content);
+        $count = 0;
+        foreach ($lines as &$line) {
+            // Case A
+            if (preg_match('/\bassert(?:Not)?Contains\s*\(\s*[\'"]/', $line)
+                && !preg_match('/\bassert(?:Not)?Contains\s*\([^,]+,\s*(?:\[|array\s*\()/', $line)
+                && !preg_match('/->(?:' . $arrayMethods . ')\s*\(/', $line)
+                && !preg_match('/\$\w+\[/', $line)
+                && !preg_match($arrayVarPattern, $line)
+            ) {
+                $new = preg_replace('/\bassertContains\s*\(/', 'assertStringContainsString(', $line, -1, $c1);
+                $new = preg_replace('/\bassertNotContains\s*\(/', 'assertStringNotContainsString(', $new, -1, $c2);
+                if ($new !== $line) {
+                    $line = $new;
+                    $count += (int)$c1 + (int)$c2;
+                    continue;
+                }
+            }
+            // Case B
+            if (preg_match('/\bassertString(?:Not)?ContainsString\s*\(/', $line)
+                && preg_match('/->(?:' . $arrayMethods . ')\s*\(/', $line)
+            ) {
+                $new = preg_replace('/\bassertStringContainsString\s*\(/', 'assertContains(', $line, -1, $c1);
+                $new = preg_replace('/\bassertStringNotContainsString\s*\(/', 'assertNotContains(', $new, -1, $c2);
+                if ($new !== $line) {
+                    $line = $new;
+                    $count += (int)$c1 + (int)$c2;
+                }
+            }
+        }
+        return ['fixed' => implode("\n", $lines), 'count' => $count];
+    }
+
+    // ── assertAttributeSame → ReflectionProperty ──────────────────────────────
+
+    /**
+     * Scans for assertAttributeSame() removed in PHPUnit 10.
+     */
+    public static function scanAssertAttributeSame(string $content): array
+    {
+        $issues = [];
+        foreach (explode("\n", $content) as $idx => $line) {
+            if (preg_match('/\bassertAttributeSame\s*\(/', $line)) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
+            }
+        }
+        return $issues;
+    }
+
+    /**
+     * Replaces $this->assertAttributeSame($expected, 'prop', $obj) with
+     * $this->assertSame($expected, (new \ReflectionProperty($obj, 'prop'))->getValue($obj)).
+     * Only handles single-line calls with a string-literal property name.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyAssertAttributeSameFix(string $content): array
+    {
+        $fixed = preg_replace(
+            '/\$this->assertAttributeSame\(([^,]+),\s*\'([^\']+)\',\s*(\$\w+)\s*\)/',
+            '$this->assertSame($1, (new \\\\ReflectionProperty($3, \'$2\'))->getValue($3))',
+            $content,
+            -1,
+            $count
+        );
+        return ['fixed' => $fixed ?? $content, 'count' => (int)$count];
+    }
+
+    // ── assertObjectHasAttribute → property_exists ───────────────────────────
+
+    /**
+     * Scans for assertObjectHasAttribute() removed in PHPUnit 10.
+     */
+    public static function scanAssertObjectHasAttribute(string $content): array
+    {
+        $issues = [];
+        foreach (explode("\n", $content) as $idx => $line) {
+            if (preg_match('/\bassertObjectHasAttribute\s*\(/', $line)) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
+            }
+        }
+        return $issues;
+    }
+
+    /**
+     * Replaces $this->assertObjectHasAttribute('prop', $obj) with
+     * $this->assertTrue(property_exists($obj, 'prop')).
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyAssertObjectHasAttributeFix(string $content): array
+    {
+        $fixed = preg_replace(
+            '/\$this->assertObjectHasAttribute\(\s*\'([^\']+)\',\s*(\$\w+)\s*\)/',
+            '$this->assertTrue(property_exists($2, \'$1\'))',
+            $content,
+            -1,
+            $count
+        );
+        return ['fixed' => $fixed ?? $content, 'count' => (int)$count];
+    }
+
+    // ── assertInternalType → assertIsX ───────────────────────────────────────
+
+    /**
+     * Scans for assertInternalType() removed in PHPUnit 10.
+     */
+    public static function scanAssertInternalType(string $content): array
+    {
+        $issues = [];
+        foreach (explode("\n", $content) as $idx => $line) {
+            if (preg_match('/\bassertInternalType\s*\(/', $line)) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
+            }
+        }
+        return $issues;
+    }
+
+    /**
+     * Replaces assertInternalType('type', $val) with the appropriate assertIsX($val) method.
+     * Supports: array, string, int/integer, float/double, bool/boolean, object,
+     *           callable, numeric, null, resource.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyAssertInternalTypeFix(string $content): array
+    {
+        $map = [
+            'array'    => 'assertIsArray',
+            'string'   => 'assertIsString',
+            'int'      => 'assertIsInt',
+            'integer'  => 'assertIsInt',
+            'float'    => 'assertIsFloat',
+            'double'   => 'assertIsFloat',
+            'bool'     => 'assertIsBool',
+            'boolean'  => 'assertIsBool',
+            'object'   => 'assertIsObject',
+            'callable' => 'assertIsCallable',
+            'numeric'  => 'assertIsNumeric',
+            'null'     => 'assertNull',
+            'resource' => 'assertIsResource',
+        ];
+        $total = 0;
+        foreach ($map as $type => $method) {
+            $content = preg_replace(
+                '/\bassertInternalType\(\s*[\'"]' . preg_quote($type, '/') . '[\'"]\s*,\s*/',
+                $method . '(',
+                $content,
+                -1,
+                $c
+            ) ?? $content;
+            $total += (int)$c;
+        }
+        return ['fixed' => $content, 'count' => $total];
+    }
+
+    // ── getMockClass → get_class(createMock()) ───────────────────────────────
+
+    /**
+     * Scans for getMockClass() removed in PHPUnit 10.
+     */
+    public static function scanGetMockClass(string $content): array
+    {
+        $issues = [];
+        foreach (explode("\n", $content) as $idx => $line) {
+            if (preg_match('/\bgetMockClass\s*\(/', $line)) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
+            }
+        }
+        return $issues;
+    }
+
+    /**
+     * Replaces $this->getMockClass('ClassName') with get_class($this->createMock('ClassName')).
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyGetMockClassFix(string $content): array
+    {
+        // Replace $this->getMockClass('X') → get_class($this->createMock('X'))
+        $fixed = preg_replace(
+            '/\$this->getMockClass\(([^)]+)\)/',
+            'get_class($this->createMock($1))',
+            $content,
+            -1,
+            $count
+        );
+        return ['fixed' => $fixed ?? $content, 'count' => (int)$count];
+    }
+
+    // ── $this->getName() → $this->name() ─────────────────────────────────────
+
+    /**
+     * Scans for TestCase::getName() removed in PHPUnit 10 (replaced by name()).
+     */
+    public static function scanGetNameTestCase(string $content): array
+    {
+        // Only apply in PHPUnit TestCase subclasses — $this->getName() is a
+        // TestCase method; in production classes it refers to unrelated methods.
+        if (!preg_match('/\bextends\b.*\bTestCase\b|\bextends\b.*Test\b/i', $content)) {
+            return [];
+        }
+        $issues = [];
+        foreach (explode("\n", $content) as $idx => $line) {
+            if (preg_match('/\$this->getName\s*\(\s*\)/', $line)) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
+            }
+        }
+        return $issues;
+    }
+
+    /**
+     * Replaces $this->getName() with $this->name() (PHPUnit 10+ API).
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyGetNameTestCaseFix(string $content): array
+    {
+        $fixed = preg_replace('/\$this->getName\s*\(\s*\)/', '$this->name()', $content, -1, $count);
+        return ['fixed' => $fixed ?? $content, 'count' => (int)$count];
+    }
+
+    // ── static provider with $this body → remove static ──────────────────────
+
+    /**
+     * Returns the set of method names that are referenced by @dataProvider or
+     * #[DataProvider(...)] annotations *within the same file*.
+     * Only these methods are safe to de-staticize — we must never touch a method
+     * that is declared static in a parent and merely overridden here.
+     */
+    private static function localDataProviderNames(string $content): array
+    {
+        $names = [];
+        // @dataProvider methodName
+        preg_match_all('/@dataProvider\s+(\w+)/', $content, $m);
+        foreach ($m[1] as $n) {
+            $names[$n] = true;
+        }
+        // #[DataProvider('methodName')] or #[DataProvider("methodName")]
+        preg_match_all('/#\[DataProvider\s*\(\s*[\'"](\w+)[\'"]\s*\)\]/', $content, $m);
+        foreach ($m[1] as $n) {
+            $names[$n] = true;
+        }
+        return $names;
+    }
+
+    /**
+     * Scans for static data-provider methods (referenced by @dataProvider in the
+     * SAME file) whose body contains $this->. These cannot be truly static because
+     * PHPUnit calls them in object context when $this is used.
+     *
+     * IMPORTANT: we only flag methods whose name appears in a local @dataProvider
+     * annotation. This prevents incorrectly flagging child-class overrides of
+     * parent static methods (which would cause a PHP fatal error if de-staticized).
+     */
+    public static function scanStaticProviderWithThis(string $content): array
+    {
+        $localProviders = self::localDataProviderNames($content);
+        if (empty($localProviders)) {
+            return [];
+        }
+
+        $issues = [];
+        $lines  = explode("\n", $content);
+        $total  = count($lines);
+        for ($i = 0; $i < $total; $i++) {
+            $line = $lines[$i];
+            if (!preg_match(
+                '/^\s*(?:public|protected|private)\s+static\s+function\s+(\w+)\s*\(/',
+                $line, $m
+            )) {
+                continue;
+            }
+            // Only process methods that are local @dataProvider targets
+            if (!isset($localProviders[$m[1]])) {
+                continue;
+            }
+            // Collect method body up to matching closing brace
+            $depth = 0;
+            $body  = '';
+            $j     = $i;
+            while ($j < $total) {
+                $body  .= $lines[$j];
+                $depth += substr_count($lines[$j], '{') - substr_count($lines[$j], '}');
+                if ($depth <= 0 && $j > $i) {
+                    break;
+                }
+                ++$j;
+            }
+            if (str_contains($body, '$this->')) {
+                $issues[] = [
+                    'line'    => $i + 1,
+                    'snippet' => rtrim($line),
+                    'method'  => $m[1],
+                ];
+            }
+        }
+        return $issues;
+    }
+
+    /**
+     * Removes the `static` keyword from data-provider methods (those referenced
+     * by @dataProvider in the same file) whose body references $this->.
+     *
+     * Safe: only touches methods listed as @dataProvider in this file, never
+     * child-class overrides of parent static methods.
+     *
+     * @return array{fixed: string, count: int}
+     */
+    public static function applyStaticProviderWithThisFix(string $content): array
+    {
+        $localProviders = self::localDataProviderNames($content);
+        if (empty($localProviders)) {
+            return ['fixed' => $content, 'count' => 0];
+        }
+
+        $lines = explode("\n", $content);
+        $total = count($lines);
+        $count = 0;
+        for ($i = 0; $i < $total; $i++) {
+            $line = $lines[$i];
+            if (!preg_match(
+                '/^\s*(?:public|protected|private)\s+static\s+function\s+(\w+)\s*\(/',
+                $line, $m
+            )) {
+                continue;
+            }
+            // Only process local @dataProvider targets
+            if (!isset($localProviders[$m[1]])) {
+                continue;
+            }
+            $depth = 0;
+            $body  = '';
+            $j     = $i;
+            while ($j < $total) {
+                $body  .= $lines[$j];
+                $depth += substr_count($lines[$j], '{') - substr_count($lines[$j], '}');
+                if ($depth <= 0 && $j > $i) {
+                    break;
+                }
+                ++$j;
+            }
+            if (str_contains($body, '$this->')) {
+                // Remove the first occurrence of 'static ' in this declaration line
+                $lines[$i] = preg_replace('/\bstatic\s+/', '', $line, 1);
+                ++$count;
+            }
+        }
+        return ['fixed' => implode("\n", $lines), 'count' => $count];
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // scanLibxmlEntityLoader / applyLibxmlEntityLoaderFix
+    // libxml_disable_entity_loader() is deprecated since PHP 8.0 and its calls
+    // corrupt global libxml state across test runs.  Remove all calls.
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public static function scanLibxmlEntityLoader(string $content): array
+    {
+        $issues = [];
+        if (!str_contains($content, 'libxml_disable_entity_loader')) {
+            return $issues;
+        }
+        foreach (explode("\n", $content) as $lineNo => $line) {
+            if (str_contains($line, 'libxml_disable_entity_loader')) {
+                $issues[] = [
+                    'line'    => $lineNo + 1,
+                    'message' => 'libxml_disable_entity_loader() is deprecated since PHP 8.0',
+                    'context' => trim($line),
+                ];
+            }
+        }
+        return $issues;
+    }
+
+    public static function applyLibxmlEntityLoaderFix(string $content): array
+    {
+        if (!str_contains($content, 'libxml_disable_entity_loader')) {
+            return ['fixed' => $content, 'count' => 0];
+        }
+
+        $lines   = explode("\n", $content);
+        $count   = 0;
+        $removed = [];
+
+        // First pass: collect variable names assigned from libxml_disable_entity_loader
+        $varNames = [];
+        foreach ($lines as $i => $line) {
+            if (preg_match('/^\s*(\$\w+)\s*=\s*libxml_disable_entity_loader\s*\(/', $line, $m)) {
+                $varNames[] = preg_quote($m[1], '/');
+                $removed[$i] = true;
+                ++$count;
+            } elseif (preg_match('/^\s*libxml_disable_entity_loader\s*\(/', $line)) {
+                $removed[$i] = true;
+                ++$count;
+            }
+        }
+
+        // Second pass: remove orphaned restore calls that use only those variables
+        if (!empty($varNames)) {
+            $varPattern = implode('|', $varNames);
+            foreach ($lines as $i => $line) {
+                if (!isset($removed[$i]) && preg_match(
+                    '/^\s*libxml_disable_entity_loader\s*\(\s*(?:' . $varPattern . ')\s*\)\s*;/',
+                    $line
+                )) {
+                    $removed[$i] = true;
+                    ++$count;
+                }
+            }
+        }
+
+        $result = implode("\n", array_filter($lines, fn($i) => !isset($removed[$i]), ARRAY_FILTER_USE_KEY));
+        return ['fixed' => $result, 'count' => $count];
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // scanSplAttach / applySplAttachFix
+    // SplObjectStorage::attach($obj) → SplObjectStorage::offsetSet($obj, null)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public static function scanSplAttach(string $content): array
+    {
+        $issues = [];
+        if (!str_contains($content, '->attach(') || !str_contains($content, 'SplObjectStorage')) {
+            return $issues;
+        }
+        foreach (explode("\n", $content) as $lineNo => $line) {
+            if (str_contains($line, '->attach(')) {
+                $issues[] = [
+                    'line'    => $lineNo + 1,
+                    'message' => 'SplObjectStorage::attach() deprecated: use offsetSet()',
+                    'context' => trim($line),
+                ];
+            }
+        }
+        return $issues;
+    }
+
+    public static function applySplAttachFix(string $content): array
+    {
+        if (!str_contains($content, '->attach(') || !str_contains($content, 'SplObjectStorage')) {
+            return ['fixed' => $content, 'count' => 0];
+        }
+        $count = 0;
+        $lines = explode("\n", $content);
+        foreach ($lines as &$line) {
+            if (!str_contains($line, '->attach(')) {
+                continue;
+            }
+            $args = self::parseTopLevelArgs($line, 'attach');
+            if ($args === null || empty($args)) {
+                continue;
+            }
+            $indent = str_repeat(' ', strlen($line) - strlen(ltrim($line)));
+            // Extract the LHS (everything before ->attach)
+            $lhsMatch = preg_match('/(.*)->attach\s*\(/', $line, $lhsM);
+            $lhs = $lhsMatch ? rtrim($lhsM[1]) : '';
+            if (isset($args[1])) {
+                // ->attach($obj, $data) → ->offsetSet($obj, $data)
+                $line = $indent . ltrim($lhs) . '->offsetSet(' . $args[0] . ', ' . $args[1] . ');';
+            } else {
+                // ->attach($obj) → ->offsetSet($obj, null)
+                $line = $indent . ltrim($lhs) . '->offsetSet(' . $args[0] . ', null);';
+            }
+            ++$count;
+        }
+        return ['fixed' => implode("\n", $lines), 'count' => $count];
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // scanSplDetach / applySplDetachFix
+    // SplObjectStorage::detach($obj) → SplObjectStorage::offsetUnset($obj)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public static function scanSplDetach(string $content): array
+    {
+        $issues = [];
+        if (!str_contains($content, '->detach(') || !str_contains($content, 'SplObjectStorage')) {
+            return $issues;
+        }
+        foreach (explode("\n", $content) as $lineNo => $line) {
+            if (str_contains($line, '->detach(')) {
+                $issues[] = [
+                    'line'    => $lineNo + 1,
+                    'message' => 'SplObjectStorage::detach() deprecated: use offsetUnset()',
+                    'context' => trim($line),
+                ];
+            }
+        }
+        return $issues;
+    }
+
+    public static function applySplDetachFix(string $content): array
+    {
+        if (!str_contains($content, '->detach(') || !str_contains($content, 'SplObjectStorage')) {
+            return ['fixed' => $content, 'count' => 0];
+        }
+        $fixed = preg_replace('/(\$\w+)->detach\(/', '$1->offsetUnset(', $content, -1, $count);
+        return ['fixed' => $fixed ?? $content, 'count' => (int)$count];
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // scanEStrict / applyEStrictFix
+    // E_STRICT was removed in PHP 8.4 — replace with 0
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public static function scanEStrict(string $content): array
+    {
+        $issues = [];
+        if (!preg_match('/\bE_STRICT\b/', $content)) {
+            return $issues;
+        }
+        foreach (explode("\n", $content) as $lineNo => $line) {
+            if (preg_match('/\bE_STRICT\b/', $line)) {
+                $issues[] = [
+                    'line'    => $lineNo + 1,
+                    'message' => 'E_STRICT was removed in PHP 8.4, use 0',
+                    'context' => trim($line),
+                ];
+            }
+        }
+        return $issues;
+    }
+
+    public static function applyEStrictFix(string $content): array
+    {
+        if (!preg_match('/\bE_STRICT\b/', $content)) {
+            return ['fixed' => $content, 'count' => 0];
+        }
+        $fixed = preg_replace('/\bE_STRICT\b/', '0', $content, -1, $count);
+        return ['fixed' => $fixed ?? $content, 'count' => (int)$count];
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // scanEscapedQuoteAssert / applyEscapedQuoteAssertFix
+    // In PHP 8, exception messages no longer escape double-quotes.
+    // Tests that use \" inside expectExceptionMessage / assertContains / etc.
+    // need to have those backslashes removed.
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public static function scanEscapedQuoteAssert(string $content): array
+    {
+        $issues = [];
+        // Only flag single-quoted strings: '...\"...' — in single-quoted PHP strings,
+        // \" is literal backslash+quote; double-quoted \" is already the correct PHP escape.
+        $assertPattern = "/(?:expectExceptionMessage|assertContains|assertStringContains"
+            . "|assertStringContainsString|assertExceptionMessage)\s*\(\s*'[^']*\\\\\"[^']*'/";
+        if (!preg_match($assertPattern, $content)) {
+            return $issues;
+        }
+        foreach (explode("\n", $content) as $lineNo => $line) {
+            if (preg_match($assertPattern, $line)) {
+                $issues[] = [
+                    'line'    => $lineNo + 1,
+                    'message' => 'Assertion string contains \\\" — PHP 8 exception messages use unescaped "',
+                    'context' => trim($line),
+                ];
+            }
+        }
+        return $issues;
+    }
+
+    public static function applyEscapedQuoteAssertFix(string $content): array
+    {
+        $assertMethods = 'expectExceptionMessage|assertContains|assertStringContains'
+            . '|assertStringContainsString|assertExceptionMessage';
+
+        if (!preg_match('/(?:' . $assertMethods . ')/', $content) || !str_contains($content, '\\"')) {
+            return ['fixed' => $content, 'count' => 0];
+        }
+
+        // Use a callback to fix only the string argument of assertion calls
+        $count = 0;
+        $fixed = preg_replace_callback(
+            '/\b(?:' . $assertMethods . ')\s*\(\s*([\'"])((?:[^\\\\]|\\\\.)*)([\'"])/',
+            function (array $m) use (&$count): string {
+                $quote    = $m[1];
+                $body     = $m[2];
+                $endQuote = $m[3];
+                if ($quote !== $endQuote) {
+                    return $m[0]; // mismatched quotes — leave alone
+                }
+                // Single-quoted: \" inside → remove backslash
+                if ($quote === "'" && str_contains($body, '\\"')) {
+                    $newBody = str_replace('\\"', '"', $body);
+                    ++$count;
+                    return str_replace($body, $newBody, $m[0]);
+                }
+                // Double-quoted: \" is already the correct PHP escape for " — leave alone
                 return $m[0];
             },
             $content
         );
-
         return ['fixed' => $fixed ?? $content, 'count' => $count];
     }
 
-    // ── Return-type compatibility scanner ─────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // scanAssertContainsRevert / applyAssertContainsRevertFix
+    // Reverts wrongly-converted assertStringContainsString(needle, arrayExpr)
+    // back to assertContains(needle, arrayExpr) when the haystack is clearly
+    // array-returning (known methods or array-element access).
+    // ─────────────────────────────────────────────────────────────────────────
 
-    /**
-     * Map of well-known PHP built-in interface / parent-class short names
-     * to the methods they require and the PHP 8+ return type for each.
-     *
-     * Used by scanReturnTypeCompat() and applyReturnTypeCompatFix().
-     *
-     * @return array<string, array<string, string>>
-     */
-    private static function interfaceReturnTypeMap(): array
+    /** Methods known to return arrays/iterables, not strings. */
+    private static function arrayReturnMethods(): string
     {
-        return [
-            // PHP core interfaces
-            'Countable'               => ['count'         => 'int'],
-            'Stringable'              => ['__toString'    => 'string'],
-            'IteratorAggregate'       => ['getIterator'   => '\\Traversable'],
-            'Iterator'                => [
-                'current' => 'mixed', 'key' => 'mixed',
-                'next'    => 'void',  'rewind' => 'void', 'valid' => 'bool',
-            ],
-            'ArrayAccess'             => [
-                'offsetExists' => 'bool',  'offsetGet'    => 'mixed',
-                'offsetSet'    => 'void',  'offsetUnset'  => 'void',
-            ],
-            'JsonSerializable'        => ['jsonSerialize' => 'mixed'],
-            // Session storage
-            'SessionHandlerInterface' => [
-                'open'    => 'bool',   'close'   => 'bool',
-                'read'    => 'string|false', 'write' => 'bool',
-                'destroy' => 'bool',   'gc'      => 'int|false',
-            ],
-            // PDO subclasses
-            'PDO'                     => [
-                'beginTransaction' => 'bool',
-                'rollBack'         => 'bool',
-                'getAttribute'     => 'mixed',
-                'prepare'          => '\\PDOStatement|false',
-            ],
-        ];
+        return 'getParameter|getUsages|getCountries|getLanguages|getLocales|getCurrencies'
+            . '|getPrefixes|getGroups|getTemplates|getMetadata|getClassNames|getMessages'
+            . '|getProperties|getMethods|getConstraints|getPaths|getValues|getAttributes'
+            . '|getHierarchy|getResourcesByType|getResources|getNamespaces|getClasses'
+            . '|getDecoratedService|getTags|getArguments|getBindings';
     }
 
-    /**
-     * Collects the set of (interface/parent short name → method → returnType)
-     * entries that apply to the class declared in $content.
-     *
-     * Returns [] when the class does not implement any of the known interfaces.
-     *
-     * @return array<string, string>  methodName → expectedReturnType
-     */
-    private static function resolveMethodReturnTypes(string $content): array
+    public static function scanAssertContainsRevert(string $content): array
     {
-        $map = self::interfaceReturnTypeMap();
-        $applicable = [];
-
-        foreach (explode("\n", $content) as $line) {
-            // Matches: class Foo [extends Bar] [implements A, B, C] [{|EOL]
-            if (!preg_match('/\bclass\s+\w+(?:\s+extends\s+(\w+))?(?:\s+implements\s+(.+?))?(?:\s*\{|$)/', $line, $m)) {
-                continue;
-            }
-
-            $declaredNames = [];
-
-            // extends ClassName → treat as if implements for PDO etc.
-            if (!empty($m[1])) {
-                $declaredNames[] = trim($m[1]);
-            }
-
-            // implements A, B\C, \D\E  → use the short (last) name
-            if (!empty($m[2])) {
-                foreach (preg_split('/\s*,\s*/', $m[2]) as $fqcn) {
-                    $parts = explode('\\', trim($fqcn));
-                    $declaredNames[] = end($parts);
-                }
-            }
-
-            foreach ($declaredNames as $name) {
-                if (isset($map[$name])) {
-                    foreach ($map[$name] as $method => $type) {
-                        $applicable[$method] = $type;
-                    }
-                }
-            }
-
-            break; // only care about the first class declaration
-        }
-
-        return $applicable;
-    }
-
-    /**
-     * Scans PHP source for methods that are missing required return type
-     * declarations because they implement a well-known PHP interface.
-     *
-     * Detects methods like `public function count()` on a class implementing
-     * Countable that lack the `: int` return type required by PHP 8.1+.
-     *
-     * Returns [ 'line' => int, 'snippet' => string, 'method' => string,
-     *            'expectedType' => string ]
-     */
-    public static function scanReturnTypeCompat(string $content): array
-    {
-        $applicable = self::resolveMethodReturnTypes($content);
-
-        if (empty($applicable)) {
-            return [];
-        }
-
         $issues = [];
+        $arrayMethods = self::arrayReturnMethods();
         foreach (explode("\n", $content) as $idx => $line) {
-            // Match `public [static] function name(...)` with NO colon-return-type
-            // Single-line signatures only (multi-line signatures are uncommon for built-in methods).
-            if (!preg_match('/\bpublic\b.*\bfunction\s+(\w+)\s*\([^)]*\)\s*(?:\{|;|$)/i', $line, $m)) {
+            if (!str_contains($line, 'assertStringContainsString')) {
                 continue;
             }
-            if (preg_match('/\)\s*:\s*\S/', $line)) {
-                continue; // already has a return type
+            // haystack is an array-returning method call
+            if (preg_match('/->(?:' . $arrayMethods . ')\s*\(/', $line)) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
+                continue;
             }
-
-            $methodName = $m[1];
-            if (isset($applicable[$methodName])) {
-                $issues[] = [
-                    'line'         => $idx + 1,
-                    'snippet'      => rtrim($line),
-                    'method'       => $methodName,
-                    'expectedType' => $applicable[$methodName],
-                ];
+            // haystack is bare array-element access (NOT followed by method call)
+            // e.g. $prefixes['Foo'] — but NOT $items[0]->getUri() which returns a string
+            if (preg_match('/assertStringContainsString\([^,]+,\s*\$\w+\[[^\]]+\]\s*\)/', $line)) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
             }
         }
-
         return $issues;
     }
 
-    /**
-     * Adds missing return type declarations to methods identified by
-     * scanReturnTypeCompat().
-     *
-     * This method is PURE — it returns the fixed string, never writes a file.
-     *
-     * @return array{fixed: string, count: int}
-     */
-    public static function applyReturnTypeCompatFix(string $content): array
+    /** @return array{fixed: string, count: int} */
+    public static function applyAssertContainsRevertFix(string $content): array
     {
-        $applicable = self::resolveMethodReturnTypes($content);
-
-        if (empty($applicable)) {
-            return ['fixed' => $content, 'count' => 0];
-        }
-
+        $arrayMethods = self::arrayReturnMethods();
         $count = 0;
         $lines = explode("\n", $content);
-        $result = [];
-
-        foreach ($lines as $line) {
-            if (
-                preg_match('/(\bpublic\b.*\bfunction\s+(\w+)\s*\([^)]*\))(\s*)(\{|;|$)/i', $line, $m) &&
-                !preg_match('/\)\s*:\s*\S/', $line)
-            ) {
-                $methodName = $m[2];
-                if (isset($applicable[$methodName])) {
-                    $returnType = $applicable[$methodName];
-                    // Insert ': ReturnType' between the closing ')' and the '{' or ';'
-                    $line = preg_replace(
-                        '/(\bpublic\b.*\bfunction\s+' . preg_quote($methodName, '/') . '\s*\([^)]*\))(\s*)(\{|;|$)/i',
-                        '$1: ' . $returnType . '$2$3',
-                        $line
-                    );
-                    ++$count;
-                }
-            }
-
-            $result[] = $line;
-        }
-
-        return ['fixed' => implode("\n", $result), 'count' => $count];
-    }
-
-    // ── Serializable interface scanner ────────────────────────────────────────
-
-    /**
-     * Scans PHP source for classes that implement the deprecated \Serializable
-     * interface without also providing __serialize() / __unserialize() methods.
-     *
-     * PHP 8.1 deprecated implementing Serializable alone; classes must either
-     * drop the interface and use __serialize()/__unserialize() exclusively, or
-     * implement both sets of methods.
-     *
-     * Returns [ 'line' => int, 'snippet' => string, 'class' => string ]
-     */
-    public static function scanSerializable(string $content): array
-    {
-        $issues = [];
-        $lines  = explode("\n", $content);
-
-        $hasSerialize   = (bool) preg_match('/\bfunction\s+__serialize\s*\(/i', $content);
-        $hasUnserialize = (bool) preg_match('/\bfunction\s+__unserialize\s*\(/i', $content);
-
-        if ($hasSerialize && $hasUnserialize) {
-            return []; // already migrated
-        }
-
-        foreach ($lines as $idx => $line) {
-            // Detect: implements ... \Serializable  or  extends ... \Serializable
-            if (preg_match('/(?:implements|extends)\s+[^{]*\\\\?Serializable\b/', $line)) {
-                if (preg_match('/\bclass\s+(\w+)/', $line, $m)) {
-                    $issues[] = [
-                        'line'    => $idx + 1,
-                        'snippet' => rtrim($line),
-                        'class'   => $m[1],
-                    ];
-                } elseif ($issues === []) {
-                    // class name on a previous line – use the line as-is
-                    $issues[] = [
-                        'line'    => $idx + 1,
-                        'snippet' => rtrim($line),
-                        'class'   => '(unknown)',
-                    ];
-                }
-            }
-
-            // Also detect `interface Foo extends \Serializable`
-            if (preg_match('/\binterface\s+(\w+)\s+extends\s+[^{]*\\\\?Serializable\b/', $line, $m)) {
-                $issues[] = [
-                    'line'    => $idx + 1,
-                    'snippet' => rtrim($line),
-                    'class'   => $m[1],
-                ];
-            }
-        }
-
-        return $issues;
-    }
-
-    /**
-     * Adds __serialize() / __unserialize() bridge methods that delegate to the
-     * existing serialize() / unserialize() methods, suppressing the Serializable
-     * deprecation while maintaining backward compatibility.
-     *
-     * Skips files that already have __serialize() / __unserialize(), or that
-     * have no serialize() method (unexpected / nothing to bridge).
-     *
-     * This method is PURE — it returns the fixed string, never writes a file.
-     *
-     * @return array{fixed: string, count: int}
-     */
-    public static function applySerializableFix(string $content): array
-    {
-        // Already migrated
-        if (preg_match('/\bfunction\s+__serialize\s*\(/i', $content) &&
-            preg_match('/\bfunction\s+__unserialize\s*\(/i', $content)) {
-            return ['fixed' => $content, 'count' => 0];
-        }
-
-        // Nothing to bridge — no serialize() method to wrap
-        if (!preg_match('/\bpublic\s+function\s+serialize\s*\(\s*\)/i', $content)) {
-            return ['fixed' => $content, 'count' => 0];
-        }
-
-        // Find the closing brace of the serialize() method and insert the bridge after it
-        $bridge = <<<'PHP'
-
-    public function __serialize(): array
-    {
-        return ['serialized' => $this->serialize()];
-    }
-
-    public function __unserialize(array $data): void
-    {
-        $this->unserialize($data['serialized']);
-    }
-PHP;
-
-        // Insert the bridge immediately before the unserialize() method declaration.
-        $fixed = preg_replace(
-            '/([ \t]*)(?:\/\*\*[^*]*\*+(?:[^*\/][^*]*\*+)*\/\s*)?' .  // optional docblock
-            '(public\s+function\s+unserialize\s*\()/i',
-            $bridge . "\n\n" . '$1$2',
-            $content,
-            1,
-            $count
-        );
-
-        if ($count === 0 || $fixed === null) {
-            return ['fixed' => $content, 'count' => 0];
-        }
-
-        return ['fixed' => $fixed, 'count' => 1];
-    }
-
-    // ── Optional-before-required parameter scanner ───────────────────────────
-
-    /**
-     * Scans PHP source for function/method parameters that have a default value
-     * but are followed by one or more required (no-default) parameters.
-     *
-     * PHP 8.0 deprecated this pattern and PHP 9 will make it an error.
-     * Auto-fixing is intentionally NOT provided because the correct remediation
-     * is context-dependent (reorder parameters, remove the default value, or
-     * change the required parameter to optional).
-     *
-     * Returns [ 'line' => int, 'snippet' => string, 'param' => string ]
-     */
-    public static function scanOptionalBeforeRequired(string $content): array
-    {
-        $issues = [];
-
-        foreach (explode("\n", $content) as $idx => $line) {
-            // Match function/method signatures that fit on one line
-            if (!preg_match('/\bfunction\s+\w+\s*\(([^)]+)\)/i', $line, $m)) {
+        foreach ($lines as &$line) {
+            if (!str_contains($line, 'assertStringContainsString')) {
                 continue;
             }
+            $args = self::parseTopLevelArgs($line, 'assertStringContainsString');
+            if ($args === null || !isset($args[0], $args[1])) {
+                continue;
+            }
+            $haystack = $args[1];
+            $isArrayHaystack = false;
+            // haystack is array-returning method call
+            if (preg_match('/->(?:' . $arrayMethods . ')\s*\(/', $haystack)) {
+                $isArrayHaystack = true;
+            }
+            // haystack is bare array-element access (NOT followed by -> method call)
+            if (!$isArrayHaystack && preg_match('/^\$\w+\[[^\]]+\]\s*$/', $haystack)) {
+                $isArrayHaystack = true;
+            }
+            if (!$isArrayHaystack) {
+                continue;
+            }
+            $newArgs = implode(', ', $args);
+            $prefix  = preg_match('/(\$(?:this->|self::))/', $line, $m) ? $m[1] : '$this->';
+            $indent  = str_repeat(' ', strlen($line) - strlen(ltrim($line)));
+            $line    = $indent . $prefix . 'assertContains(' . $newArgs . ');';
+            ++$count;
+        }
+        return ['fixed' => implode("\n", $lines), 'count' => $count];
+    }
 
-            $paramList = $m[1];
+    // ─────────────────────────────────────────────────────────────────────────
+    // scanAssertEqualsWithDelta / applyAssertEqualsWithDeltaFix
+    // assertEquals(x, y, null, DELTA) → assertEqualsWithDelta(x, y, DELTA)
+    // assertEquals(x, y, '', DELTA)   → assertEqualsWithDelta(x, y, DELTA)
+    // Also fixes assertEquals(x, y, null) → assertEquals(x, y, '') when
+    // null is the LAST arg (already in assertNullMsg but catches multi-line).
+    // ─────────────────────────────────────────────────────────────────────────
 
-            // Split by comma (simple; won't handle nested generics/defaults with commas)
-            $params    = array_map('trim', explode(',', $paramList));
-            $seenOptional = null;
-
-            foreach ($params as $param) {
-                if ($param === '' || str_starts_with($param, '...')) {
-                    continue; // variadic always last
-                }
-                $hasDefault = str_contains($param, '=');
-
-                if ($hasDefault) {
-                    $seenOptional = $param;
-                } elseif ($seenOptional !== null) {
-                    // A required param comes AFTER an optional one
-                    $issues[] = [
-                        'line'    => $idx + 1,
-                        'snippet' => rtrim($line),
-                        'param'   => trim(preg_replace('/.*\$/', '$', $seenOptional) ?? $seenOptional),
-                    ];
-                    $seenOptional = null; // report only once per signature
-                }
+    public static function scanAssertEqualsWithDelta(string $content): array
+    {
+        $issues = [];
+        foreach (explode("\n", $content) as $idx => $line) {
+            if (!preg_match('/\$(?:this->|self::)assertEquals\s*\(/', $line)) {
+                continue;
+            }
+            $args = self::parseTopLevelArgs($line, 'assertEquals');
+            if ($args !== null && isset($args[2], $args[3])
+                && ($args[2] === 'null' || $args[2] === "''")
+            ) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
             }
         }
-
         return $issues;
     }
 
-    // ── Aggregated file-level scan ────────────────────────────────────────────
+    /** @return array{fixed: string, count: int} */
+    public static function applyAssertEqualsWithDeltaFix(string $content): array
+    {
+        $count = 0;
+        $lines = explode("\n", $content);
+        foreach ($lines as &$line) {
+            if (!preg_match('/\$(?:this->|self::)assertEquals\s*\(/', $line)) {
+                continue;
+            }
+            $args = self::parseTopLevelArgs($line, 'assertEquals');
+            if ($args === null || !isset($args[2], $args[3])) {
+                continue;
+            }
+            if ($args[2] !== 'null' && $args[2] !== "''") {
+                continue;
+            }
+            // Build replacement: assertEqualsWithDelta($args[0], $args[1], $args[3])
+            $indent = str_repeat(' ', strlen($line) - strlen(ltrim($line)));
+            $prefix = preg_match('/(\$(?:this->|self::))/', $line, $m) ? $m[1] : '$this->';
+            $line = $indent . $prefix . 'assertEqualsWithDelta('
+                . $args[0] . ', ' . $args[1] . ', ' . $args[3] . ');';
+            ++$count;
+        }
+        return ['fixed' => implode("\n", $lines), 'count' => $count];
+    }
 
     /**
-     * Runs a single scanner callback over all files produced by an iterator.
+     * Parse top-level comma-separated arguments of a named method call on a single line.
+     * Properly handles nested parentheses, brackets, and quoted strings.
+     * Returns null if the method call is not found or spans multiple lines.
      *
-     * @param \Iterator        $files    Iterator of \SplFileInfo objects
-     * @param callable         $scanner  static method reference e.g. [ScannerTrait::class, 'scanNullable']
-     * @param string           $baseDir  Used to produce relative paths in results
-     *
-     * @return array<string, array>  Keyed by relative file path; value is the array of issues for that file.
+     * @return string[]|null
      */
+    private static function parseTopLevelArgs(string $line, string $methodName): ?array
+    {
+        $search = $methodName . '(';
+        $pos    = strpos($line, $search);
+        if ($pos === false) {
+            return null;
+        }
+        $pos += strlen($search);
+        $len   = strlen($line);
+        $depth = 1;
+        $args  = [];
+        $start = $pos;
+        $inStr = false;
+        $quote = '';
+
+        for ($i = $pos; $i < $len; $i++) {
+            $c = $line[$i];
+            if ($inStr) {
+                if ($c === '\\') { $i++; continue; }
+                if ($c === $quote) { $inStr = false; }
+                continue;
+            }
+            if ($c === '"' || $c === "'") { $inStr = true; $quote = $c; continue; }
+            if ($c === '(' || $c === '[') { $depth++; continue; }
+            if ($c === ')' || $c === ']') {
+                $depth--;
+                if ($depth === 0) {
+                    $args[] = trim(substr($line, $start, $i - $start));
+                    break;
+                }
+                continue;
+            }
+            if ($c === ',' && $depth === 1) {
+                $args[] = trim(substr($line, $start, $i - $start));
+                $start  = $i + 1;
+            }
+        }
+
+        return $args ?: null;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // scanAssertContainsString4 / applyAssertContainsString4Fix
+    // assertContains(needle, stringExpr) → assertStringContainsString
+    // For cases where haystack is clearly a string: ->getMessage(), ->getOutput(),
+    // ->getDisplay(), ->getCommandLine(), ->getContent(), ->render(), etc.
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private static function stringReturnMethods(): string
+    {
+        return 'getMessage|getOutput|getDisplay|getCommandLine|getContent|render'
+            . '|getBody|getText|getString|getDescription|dump|getLine|toString'
+            . '|getSql|getQuery|getErrorOutput|getCommandLine|__toString';
+    }
+
+    public static function scanAssertContainsString4(string $content): array
+    {
+        $issues = [];
+        $strMethods = self::stringReturnMethods();
+        foreach (explode("\n", $content) as $idx => $line) {
+            if (!str_contains($line, 'assertContains(')) {
+                continue;
+            }
+            // haystack is a string-returning method
+            if (preg_match('/assertContains\s*\([^,]+,\s*[^)]+->(?:' . $strMethods . ')\s*\(/', $line)) {
+                $issues[] = ['line' => $idx + 1, 'snippet' => rtrim($line)];
+            }
+        }
+        return $issues;
+    }
+
+    /** @return array{fixed: string, count: int} */
+    public static function applyAssertContainsString4Fix(string $content): array
+    {
+        $strMethods = self::stringReturnMethods();
+        $count = 0;
+        $lines = explode("\n", $content);
+        foreach ($lines as &$line) {
+            if (!str_contains($line, 'assertContains(')) {
+                continue;
+            }
+            // Verify haystack (arg[1]) contains a string-returning method call
+            if (!preg_match('/->(?:' . $strMethods . ')\s*\(/', $line)) {
+                continue;
+            }
+            $args = self::parseTopLevelArgs($line, 'assertContains');
+            if ($args === null || !isset($args[0], $args[1])) {
+                continue;
+            }
+            // Rebuild args and replace assertContains with assertStringContainsString
+            $newArgs = implode(', ', $args);
+            $prefix  = preg_match('/(\$(?:this->|self::))/', $line, $m) ? $m[1] : '$this->';
+            $indent  = str_repeat(' ', strlen($line) - strlen(ltrim($line)));
+            $line    = $indent . $prefix . 'assertStringContainsString(' . $newArgs . ');';
+            ++$count;
+        }
+        return ['fixed' => implode("\n", $lines), 'count' => $count];
+    }
+
+    // ── Generic file-scanning helpers ────────────────────────────────────────
+
     protected function scanFiles(\Iterator $files, callable $scanner, string $baseDir): array
     {
         $results = [];

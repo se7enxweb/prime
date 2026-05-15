@@ -97,9 +97,12 @@ class DirectoryResourceTest extends TestCase
     public function testIsFreshDeleteFile()
     {
         $resource = new DirectoryResource($this->directory);
-        $time = time();
-        sleep(1);
+        $time = time() + 10;
         unlink($this->directory.'/tmp.xml');
+
+        // Ensure directory mtime advances even on coarse filesystem timestamp resolutions.
+        touch($this->directory, $time + 10);
+
         $this->assertFalse($resource->isFresh($time), '->isFresh() returns false if an existing file is removed');
     }
 

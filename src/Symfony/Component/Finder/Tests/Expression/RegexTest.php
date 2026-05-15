@@ -11,18 +11,19 @@
 
 namespace Symfony\Component\Finder\Tests\Expression;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Expression\Expression;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class RegexTest extends TestCase
 {
-    /**
-     * @dataProvider getHasFlagsData
-     */
-    public function testHasFlags($regex, $start, $end)
+    #[DataProvider('getHasFlagsData')]    public function testHasFlags($regex, $start, $end)
     {
         $expr = new Expression($regex);
 
@@ -30,10 +31,7 @@ class RegexTest extends TestCase
         $this->assertEquals($end, $expr->getRegex()->hasEndFlag());
     }
 
-    /**
-     * @dataProvider getHasJokersData
-     */
-    public function testHasJokers($regex, $start, $end)
+    #[DataProvider('getHasJokersData')]    public function testHasJokers($regex, $start, $end)
     {
         $expr = new Expression($regex);
 
@@ -41,10 +39,7 @@ class RegexTest extends TestCase
         $this->assertEquals($end, $expr->getRegex()->hasEndJoker());
     }
 
-    /**
-     * @dataProvider getSetFlagsData
-     */
-    public function testSetFlags($regex, $start, $end, $expected)
+    #[DataProvider('getSetFlagsData')]    public function testSetFlags($regex, $start, $end, $expected)
     {
         $expr = new Expression($regex);
         $expr->getRegex()->setStartFlag($start)->setEndFlag($end);
@@ -52,10 +47,7 @@ class RegexTest extends TestCase
         $this->assertEquals($expected, $expr->render());
     }
 
-    /**
-     * @dataProvider getSetJokersData
-     */
-    public function testSetJokers($regex, $start, $end, $expected)
+    #[DataProvider('getSetJokersData')]    public function testSetJokers($regex, $start, $end, $expected)
     {
         $expr = new Expression($regex);
         $expr->getRegex()->setStartJoker($start)->setEndJoker($end);
@@ -82,10 +74,7 @@ class RegexTest extends TestCase
         $this->assertEquals('~^.*abc.*$~is', $expr->render());
     }
 
-    /**
-     * @dataProvider getReplaceJokersTestData
-     */
-    public function testReplaceJokers($regex, $expected)
+    #[DataProvider('getReplaceJokersTestData')]    public function testReplaceJokers($regex, $expected)
     {
         $expr = new Expression($regex);
         $expr = $expr->getRegex()->replaceJokers('@');

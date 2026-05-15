@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Intl\Tests\Globals;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -31,10 +33,7 @@ abstract class AbstractIntlGlobalsTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider errorNameProvider
-     */
-    public function testGetErrorName($errorCode, $errorName)
+    #[DataProvider('errorNameProvider')]    public function testGetErrorName($errorCode, $errorName)
     {
         $this->assertSame($errorName, $this->getIntlErrorName($errorCode));
     }

@@ -43,6 +43,7 @@ class VirtualFormAwareIterator extends \IteratorIterator implements \RecursiveIt
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function getChildren()
     {
         return new static($this->current());
@@ -51,6 +52,7 @@ class VirtualFormAwareIterator extends \IteratorIterator implements \RecursiveIt
     /**
      *{@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function hasChildren()
     {
         return (bool) $this->current()->getConfig()->getInheritData();

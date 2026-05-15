@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\RegexValidator;
 use Symfony\Component\Validator\Validation;
@@ -50,10 +52,7 @@ class RegexValidatorTest extends AbstractConstraintValidatorTest
         $this->validator->validate(new \stdClass(), new Regex(array('pattern' => '/^[0-9]+$/')));
     }
 
-    /**
-     * @dataProvider getValidValues
-     */
-    public function testValidValues($value)
+    #[DataProvider('getValidValues')]    public function testValidValues($value)
     {
         $constraint = new Regex(array('pattern' => '/^[0-9]+$/'));
         $this->validator->validate($value, $constraint);
@@ -71,10 +70,7 @@ class RegexValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidValues
-     */
-    public function testInvalidValues($value)
+    #[DataProvider('getInvalidValues')]    public function testInvalidValues($value)
     {
         $constraint = new Regex(array(
             'pattern' => '/^[0-9]+$/',

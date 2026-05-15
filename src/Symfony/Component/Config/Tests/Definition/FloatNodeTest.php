@@ -11,22 +11,21 @@
 
 namespace Symfony\Component\Config\Tests\Definition;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\FloatNode;
 
 class FloatNodeTest extends TestCase
 {
-    /**
-     * @dataProvider getValidValues
-     */
-    public function testNormalize($value)
+    #[DataProvider('getValidValues')]    public function testNormalize($value)
     {
         $node = new FloatNode('test');
         $this->assertSame($value, $node->normalize($value));
     }
 
+    #[DataProvider('getValidValues')]
     /**
-     * @dataProvider getValidValues
      *
      * @param int $value
      */
@@ -52,10 +51,7 @@ class FloatNodeTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getInvalidValues
-     */
-    public function testNormalizeThrowsExceptionOnInvalidValues($value)
+    #[DataProvider('getInvalidValues')]    public function testNormalizeThrowsExceptionOnInvalidValues($value)
     {
         $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidTypeException::class);
 

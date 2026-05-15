@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Validator\ViolationMapper;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Validator\ViolationMapper\ViolationPath;
 
@@ -84,10 +86,7 @@ class ViolationPathTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider providePaths
-     */
-    public function testCreatePath($string, $entries, $slicedPath = null)
+    #[DataProvider('providePaths')]    public function testCreatePath($string, $entries, $slicedPath = null)
     {
         if (null === $slicedPath) {
             $slicedPath = $string;
@@ -122,10 +121,7 @@ class ViolationPathTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideParents
-     */
-    public function testGetParent($violationPath, $parentPath)
+    #[DataProvider('provideParents')]    public function testGetParent($violationPath, $parentPath)
     {
         $path = new ViolationPath($violationPath);
         $parent = null === $parentPath ? null : new ViolationPath($parentPath);

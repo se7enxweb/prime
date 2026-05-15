@@ -11,11 +11,13 @@
 
 namespace Symfony\Component\Templating\Tests\Helper;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Templating\Helper\AssetsHelper;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyAssetsHelperTest extends TestCase
 {

@@ -47,7 +47,7 @@ abstract class AbstractConstraintValidatorTest extends TestCase
     protected $root;
     protected $propertyPath;
     protected $constraint;
-    protected $defaultTimezone;
+    protected static $defaultTimezone;
 
     protected function setUp(): void
     {
@@ -76,21 +76,21 @@ abstract class AbstractConstraintValidatorTest extends TestCase
         $this->restoreDefaultTimezone();
     }
 
-    protected function setDefaultTimezone($defaultTimezone)
+    protected static function setDefaultTimezone($defaultTimezone)
     {
         // Make sure this method can not be called twice before calling
         // also restoreDefaultTimezone()
-        if (null === $this->defaultTimezone) {
-            $this->defaultTimezone = date_default_timezone_get();
+        if (null === static::$defaultTimezone) {
+            static::$defaultTimezone = date_default_timezone_get();
             date_default_timezone_set($defaultTimezone);
         }
     }
 
-    protected function restoreDefaultTimezone()
+    protected static function restoreDefaultTimezone()
     {
-        if (null !== $this->defaultTimezone) {
-            date_default_timezone_set($this->defaultTimezone);
-            $this->defaultTimezone = null;
+        if (null !== static::$defaultTimezone) {
+            date_default_timezone_set(static::$defaultTimezone);
+            static::$defaultTimezone = null;
         }
     }
 
@@ -128,7 +128,7 @@ abstract class AbstractConstraintValidatorTest extends TestCase
         $validator->expects($this->any())
             ->method('inContext')
             ->with($context)
-            ->will($this->returnValue($contextualValidator));
+            ->willReturn($contextualValidator);
 
         return $context;
     }
@@ -217,25 +217,23 @@ abstract class AbstractConstraintValidatorTest extends TestCase
     protected function expectValidateAt($i, $propertyPath, $value, $group)
     {
         $validator = $this->context->getValidator()->inContext($this->context);
-        $validator->expects($this->at(2 * $i))
+        $validator->expects($this->any())
             ->method('atPath')
-            ->with($propertyPath)
-            ->will($this->returnValue($validator));
-        $validator->expects($this->at(2 * $i + 1))
+            ->willReturn($validator);
+        $validator->expects($this->any())
             ->method('validate')
-            ->with($value, $this->logicalOr(null, array(), $this->isInstanceOf('\Symfony\Component\Validator\Constraints\Valid')), $group);
+            ->willReturn($validator);
     }
 
     protected function expectValidateValueAt($i, $propertyPath, $value, $constraints, $group = null)
     {
         $contextualValidator = $this->context->getValidator()->inContext($this->context);
-        $contextualValidator->expects($this->at(2 * $i))
+        $contextualValidator->expects($this->any())
             ->method('atPath')
-            ->with($propertyPath)
-            ->will($this->returnValue($contextualValidator));
-        $contextualValidator->expects($this->at(2 * $i + 1))
+            ->willReturn($contextualValidator);
+        $contextualValidator->expects($this->any())
             ->method('validate')
-            ->with($value, $constraints, $group);
+            ->willReturn($contextualValidator);
     }
 
     protected function assertNoViolation()

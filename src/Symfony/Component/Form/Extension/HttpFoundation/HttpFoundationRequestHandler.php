@@ -43,7 +43,7 @@ class HttpFoundationRequestHandler implements RequestHandlerInterface
             throw new UnexpectedTypeException($request, 'Symfony\Component\HttpFoundation\Request');
         }
 
-        $name = $form->getName();
+        $name = (string) $form->getName();
         $method = $form->getConfig()->getMethod();
 
         if ($method !== $request->getMethod()) {
@@ -98,11 +98,19 @@ class HttpFoundationRequestHandler implements RequestHandlerInterface
             } else {
                 $data = $params ?: $files;
             }
+
+            if ('' === $name && \is_array($data) && array_keys($data) === array('')) {
+                $data = $data[''];
+            }
         }
 
         // Don't auto-submit the form unless at least one field is present.
-        if ('' === $name && \count(array_intersect_key($data, $form->all())) <= 0) {
-            return;
+        if ('' === $name) {
+            $fields = $form->all();
+
+            if (\is_array($data) && \is_array($fields) && \count(array_intersect_key($data, $fields)) <= 0) {
+                return;
+            }
         }
 
         $form->submit($data, 'PATCH' !== $method);

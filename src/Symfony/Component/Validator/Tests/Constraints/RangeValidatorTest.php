@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Intl\Util\IntlTestHelper;
 use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints\RangeValidator;
@@ -55,7 +57,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
             array(9.99999, '9.99999'),
             array('9.99999', '"9.99999"'),
             array(5, '5'),
-            array(1.0, '1.0'),
+            array(1.0, '1'),
         );
     }
 
@@ -65,14 +67,11 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
             array(20.000001, '20.000001'),
             array('20.000001', '"20.000001"'),
             array(21, '21'),
-            array(30.0, '30.0'),
+            array(30.0, '30'),
         );
     }
 
-    /**
-     * @dataProvider getTenToTwenty
-     */
-    public function testValidValuesMin($value)
+    #[DataProvider('getTenToTwenty')]    public function testValidValuesMin($value)
     {
         $constraint = new Range(array('min' => 10));
         $this->validator->validate($value, $constraint);
@@ -80,10 +79,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getTenToTwenty
-     */
-    public function testValidValuesMax($value)
+    #[DataProvider('getTenToTwenty')]    public function testValidValuesMax($value)
     {
         $constraint = new Range(array('max' => 20));
         $this->validator->validate($value, $constraint);
@@ -91,10 +87,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getTenToTwenty
-     */
-    public function testValidValuesMinMax($value)
+    #[DataProvider('getTenToTwenty')]    public function testValidValuesMinMax($value)
     {
         $constraint = new Range(array('min' => 10, 'max' => 20));
         $this->validator->validate($value, $constraint);
@@ -102,10 +95,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getLessThanTen
-     */
-    public function testInvalidValuesMin($value, $formattedValue)
+    #[DataProvider('getLessThanTen')]    public function testInvalidValuesMin($value, $formattedValue)
     {
         $constraint = new Range(array(
             'min' => 10,
@@ -116,15 +106,12 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
 
         $this->buildViolation('myMessage')
             ->setParameter('{{ value }}', $formattedValue)
-            ->setParameter('{{ limit }}', 10)
+            ->setParameter('{{ limit }}', '10')
             ->setCode(Range::TOO_LOW_ERROR)
             ->assertRaised();
     }
 
-    /**
-     * @dataProvider getMoreThanTwenty
-     */
-    public function testInvalidValuesMax($value, $formattedValue)
+    #[DataProvider('getMoreThanTwenty')]    public function testInvalidValuesMax($value, $formattedValue)
     {
         $constraint = new Range(array(
             'max' => 20,
@@ -135,15 +122,12 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
 
         $this->buildViolation('myMessage')
             ->setParameter('{{ value }}', $formattedValue)
-            ->setParameter('{{ limit }}', 20)
+            ->setParameter('{{ limit }}', '20')
             ->setCode(Range::TOO_HIGH_ERROR)
             ->assertRaised();
     }
 
-    /**
-     * @dataProvider getMoreThanTwenty
-     */
-    public function testInvalidValuesCombinedMax($value, $formattedValue)
+    #[DataProvider('getMoreThanTwenty')]    public function testInvalidValuesCombinedMax($value, $formattedValue)
     {
         $constraint = new Range(array(
             'min' => 10,
@@ -156,15 +140,12 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
 
         $this->buildViolation('myMaxMessage')
             ->setParameter('{{ value }}', $formattedValue)
-            ->setParameter('{{ limit }}', 20)
+            ->setParameter('{{ limit }}', '20')
             ->setCode(Range::TOO_HIGH_ERROR)
             ->assertRaised();
     }
 
-    /**
-     * @dataProvider getLessThanTen
-     */
-    public function testInvalidValuesCombinedMin($value, $formattedValue)
+    #[DataProvider('getLessThanTen')]    public function testInvalidValuesCombinedMin($value, $formattedValue)
     {
         $constraint = new Range(array(
             'min' => 10,
@@ -177,7 +158,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
 
         $this->buildViolation('myMinMessage')
             ->setParameter('{{ value }}', $formattedValue)
-            ->setParameter('{{ limit }}', 10)
+            ->setParameter('{{ limit }}', '10')
             ->setCode(Range::TOO_LOW_ERROR)
             ->assertRaised();
     }
@@ -186,7 +167,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
     {
         // The provider runs before setUp(), so we need to manually fix
         // the default timezone
-        $this->setDefaultTimezone('UTC');
+        self::setDefaultTimezone('UTC');
 
         $tests = array(
             array(new \DateTime('March 10, 2014')),
@@ -200,7 +181,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
             $tests[] = array(new \DateTimeImmutable('March 20, 2014'));
         }
 
-        $this->restoreDefaultTimezone();
+        self::restoreDefaultTimezone();
 
         return $tests;
     }
@@ -209,19 +190,19 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
     {
         // The provider runs before setUp(), so we need to manually fix
         // the default timezone
-        $this->setDefaultTimezone('UTC');
+        self::setDefaultTimezone('UTC');
 
         $tests = array(
-            array(new \DateTime('March 20, 2013'), 'Mar 20, 2013, 12:00 AM'),
-            array(new \DateTime('March 9, 2014'), 'Mar 9, 2014, 12:00 AM'),
+            array(new \DateTime('March 20, 2013'), 'Mar 20, 2013, 12:00 AM'),
+            array(new \DateTime('March 9, 2014'), 'Mar 9, 2014, 12:00 AM'),
         );
 
         if (\PHP_VERSION_ID >= 50500) {
-            $tests[] = array(new \DateTimeImmutable('March 20, 2013'), 'Mar 20, 2013, 12:00 AM');
-            $tests[] = array(new \DateTimeImmutable('March 9, 2014'), 'Mar 9, 2014, 12:00 AM');
+            $tests[] = array(new \DateTimeImmutable('March 20, 2013'), 'Mar 20, 2013, 12:00 AM');
+            $tests[] = array(new \DateTimeImmutable('March 9, 2014'), 'Mar 9, 2014, 12:00 AM');
         }
 
-        $this->restoreDefaultTimezone();
+        self::restoreDefaultTimezone();
 
         return $tests;
     }
@@ -230,27 +211,24 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
     {
         // The provider runs before setUp(), so we need to manually fix
         // the default timezone
-        $this->setDefaultTimezone('UTC');
+        self::setDefaultTimezone('UTC');
 
         $tests = array(
-            array(new \DateTime('March 21, 2014'), 'Mar 21, 2014, 12:00 AM'),
-            array(new \DateTime('March 9, 2015'), 'Mar 9, 2015, 12:00 AM'),
+            array(new \DateTime('March 21, 2014'), 'Mar 21, 2014, 12:00 AM'),
+            array(new \DateTime('March 9, 2015'), 'Mar 9, 2015, 12:00 AM'),
         );
 
         if (\PHP_VERSION_ID >= 50500) {
-            $tests[] = array(new \DateTimeImmutable('March 21, 2014'), 'Mar 21, 2014, 12:00 AM');
-            $tests[] = array(new \DateTimeImmutable('March 9, 2015'), 'Mar 9, 2015, 12:00 AM');
+            $tests[] = array(new \DateTimeImmutable('March 21, 2014'), 'Mar 21, 2014, 12:00 AM');
+            $tests[] = array(new \DateTimeImmutable('March 9, 2015'), 'Mar 9, 2015, 12:00 AM');
         }
 
-        $this->restoreDefaultTimezone();
+        self::restoreDefaultTimezone();
 
         return $tests;
     }
 
-    /**
-     * @dataProvider getTenthToTwentiethMarch2014
-     */
-    public function testValidDatesMin($value)
+    #[DataProvider('getTenthToTwentiethMarch2014')]    public function testValidDatesMin($value)
     {
         $constraint = new Range(array('min' => 'March 10, 2014'));
         $this->validator->validate($value, $constraint);
@@ -258,10 +236,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getTenthToTwentiethMarch2014
-     */
-    public function testValidDatesMax($value)
+    #[DataProvider('getTenthToTwentiethMarch2014')]    public function testValidDatesMax($value)
     {
         $constraint = new Range(array('max' => 'March 20, 2014'));
         $this->validator->validate($value, $constraint);
@@ -269,10 +244,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getTenthToTwentiethMarch2014
-     */
-    public function testValidDatesMinMax($value)
+    #[DataProvider('getTenthToTwentiethMarch2014')]    public function testValidDatesMinMax($value)
     {
         $constraint = new Range(array('min' => 'March 10, 2014', 'max' => 'March 20, 2014'));
         $this->validator->validate($value, $constraint);
@@ -280,10 +252,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getSoonerThanTenthMarch2014
-     */
-    public function testInvalidDatesMin($value, $dateTimeAsString)
+    #[DataProvider('getSoonerThanTenthMarch2014')]    public function testInvalidDatesMin($value, $dateTimeAsString)
     {
         // Conversion of dates to string differs between ICU versions
         // Make sure we have the correct version loaded
@@ -298,15 +267,12 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
 
         $this->buildViolation('myMessage')
             ->setParameter('{{ value }}', $dateTimeAsString)
-            ->setParameter('{{ limit }}', 'Mar 10, 2014, 12:00 AM')
+            ->setParameter('{{ limit }}', 'Mar 10, 2014, 12:00 AM')
             ->setCode(Range::TOO_LOW_ERROR)
             ->assertRaised();
     }
 
-    /**
-     * @dataProvider getLaterThanTwentiethMarch2014
-     */
-    public function testInvalidDatesMax($value, $dateTimeAsString)
+    #[DataProvider('getLaterThanTwentiethMarch2014')]    public function testInvalidDatesMax($value, $dateTimeAsString)
     {
         // Conversion of dates to string differs between ICU versions
         // Make sure we have the correct version loaded
@@ -321,15 +287,12 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
 
         $this->buildViolation('myMessage')
             ->setParameter('{{ value }}', $dateTimeAsString)
-            ->setParameter('{{ limit }}', 'Mar 20, 2014, 12:00 AM')
+            ->setParameter('{{ limit }}', 'Mar 20, 2014, 12:00 AM')
             ->setCode(Range::TOO_HIGH_ERROR)
             ->assertRaised();
     }
 
-    /**
-     * @dataProvider getLaterThanTwentiethMarch2014
-     */
-    public function testInvalidDatesCombinedMax($value, $dateTimeAsString)
+    #[DataProvider('getLaterThanTwentiethMarch2014')]    public function testInvalidDatesCombinedMax($value, $dateTimeAsString)
     {
         // Conversion of dates to string differs between ICU versions
         // Make sure we have the correct version loaded
@@ -346,15 +309,12 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
 
         $this->buildViolation('myMaxMessage')
             ->setParameter('{{ value }}', $dateTimeAsString)
-            ->setParameter('{{ limit }}', 'Mar 20, 2014, 12:00 AM')
+            ->setParameter('{{ limit }}', 'Mar 20, 2014, 12:00 AM')
             ->setCode(Range::TOO_HIGH_ERROR)
             ->assertRaised();
     }
 
-    /**
-     * @dataProvider getSoonerThanTenthMarch2014
-     */
-    public function testInvalidDatesCombinedMin($value, $dateTimeAsString)
+    #[DataProvider('getSoonerThanTenthMarch2014')]    public function testInvalidDatesCombinedMin($value, $dateTimeAsString)
     {
         // Conversion of dates to string differs between ICU versions
         // Make sure we have the correct version loaded
@@ -371,7 +331,7 @@ class RangeValidatorTest extends AbstractConstraintValidatorTest
 
         $this->buildViolation('myMinMessage')
             ->setParameter('{{ value }}', $dateTimeAsString)
-            ->setParameter('{{ limit }}', 'Mar 10, 2014, 12:00 AM')
+            ->setParameter('{{ limit }}', 'Mar 10, 2014, 12:00 AM')
             ->setCode(Range::TOO_LOW_ERROR)
             ->assertRaised();
     }

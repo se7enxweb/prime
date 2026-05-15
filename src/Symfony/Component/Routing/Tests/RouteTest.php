@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Routing\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Route;
 
@@ -122,10 +125,7 @@ class RouteTest extends TestCase
         $this->assertTrue($route->hasRequirement('foo'), '->hasRequirement() return true if requirement is set');
     }
 
-    /**
-     * @dataProvider getInvalidRequirements
-     */
-    public function testSetInvalidRequirement($req)
+    #[DataProvider('getInvalidRequirements')]    public function testSetInvalidRequirement($req)
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -166,10 +166,7 @@ class RouteTest extends TestCase
         $this->assertTrue($route->hasScheme('httpS'));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacySchemeRequirement()
+    #[Group('legacy')]    public function testLegacySchemeRequirement()
     {
         $route = new Route('/');
         $route->setRequirement('_scheme', 'http|https');
@@ -188,24 +185,21 @@ class RouteTest extends TestCase
     {
         $route = new Route('/');
         $this->assertEquals(array(), $route->getMethods(), 'methods is initialized with array()');
-        $route->setMethods('gEt');
-        $this->assertEquals(array('GET'), $route->getMethods(), '->setMethods() accepts a single method string and uppercases it');
-        $route->setMethods(array('gEt', 'PosT'));
-        $this->assertEquals(array('GET', 'POST'), $route->getMethods(), '->setMethods() accepts an array of methods and uppercases them');
+        $route->onlyMethods('gEt');
+        $this->assertEquals(array('GET'), $route->getMethods(), '->onlyMethods() accepts a single method string and uppercases it');
+        $route->onlyMethods(array('gEt', 'PosT'));
+        $this->assertEquals(array('GET', 'POST'), $route->getMethods(), '->onlyMethods() accepts an array of methods and uppercases them');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyMethodRequirement()
+    #[Group('legacy')]    public function testLegacyMethodRequirement()
     {
         $route = new Route('/');
         $route->setRequirement('_method', 'GET|POST');
         $this->assertEquals('GET|POST', $route->getRequirement('_method'));
         $this->assertEquals(array('GET', 'POST'), $route->getMethods());
-        $route->setMethods(array('gEt'));
+        $route->onlyMethods(array('gEt'));
         $this->assertEquals('GET', $route->getRequirement('_method'));
-        $route->setMethods(array());
+        $route->onlyMethods(array());
         $this->assertNull($route->getRequirement('_method'));
     }
 
@@ -226,10 +220,7 @@ class RouteTest extends TestCase
         $this->assertNotSame($compiled, $route->compile(), '->compile() recompiles if the route was modified');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyPattern()
+    #[Group('legacy')]    public function testLegacyPattern()
     {
         $route = new Route('/{foo}');
         $this->assertEquals('/{foo}', $route->getPattern());

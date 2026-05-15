@@ -2,6 +2,10 @@
 
 namespace Symfony\Bridge\Twig\Tests;
 
+
+
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\AppVariable;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,11 +22,7 @@ class AppVariableTest extends TestCase
     {
         $this->appVariable = new AppVariable();
     }
-
-    /**
-     * @dataProvider debugDataProvider
-     */
-    public function testDebug($debugFlag)
+    #[DataProvider('debugDataProvider')]    public function testDebug($debugFlag)
     {
         $this->appVariable->setDebug($debugFlag);
 
@@ -43,9 +43,8 @@ class AppVariableTest extends TestCase
 
         $this->assertEquals('dev', $this->appVariable->getEnvironment());
     }
-
+    #[RunInSeparateProcess]
     /**
-     * @runInSeparateProcess
      */
     public function testGetSession()
     {
@@ -54,7 +53,7 @@ class AppVariableTest extends TestCase
 
         $this->setRequestStack($request);
 
-        $this->assertEquals($session, $this->appVariable->getSession());
+$this->assertEquals($session, $this->appVariable->getSession());
     }
 
     public function testGetSessionWithNoRequest()
@@ -151,7 +150,8 @@ class AppVariableTest extends TestCase
         $tokenStorage = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')->getMock();
         $this->appVariable->setTokenStorage($tokenStorage);
 
-        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')->getMock();
+        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')
+            ->getMock();
         $tokenStorage->method('getToken')->willReturn($token);
 
         $token->method('getUser')->willReturn($user);

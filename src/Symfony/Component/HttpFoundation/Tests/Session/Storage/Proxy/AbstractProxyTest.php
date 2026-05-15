@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\HttpFoundation\Tests\Session\Storage\Proxy;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
 
@@ -101,10 +105,10 @@ class AbstractProxyTest extends TestCase
         $this->assertFalse($this->proxy->isActive());
     }
 
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    #[RequiresPhp('5.4')]
     /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     * @requires PHP 5.4
      */
     public function testIsActivePhp54()
     {
@@ -125,10 +129,10 @@ class AbstractProxyTest extends TestCase
         $this->assertFalse($this->proxy->isActive());
     }
 
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    #[RequiresPhp('5.4')]
     /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     * @requires PHP 5.4
      */
     public function testSetActivePhp54()
     {
@@ -137,9 +141,9 @@ class AbstractProxyTest extends TestCase
         $this->proxy->setActive(true);
     }
 
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testName()
     {
@@ -163,10 +167,10 @@ class AbstractProxyTest extends TestCase
         $this->proxy->setName('foo');
     }
 
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    #[RequiresPhp('5.4')]
     /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     * @requires PHP 5.4
      */
     public function testNameExceptionPhp54()
     {
@@ -176,9 +180,9 @@ class AbstractProxyTest extends TestCase
         $this->proxy->setName('foo');
     }
 
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testId()
     {
@@ -202,10 +206,10 @@ class AbstractProxyTest extends TestCase
         $this->proxy->setId('foo');
     }
 
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    #[RequiresPhp('5.4')]
     /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     * @requires PHP 5.4
      */
     public function testIdExceptionPhp54()
     {

@@ -101,7 +101,6 @@ EOF
         $kernel->boot();
 
         $method = new \ReflectionMethod($kernel, 'buildContainer');
-        $method->setAccessible(true);
         $container = $method->invoke($kernel);
         $container->getCompiler()->compile($container);
 

@@ -11,6 +11,8 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Controller;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerResolver;
@@ -52,7 +54,7 @@ class ControllerResolverTest extends BaseControllerResolverTest
         $parser->expects($this->once())
             ->method('parse')
             ->with($shortName)
-            ->will($this->returnValue('Symfony\Bundle\FrameworkBundle\Tests\Controller\ContainerAwareController::testAction'))
+            ->willReturn('Symfony\Bundle\FrameworkBundle\Tests\Controller\ContainerAwareController::testAction')
         ;
 
         $resolver = $this->createControllerResolver(null, $parser);
@@ -62,7 +64,7 @@ class ControllerResolverTest extends BaseControllerResolverTest
         $controller = $resolver->getController($request);
 
         $this->assertInstanceOf('Symfony\Bundle\FrameworkBundle\Tests\Controller\ContainerAwareController', $controller[0]);
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerInterface', $controller[0]->getContainer());
+$this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerInterface', $controller[0]->getContainer());
         $this->assertSame('testAction', $controller[1]);
     }
 
@@ -72,7 +74,7 @@ class ControllerResolverTest extends BaseControllerResolverTest
         $container->expects($this->once())
             ->method('get')
             ->with('foo')
-            ->will($this->returnValue($this))
+            ->willReturn($this)
         ;
 
         $resolver = $this->createControllerResolver(null, null, $container);
@@ -93,12 +95,12 @@ class ControllerResolverTest extends BaseControllerResolverTest
         $container->expects($this->once())
             ->method('has')
             ->with('foo')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
         $container->expects($this->once())
             ->method('get')
             ->with('foo')
-            ->will($this->returnValue($invokableController))
+            ->willReturn($invokableController)
         ;
 
         $resolver = $this->createControllerResolver(null, null, $container);
@@ -119,12 +121,12 @@ class ControllerResolverTest extends BaseControllerResolverTest
         $container->expects($this->once())
             ->method('has')
             ->with($className)
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
         $container->expects($this->once())
             ->method('get')
             ->with($className)
-            ->will($this->returnValue($invokableController))
+            ->willReturn($invokableController)
         ;
 
         $resolver = $this->createControllerResolver(null, null, $container);
@@ -135,32 +137,32 @@ class ControllerResolverTest extends BaseControllerResolverTest
 
         $this->assertEquals($invokableController, $controller);
     }
-
-    /**
-     * @dataProvider getUndefinedControllers
-     */
-    public function testGetControllerOnNonUndefinedFunction($controller, $exceptionName = null, $exceptionMessage = null)
+    #[DataProvider('getUndefinedControllers')]    public function testGetControllerOnNonUndefinedFunction($controller, $exceptionName = null, $exceptionMessage = null)
     {
         if (method_exists($this, 'expectException')) {
             $this->expectException($exceptionName);
             $this->expectExceptionMessage($exceptionMessage);
         } else {
-            $this->setExpectedException($exceptionName, $exceptionMessage);
+            $this->expectException($exceptionName);
+        $this->expectExceptionMessage($exceptionMessage);
         }
 
-        parent::testGetControllerOnNonUndefinedFunction($controller);
+        $resolver = $this->createControllerResolver();
+        $request = Request::create('/');
+        $request->attributes->set('_controller', $controller);
+        $resolver->getController($request);
     }
 
     public static function getUndefinedControllers()
     {
         return array(
-            array('foo', '\LogicException', 'Unable to parse the controller name "foo".'),
+            array('foo', '\\LogicException', 'Unable to parse the controller name "foo".'),
             array('oof::bar', '\InvalidArgumentException', 'Class "oof" does not exist.'),
-            array('stdClass', '\LogicException', 'Unable to parse the controller name "stdClass".'),
+            array('stdClass', '\\LogicException', 'Unable to parse the controller name "stdClass".'),
             array(
-                'Symfony\Component\HttpKernel\Tests\Controller\ControllerResolverTest::bar',
+                'Symfony\Component\HttpKernel\Tests\Controller\TestController::bar',
                 '\InvalidArgumentException',
-                'Controller "Symfony\Component\HttpKernel\Tests\Controller\ControllerResolverTest::bar" for URI "/" is not callable.',
+                'Controller "Symfony\Component\HttpKernel\Tests\Controller\TestController::bar" for URI "/" is not callable.',
             ),
         );
     }

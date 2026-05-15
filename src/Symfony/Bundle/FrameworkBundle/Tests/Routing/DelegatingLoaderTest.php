@@ -2,6 +2,8 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Routing;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
@@ -19,20 +21,12 @@ class DelegatingLoaderTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
     }
-
-    /**
-     * @group legacy
-     */
-    public function testLegacyConstructorApi()
+    #[Group('legacy')]    public function testLegacyConstructorApi()
     {
         new DelegatingLoader($this->controllerNameParser, new NullLogger(), new LoaderResolver());
         $this->assertTrue(true, '__construct() accepts a LoggerInterface instance as its second argument');
     }
-
-    /**
-     * @group legacy
-     */
-    public function testLegacyConstructorApiAcceptsNullAsSecondArgument()
+    #[Group('legacy')]    public function testLegacyConstructorApiAcceptsNullAsSecondArgument()
     {
         new DelegatingLoader($this->controllerNameParser, null, new LoaderResolver());
         $this->assertTrue(true, '__construct() accepts null as its second argument');

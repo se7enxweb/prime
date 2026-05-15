@@ -11,33 +11,27 @@
 
 namespace Symfony\Component\Yaml\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Inline;
 
 class InlineTest extends TestCase
 {
-    /**
-     * @dataProvider getTestsForParse
-     */
-    public function testParse($yaml, $value)
+    #[DataProvider('getTestsForParse')]    public function testParse($yaml, $value)
     {
         $this->assertSame($value, Inline::parse($yaml), sprintf('::parse() converts an inline YAML to a PHP structure (%s)', $yaml));
     }
 
-    /**
-     * @dataProvider getTestsForParseWithMapObjects
-     */
-    public function testParseWithMapObjects($yaml, $value)
+    #[DataProvider('getTestsForParseWithMapObjects')]    public function testParseWithMapObjects($yaml, $value)
     {
         $actual = Inline::parse($yaml, false, false, true);
 
         $this->assertSame(serialize($value), serialize($actual));
     }
 
-    /**
-     * @dataProvider getTestsForDump
-     */
-    public function testDump($yaml, $value)
+    #[DataProvider('getTestsForDump')]    public function testDump($yaml, $value)
     {
         $this->assertEquals($yaml, Inline::dump($value), sprintf('::dump() converts a PHP structure to an inline YAML (%s)', $yaml));
 
@@ -58,7 +52,7 @@ class InlineTest extends TestCase
             }
 
             $this->assertEquals('1.2', Inline::dump(1.2));
-            $this->assertContains('fr', strtolower(setlocale(LC_NUMERIC, 0)));
+            $this->assertStringContainsString('fr', strtolower(setlocale(LC_NUMERIC, 0)));
             setlocale(LC_NUMERIC, $locale);
         } catch (\Exception $e) {
             setlocale(LC_NUMERIC, $locale);
@@ -73,8 +67,8 @@ class InlineTest extends TestCase
         $this->assertSame($value, Inline::parse(Inline::dump($value)));
     }
 
+    #[Group('legacy')]
     /**
-     * @group legacy
      * throws \Symfony\Component\Yaml\Exception\ParseException in 3.0
      */
     public function testParseScalarWithNonEscapedBlackslashShouldThrowException()
@@ -147,10 +141,7 @@ class InlineTest extends TestCase
         $this->assertSame($expect, Inline::parseScalar($value));
     }
 
-    /**
-     * @dataProvider getDataForParseReferences
-     */
-    public function testParseReferences($yaml, $expected)
+    #[DataProvider('getDataForParseReferences')]    public function testParseReferences($yaml, $expected)
     {
         $this->assertSame($expected, Inline::parse($yaml, false, false, false, array('var' => 'var-value')));
     }
@@ -199,43 +190,31 @@ class InlineTest extends TestCase
         Inline::parse('{ foo: * #foo }');
     }
 
-    /**
-     * @group legacy
-     * @expectedDeprecation Not quoting the scalar "@foo " starting with "@" is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.
-     * throws \Symfony\Component\Yaml\Exception\ParseException in 3.0
-     */
-    public function testParseUnquotedScalarStartingWithReservedAtIndicator()
+    #[Group('legacy')]    public function testParseUnquotedScalarStartingWithReservedAtIndicator()
     {
+        $this->expectUserDeprecationMessage('Not quoting the scalar "@foo " starting with "@" is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.');
+
         Inline::parse('{ foo: @foo }');
     }
 
-    /**
-     * @group legacy
-     * @expectedDeprecation Not quoting the scalar "`foo " starting with "`" is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.
-     * throws \Symfony\Component\Yaml\Exception\ParseException in 3.0
-     */
-    public function testParseUnquotedScalarStartingWithReservedBacktickIndicator()
+    #[Group('legacy')]    public function testParseUnquotedScalarStartingWithReservedBacktickIndicator()
     {
+        $this->expectUserDeprecationMessage('Not quoting the scalar "`foo " starting with "`" is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.');
+
         Inline::parse('{ foo: `foo }');
     }
 
-    /**
-     * @group legacy
-     * @expectedDeprecation Not quoting the scalar "|foo " starting with "|" is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.
-     * throws \Symfony\Component\Yaml\Exception\ParseException in 3.0
-     */
-    public function testParseUnquotedScalarStartingWithLiteralStyleIndicator()
+    #[Group('legacy')]    public function testParseUnquotedScalarStartingWithLiteralStyleIndicator()
     {
+        $this->expectUserDeprecationMessage('Not quoting the scalar "|foo " starting with "|" is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.');
+
         Inline::parse('{ foo: |foo }');
     }
 
-    /**
-     * @group legacy
-     * @expectedDeprecation Not quoting the scalar ">foo " starting with ">" is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.
-     * throws \Symfony\Component\Yaml\Exception\ParseException in 3.0
-     */
-    public function testParseUnquotedScalarStartingWithFoldedStyleIndicator()
+    #[Group('legacy')]    public function testParseUnquotedScalarStartingWithFoldedStyleIndicator()
     {
+        $this->expectUserDeprecationMessage('Not quoting the scalar ">foo " starting with ">" is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.');
+
         Inline::parse('{ foo: >foo }');
     }
 
@@ -244,10 +223,7 @@ class InlineTest extends TestCase
         return array(array('|'), array('>'));
     }
 
-    /**
-     * @dataProvider getDataForIsHash
-     */
-    public function testIsHash($array, $expected)
+    #[DataProvider('getDataForIsHash')]    public function testIsHash($array, $expected)
     {
         $this->assertSame($expected, Inline::isHash($array));
     }
@@ -509,7 +485,7 @@ class InlineTest extends TestCase
     public function testUnfinishedInlineMap()
     {
         $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
-        $this->expectExceptionMessage('Unexpected end of line, expected one of \",}\".');
+        $this->expectExceptionMessage('Unexpected end of line, expected one of ",}".');
 
         Inline::parse("{abc: 'def'");
     }

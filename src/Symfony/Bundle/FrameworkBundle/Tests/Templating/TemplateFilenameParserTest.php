@@ -11,6 +11,8 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Templating;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateFilenameParser;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
@@ -29,10 +31,7 @@ class TemplateFilenameParserTest extends TestCase
         $this->parser = null;
     }
 
-    /**
-     * @dataProvider getFilenameToTemplateProvider
-     */
-    public function testParseFromFilename($file, $ref)
+    #[DataProvider('getFilenameToTemplateProvider')]    public function testParseFromFilename($file, $ref)
     {
         $template = $this->parser->parse($file);
 

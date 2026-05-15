@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Routing\Tests\Loader;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Loader\AnnotationFileLoader;
@@ -35,8 +37,8 @@ class AnnotationFileLoaderTest extends AbstractAnnotationLoaderTest
         $this->loader->load(__DIR__.'/../Fixtures/AnnotatedClasses/FooClass.php');
     }
 
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function testLoadTraitWithClassConstant()
     {
@@ -45,21 +47,21 @@ class AnnotationFileLoaderTest extends AbstractAnnotationLoaderTest
         $this->loader->load(__DIR__.'/../Fixtures/AnnotatedClasses/FooTrait.php');
     }
 
+    #[RequiresPhp('5.6')]
     /**
-     * @requires PHP 5.6
      */
     public function testLoadVariadic()
     {
         $route = new Route(array('path' => '/path/to/{id}'));
         $this->reader->expects($this->once())->method('getClassAnnotation');
         $this->reader->expects($this->once())->method('getMethodAnnotations')
-            ->will($this->returnValue(array($route)));
+            ->willReturn(array($route));
 
         $this->loader->load(__DIR__.'/../Fixtures/OtherAnnotatedClasses/VariadicClass.php');
     }
 
+    #[RequiresPhp('7.0')]
     /**
-     * @requires PHP 7.0
      */
     public function testLoadAnonymousClass()
     {

@@ -11,14 +11,16 @@
 
 namespace Symfony\Bundle\WebProfilerBundle\Tests\Command;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\WebProfilerBundle\Command\ImportCommand;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class ImportCommandTest extends TestCase
 {
@@ -30,7 +32,7 @@ class ImportCommandTest extends TestCase
             ->getMock()
         ;
 
-        $profiler->expects($this->once())->method('import')->will($this->returnValue(new Profile('TOKEN')));
+        $profiler->expects($this->once())->method('import')->willReturn(new Profile('TOKEN'));
 
         $helperSet = new HelperSet();
         $helper = $this->getMockBuilder('Symfony\Component\Console\Helper\FormatterHelper')->getMock();

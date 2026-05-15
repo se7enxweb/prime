@@ -11,15 +11,14 @@
 
 namespace Symfony\Component\Security\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Finder;
 
 class TranslationSyncStatusTest extends TestCase
 {
-    /**
-     * @dataProvider getTranslationDirectoriesData
-     */
-    public function testTranslationFileIsNotMissingInCore($dir1, $dir2)
+    #[DataProvider('getTranslationDirectoriesData')]    public function testTranslationFileIsNotMissingInCore($dir1, $dir2)
     {
         $finder = new Finder();
         $files = $finder->in($dir1)->files();
@@ -31,8 +30,8 @@ class TranslationSyncStatusTest extends TestCase
 
     public static function getTranslationDirectoriesData()
     {
-        $legacyTranslationsDir = $this->getLegacyTranslationsDirectory();
-        $coreTranslationsDir = $this->getCoreTranslationsDirectory();
+        $legacyTranslationsDir = self::getLegacyTranslationsDirectory();
+        $coreTranslationsDir = self::getCoreTranslationsDirectory();
 
         return array(
             'file-not-missing-in-core' => array($legacyTranslationsDir, $coreTranslationsDir),
@@ -52,12 +51,12 @@ class TranslationSyncStatusTest extends TestCase
         }
     }
 
-    private function getLegacyTranslationsDirectory()
+    private static function getLegacyTranslationsDirectory()
     {
         return __DIR__.'/../Resources/translations';
     }
 
-    private function getCoreTranslationsDirectory()
+    private static function getCoreTranslationsDirectory()
     {
         return __DIR__.'/../Core/Resources/translations';
     }

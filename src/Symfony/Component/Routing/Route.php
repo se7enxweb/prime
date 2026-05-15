@@ -62,7 +62,7 @@ class Route implements \Serializable
             $this->setSchemes($schemes);
         }
         if ($methods) {
-            $this->setMethods($methods);
+            $this->onlyMethods($methods);
         }
         $this->setCondition($condition);
     }
@@ -287,6 +287,18 @@ class Route implements \Serializable
         $this->compiled = null;
 
         return $this;
+    }
+
+    /**
+     * @deprecated Use setMethods() instead.
+     *
+     * @param string|string[] $methods
+     *
+     * @return $this
+     */
+    public function onlyMethods($methods)
+    {
+        return $this->setMethods($methods);
     }
 
     /**
@@ -628,7 +640,7 @@ class Route implements \Serializable
         } elseif ('_method' === $key) {
             @trigger_error('The "_method" requirement is deprecated since Symfony 2.2 and will be removed in 3.0. Use the setMethods() method instead.', E_USER_DEPRECATED);
 
-            $this->setMethods(explode('|', $regex));
+            $this->onlyMethods(explode('|', $regex));
         }
 
         return $regex;

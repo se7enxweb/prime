@@ -45,7 +45,7 @@ class ServerParams
      */
     public function getPostMaxSize()
     {
-        $iniMax = strtolower($this->getNormalizedIniPostMaxSize());
+        $iniMax = strtolower((string) $this->getNormalizedIniPostMaxSize());
 
         if ('' === $iniMax) {
             return;

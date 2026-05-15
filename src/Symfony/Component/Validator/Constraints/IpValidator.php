@@ -93,7 +93,11 @@ class IpValidator extends ConstraintValidator
                 break;
         }
 
-        if (!filter_var($value, FILTER_VALIDATE_IP, $flag)) {
+      $isValidIp = null === $flag
+         ? false !== filter_var($value, FILTER_VALIDATE_IP)
+         : false !== filter_var($value, FILTER_VALIDATE_IP, $flag);
+
+      if (!$isValidIp) {
             if ($this->context instanceof ExecutionContextInterface) {
                 $this->context->buildViolation($constraint->message)
                     ->setParameter('{{ value }}', $this->formatValue($value))

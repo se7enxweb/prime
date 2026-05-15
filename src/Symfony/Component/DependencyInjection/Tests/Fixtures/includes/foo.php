@@ -6,6 +6,7 @@ class FooClass
 {
     public $foo;
     public $moo;
+    public $qux;
 
     public $bar = null;
     public $initialized = false;

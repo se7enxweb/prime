@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Security\Http\Tests\Firewall;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Http\Firewall\DigestData;
 
@@ -100,8 +102,8 @@ class DigestDataTest extends TestCase
         $this->assertEquals('"u\\ser"', $digestAuth->getUsername());
     }
 
+    #[Group('time-sensitive')]
     /**
-     * @group time-sensitive
      */
     public function testValidateAndDecode()
     {

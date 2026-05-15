@@ -48,7 +48,7 @@ class DelegatingEngineTest extends TestCase
     public function testGetInvalidEngine()
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('No engine is able to work with the template \"template.php\"');
+        $this->expectExceptionMessage('No engine is able to work with the template "template.php"');
 
         $firstEngine = $this->getEngineMock('template.php', false);
         $secondEngine = $this->getEngineMock('template.php', false);
@@ -68,12 +68,12 @@ class DelegatingEngineTest extends TestCase
         $engine->expects($this->once())
             ->method('renderResponse')
             ->with('template.php', array('foo' => 'bar'))
-            ->will($this->returnValue($response));
-        $container = $this->getContainerMock(array('engine' => $engine));
+            ->willReturn($response);
+$container = $this->getContainerMock(array('engine' => $engine));
 
-        $delegatingEngine = new DelegatingEngine($container, array('engine'));
+$delegatingEngine = new DelegatingEngine($container, array('engine'));
 
-        $this->assertSame($response, $delegatingEngine->renderResponse('template.php', array('foo' => 'bar')));
+$this->assertSame($response, $delegatingEngine->renderResponse('template.php', array('foo' => 'bar')));
     }
 
     public function testRenderResponseWithTemplatingEngine()
@@ -92,7 +92,7 @@ class DelegatingEngineTest extends TestCase
         $engine->expects($this->once())
             ->method('supports')
             ->with($template)
-            ->will($this->returnValue($supports));
+            ->willReturn($supports);
 
         return $engine;
     }
@@ -104,7 +104,7 @@ class DelegatingEngineTest extends TestCase
         $engine->expects($this->once())
             ->method('supports')
             ->with($template)
-            ->will($this->returnValue($supports));
+            ->willReturn($supports);
 
         return $engine;
     }
@@ -113,13 +113,11 @@ class DelegatingEngineTest extends TestCase
     {
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
 
-        $i = 0;
-        foreach ($services as $id => $service) {
-            $container->expects($this->at($i++))
-                ->method('get')
-                ->with($id)
-                ->will($this->returnValue($service));
-        }
+        $container->expects($this->any())
+            ->method('get')
+            ->willReturnCallback(function ($id) use ($services) {
+                return $services[$id];
+            });
 
         return $container;
     }

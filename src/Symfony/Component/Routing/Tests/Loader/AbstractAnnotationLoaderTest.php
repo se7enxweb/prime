@@ -27,7 +27,8 @@ abstract class AbstractAnnotationLoaderTest extends TestCase
     {
         return $this->getMockBuilder('Symfony\Component\Routing\Loader\AnnotationClassLoader')
             ->setConstructorArgs(array($reader))
-            ->getMockForAbstractClass()
+            ->onlyMethods(array('configureRoute'))
+            ->getMock()
         ;
     }
 }

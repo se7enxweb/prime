@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\CallbackTransformer;
 
@@ -27,8 +29,8 @@ class CallbackTransformerTest extends TestCase
         $this->assertEquals('bar has reversely been transformed', $transformer->reverseTransform('bar'));
     }
 
+    #[DataProvider('invalidCallbacksProvider')]
     /**
-     * @dataProvider invalidCallbacksProvider
      *
      */
     public function testConstructorWithInvalidCallbacks($transformCallback, $reverseTransformCallback)

@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Validator;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Validator\ValidatorTypeGuesser;
 use Symfony\Component\Form\Guess\Guess;
@@ -56,7 +59,7 @@ class ValidatorTypeGuesserTest extends TestCase
         $this->metadataFactory->expects($this->any())
             ->method('getMetadataFor')
             ->with(self::TEST_CLASS)
-            ->will($this->returnValue($this->metadata));
+            ->willReturn($this->metadata);
         $this->guesser = new ValidatorTypeGuesser($this->metadataFactory);
     }
 
@@ -71,10 +74,7 @@ class ValidatorTypeGuesserTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider guessRequiredProvider
-     */
-    public function testGuessRequired($constraint, $guess)
+    #[DataProvider('guessRequiredProvider')]    public function testGuessRequired($constraint, $guess)
     {
         // add distracting constraint
         $this->metadata->addPropertyConstraint(self::TEST_PROPERTY, new Email());
@@ -85,10 +85,7 @@ class ValidatorTypeGuesserTest extends TestCase
         $this->assertEquals($guess, $this->guesser->guessRequired(self::TEST_CLASS, self::TEST_PROPERTY));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyGuessRequired()
+    #[Group('legacy')]    public function testLegacyGuessRequired()
     {
         if (\PHP_VERSION_ID >= 70000) {
             $this->markTestSkipped('Cannot use a class called True on PHP 7 or higher.');
@@ -130,10 +127,7 @@ class ValidatorTypeGuesserTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider maxLengthTypeProvider
-     */
-    public function testGuessMaxLengthForConstraintWithType($type)
+    #[DataProvider('maxLengthTypeProvider')]    public function testGuessMaxLengthForConstraintWithType($type)
     {
         $constraint = new Type($type);
 

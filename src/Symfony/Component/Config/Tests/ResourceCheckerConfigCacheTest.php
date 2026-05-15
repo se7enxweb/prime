@@ -86,10 +86,10 @@ class ResourceCheckerConfigCacheTest extends TestCase
                   ->method('isFresh')
                   ->willReturn(true);
 
-        $cache = new ResourceCheckerConfigCache($this->cacheFile, array($checker));
-        $cache->write('', array(new ResourceStub()));
+$cache = new ResourceCheckerConfigCache($this->cacheFile, array($checker));
+$cache->write('', array(new ResourceStub()));
 
-        $this->assertTrue($cache->isFresh());
+$this->assertTrue($cache->isFresh());
     }
 
     public function testIsNotFreshWithchecker()
@@ -104,10 +104,10 @@ class ResourceCheckerConfigCacheTest extends TestCase
                   ->method('isFresh')
                   ->willReturn(false);
 
-        $cache = new ResourceCheckerConfigCache($this->cacheFile, array($checker));
-        $cache->write('', array(new ResourceStub()));
+$cache = new ResourceCheckerConfigCache($this->cacheFile, array($checker));
+$cache->write('', array(new ResourceStub()));
 
-        $this->assertFalse($cache->isFresh());
+$this->assertFalse($cache->isFresh());
     }
 
     public function testCacheIsNotFreshWhenUnserializeFails()

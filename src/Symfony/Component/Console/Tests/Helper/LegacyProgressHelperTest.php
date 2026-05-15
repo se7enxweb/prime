@@ -11,13 +11,14 @@
 
 namespace Symfony\Component\Console\Tests\Helper;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Helper\ProgressHelper;
 use Symfony\Component\Console\Output\StreamOutput;
 
+#[Group('legacy')]
 /**
- * @group legacy
- * @group time-sensitive
  */
 class LegacyProgressHelperTest extends TestCase
 {
@@ -145,7 +146,7 @@ class LegacyProgressHelperTest extends TestCase
 
     public function testRedrawFrequency()
     {
-        $progress = $this->getMockBuilder('Symfony\Component\Console\Helper\ProgressHelper')->setMethods(array('display'))->getMock();
+        $progress = $this->getMockBuilder('Symfony\Component\Console\Helper\ProgressHelper')->onlyMethods(array('display'))->getMock();
         $progress->expects($this->exactly(4))
                  ->method('display');
 

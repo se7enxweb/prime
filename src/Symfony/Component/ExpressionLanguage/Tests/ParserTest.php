@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\ExpressionLanguage\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\ExpressionLanguage\Lexer;
 use Symfony\Component\ExpressionLanguage\Node;
@@ -23,7 +25,7 @@ class ParserTest extends TestCase
     public function testParseWithInvalidName()
     {
         $this->expectException(\Symfony\Component\ExpressionLanguage\SyntaxError::class);
-        $this->expectExceptionMessage('Variable \"foo\" is not valid around position 1 for expression `foo`.');
+        $this->expectExceptionMessage('Variable "foo" is not valid around position 1 for expression `foo`.');
 
         $lexer = new Lexer();
         $parser = new Parser(array());
@@ -35,17 +37,14 @@ class ParserTest extends TestCase
     public function testParseWithZeroInNames()
     {
         $this->expectException(\Symfony\Component\ExpressionLanguage\SyntaxError::class);
-        $this->expectExceptionMessage('Variable \"foo\" is not valid around position 1 for expression `foo`.');
+        $this->expectExceptionMessage('Variable "foo" is not valid around position 1 for expression `foo`.');
 
         $lexer = new Lexer();
         $parser = new Parser(array());
         $parser->parse($lexer->tokenize('foo'), array(0));
     }
 
-    /**
-     * @dataProvider getParseData
-     */
-    public function testParse($node, $expression, $names = array())
+    #[DataProvider('getParseData')]    public function testParse($node, $expression, $names = array())
     {
         $lexer = new Lexer();
         $parser = new Parser(array());
@@ -141,10 +140,10 @@ class ParserTest extends TestCase
 
             // chained calls
             array(
-                $this->createGetAttrNode(
-                    $this->createGetAttrNode(
-                        $this->createGetAttrNode(
-                            $this->createGetAttrNode(new Node\NameNode('foo'), 'bar', Node\GetAttrNode::METHOD_CALL),
+                self::createGetAttrNode(
+                    self::createGetAttrNode(
+                        self::createGetAttrNode(
+                            self::createGetAttrNode(new Node\NameNode('foo'), 'bar', Node\GetAttrNode::METHOD_CALL),
                             'foo', Node\GetAttrNode::METHOD_CALL),
                         'baz', Node\GetAttrNode::PROPERTY_CALL),
                     '3', Node\GetAttrNode::ARRAY_CALL),
@@ -160,15 +159,12 @@ class ParserTest extends TestCase
         );
     }
 
-    private function createGetAttrNode($node, $item, $type)
+    private static function createGetAttrNode($node, $item, $type)
     {
         return new Node\GetAttrNode($node, new Node\ConstantNode($item), new Node\ArgumentsNode(), $type);
     }
 
-    /**
-     * @dataProvider getInvalidPostfixData
-     */
-    public function testParseWithInvalidPostfixData($expr, $names = array())
+    #[DataProvider('getInvalidPostfixData')]    public function testParseWithInvalidPostfixData($expr, $names = array())
     {
         $this->expectException(\Symfony\Component\ExpressionLanguage\SyntaxError::class);
 

@@ -164,8 +164,9 @@ class BinaryFileResponse extends Response
 
             for ($i = 0, $filenameLength = mb_strlen($filename, $encoding); $i < $filenameLength; ++$i) {
                 $char = mb_substr($filename, $i, 1, $encoding);
+                $firstByte = isset($char[0]) ? $char[0] : '';
 
-                if ('%' === $char || \ord($char) < 32 || \ord($char) > 126) {
+                if ('%' === $char || '' === $firstByte || \ord($firstByte) < 32 || \ord($firstByte) > 126) {
                     $filenameFallback .= '_';
                 } else {
                     $filenameFallback .= $char;

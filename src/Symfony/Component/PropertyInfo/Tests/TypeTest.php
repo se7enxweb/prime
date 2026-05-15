@@ -48,7 +48,7 @@ class TypeTest extends TestCase
     public function testInvalidType()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('\"foo\" is not a valid PHP type.');
+        $this->expectExceptionMessage('"foo" is not a valid PHP type.');
 
         new Type('foo');
     }

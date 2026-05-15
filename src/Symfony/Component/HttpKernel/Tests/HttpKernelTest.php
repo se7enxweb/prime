@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\HttpKernel\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -107,10 +109,7 @@ class HttpKernelTest extends TestCase
         $this->assertEquals('POST', $response->headers->get('Allow'));
     }
 
-    /**
-     * @dataProvider getStatusCodes
-     */
-    public function testHandleWhenAnExceptionIsHandledWithASpecificStatusCode($responseStatusCode, $expectedStatusCode)
+    #[DataProvider('getStatusCodes')]    public function testHandleWhenAnExceptionIsHandledWithASpecificStatusCode($responseStatusCode, $expectedStatusCode)
     {
         $dispatcher = new EventDispatcher();
         $dispatcher->addListener(KernelEvents::EXCEPTION, function ($event) use ($responseStatusCode, $expectedStatusCode) {
@@ -267,9 +266,9 @@ class HttpKernelTest extends TestCase
     {
         $request = new Request();
 
-        $stack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->setMethods(array('push', 'pop'))->getMock();
-        $stack->expects($this->at(0))->method('push')->with($this->equalTo($request));
-        $stack->expects($this->at(1))->method('pop');
+        $stack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->onlyMethods(array('push', 'pop'))->getMock();
+        $stack->expects($this->any())->method('push')->with($this->equalTo($request));
+        $stack->expects($this->any())->method('pop');
 
         $dispatcher = new EventDispatcher();
         $kernel = new HttpKernel($dispatcher, $this->getResolver(), $stack);
@@ -310,10 +309,10 @@ class HttpKernelTest extends TestCase
         $resolver = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Controller\\ControllerResolverInterface')->getMock();
         $resolver->expects($this->any())
             ->method('getController')
-            ->will($this->returnValue($controller));
+            ->willReturn($controller);
         $resolver->expects($this->any())
             ->method('getArguments')
-            ->will($this->returnValue(array()));
+            ->willReturn(array());
 
         return $resolver;
     }

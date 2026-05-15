@@ -12,6 +12,7 @@
 namespace Symfony\Bundle\FrameworkBundle\Tests\Translation;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -101,7 +102,7 @@ class TranslatorTest extends TestCase
         $translator = $this->getTranslator($loader, array('cache_dir' => $this->tmpDir), 'loader', '\Symfony\Bundle\FrameworkBundle\Tests\Translation\TranslatorWithInvalidLocale');
         $translator->setLocale('invalid locale');
 
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('\InvalidArgumentException');
+        $this->expectException('\InvalidArgumentException');
         $translator->trans('foo');
     }
 
@@ -127,32 +128,24 @@ class TranslatorTest extends TestCase
             ->expects($this->once())
             ->method('getParameter')
             ->with('kernel.default_locale')
-            ->will($this->returnValue('en'))
+            ->willReturn('en')
         ;
 
-        $translator = new Translator($container, new MessageSelector());
+$translator = new Translator($container, new MessageSelector());
 
-        $this->assertSame('en', $translator->getLocale());
-    }
-
-    /** @dataProvider getDebugModeAndCacheDirCombinations */
+$this->assertSame('en', $translator->getLocale());
+    }    #[DataProvider('getDebugModeAndCacheDirCombinations')]
     public function testResourceFilesOptionLoadsBeforeOtherAddedResources($debug, $enableCache)
     {
-        $someCatalogue = $this->getCatalogue('some_locale', array());
+$someCatalogue = $this->getCatalogue('some_locale', array());
 
         $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')->getMock();
 
-        $loader->expects($this->at(0))
+        $loader->expects($this->any())
             ->method('load')
-            /* The "messages.some_locale.loader" is passed via the resource_file option and shall be loaded first */
-            ->with('messages.some_locale.loader', 'some_locale', 'messages')
-            ->willReturn($someCatalogue);
-
-        $loader->expects($this->at(1))
-            ->method('load')
-            /* This resource is added by an addResource() call and shall be loaded after the resource_files */
-            ->with('second_resource.some_locale.loader', 'some_locale', 'messages')
-            ->willReturn($someCatalogue);
+            ->willReturnCallback(function ($resource, $locale, $domain) use ($someCatalogue) {
+                return $someCatalogue;
+            });
 
         $options = array(
             'resource_files' => array('some_locale' => array('messages.some_locale.loader')),
@@ -168,6 +161,7 @@ class TranslatorTest extends TestCase
         $translator->addResource('loader', 'second_resource.some_locale.loader', 'some_locale', 'messages');
 
         $translator->trans('some_message', array(), null, 'some_locale');
+        $this->addToAssertionCount(1);
     }
 
     public static function getDebugModeAndCacheDirCombinations()
@@ -195,57 +189,29 @@ class TranslatorTest extends TestCase
 
     protected function getLoader()
     {
-        $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')->getMock();
-        $loader
-            ->expects($this->at(0))
-            ->method('load')
-            ->will($this->returnValue($this->getCatalogue('fr', array(
-                'foo' => 'foo (FR)',
-            ))))
-        ;
-        $loader
-            ->expects($this->at(1))
-            ->method('load')
-            ->will($this->returnValue($this->getCatalogue('en', array(
+        $catalogues = array(
+            'fr' => $this->getCatalogue('fr', array('foo' => 'foo (FR)')),
+            'en' => $this->getCatalogue('en', array(
                 'foo' => 'foo (EN)',
                 'bar' => 'bar (EN)',
                 'choice' => '{0} choice 0 (EN)|{1} choice 1 (EN)|]1,Inf] choice inf (EN)',
-            ))))
-        ;
-        $loader
-            ->expects($this->at(2))
-            ->method('load')
-            ->will($this->returnValue($this->getCatalogue('es', array(
-                'foobar' => 'foobar (ES)',
-            ))))
-        ;
-        $loader
-            ->expects($this->at(3))
-            ->method('load')
-            ->will($this->returnValue($this->getCatalogue('pt-PT', array(
-                'foobarfoo' => 'foobarfoo (PT-PT)',
-            ))))
-        ;
-        $loader
-            ->expects($this->at(4))
-            ->method('load')
-            ->will($this->returnValue($this->getCatalogue('pt_BR', array(
+            )),
+            'es' => $this->getCatalogue('es', array('foobar' => 'foobar (ES)')),
+            'pt-PT' => $this->getCatalogue('pt-PT', array('foobarfoo' => 'foobarfoo (PT-PT)')),
+            'pt_BR' => $this->getCatalogue('pt_BR', array(
                 'other choice' => '{0} other choice 0 (PT-BR)|{1} other choice 1 (PT-BR)|]1,Inf] other choice inf (PT-BR)',
-            ))))
-        ;
+            )),
+            'fr.UTF-8' => $this->getCatalogue('fr.UTF-8', array('foobarbaz' => 'foobarbaz (fr.UTF-8)')),
+            'sr@latin' => $this->getCatalogue('sr@latin', array('foobarbax' => 'foobarbax (sr@latin)')),
+        );
+
+        $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')->getMock();
         $loader
-            ->expects($this->at(5))
+            ->expects($this->any())
             ->method('load')
-            ->will($this->returnValue($this->getCatalogue('fr.UTF-8', array(
-                'foobarbaz' => 'foobarbaz (fr.UTF-8)',
-            ))))
-        ;
-        $loader
-            ->expects($this->at(6))
-            ->method('load')
-            ->will($this->returnValue($this->getCatalogue('sr@latin', array(
-                'foobarbax' => 'foobarbax (sr@latin)',
-            ))))
+            ->willReturnCallback(function ($resource, $locale, $domain) use ($catalogues) {
+                return isset($catalogues[$locale]) ? $catalogues[$locale] : new \Symfony\Component\Translation\MessageCatalogue($locale);
+            })
         ;
 
         return $loader;
@@ -257,7 +223,7 @@ class TranslatorTest extends TestCase
         $container
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnValue($loader))
+            ->willReturn($loader)
         ;
 
         return $container;

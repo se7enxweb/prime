@@ -362,7 +362,7 @@ class XmlDescriptor extends Descriptor
         $serviceXML->setAttribute('synchronized', $definition->isSynchronized(false) ? 'true' : 'false');
         $serviceXML->setAttribute('abstract', $definition->isAbstract() ? 'true' : 'false');
         $serviceXML->setAttribute('autowired', $definition->isAutowired() ? 'true' : 'false');
-        $serviceXML->setAttribute('file', $definition->getFile());
+        $serviceXML->setAttribute('file', (string) $definition->getFile());
 
         if (!$omitTags) {
             if ($tags = $definition->getTags()) {

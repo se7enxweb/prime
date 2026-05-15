@@ -11,6 +11,9 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Console\Descriptor;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -24,8 +27,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 abstract class AbstractDescriptorTest extends TestCase
-{
-    /** @dataProvider getDescribeRouteCollectionTestData */
+{    #[DataProvider('getDescribeRouteCollectionTestData')]
     public function testDescribeRouteCollection(RouteCollection $routes, $expectedDescription)
     {
         $this->assertDescription($expectedDescription, $routes);
@@ -33,10 +35,9 @@ abstract class AbstractDescriptorTest extends TestCase
 
     public static function getDescribeRouteCollectionTestData()
     {
-        return $this->getDescriptionTestData(ObjectsProvider::getRouteCollections());
+        return self::getDescriptionTestData(ObjectsProvider::getRouteCollections());
     }
-
-    /** @dataProvider getDescribeRouteTestData */
+    #[DataProvider('getDescribeRouteTestData')]
     public function testDescribeRoute(Route $route, $expectedDescription)
     {
         $this->assertDescription($expectedDescription, $route);
@@ -44,10 +45,9 @@ abstract class AbstractDescriptorTest extends TestCase
 
     public static function getDescribeRouteTestData()
     {
-        return $this->getDescriptionTestData(ObjectsProvider::getRoutes());
+        return self::getDescriptionTestData(ObjectsProvider::getRoutes());
     }
-
-    /** @dataProvider getDescribeContainerParametersTestData */
+    #[DataProvider('getDescribeContainerParametersTestData')]
     public function testDescribeContainerParameters(ParameterBag $parameters, $expectedDescription)
     {
         $this->assertDescription($expectedDescription, $parameters);
@@ -55,10 +55,9 @@ abstract class AbstractDescriptorTest extends TestCase
 
     public static function getDescribeContainerParametersTestData()
     {
-        return $this->getDescriptionTestData(ObjectsProvider::getContainerParameters());
+        return self::getDescriptionTestData(ObjectsProvider::getContainerParameters());
     }
-
-    /** @dataProvider getDescribeContainerBuilderTestData */
+    #[DataProvider('getDescribeContainerBuilderTestData')]
     public function testDescribeContainerBuilder(ContainerBuilder $builder, $expectedDescription, array $options)
     {
         $this->assertDescription($expectedDescription, $builder, $options);
@@ -66,27 +65,24 @@ abstract class AbstractDescriptorTest extends TestCase
 
     public static function getDescribeContainerBuilderTestData()
     {
-        return $this->getContainerBuilderDescriptionTestData(ObjectsProvider::getContainerBuilders());
+        return self::getContainerBuilderDescriptionTestData(ObjectsProvider::getContainerBuilders());
     }
-
+    #[DataProvider('provideLegacySynchronizedServiceDefinitionTestData')]
+    #[Group('legacy')]
     /**
-     * @dataProvider provideLegacySynchronizedServiceDefinitionTestData
-     * @group legacy
      */
     public function testLegacyDescribeSynchronizedServiceDefinition(Definition $definition, $expectedDescription)
     {
         $this->assertDescription($expectedDescription, $definition);
     }
-
+    #[Group('legacy')]
     /**
-     * @group legacy
      */
     public static function provideLegacySynchronizedServiceDefinitionTestData()
     {
-        return $this->getDescriptionTestData(ObjectsProvider::getLegacyContainerDefinitions());
+        return self::getDescriptionTestData(ObjectsProvider::getLegacyContainerDefinitions());
     }
-
-    /** @dataProvider getDescribeContainerDefinitionTestData */
+    #[DataProvider('getDescribeContainerDefinitionTestData')]
     public function testDescribeContainerDefinition(Definition $definition, $expectedDescription)
     {
         $this->assertDescription($expectedDescription, $definition);
@@ -94,10 +90,9 @@ abstract class AbstractDescriptorTest extends TestCase
 
     public static function getDescribeContainerDefinitionTestData()
     {
-        return $this->getDescriptionTestData(ObjectsProvider::getContainerDefinitions());
+        return self::getDescriptionTestData(ObjectsProvider::getContainerDefinitions());
     }
-
-    /** @dataProvider getDescribeContainerAliasTestData */
+    #[DataProvider('getDescribeContainerAliasTestData')]
     public function testDescribeContainerAlias(Alias $alias, $expectedDescription)
     {
         $this->assertDescription($expectedDescription, $alias);
@@ -105,10 +100,9 @@ abstract class AbstractDescriptorTest extends TestCase
 
     public static function getDescribeContainerAliasTestData()
     {
-        return $this->getDescriptionTestData(ObjectsProvider::getContainerAliases());
+        return self::getDescriptionTestData(ObjectsProvider::getContainerAliases());
     }
-
-    /** @dataProvider getDescribeContainerParameterTestData */
+    #[DataProvider('getDescribeContainerParameterTestData')]
     public function testDescribeContainerParameter($parameter, $expectedDescription, array $options)
     {
         $this->assertDescription($expectedDescription, $parameter, $options);
@@ -116,15 +110,14 @@ abstract class AbstractDescriptorTest extends TestCase
 
     public static function getDescribeContainerParameterTestData()
     {
-        $data = $this->getDescriptionTestData(ObjectsProvider::getContainerParameter());
+        $data = self::getDescriptionTestData(ObjectsProvider::getContainerParameter());
 
         $data[0][] = array('parameter' => 'database_name');
         $data[1][] = array('parameter' => 'twig.form.resources');
 
         return $data;
     }
-
-    /** @dataProvider getDescribeEventDispatcherTestData */
+    #[DataProvider('getDescribeEventDispatcherTestData')]
     public function testDescribeEventDispatcher(EventDispatcher $eventDispatcher, $expectedDescription, array $options)
     {
         $this->assertDescription($expectedDescription, $eventDispatcher, $options);
@@ -132,10 +125,9 @@ abstract class AbstractDescriptorTest extends TestCase
 
     public static function getDescribeEventDispatcherTestData()
     {
-        return $this->getEventDispatcherDescriptionTestData(ObjectsProvider::getEventDispatchers());
+        return self::getEventDispatcherDescriptionTestData(ObjectsProvider::getEventDispatchers());
     }
-
-    /** @dataProvider getDescribeCallableTestData */
+    #[DataProvider('getDescribeCallableTestData')]
     public function testDescribeCallable($callable, $expectedDescription)
     {
         $this->assertDescription($expectedDescription, $callable);
@@ -143,43 +135,43 @@ abstract class AbstractDescriptorTest extends TestCase
 
     public static function getDescribeCallableTestData()
     {
-        return $this->getDescriptionTestData(ObjectsProvider::getCallables());
+        return self::getDescriptionTestData(ObjectsProvider::getCallables());
     }
 
     abstract protected function getDescriptor();
 
-    abstract protected function getFormat();
+    abstract protected static function getFormat();
 
     private function assertDescription($expectedDescription, $describedObject, array $options = array())
     {
         $options['raw_output'] = true;
         $output = new BufferedOutput(BufferedOutput::VERBOSITY_NORMAL, true);
 
-        if ('txt' === $this->getFormat()) {
+        if ('txt' === static::getFormat()) {
             $options['output'] = new SymfonyStyle(new ArrayInput(array()), $output);
         }
 
         $this->getDescriptor()->describe($output, $describedObject, $options);
 
-        if ('json' === $this->getFormat()) {
+        if ('json' === static::getFormat()) {
             $this->assertEquals(json_decode($expectedDescription), json_decode($output->fetch()));
         } else {
             $this->assertEquals(trim($expectedDescription), trim(str_replace(PHP_EOL, "\n", $output->fetch())));
         }
     }
 
-    private function getDescriptionTestData(array $objects)
+    private static function getDescriptionTestData(array $objects)
     {
         $data = array();
         foreach ($objects as $name => $object) {
-            $description = file_get_contents(sprintf('%s/../../Fixtures/Descriptor/%s.%s', __DIR__, $name, $this->getFormat()));
+            $description = file_get_contents(sprintf('%s/../../Fixtures/Descriptor/%s.%s', __DIR__, $name, static::getFormat()));
             $data[] = array($object, $description);
         }
 
         return $data;
     }
 
-    private function getContainerBuilderDescriptionTestData(array $objects)
+    private static function getContainerBuilderDescriptionTestData(array $objects)
     {
         $variations = array(
             'services' => array('show_private' => true),
@@ -191,7 +183,7 @@ abstract class AbstractDescriptorTest extends TestCase
         $data = array();
         foreach ($objects as $name => $object) {
             foreach ($variations as $suffix => $options) {
-                $description = file_get_contents(sprintf('%s/../../Fixtures/Descriptor/%s_%s.%s', __DIR__, $name, $suffix, $this->getFormat()));
+                $description = file_get_contents(sprintf('%s/../../Fixtures/Descriptor/%s_%s.%s', __DIR__, $name, $suffix, static::getFormat()));
                 $data[] = array($object, $description, $options);
             }
         }
@@ -199,7 +191,7 @@ abstract class AbstractDescriptorTest extends TestCase
         return $data;
     }
 
-    private function getEventDispatcherDescriptionTestData(array $objects)
+    private static function getEventDispatcherDescriptionTestData(array $objects)
     {
         $variations = array(
             'events' => array(),
@@ -209,7 +201,7 @@ abstract class AbstractDescriptorTest extends TestCase
         $data = array();
         foreach ($objects as $name => $object) {
             foreach ($variations as $suffix => $options) {
-                $description = file_get_contents(sprintf('%s/../../Fixtures/Descriptor/%s_%s.%s', __DIR__, $name, $suffix, $this->getFormat()));
+                $description = file_get_contents(sprintf('%s/../../Fixtures/Descriptor/%s_%s.%s', __DIR__, $name, $suffix, static::getFormat()));
                 $data[] = array($object, $description, $options);
             }
         }

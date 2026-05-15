@@ -11,6 +11,9 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\DependencyInjection;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Processor;
@@ -40,11 +43,7 @@ class ConfigurationTest extends TestCase
 
         $this->assertEquals(array('FrameworkBundle:Form'), $config['templating']['form']['resources']);
     }
-
-    /**
-     * @dataProvider getTestValidSessionName
-     */
-    public function testValidSessionName($sessionName)
+    #[DataProvider('getTestValidSessionName')]    public function testValidSessionName($sessionName)
     {
         $processor = new Processor();
         $config = $processor->processConfiguration(
@@ -64,11 +63,7 @@ class ConfigurationTest extends TestCase
             array(',_-!@#$%^*(){}:<>/?'),
         );
     }
-
-    /**
-     * @dataProvider getTestInvalidSessionName
-     */
-    public function testInvalidSessionName($sessionName)
+    #[DataProvider('getTestInvalidSessionName')]    public function testInvalidSessionName($sessionName)
     {
         $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
 
@@ -90,11 +85,7 @@ class ConfigurationTest extends TestCase
             array('a+b'),
         );
     }
-
-    /**
-     * @dataProvider getTestValidTrustedProxiesData
-     */
-    public function testValidTrustedProxies($trustedProxies, $processedProxies)
+    #[DataProvider('getTestValidTrustedProxiesData')]    public function testValidTrustedProxies($trustedProxies, $processedProxies)
     {
         $processor = new Processor();
         $configuration = new Configuration(true);
@@ -152,14 +143,10 @@ class ConfigurationTest extends TestCase
             ),
         ));
     }
-
-    /**
-     * @group legacy
-     */
-    public function testLegacyInvalidValueAssets()
+    #[Group('legacy')]    public function testLegacyInvalidValueAssets()
     {
         $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
-        $this->expectExceptionMessage('You cannot use assets settings under \"framework.templating\" and \"assets\" configurations in the same project.');
+        $this->expectExceptionMessage('You cannot use assets settings under "framework.templating" and "assets" configurations in the same project.');
 
         $processor = new Processor();
         $configuration = new Configuration(true);

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+use PHPUnit\Framework\Attributes\Group;
 /**
  * @author Stepan Anchugov <kixxx1@gmail.com>
  */
@@ -18,10 +20,7 @@ class BirthdayTypeTest extends DateTypeTest
 {
     const TESTED_TYPE = 'Symfony\Component\Form\Extension\Core\Type\BirthdayType';
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('birthday');
 

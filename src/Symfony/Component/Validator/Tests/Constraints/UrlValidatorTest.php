@@ -11,14 +11,18 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresFunction;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bridge\PhpUnit\DnsMock;
 use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Validator\Constraints\UrlValidator;
 use Symfony\Component\Validator\Validation;
 
-/**
- * @group dns-sensitive
- */
+#[Group('dns-sensitive')]
 class UrlValidatorTest extends AbstractConstraintValidatorTest
 {
     protected function getApiVersion()
@@ -61,10 +65,7 @@ class UrlValidatorTest extends AbstractConstraintValidatorTest
         $this->validator->validate(new \stdClass(), new Url());
     }
 
-    /**
-     * @dataProvider getValidUrls
-     */
-    public function testValidUrls($url)
+    #[DataProvider('getValidUrls')]    public function testValidUrls($url)
     {
         $this->validator->validate($url, new Url());
 
@@ -136,10 +137,7 @@ class UrlValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidUrls
-     */
-    public function testInvalidUrls($url)
+    #[DataProvider('getInvalidUrls')]    public function testInvalidUrls($url)
     {
         $constraint = new Url(array(
             'message' => 'myMessage',
@@ -180,10 +178,7 @@ class UrlValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getValidCustomUrls
-     */
-    public function testCustomProtocolIsValid($url)
+    #[DataProvider('getValidCustomUrls')]    public function testCustomProtocolIsValid($url)
     {
         $constraint = new Url(array(
             'protocols' => array('ftp', 'file', 'git'),
@@ -203,9 +198,9 @@ class UrlValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
+    #[DataProvider('getCheckDns')]
+    #[RequiresFunction('Symfony\Bridge\PhpUnit\DnsMock::withMockedHosts')]
     /**
-     * @dataProvider getCheckDns
-     * @requires function Symfony\Bridge\PhpUnit\DnsMock::withMockedHosts
      */
     public function testCheckDns($violation)
     {

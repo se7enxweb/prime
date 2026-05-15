@@ -11,12 +11,11 @@
 
 namespace Symfony\Bundle\SecurityBundle\Tests\Functional;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 class SwitchUserTest extends WebTestCase
 {
-    /**
-     * @dataProvider getTestParameters
-     */
-    public function testSwitchUser($originalUser, $targetUser, $expectedUser, $expectedStatus)
+    #[DataProvider('getTestParameters')]    public function testSwitchUser($originalUser, $targetUser, $expectedUser, $expectedStatus)
     {
         $client = $this->createAuthenticatedClient($originalUser);
 

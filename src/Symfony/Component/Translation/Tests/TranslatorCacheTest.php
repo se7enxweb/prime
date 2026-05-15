@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Translation\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
 use Symfony\Component\Translation\Loader\ArrayLoader;
@@ -53,10 +55,7 @@ class TranslatorCacheTest extends TestCase
         rmdir($this->tmpDir);
     }
 
-    /**
-     * @dataProvider runForDebugAndProduction
-     */
-    public function testThatACacheIsUsed($debug)
+    #[DataProvider('runForDebugAndProduction')]    public function testThatACacheIsUsed($debug)
     {
         $locale = 'any_locale';
         $format = 'some_format';
@@ -100,7 +99,7 @@ class TranslatorCacheTest extends TestCase
         $loader
             ->expects($this->exactly(2))
             ->method('load')
-            ->will($this->returnValue($catalogue))
+            ->willReturn($catalogue)
         ;
 
         // 1st pass
@@ -116,10 +115,7 @@ class TranslatorCacheTest extends TestCase
         $translator->trans($msgid);
     }
 
-    /**
-     * @dataProvider runForDebugAndProduction
-     */
-    public function testDifferentTranslatorsForSameLocaleDoNotOverwriteEachOthersCache($debug)
+    #[DataProvider('runForDebugAndProduction')]    public function testDifferentTranslatorsForSameLocaleDoNotOverwriteEachOthersCache($debug)
     {
         /*
          * Similar to the previous test. After we used the second translator, make
@@ -242,11 +238,11 @@ class TranslatorCacheTest extends TestCase
     {
         $resource = $this->getMockBuilder('Symfony\Component\Config\Resource\SelfCheckingResourceInterface')->getMock();
         $loader = $this->getMockBuilder('Symfony\Component\Translation\Loader\LoaderInterface')->getMock();
-        $resource->method('isFresh')->will($this->returnValue(false));
+        $resource->method('isFresh')->willReturn(false);
         $loader
             ->expects($this->exactly(2))
             ->method('load')
-            ->will($this->returnValue($this->getCatalogue('fr', array(), array($resource))));
+            ->willReturn($this->getCatalogue('fr', array(), array($resource)));
 
         // prime the cache
         $translator = new Translator('fr', null, $this->tmpDir, true);

@@ -34,7 +34,7 @@ class TemplateFinderTest extends TestCase
         $kernel
             ->expects($this->once())
             ->method('getBundles')
-            ->will($this->returnValue(array('BaseBundle' => new BaseBundle())))
+            ->willReturn(array('BaseBundle' => new BaseBundle()))
         ;
 
         $parser = new TemplateFilenameParser();
@@ -47,11 +47,11 @@ class TemplateFinderTest extends TestCase
         );
 
         $this->assertCount(7, $templates, '->findAllTemplates() find all templates in the bundles and global folders');
-        $this->assertStringContainsString('BaseBundle::base.format.engine', $templates);
-        $this->assertStringContainsString('BaseBundle::this.is.a.template.format.engine', $templates);
-        $this->assertStringContainsString('BaseBundle:controller:base.format.engine', $templates);
-        $this->assertStringContainsString('BaseBundle:controller:custom.format.engine', $templates);
-        $this->assertStringContainsString('::this.is.a.template.format.engine', $templates);
-        $this->assertStringContainsString('::resource.format.engine', $templates);
+        $this->assertContains('BaseBundle::base.format.engine', $templates);
+        $this->assertContains('BaseBundle::this.is.a.template.format.engine', $templates);
+        $this->assertContains('BaseBundle:controller:base.format.engine', $templates);
+        $this->assertContains('BaseBundle:controller:custom.format.engine', $templates);
+        $this->assertContains('::this.is.a.template.format.engine', $templates);
+        $this->assertContains('::resource.format.engine', $templates);
     }
 }

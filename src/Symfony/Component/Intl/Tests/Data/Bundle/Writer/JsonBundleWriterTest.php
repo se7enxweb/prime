@@ -11,13 +11,17 @@
 
 namespace Symfony\Component\Intl\Tests\Data\Bundle\Writer;
 
+
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Intl\Data\Bundle\Writer\JsonBundleWriter;
 
+#[RequiresPhp('5.4')]
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
- * @requires PHP 5.4
  */
 class JsonBundleWriterTest extends TestCase
 {
@@ -69,10 +73,7 @@ class JsonBundleWriterTest extends TestCase
         $this->assertFileEquals(__DIR__.'/Fixtures/en.json', $this->directory.'/en.json');
     }
 
-    /**
-     * @requires extension intl
-     */
-    public function testWriteResourceBundle()
+    #[RequiresPhpExtension('intl')]    public function testWriteResourceBundle()
     {
         $bundle = new \ResourceBundle('rb', __DIR__.'/Fixtures', false);
 

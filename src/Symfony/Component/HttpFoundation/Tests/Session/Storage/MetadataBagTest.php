@@ -11,14 +11,15 @@
 
 namespace Symfony\Component\HttpFoundation\Tests\Session\Storage;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Storage\MetadataBag;
 
+#[Group('time-sensitive')]
 /**
  * Test class for MetadataBag.
- *
- * @group time-sensitive
- */
+ * */
 class MetadataBagTest extends TestCase
 {
     /**

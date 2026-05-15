@@ -11,12 +11,11 @@
 
 namespace Symfony\Bundle\SecurityBundle\Tests\Functional;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 class FormLoginTest extends WebTestCase
 {
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testFormLogin($config)
+    #[DataProvider('getConfigs')]    public function testFormLogin($config)
     {
         $client = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => $config));
 
@@ -32,10 +31,7 @@ class FormLoginTest extends WebTestCase
         $this->assertStringContainsString('You\'re browsing to path "/profile".', $text);
     }
 
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testFormLogout($config)
+    #[DataProvider('getConfigs')]    public function testFormLogout($config)
     {
         $client = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => $config));
 
@@ -65,10 +61,7 @@ class FormLoginTest extends WebTestCase
         $this->assertSame($logoutLinks[1]->getUri(), $logoutLinks[5]->getUri());
     }
 
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testFormLoginWithCustomTargetPath($config)
+    #[DataProvider('getConfigs')]    public function testFormLoginWithCustomTargetPath($config)
     {
         $client = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => $config));
 
@@ -85,10 +78,7 @@ class FormLoginTest extends WebTestCase
         $this->assertStringContainsString('You\'re browsing to path "/foo".', $text);
     }
 
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testFormLoginRedirectsToProtectedResourceAfterLogin($config)
+    #[DataProvider('getConfigs')]    public function testFormLoginRedirectsToProtectedResourceAfterLogin($config)
     {
         $client = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => $config));
 

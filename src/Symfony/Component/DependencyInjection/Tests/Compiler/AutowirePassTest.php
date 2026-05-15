@@ -107,7 +107,7 @@ class AutowirePassTest extends TestCase
     public function testTypeCollision()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
-        $this->expectExceptionMessage('Unable to autowire argument of type \"Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\CollisionInterface\" for the service \"a\". Multiple services exist for this interface (c1, c2, c3).');
+        $this->expectExceptionMessage('Unable to autowire argument of type "Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\CollisionInterface" for the service "a". Multiple services exist for this interface (c1, c2, c3).');
 
         $container = new ContainerBuilder();
 
@@ -126,7 +126,7 @@ class AutowirePassTest extends TestCase
     public function testTypeNotGuessable()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
-        $this->expectExceptionMessage('Unable to autowire argument of type \"Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\Foo\" for the service \"a\". Multiple services exist for this class (a1, a2).');
+        $this->expectExceptionMessage('Unable to autowire argument of type "Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\Foo" for the service "a". Multiple services exist for this class (a1, a2).');
 
         $container = new ContainerBuilder();
 
@@ -144,7 +144,7 @@ class AutowirePassTest extends TestCase
     public function testTypeNotGuessableWithSubclass()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
-        $this->expectExceptionMessage('Unable to autowire argument of type \"Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\A\" for the service \"a\". Multiple services exist for this class (a1, a2).');
+        $this->expectExceptionMessage('Unable to autowire argument of type "Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\A" for the service "a". Multiple services exist for this class (a1, a2).');
 
         $container = new ContainerBuilder();
 
@@ -162,7 +162,7 @@ class AutowirePassTest extends TestCase
     public function testTypeNotGuessableNoServicesFound()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
-        $this->expectExceptionMessage('Unable to autowire argument of type \"Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\CollisionInterface\" for the service \"a\". No services were found matching this interface and it cannot be auto-registered.');
+        $this->expectExceptionMessage('Unable to autowire argument of type "Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\CollisionInterface" for the service "a". No services were found matching this interface and it cannot be auto-registered.');
 
         $container = new ContainerBuilder();
 
@@ -281,7 +281,7 @@ class AutowirePassTest extends TestCase
     public function testClassNotFoundThrowsException()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
-        $this->expectExceptionMessage('Cannot autowire argument 2 for Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\BadTypeHintedArgument because the type-hinted class does not exist (Class Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\NotARealClass does not exist).');
+        $this->expectExceptionMessage('Cannot autowire argument 2 for Symfony\Component\DependencyInjection\Tests\Compiler\BadTypeHintedArgument because the type-hinted class does not exist');
 
         $container = new ContainerBuilder();
 
@@ -297,7 +297,7 @@ class AutowirePassTest extends TestCase
     public function testParentClassNotFoundThrowsException()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
-        $this->expectExceptionMessage('Cannot autowire argument 2 for Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\BadParentTypeHintedArgument because the type-hinted class does not exist (Class Symfony\\Component\\DependencyInjection\\Tests\\Compiler\\OptionalServiceClass does not exist).');
+        $this->expectExceptionMessage('Cannot autowire argument 2 for Symfony\Component\DependencyInjection\Tests\Compiler\BadParentTypeHintedArgument because the type-hinted class does not exist');
 
         $container = new ContainerBuilder();
 
@@ -357,7 +357,7 @@ class AutowirePassTest extends TestCase
     public function testScalarArgsCannotBeAutowired()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
-        $this->expectExceptionMessage('Unable to autowire argument index 1 ($foo) for the service \"arg_no_type_hint\". If this is an object, give it a type-hint. Otherwise, specify this argument\'s value explicitly.');
+        $this->expectExceptionMessage('Unable to autowire argument index 1 ($foo) for the service "arg_no_type_hint". If this is an object, give it a type-hint. Otherwise, specify this argument\'s value explicitly.');
 
         $container = new ContainerBuilder();
 
@@ -377,7 +377,7 @@ class AutowirePassTest extends TestCase
     public function testOptionalScalarNotReallyOptionalThrowException()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
-        $this->expectExceptionMessage('Unable to autowire argument index 1 ($foo) for the service \"not_really_optional_scalar\". If this is an object, give it a type-hint. Otherwise, specify this argument\'s value explicitly.');
+        $this->expectExceptionMessage('Unable to autowire argument index 1 ($foo) for the service "not_really_optional_scalar". If this is an object, give it a type-hint. Otherwise, specify this argument\'s value explicitly.');
 
         $container = new ContainerBuilder();
 
@@ -495,7 +495,7 @@ class AutowirePassTest extends TestCase
     public function testWithFactory()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
-        $this->expectExceptionMessage('Service \"a\" can use either autowiring or a factory, not both.');
+        $this->expectExceptionMessage('Service "a" can use either autowiring or a factory, not both.');
 
         $container = new ContainerBuilder();
 

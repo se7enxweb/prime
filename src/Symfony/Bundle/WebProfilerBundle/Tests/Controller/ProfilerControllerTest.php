@@ -12,15 +12,14 @@
 namespace Symfony\Bundle\WebProfilerBundle\Tests\Controller;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\WebProfilerBundle\Controller\ProfilerController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
 class ProfilerControllerTest extends TestCase
 {
-    /**
-     * @dataProvider getEmptyTokenCases
-     */
+    #[DataProvider('getEmptyTokenCases')]
     public function testEmptyToken($token)
     {
         $urlGenerator = $this->getMockBuilder('Symfony\Component\Routing\Generator\UrlGeneratorInterface')->getMock();
@@ -59,15 +58,16 @@ class ProfilerControllerTest extends TestCase
         $profiler
             ->expects($this->exactly(2))
             ->method('loadProfile')
-            ->will($this->returnCallback(function ($token) {
+            ->willReturnCallback(function ($token) {
                 if ('found' == $token) {
                     return new Profile($token);
                 }
-            }))
+            })
+
         ;
 
         $response = $controller->toolbarAction(Request::create('/_wdt/found'), 'found');
-        $this->assertEquals(200, $response->getStatusCode());
+$this->assertEquals(200, $response->getStatusCode());
 
         $response = $controller->toolbarAction(Request::create('/_wdt/notFound'), 'notFound');
         $this->assertEquals(404, $response->getStatusCode());
@@ -107,14 +107,14 @@ class ProfilerControllerTest extends TestCase
         $profiler
             ->expects($this->once())
             ->method('find')
-            ->will($this->returnValue($tokens));
+            ->willReturn($tokens);
 
         $request = Request::create('/_profiler/empty/search/results', 'GET', array(
                 'limit' => 2,
                 'ip' => '127.0.0.1',
                 'method' => 'GET',
                 'url' => 'http://example.com/',
-        ));
+));
 
         $twig->expects($this->once())
             ->method('render')

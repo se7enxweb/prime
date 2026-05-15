@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\FileValidator;
@@ -161,10 +163,7 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider provideMaxSizeExceededTests
-     */
-    public function testMaxSizeExceeded($bytesWritten, $limit, $sizeAsString, $limitAsString, $suffix)
+    #[DataProvider('provideMaxSizeExceededTests')]    public function testMaxSizeExceeded($bytesWritten, $limit, $sizeAsString, $limitAsString, $suffix)
     {
         fseek($this->file, $bytesWritten - 1, SEEK_SET);
         fwrite($this->file, '0');
@@ -209,10 +208,7 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider provideMaxSizeNotExceededTests
-     */
-    public function testMaxSizeNotExceeded($bytesWritten, $limit)
+    #[DataProvider('provideMaxSizeNotExceededTests')]    public function testMaxSizeNotExceeded($bytesWritten, $limit)
     {
         fseek($this->file, $bytesWritten - 1, SEEK_SET);
         fwrite($this->file, '0');
@@ -263,10 +259,7 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider provideBinaryFormatTests
-     */
-    public function testBinaryFormat($bytesWritten, $limit, $binaryFormat, $sizeAsString, $limitAsString, $suffix)
+    #[DataProvider('provideBinaryFormatTests')]    public function testBinaryFormat($bytesWritten, $limit, $binaryFormat, $sizeAsString, $limitAsString, $suffix)
     {
         fseek($this->file, $bytesWritten - 1, SEEK_SET);
         fwrite($this->file, '0');
@@ -298,11 +291,11 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
         $file
             ->expects($this->once())
             ->method('getPathname')
-            ->will($this->returnValue($this->path));
+            ->willReturn($this->path);
         $file
             ->expects($this->once())
             ->method('getMimeType')
-            ->will($this->returnValue('image/jpg'));
+            ->willReturn('image/jpg');
 
         $constraint = new File(array(
             'mimeTypes' => array('image/png', 'image/jpg'),
@@ -322,11 +315,11 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
         $file
             ->expects($this->once())
             ->method('getPathname')
-            ->will($this->returnValue($this->path));
+            ->willReturn($this->path);
         $file
             ->expects($this->once())
             ->method('getMimeType')
-            ->will($this->returnValue('image/jpg'));
+            ->willReturn('image/jpg');
 
         $constraint = new File(array(
             'mimeTypes' => array('image/*'),
@@ -346,11 +339,11 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
         $file
             ->expects($this->once())
             ->method('getPathname')
-            ->will($this->returnValue($this->path));
+            ->willReturn($this->path);
         $file
             ->expects($this->once())
             ->method('getMimeType')
-            ->will($this->returnValue('application/pdf'));
+            ->willReturn('application/pdf');
 
         $constraint = new File(array(
             'mimeTypes' => array('image/png', 'image/jpg'),
@@ -376,11 +369,11 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
         $file
             ->expects($this->once())
             ->method('getPathname')
-            ->will($this->returnValue($this->path));
+            ->willReturn($this->path);
         $file
             ->expects($this->once())
             ->method('getMimeType')
-            ->will($this->returnValue('application/pdf'));
+            ->willReturn('application/pdf');
 
         $constraint = new File(array(
             'mimeTypes' => array('image/*', 'image/jpg'),
@@ -413,10 +406,7 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    /**
-     * @dataProvider uploadedFileErrorProvider
-     */
-    public function testUploadedFileError($error, $message, array $params = array(), $maxSize = null)
+    #[DataProvider('uploadedFileErrorProvider')]    public function testUploadedFileError($error, $message, array $params = array(), $maxSize = null)
     {
         $file = new UploadedFile('/path/to/file', 'originalName', 'mime', 0, $error);
 
@@ -460,15 +450,16 @@ abstract class FileValidatorTest extends AbstractConstraintValidatorTest
             // access FileValidator::factorizeSizes() private method to format max file size
             $reflection = new \ReflectionClass(\get_class(new FileValidator()));
             $method = $reflection->getMethod('factorizeSizes');
-            $method->setAccessible(true);
             list($sizeAsString, $limit, $suffix) = $method->invokeArgs(new FileValidator(), array(0, UploadedFile::getMaxFilesize(), false));
 
             // it correctly parses the maxSize option and not only uses simple string comparison
-            // 1000M should be bigger than the ini value
+            // bigMaxSize should be bigger than the ini value
+            $bigMaxSizeBytes = UploadedFile::getMaxFilesize() * 2;
+            $bigMaxSizeMB = (int) round($bigMaxSizeBytes / 1048576);
             $tests[] = array(UPLOAD_ERR_INI_SIZE, 'uploadIniSizeErrorMessage', array(
                 '{{ limit }}' => $limit,
                 '{{ suffix }}' => $suffix,
-            ), '1000M');
+            ), $bigMaxSizeMB.'M');
 
             // it correctly parses the maxSize option and not only uses simple string comparison
             // 1000M should be bigger than the ini value

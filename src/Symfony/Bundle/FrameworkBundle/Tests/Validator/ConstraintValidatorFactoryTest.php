@@ -22,23 +22,23 @@ class ConstraintValidatorFactoryTest extends TestCase
 {
     public function testGetInstanceCreatesValidator()
     {
-        $class = \get_class($this->getMockForAbstractClass('Symfony\\Component\\Validator\\ConstraintValidator'));
+        $class = \get_class($this->createMock('Symfony\\Component\\Validator\\ConstraintValidator'));
 
         $constraint = $this->getMockBuilder('Symfony\\Component\\Validator\\Constraint')->getMock();
         $constraint
             ->expects($this->once())
             ->method('validatedBy')
-            ->will($this->returnValue($class));
+            ->willReturn($class);
 
-        $factory = new ConstraintValidatorFactory(new Container());
-        $this->assertInstanceOf($class, $factory->getInstance($constraint));
+$factory = new ConstraintValidatorFactory(new Container());
+$this->assertInstanceOf($class, $factory->getInstance($constraint));
     }
 
     public function testGetInstanceReturnsExistingValidator()
     {
-        $factory = new ConstraintValidatorFactory(new Container());
-        $v1 = $factory->getInstance(new BlankConstraint());
-        $v2 = $factory->getInstance(new BlankConstraint());
+$factory = new ConstraintValidatorFactory(new Container());
+$v1 = $factory->getInstance(new BlankConstraint());
+$v2 = $factory->getInstance(new BlankConstraint());
         $this->assertSame($v1, $v2);
     }
 
@@ -63,9 +63,9 @@ class ConstraintValidatorFactoryTest extends TestCase
         $constraint
             ->expects($this->once())
             ->method('validatedBy')
-            ->will($this->returnValue('Fully\\Qualified\\ConstraintValidator\\Class\\Name'));
+            ->willReturn('Fully\\Qualified\\ConstraintValidator\\Class\\Name');
 
-        $factory = new ConstraintValidatorFactory(new Container());
+$factory = new ConstraintValidatorFactory(new Container());
         $factory->getInstance($constraint);
     }
 }

@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-interface KernelInterface extends HttpKernelInterface, \Serializable
+interface KernelInterface extends HttpKernelInterface
 {
     /**
      * Returns an array of bundles to register.

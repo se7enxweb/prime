@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Config\Tests\Definition\Builder;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\ScalarNodeDefinition;
@@ -35,10 +37,7 @@ class ArrayNodeDefinitionTest extends TestCase
         $this->assertContains($child, $this->getField($parent, 'children'));
     }
 
-    /**
-     * @dataProvider providePrototypeNodeSpecificCalls
-     */
-    public function testPrototypeNodeSpecificOption($method, $args)
+    #[DataProvider('providePrototypeNodeSpecificCalls')]    public function testPrototypeNodeSpecificOption($method, $args)
     {
         $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidDefinitionException::class);
 
@@ -99,10 +98,7 @@ class ArrayNodeDefinitionTest extends TestCase
         $this->assertEquals(array(array()), $tree->getDefaultValue());
     }
 
-    /**
-     * @dataProvider providePrototypedArrayNodeDefaults
-     */
-    public function testPrototypedArrayNodeDefault($args, $shouldThrowWhenUsingAttrAsKey, $shouldThrowWhenNotUsingAttrAsKey, $defaults)
+    #[DataProvider('providePrototypedArrayNodeDefaults')]    public function testPrototypedArrayNodeDefault($args, $shouldThrowWhenUsingAttrAsKey, $shouldThrowWhenNotUsingAttrAsKey, $defaults)
     {
         $node = new ArrayNodeDefinition('root');
         $node
@@ -172,10 +168,7 @@ class ArrayNodeDefinitionTest extends TestCase
         $this->assertEquals(array('enabled' => false, 'foo' => 'bar'), $node->getNode()->getDefaultValue());
     }
 
-    /**
-     * @dataProvider getEnableableNodeFixtures
-     */
-    public function testTrueEnableEnabledNode($expected, $config, $message)
+    #[DataProvider('getEnableableNodeFixtures')]    public function testTrueEnableEnabledNode($expected, $config, $message)
     {
         $processor = new Processor();
         $node = new ArrayNodeDefinition('root');
@@ -268,7 +261,6 @@ class ArrayNodeDefinitionTest extends TestCase
     protected function getField($object, $field)
     {
         $reflection = new \ReflectionProperty($object, $field);
-        $reflection->setAccessible(true);
 
         return $reflection->getValue($object);
     }

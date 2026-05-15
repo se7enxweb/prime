@@ -11,6 +11,11 @@
 
 namespace Symfony\Component\Console\Tests\Helper;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresFunction;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Helper\FormatterHelper;
@@ -21,8 +26,8 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
+#[Group('tty')]
 /**
- * @group tty
  */
 class QuestionHelperTest extends TestCase
 {
@@ -296,10 +301,7 @@ class QuestionHelperTest extends TestCase
         $this->assertEquals('8AM', $dialog->ask($this->createInputInterfaceMock(), $this->createOutputInterface(), $question));
     }
 
-    /**
-     * @dataProvider getAskConfirmationData
-     */
-    public function testAskConfirmation($question, $expected, $default = true)
+    #[DataProvider('getAskConfirmationData')]    public function testAskConfirmation($question, $expected, $default = true)
     {
         $dialog = new QuestionHelper();
 
@@ -363,10 +365,7 @@ class QuestionHelperTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider simpleAnswerProvider
-     */
-    public function testSelectChoiceFromSimpleChoices($providedAnswer, $expectedValue)
+    #[DataProvider('simpleAnswerProvider')]    public function testSelectChoiceFromSimpleChoices($providedAnswer, $expectedValue)
     {
         $possibleChoices = array(
             'My environment 1',
@@ -398,10 +397,7 @@ class QuestionHelperTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider specialCharacterInMultipleChoice
-     */
-    public function testSpecialCharacterChoiceFromMultipleChoiceList($providedAnswer, $expectedValue)
+    #[DataProvider('specialCharacterInMultipleChoice')]    public function testSpecialCharacterChoiceFromMultipleChoiceList($providedAnswer, $expectedValue)
     {
         $possibleChoices = array(
             '.',
@@ -429,10 +425,7 @@ class QuestionHelperTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider mixedKeysChoiceListAnswerProvider
-     */
-    public function testChoiceFromChoicelistWithMixedKeys($providedAnswer, $expectedValue)
+    #[DataProvider('mixedKeysChoiceListAnswerProvider')]    public function testChoiceFromChoicelistWithMixedKeys($providedAnswer, $expectedValue)
     {
         $possibleChoices = array(
             '0' => 'No environment',
@@ -465,10 +458,7 @@ class QuestionHelperTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider answerProvider
-     */
-    public function testSelectChoiceFromChoiceList($providedAnswer, $expectedValue)
+    #[DataProvider('answerProvider')]    public function testSelectChoiceFromChoiceList($providedAnswer, $expectedValue)
     {
         $possibleChoices = array(
             'env_1' => 'My environment 1',
@@ -529,10 +519,7 @@ class QuestionHelperTest extends TestCase
         $this->assertEquals('not yet', $dialog->ask($this->createInputInterfaceMock(false), $this->createOutputInterface(), $question));
     }
 
-    /**
-     * @requires function mb_strwidth
-     */
-    public function testChoiceOutputFormattingQuestionForUtf8Keys()
+    #[RequiresFunction('mb_strwidth')]    public function testChoiceOutputFormattingQuestionForUtf8Keys()
     {
         $question = 'Lorem ipsum?';
         $possibleChoices = array(
@@ -550,11 +537,11 @@ class QuestionHelperTest extends TestCase
         $output->method('getFormatter')->willReturn(new OutputFormatter());
 
         $dialog = new QuestionHelper();
-        $dialog->setInputStream($this->getInputStream("\n"));
-        $helperSet = new HelperSet(array(new FormatterHelper()));
+$dialog->setInputStream($this->getInputStream("\n"));
+$helperSet = new HelperSet(array(new FormatterHelper()));
         $dialog->setHelperSet($helperSet);
 
-        $output->expects($this->once())->method('writeln')->with($this->equalTo($outputShown));
+$output->expects($this->once())->method('writeln')->with($this->equalTo($outputShown));
 
         $question = new ChoiceQuestion($question, $possibleChoices, 'foo');
         $dialog->ask($this->createInputInterfaceMock(), $output, $question);
@@ -656,7 +643,7 @@ class QuestionHelperTest extends TestCase
         $mock = $this->getMockBuilder('Symfony\Component\Console\Input\InputInterface')->getMock();
         $mock->expects($this->any())
             ->method('isInteractive')
-            ->will($this->returnValue($interactive));
+            ->willReturn($interactive);
 
         return $mock;
     }

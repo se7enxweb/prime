@@ -105,6 +105,10 @@ class LdapClient implements LdapClientInterface
      */
     public function escape($subject, $ignore = '', $flags = 0)
     {
+        if (null === $ignore) {
+            $ignore = '';
+        }
+
         $value = ldap_escape($subject, $ignore, $flags);
 
         // Per RFC 4514, leading/trailing spaces should be encoded in DNs, as well as carriage returns.

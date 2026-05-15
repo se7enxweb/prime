@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\DateValidator;
 use Symfony\Component\Validator\Validation;
@@ -57,10 +59,7 @@ class DateValidatorTest extends AbstractConstraintValidatorTest
         $this->validator->validate(new \stdClass(), new Date());
     }
 
-    /**
-     * @dataProvider getValidDates
-     */
-    public function testValidDates($date)
+    #[DataProvider('getValidDates')]    public function testValidDates($date)
     {
         $this->validator->validate($date, new Date());
 
@@ -76,10 +75,7 @@ class DateValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidDates
-     */
-    public function testInvalidDates($date, $code)
+    #[DataProvider('getInvalidDates')]    public function testInvalidDates($date, $code)
     {
         $constraint = new Date(array(
             'message' => 'myMessage',

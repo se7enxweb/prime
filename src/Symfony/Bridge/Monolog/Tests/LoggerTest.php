@@ -2,6 +2,8 @@
 
 namespace Symfony\Bridge\Monolog\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Monolog\Handler\TestHandler;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Monolog\Handler\DebugHandler;
@@ -9,10 +11,7 @@ use Symfony\Bridge\Monolog\Logger;
 
 class LoggerTest extends TestCase
 {
-    /**
-     * @group legacy
-     */
-    public function testEmerg()
+    #[Group('legacy')]    public function testEmerg()
     {
         $handler = new TestHandler();
         $logger = new Logger('test');
@@ -21,11 +20,7 @@ class LoggerTest extends TestCase
         $this->assertTrue($logger->emerg('test'));
         $this->assertTrue($handler->hasEmergency('test'));
     }
-
-    /**
-     * @group legacy
-     */
-    public function testCrit()
+    #[Group('legacy')]    public function testCrit()
     {
         $handler = new TestHandler();
         $logger = new Logger('test');
@@ -34,11 +29,7 @@ class LoggerTest extends TestCase
         $this->assertTrue($logger->crit('test'));
         $this->assertTrue($handler->hasCritical('test'));
     }
-
-    /**
-     * @group legacy
-     */
-    public function testErr()
+    #[Group('legacy')]    public function testErr()
     {
         $handler = new TestHandler();
         $logger = new Logger('test');
@@ -47,11 +38,7 @@ class LoggerTest extends TestCase
         $this->assertTrue($logger->err('test'));
         $this->assertTrue($handler->hasError('test'));
     }
-
-    /**
-     * @group legacy
-     */
-    public function testWarn()
+    #[Group('legacy')]    public function testWarn()
     {
         $handler = new TestHandler();
         $logger = new Logger('test');

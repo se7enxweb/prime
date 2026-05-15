@@ -26,7 +26,7 @@ class DelegatingEngineTest extends TestCase
         $secondEngine->expects($this->once())
             ->method('render')
             ->with('template.php', array('foo' => 'bar'))
-            ->will($this->returnValue('<html />'));
+            ->willReturn('<html />');
 
         $delegatingEngine = new DelegatingEngine(array($firstEngine, $secondEngine));
         $result = $delegatingEngine->render('template.php', array('foo' => 'bar'));
@@ -39,7 +39,7 @@ class DelegatingEngineTest extends TestCase
     public function testRenderWithNoSupportedEngine()
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('No engine is able to work with the template \"template.php\"');
+        $this->expectExceptionMessage('No engine is able to work with the template "template.php"');
 
         $firstEngine = $this->getEngineMock('template.php', false);
         $secondEngine = $this->getEngineMock('template.php', false);
@@ -54,7 +54,7 @@ class DelegatingEngineTest extends TestCase
         $streamingEngine->expects($this->once())
             ->method('stream')
             ->with('template.php', array('foo' => 'bar'))
-            ->will($this->returnValue('<html />'));
+            ->willReturn('<html />');
 
         $delegatingEngine = new DelegatingEngine(array($streamingEngine));
         $result = $delegatingEngine->stream('template.php', array('foo' => 'bar'));
@@ -67,7 +67,7 @@ class DelegatingEngineTest extends TestCase
     public function testStreamRequiresStreamingEngine()
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Template \"template.php\" cannot be streamed as the engine supporting it does not implement StreamingEngineInterface');
+        $this->expectExceptionMessage('Template "template.php" cannot be streamed as the engine supporting it does not implement StreamingEngineInterface');
 
         $delegatingEngine = new DelegatingEngine(array(new TestEngine()));
         $delegatingEngine->stream('template.php', array('foo' => 'bar'));
@@ -79,7 +79,7 @@ class DelegatingEngineTest extends TestCase
         $engine->expects($this->once())
             ->method('exists')
             ->with('template.php')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $delegatingEngine = new DelegatingEngine(array($engine));
 
@@ -119,7 +119,7 @@ class DelegatingEngineTest extends TestCase
     public function testGetInvalidEngine()
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('No engine is able to work with the template \"template.php\"');
+        $this->expectExceptionMessage('No engine is able to work with the template "template.php"');
 
         $firstEngine = $this->getEngineMock('template.php', false);
         $secondEngine = $this->getEngineMock('template.php', false);
@@ -135,19 +135,19 @@ class DelegatingEngineTest extends TestCase
         $engine->expects($this->once())
             ->method('supports')
             ->with($template)
-            ->will($this->returnValue($supports));
+            ->willReturn($supports);
 
         return $engine;
     }
 
     private function getStreamingEngineMock($template, $supports)
     {
-        $engine = $this->getMockForAbstractClass('Symfony\Component\Templating\Tests\MyStreamingEngine');
+        $engine = $this->createMock('Symfony\Component\Templating\Tests\MyStreamingEngine');
 
         $engine->expects($this->once())
             ->method('supports')
             ->with($template)
-            ->will($this->returnValue($supports));
+            ->willReturn($supports);
 
         return $engine;
     }

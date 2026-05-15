@@ -11,15 +11,14 @@
 
 namespace Symfony\Component\HttpFoundation\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\ApacheRequest;
 
 class ApacheRequestTest extends TestCase
 {
-    /**
-     * @dataProvider provideServerVars
-     */
-    public function testUriMethods($server, $expectedRequestUri, $expectedBaseUrl, $expectedPathInfo)
+    #[DataProvider('provideServerVars')]    public function testUriMethods($server, $expectedRequestUri, $expectedBaseUrl, $expectedPathInfo)
     {
         $request = new ApacheRequest();
         $request->server->replace($server);

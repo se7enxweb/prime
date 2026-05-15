@@ -39,7 +39,7 @@ class NumberFormatterTest extends AbstractNumberFormatterTest
         parent::testGetTextAttribute();
     }
 
-    protected function getNumberFormatter($locale = 'en', $style = null, $pattern = null)
+    protected static function getNumberFormatter($locale = 'en', $style = null, $pattern = null)
     {
         return new \NumberFormatter($locale, $style, $pattern);
     }
@@ -57,5 +57,43 @@ class NumberFormatterTest extends AbstractNumberFormatterTest
     protected function isIntlFailure($errorCode)
     {
         return intl_is_failure($errorCode);
+    }
+
+    public static function formatFractionDigitsProvider()
+    {
+        return array(
+            array(1.123, '1.123', null, 0),
+            array(1.123, '1', 0, 0),
+            array(1.123, '1.1', 1, 1),
+            array(1.123, '1.12', 2, 2),
+            array(1.123, '1.123', -1, 0),
+            array(1.123, '1.123', 'abc', 0),
+        );
+    }
+
+    public static function formatGroupingUsedProvider()
+    {
+        return array(
+            array(1000, '1,000', null, 1),
+            array(1000, '1000', 0, 0),
+            array(1000, '1,000', 1, 1),
+            array(1000, '1,000', 2, 1),
+            array(1000, '1,000', 'abc', 1),
+            array(1000, '1,000', -1, 1),
+        );
+    }
+
+    public static function parseProvider()
+    {
+        return array(
+            array('prefix1', false, '->parse() does not parse a number with a string prefix.', 0),
+            array('1.4suffix', (float) 1.4, '->parse() parses a number with a string suffix.', 3),
+            array('-.4suffix', (float) -0.4, '->parse() parses a negative dot float with suffix.', 3),
+            array('-123,4', false, '->parse() does not parse when invalid grouping used.', 1),
+            array('-123,4567', false, '->parse() does not parse when invalid grouping used.', 1),
+            array('-123,,456', -123.0, '->parse() does not parse when invalid grouping used.', 4),
+            array('-123,,456', -123.0, '->parse() parses when grouping is disabled.', 4, false),
+            array('239.', 239.0, '->parse() parses when string ends with decimal separator.', 4, false),
+        );
     }
 }

@@ -178,18 +178,26 @@ class AuthenticationProviderManagerTest extends TestCase
         $provider = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface')->getMock();
         $provider->expects($this->once())
                  ->method('supports')
-                 ->will($this->returnValue($supports))
+                 ->willReturn($supports)
         ;
 
         if (null !== $token) {
             $provider->expects($this->once())
                      ->method('authenticate')
-                     ->will($this->returnValue($token))
+                     ->willReturn($token)
             ;
         } elseif (null !== $exception) {
+            // Create exception instance - use mock for abstract classes
+            $reflection = new \ReflectionClass($exception);
+            if ($reflection->isAbstract()) {
+                $exceptionInstance = $this->getMockBuilder($exception)->onlyMethods([])->getMock();
+            } else {
+                $exceptionInstance = new $exception();
+            }
+            
             $provider->expects($this->once())
                      ->method('authenticate')
-                     ->will($this->throwException($this->getMockBuilder($exception)->setMethods(null)->getMock()))
+                     ->willThrowException($exceptionInstance)
             ;
         }
 

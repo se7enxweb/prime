@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Mapping\Loader;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Callback;
@@ -34,14 +36,10 @@ class YamlFileLoaderTest extends TestCase
         $this->assertFalse($loader->loadClassMetadata($metadata));
 
         $r = new \ReflectionProperty($loader, 'classes');
-        $r->setAccessible(true);
         $this->assertSame(array(), $r->getValue($loader));
     }
 
-    /**
-     * @dataProvider provideInvalidYamlFiles
-     */
-    public function testInvalidYamlFiles($path)
+    #[DataProvider('provideInvalidYamlFiles')]    public function testInvalidYamlFiles($path)
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -70,7 +68,7 @@ class YamlFileLoaderTest extends TestCase
             $loader->loadClassMetadata($metadata);
         } catch (\InvalidArgumentException $e) {
             // Call again. Again an exception should be thrown
-            $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('\InvalidArgumentException');
+            $this->expectException('\InvalidArgumentException');
             $loader->loadClassMetadata($metadata);
         }
     }

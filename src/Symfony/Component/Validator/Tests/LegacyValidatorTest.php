@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\ConstraintValidatorFactory;
@@ -19,8 +21,8 @@ use Symfony\Component\Validator\Tests\Fixtures\Entity;
 use Symfony\Component\Validator\Tests\Validator\AbstractLegacyApiTest;
 use Symfony\Component\Validator\Validator as LegacyValidator;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyValidatorTest extends AbstractLegacyApiTest
 {

@@ -11,11 +11,13 @@
 
 namespace Symfony\Component\HttpKernel\Tests\Profiler;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpKernel\Profiler\MemcachedProfilerStorage;
 use Symfony\Component\HttpKernel\Tests\Profiler\Mock\MemcachedMock;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class MemcachedProfilerStorageTest extends AbstractProfilerStorageTest
 {

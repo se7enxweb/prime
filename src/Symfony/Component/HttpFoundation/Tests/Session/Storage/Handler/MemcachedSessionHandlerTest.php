@@ -11,12 +11,16 @@
 
 namespace Symfony\Component\HttpFoundation\Tests\Session\Storage\Handler;
 
+
+
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\MemcachedSessionHandler;
 
+#[RequiresPhpExtension('memcached')]
 /**
- * @requires extension memcached
- * @group time-sensitive
  */
 class MemcachedSessionHandlerTest extends TestCase
 {
@@ -83,10 +87,10 @@ class MemcachedSessionHandlerTest extends TestCase
             ->expects($this->once())
             ->method('set')
             ->with(self::PREFIX.'id', 'data', $this->equalTo(time() + self::TTL, 2))
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
-        $this->assertTrue($this->storage->write('id', 'data'));
+$this->assertTrue($this->storage->write('id', 'data'));
     }
 
     public function testDestroySession()
@@ -95,21 +99,18 @@ class MemcachedSessionHandlerTest extends TestCase
             ->expects($this->once())
             ->method('delete')
             ->with(self::PREFIX.'id')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
-        $this->assertTrue($this->storage->destroy('id'));
+$this->assertTrue($this->storage->destroy('id'));
     }
 
     public function testGcSession()
     {
-        $this->assertTrue($this->storage->gc(123));
+$this->assertNotFalse($this->storage->gc(123));
     }
 
-    /**
-     * @dataProvider getOptionFixtures
-     */
-    public function testSupportedOptions($options, $supported)
+    #[DataProvider('getOptionFixtures')]    public function testSupportedOptions($options, $supported)
     {
         try {
             new MemcachedSessionHandler($this->memcached, $options);
@@ -132,7 +133,6 @@ class MemcachedSessionHandlerTest extends TestCase
     public function testGetConnection()
     {
         $method = new \ReflectionMethod($this->storage, 'getMemcached');
-        $method->setAccessible(true);
 
         $this->assertInstanceOf('\Memcached', $method->invoke($this->storage));
     }

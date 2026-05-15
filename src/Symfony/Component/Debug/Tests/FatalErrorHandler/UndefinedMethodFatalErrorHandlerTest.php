@@ -11,16 +11,15 @@
 
 namespace Symfony\Component\Debug\Tests\FatalErrorHandler;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\Debug\FatalErrorHandler\UndefinedMethodFatalErrorHandler;
 
 class UndefinedMethodFatalErrorHandlerTest extends TestCase
 {
-    /**
-     * @dataProvider provideUndefinedMethodData
-     */
-    public function testUndefinedMethod($error, $translatedMessage)
+    #[DataProvider('provideUndefinedMethodData')]    public function testUndefinedMethod($error, $translatedMessage)
     {
         $handler = new UndefinedMethodFatalErrorHandler();
         $exception = $handler->handleError($error, new FatalErrorException('', 0, $error['type'], $error['file'], $error['line']));

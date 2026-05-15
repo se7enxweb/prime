@@ -60,7 +60,7 @@ class RememberMeAuthenticationProviderTest extends TestCase
         $userChecker = $this->getMockBuilder('Symfony\Component\Security\Core\User\UserCheckerInterface')->getMock();
         $userChecker->expects($this->once())
             ->method('checkPreAuth')
-            ->will($this->throwException(new DisabledException()));
+            ->willThrowException(new DisabledException());
 
         $provider = $this->getProvider($userChecker);
 
@@ -72,7 +72,7 @@ class RememberMeAuthenticationProviderTest extends TestCase
         $user = $this->getMockBuilder('Symfony\Component\Security\Core\User\UserInterface')->getMock();
         $user->expects($this->exactly(2))
              ->method('getRoles')
-             ->will($this->returnValue(array('ROLE_FOO')));
+             ->willReturn(array('ROLE_FOO'));
 
         $provider = $this->getProvider();
 
@@ -92,14 +92,14 @@ class RememberMeAuthenticationProviderTest extends TestCase
             $user
                 ->expects($this->any())
                 ->method('getRoles')
-                ->will($this->returnValue(array()));
+                ->willReturn(array());
         }
 
-        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\RememberMeToken')->setMethods(array('getProviderKey'))->setConstructorArgs(array($user, 'foo', $secret))->getMock();
+        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\RememberMeToken')->onlyMethods(array('getProviderKey'))->setConstructorArgs(array($user, 'foo', $secret))->getMock();
         $token
             ->expects($this->once())
             ->method('getProviderKey')
-            ->will($this->returnValue('foo'));
+            ->willReturn('foo');
 
         return $token;
     }

@@ -11,17 +11,18 @@
 
 namespace Symfony\Component\Finder\Tests\Iterator;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Finder\Iterator\FilePathsIterator;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class FilePathsIteratorTest extends RealIteratorTestCase
 {
-    /**
-     * @dataProvider getSubPathData
-     */
-    public function testSubPath($baseDir, array $paths, array $subPaths, array $subPathnames)
+    #[DataProvider('getSubPathData')]    public function testSubPath($baseDir, array $paths, array $subPaths, array $subPathnames)
     {
         $iterator = new FilePathsIterator($paths, $baseDir);
 

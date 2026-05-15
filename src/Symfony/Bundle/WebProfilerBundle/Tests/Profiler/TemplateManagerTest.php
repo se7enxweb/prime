@@ -70,14 +70,14 @@ class TemplateManagerTest extends TestCase
         $this->profiler->expects($this->any())
             ->method('has')
             ->withAnyParameters()
-            ->will($this->returnCallback(array($this, 'profilerHasCallback')));
+            ->willReturnCallback(array($this, 'profilerHasCallback'));
 
         $profile = $this->mockProfile();
         $profile->expects($this->any())
             ->method('hasCollector')
-            ->will($this->returnCallback(array($this, 'profileHasCollectorCallback')));
+->willReturnCallback(array($this, 'profileHasCollectorCallback'));
 
-        $this->assertEquals('FooBundle:Collector:foo.html.twig', $this->templateManager->getName($profile, 'foo'));
+$this->assertEquals('FooBundle:Collector:foo.html.twig', $this->templateManager->getName($profile, 'foo'));
     }
 
     /**
@@ -89,12 +89,12 @@ class TemplateManagerTest extends TestCase
         $profile = $this->mockProfile();
         $profile->expects($this->any())
             ->method('hasCollector')
-            ->will($this->returnCallback(array($this, 'profilerHasCallback')));
+            ->willReturnCallback(array($this, 'profilerHasCallback'));
 
         $this->profiler->expects($this->any())
             ->method('has')
             ->withAnyParameters()
-            ->will($this->returnCallback(array($this, 'profileHasCollectorCallback')));
+->willReturnCallback(array($this, 'profileHasCollectorCallback'));
 
         $result = $this->templateManager->getTemplates($profile);
         $this->assertArrayHasKey('foo', $result);
@@ -135,14 +135,14 @@ class TemplateManagerTest extends TestCase
 
         $this->twigEnvironment->expects($this->any())
             ->method('loadTemplate')
-            ->will($this->returnValue('loadedTemplate'));
+            ->willReturn('loadedTemplate');
 
         if (interface_exists('Twig\Loader\SourceContextLoaderInterface')) {
             $loader = $this->getMockBuilder('Twig\Loader\SourceContextLoaderInterface')->getMock();
         } else {
             $loader = $this->getMockBuilder('Twig\Loader\LoaderInterface')->getMock();
         }
-        $this->twigEnvironment->expects($this->any())->method('getLoader')->will($this->returnValue($loader));
+        $this->twigEnvironment->expects($this->any())->method('getLoader')->willReturn($loader);
 
         return $this->twigEnvironment;
     }

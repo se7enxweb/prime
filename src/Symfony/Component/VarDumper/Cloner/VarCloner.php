@@ -63,6 +63,8 @@ class VarCloner extends AbstractCloner
             $fromObjCast = array_keys(array_flip($fromObjCast)) !== $fromObjCast;
             $refs = $vals = $fromObjCast ? array_values($queue[$i]) : $queue[$i];
             foreach ($queue[$i] as $k => $v) {
+                $k = null === $k ? '' : $k;
+
                 // $k is the original key
                 // $v is the original value or a stub object in case of hard references
                 if ($k !== ++$j) {
@@ -83,8 +85,8 @@ class VarCloner extends AbstractCloner
                 if ($zval['zval_isref']) {
                     $vals[$k] = &$stub;         // Break hard references to make $queue completely
                     unset($stub);               // independent from the original structure
-                    if (isset($hardRefs[$zval['zval_hash']])) {
-                        $vals[$k] = $useExt ? ($v = $hardRefs[$zval['zval_hash']]) : ($refs[$k] = $v);
+                    if (isset($hardRefs[(string) $zval['zval_hash']])) {
+                        $vals[$k] = $useExt ? ($v = $hardRefs[(string) $zval['zval_hash']]) : ($refs[$k] = $v);
                         if ($v->value instanceof Stub && (Stub::TYPE_OBJECT === $v->value->type || Stub::TYPE_RESOURCE === $v->value->type)) {
                             ++$v->value->refCount;
                         }
@@ -211,7 +213,7 @@ class VarCloner extends AbstractCloner
                 if (isset($stub)) {
                     if ($zval['zval_isref']) {
                         if ($useExt) {
-                            $vals[$k] = $hardRefs[$zval['zval_hash']] = $v = new Stub();
+                            $vals[$k] = $hardRefs[(string) $zval['zval_hash']] = $v = new Stub();
                             $v->value = $stub;
                         } else {
                             $refs[$k] = new Stub();
@@ -250,7 +252,7 @@ class VarCloner extends AbstractCloner
                     $stub = $a = null;
                 } elseif ($zval['zval_isref']) {
                     if ($useExt) {
-                        $vals[$k] = $hardRefs[$zval['zval_hash']] = new Stub();
+                        $vals[$k] = $hardRefs[(string) $zval['zval_hash']] = new Stub();
                         $vals[$k]->value = $v;
                     } else {
                         $refs[$k] = $vals[$k] = new Stub();

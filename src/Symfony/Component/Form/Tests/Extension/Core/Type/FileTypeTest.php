@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationRequestHandler;
 use Symfony\Component\Form\NativeRequestHandler;
 use Symfony\Component\Form\RequestHandlerInterface;
@@ -20,10 +23,7 @@ class FileTypeTest extends BaseTypeTest
 {
     const TESTED_TYPE = 'Symfony\Component\Form\Extension\Core\Type\FileType';
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('file');
 
@@ -44,10 +44,7 @@ class FileTypeTest extends BaseTypeTest
         $this->assertSame($data, $form->getData());
     }
 
-    /**
-     * @dataProvider requestHandlerProvider
-     */
-    public function testSubmit(RequestHandlerInterface $requestHandler)
+    #[DataProvider('requestHandlerProvider')]    public function testSubmit(RequestHandlerInterface $requestHandler)
     {
         $form = $this->factory->createBuilder(static::TESTED_TYPE)->setRequestHandler($requestHandler)->getForm();
         $data = $this->createUploadedFileMock($requestHandler, __DIR__.'/../../../Fixtures/foo', 'foo.jpg');
@@ -57,10 +54,7 @@ class FileTypeTest extends BaseTypeTest
         $this->assertSame($data, $form->getData());
     }
 
-    /**
-     * @dataProvider requestHandlerProvider
-     */
-    public function testSetDataMultiple(RequestHandlerInterface $requestHandler)
+    #[DataProvider('requestHandlerProvider')]    public function testSetDataMultiple(RequestHandlerInterface $requestHandler)
     {
         $form = $this->factory->createBuilder(static::TESTED_TYPE, null, array(
             'multiple' => true,
@@ -75,10 +69,7 @@ class FileTypeTest extends BaseTypeTest
         $this->assertSame($data, $form->getData());
     }
 
-    /**
-     * @dataProvider requestHandlerProvider
-     */
-    public function testSubmitMultiple(RequestHandlerInterface $requestHandler)
+    #[DataProvider('requestHandlerProvider')]    public function testSubmitMultiple(RequestHandlerInterface $requestHandler)
     {
         $form = $this->factory->createBuilder(static::TESTED_TYPE, null, array(
             'multiple' => true,
@@ -97,10 +88,7 @@ class FileTypeTest extends BaseTypeTest
         $this->assertArrayHasKey('multiple', $view->vars['attr']);
     }
 
-    /**
-     * @dataProvider requestHandlerProvider
-     */
-    public function testDontPassValueToView(RequestHandlerInterface $requestHandler)
+    #[DataProvider('requestHandlerProvider')]    public function testDontPassValueToView(RequestHandlerInterface $requestHandler)
     {
         $form = $this->factory->createBuilder(static::TESTED_TYPE)->setRequestHandler($requestHandler)->getForm();
         $form->submit(array(
@@ -136,10 +124,7 @@ class FileTypeTest extends BaseTypeTest
         $this->assertSame(array(), $form->getViewData());
     }
 
-    /**
-     * @dataProvider requestHandlerProvider
-     */
-    public function testSubmittedFilePathsAreDropped(RequestHandlerInterface $requestHandler)
+    #[DataProvider('requestHandlerProvider')]    public function testSubmittedFilePathsAreDropped(RequestHandlerInterface $requestHandler)
     {
         $form = $this->factory->createBuilder(static::TESTED_TYPE)->setRequestHandler($requestHandler)->getForm();
         $form->submit('file:///etc/passwd');
@@ -149,10 +134,7 @@ class FileTypeTest extends BaseTypeTest
         $this->assertSame('', $form->getViewData());
     }
 
-    /**
-     * @dataProvider requestHandlerProvider
-     */
-    public function testMultipleSubmittedFilePathsAreDropped(RequestHandlerInterface $requestHandler)
+    #[DataProvider('requestHandlerProvider')]    public function testMultipleSubmittedFilePathsAreDropped(RequestHandlerInterface $requestHandler)
     {
         $form = $this->factory
             ->createBuilder(static::TESTED_TYPE, null, array(
@@ -169,10 +151,7 @@ class FileTypeTest extends BaseTypeTest
         $this->assertCount(1, $form->getData());
     }
 
-    /**
-     * @dataProvider requestHandlerProvider
-     */
-    public function testSubmitNonArrayValueWhenMultiple(RequestHandlerInterface $requestHandler)
+    #[DataProvider('requestHandlerProvider')]    public function testSubmitNonArrayValueWhenMultiple(RequestHandlerInterface $requestHandler)
     {
         $form = $this->factory
             ->createBuilder(static::TESTED_TYPE, null, array(

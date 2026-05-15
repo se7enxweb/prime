@@ -30,7 +30,7 @@ class SessionAuthenticationStrategyTest extends TestCase
     public function testUnsupportedStrategy()
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Invalid session authentication strategy \"foo\"');
+        $this->expectExceptionMessage('Invalid session authentication strategy "foo"');
 
         $request = $this->getRequest();
         $request->expects($this->never())->method('getSession');
@@ -79,7 +79,7 @@ class SessionAuthenticationStrategyTest extends TestCase
         $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
 
         if (null !== $session) {
-            $request->expects($this->any())->method('getSession')->will($this->returnValue($session));
+            $request->expects($this->any())->method('getSession')->willReturn($session);
         }
 
         return $request;

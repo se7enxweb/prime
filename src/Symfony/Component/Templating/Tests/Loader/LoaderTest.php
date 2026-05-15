@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Templating\Tests\Loader;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Templating\Loader\Loader;
 use Symfony\Component\Templating\TemplateReferenceInterface;
@@ -25,10 +27,7 @@ class LoaderTest extends TestCase
         $this->assertSame($logger, $loader->getLogger(), '->setLogger() sets the logger instance');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyGetSetDebugger()
+    #[Group('legacy')]    public function testLegacyGetSetDebugger()
     {
         $loader = new ProjectTemplateLoader4();
         $debugger = $this->getMockBuilder('Symfony\Component\Templating\DebuggerInterface')->getMock();

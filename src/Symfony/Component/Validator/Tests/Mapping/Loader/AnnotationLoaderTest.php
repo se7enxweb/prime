@@ -12,6 +12,7 @@
 namespace Symfony\Component\Validator\Tests\Mapping\Loader;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Callback;
@@ -26,6 +27,11 @@ use Symfony\Component\Validator\Tests\Fixtures\ConstraintA;
 
 class AnnotationLoaderTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        AnnotationRegistry::registerLoader('class_exists');
+    }
+
     public function testLoadClassMetadataReturnsTrueIfSuccessful()
     {
         $reader = new AnnotationReader();

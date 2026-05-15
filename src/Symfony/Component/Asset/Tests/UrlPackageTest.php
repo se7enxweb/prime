@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Asset\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Asset\UrlPackage;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
@@ -18,10 +20,7 @@ use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
 
 class UrlPackageTest extends TestCase
 {
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testGetUrl($baseUrls, $format, $path, $expected)
+    #[DataProvider('getConfigs')]    public function testGetUrl($baseUrls, $format, $path, $expected)
     {
         $package = new UrlPackage($baseUrls, new StaticVersionStrategy('v1', $format));
         $this->assertEquals($expected, $package->getUrl($path));
@@ -51,10 +50,7 @@ class UrlPackageTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getContextConfigs
-     */
-    public function testGetUrlWithContext($secure, $baseUrls, $format, $path, $expected)
+    #[DataProvider('getContextConfigs')]    public function testGetUrlWithContext($secure, $baseUrls, $format, $path, $expected)
     {
         $package = new UrlPackage($baseUrls, new StaticVersionStrategy('v1', $format), $this->getContext($secure));
 
@@ -85,7 +81,7 @@ class UrlPackageTest extends TestCase
             ->willReturn('https://cdn.com/bar/main.css');
         $package = new UrlPackage('https://example.com', $versionStrategy);
 
-        $this->assertEquals('https://cdn.com/bar/main.css', $package->getUrl('main.css'));
+$this->assertEquals('https://cdn.com/bar/main.css', $package->getUrl('main.css'));
     }
 
     /**
@@ -109,7 +105,7 @@ class UrlPackageTest extends TestCase
     private function getContext($secure)
     {
         $context = $this->getMockBuilder('Symfony\Component\Asset\Context\ContextInterface')->getMock();
-        $context->expects($this->any())->method('isSecure')->will($this->returnValue($secure));
+        $context->expects($this->any())->method('isSecure')->willReturn($secure);
 
         return $context;
     }

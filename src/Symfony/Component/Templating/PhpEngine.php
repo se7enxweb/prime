@@ -523,7 +523,7 @@ class PhpEngine implements EngineInterface, \ArrayAccess
     {
         $template = $this->parser->parse($name);
 
-        $key = $template->getLogicalName();
+        $key = (string) $template->getLogicalName();
         if (isset($this->cache[$key])) {
             return $this->cache[$key];
         }

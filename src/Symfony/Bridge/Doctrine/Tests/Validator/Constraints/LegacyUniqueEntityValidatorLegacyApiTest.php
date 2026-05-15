@@ -11,11 +11,12 @@
 
 namespace Symfony\Bridge\Doctrine\Tests\Validator\Constraints;
 
-use Symfony\Component\Validator\Validation;
 
+use PHPUnit\Framework\Attributes\Group;
+use Symfony\Component\Validator\Validation;
+    #[Group('legacy')]
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
- * @group  legacy
  */
 class LegacyUniqueEntityValidatorLegacyApiTest extends UniqueEntityValidatorTest
 {

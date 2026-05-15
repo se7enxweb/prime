@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Console\Tests\Input;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -24,6 +27,7 @@ class InputDefinitionTest extends TestCase
     protected $bar;
     protected $foo1;
     protected $foo2;
+    protected $multi;
 
     public static function setUpBeforeClass(): void
     {
@@ -91,7 +95,7 @@ class InputDefinitionTest extends TestCase
     public function testArgumentsMustHaveDifferentNames()
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('An argument with name \"foo\" already exists.');
+        $this->expectExceptionMessage('An argument with name "foo" already exists.');
 
         $this->initializeArguments();
 
@@ -142,7 +146,7 @@ class InputDefinitionTest extends TestCase
     public function testGetInvalidArgument()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The \"bar\" argument does not exist.');
+        $this->expectExceptionMessage('The "bar" argument does not exist.');
 
         $this->initializeArguments();
 
@@ -215,7 +219,7 @@ class InputDefinitionTest extends TestCase
     public function testSetOptionsClearsOptions()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The \"-f\" option does not exist.');
+        $this->expectExceptionMessage('The "-f" option does not exist.');
 
         $this->initializeOptions();
 
@@ -250,7 +254,7 @@ class InputDefinitionTest extends TestCase
     public function testAddDuplicateOption()
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('An option named \"foo\" already exists.');
+        $this->expectExceptionMessage('An option named "foo" already exists.');
 
         $this->initializeOptions();
 
@@ -264,7 +268,7 @@ class InputDefinitionTest extends TestCase
     public function testAddDuplicateShortcutOption()
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('An option with shortcut \"f\" already exists.');
+        $this->expectExceptionMessage('An option with shortcut "f" already exists.');
 
         $this->initializeOptions();
 
@@ -286,7 +290,7 @@ class InputDefinitionTest extends TestCase
     public function testGetInvalidOption()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The \"--bar\" option does not exist.');
+        $this->expectExceptionMessage('The "--bar" option does not exist.');
 
         $this->initializeOptions();
 
@@ -334,7 +338,7 @@ class InputDefinitionTest extends TestCase
     public function testGetOptionForInvalidShortcut()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The \"-l\" option does not exist.');
+        $this->expectExceptionMessage('The "-l" option does not exist.');
 
         $this->initializeOptions();
 
@@ -365,10 +369,7 @@ class InputDefinitionTest extends TestCase
         $this->assertSame($defaults, $definition->getOptionDefaults(), '->getOptionDefaults() returns the default values for all options');
     }
 
-    /**
-     * @dataProvider getGetSynopsisData
-     */
-    public function testGetSynopsis(InputDefinition $definition, $expectedSynopsis, $message = null)
+    #[DataProvider('getGetSynopsisData')]    public function testGetSynopsis(InputDefinition $definition, $expectedSynopsis, $message = null)
     {
         $this->assertEquals($expectedSynopsis, $definition->getSynopsis(), $message ? '->getSynopsis() '.$message : '');
     }
@@ -396,10 +397,7 @@ class InputDefinitionTest extends TestCase
         $this->assertEquals('[options] [--] [<cat>]', $definition->getSynopsis(true), '->getSynopsis(true) groups options in [options]');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyAsText()
+    #[Group('legacy')]    public function testLegacyAsText()
     {
         $definition = new InputDefinition(array(
             new InputArgument('foo', InputArgument::OPTIONAL, 'The foo argument'),
@@ -415,10 +413,7 @@ class InputDefinitionTest extends TestCase
         $this->assertStringEqualsFile(self::$fixtures.'/definition_astext.txt', $definition->asText(), '->asText() returns a textual representation of the InputDefinition');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyAsXml()
+    #[Group('legacy')]    public function testLegacyAsXml()
     {
         $definition = new InputDefinition(array(
             new InputArgument('foo', InputArgument::OPTIONAL, 'The foo argument'),

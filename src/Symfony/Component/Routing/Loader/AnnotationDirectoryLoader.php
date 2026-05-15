@@ -103,16 +103,19 @@ class RecursiveCallbackFilterIterator extends \FilterIterator implements \Recurs
         parent::__construct($iterator);
     }
 
+    #[\ReturnTypeWillChange]
     public function accept()
     {
         return \call_user_func($this->callback, $this->current(), $this->key(), $this->iterator);
     }
 
+    #[\ReturnTypeWillChange]
     public function hasChildren()
     {
         return $this->iterator->hasChildren();
     }
 
+    #[\ReturnTypeWillChange]
     public function getChildren()
     {
         return new static($this->iterator->getChildren(), $this->callback);

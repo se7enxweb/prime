@@ -49,7 +49,7 @@ class EnumNodeTest extends TestCase
     public function testFinalizeWithInvalidValue()
     {
         $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
-        $this->expectExceptionMessage('The value \"foobar\" is not allowed for path \"foo\". Permissible values: \"foo\", \"bar\"');
+        $this->expectExceptionMessage('The value "foobar" is not allowed for path "foo". Permissible values: "foo", "bar"');
 
         $node = new EnumNode('foo', null, array('foo', 'bar'));
         $node->finalize('foobar');

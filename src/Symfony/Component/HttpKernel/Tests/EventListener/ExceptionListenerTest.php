@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\HttpKernel\Tests\EventListener;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,13 +27,12 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use Symfony\Component\HttpKernel\Tests\Logger;
 
+#[Group('time-sensitive')]
 /**
  * ExceptionListenerTest.
  *
  * @author Robert Schönthal <seroscho@googlemail.com>
- *
- * @group time-sensitive
- */
+ * */
 class ExceptionListenerTest extends TestCase
 {
     public function testConstruct()
@@ -38,20 +41,15 @@ class ExceptionListenerTest extends TestCase
         $l = new ExceptionListener('foo', $logger);
 
         $_logger = new \ReflectionProperty(\get_class($l), 'logger');
-        $_logger->setAccessible(true);
         $_controller = new \ReflectionProperty(\get_class($l), 'controller');
-        $_controller->setAccessible(true);
 
         $this->assertSame($logger, $_logger->getValue($l));
         $this->assertSame('foo', $_controller->getValue($l));
     }
 
-    /**
-     * @dataProvider provider
-     */
-    public function testHandleWithoutLogger($event, $event2)
+    #[DataProvider('provider')]    public function testHandleWithoutLogger($event, $event2)
     {
-        $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
+        ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
 
         $l = new ExceptionListener('foo');
         $l->onKernelException($event);
@@ -65,12 +63,10 @@ class ExceptionListenerTest extends TestCase
             $this->assertSame('bar', $e->getMessage());
             $this->assertSame('foo', $e->getPrevious()->getMessage());
         }
+        ini_restore('error_log');
     }
 
-    /**
-     * @dataProvider provider
-     */
-    public function testHandleWithLogger($event, $event2)
+    #[DataProvider('provider')]    public function testHandleWithLogger($event, $event2)
     {
         $logger = new TestLogger();
 
@@ -112,14 +108,14 @@ class ExceptionListenerTest extends TestCase
         $listener = new ExceptionListener('foo', $this->getMockBuilder('Psr\Log\LoggerInterface')->getMock());
 
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
-        $kernel->expects($this->once())->method('handle')->will($this->returnCallback(function (Request $request) {
-            return new Response($request->getRequestFormat());
-        }));
+        $kernel->expects($this->once())->method('handle')->willReturnCallback(function (Request $request) {
+return new Response($request->getRequestFormat());
+        });
 
         $request = Request::create('/');
         $request->setRequestFormat('xml');
 
-        $event = new GetResponseForExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, new \Exception('foo'));
+$event = new GetResponseForExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, new \Exception('foo'));
         $listener->onKernelException($event);
 
         $response = $event->getResponse();
@@ -130,16 +126,16 @@ class ExceptionListenerTest extends TestCase
     {
         $dispatcher = new EventDispatcher();
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
-        $kernel->expects($this->once())->method('handle')->will($this->returnCallback(function (Request $request) {
-            return new Response($request->getRequestFormat());
-        }));
+        $kernel->expects($this->once())->method('handle')->willReturnCallback(function (Request $request) {
+return new Response($request->getRequestFormat());
+        });
 
         $listener = new ExceptionListener('foo', $this->getMockBuilder('Psr\Log\LoggerInterface')->getMock(), true);
 
         $dispatcher->addSubscriber($listener);
 
         $request = Request::create('/');
-        $event = new GetResponseForExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, new \Exception('foo'));
+$event = new GetResponseForExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, new \Exception('foo'));
         $dispatcher->dispatch(KernelEvents::EXCEPTION, $event);
 
         $response = new Response('', 200, array('content-security-policy' => "style-src 'self'"));

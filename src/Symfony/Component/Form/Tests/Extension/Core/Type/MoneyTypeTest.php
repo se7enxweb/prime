@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Intl\Util\IntlTestHelper;
 
 class MoneyTypeTest extends BaseTypeTest
@@ -26,10 +28,7 @@ class MoneyTypeTest extends BaseTypeTest
         parent::setUp();
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('money');
 

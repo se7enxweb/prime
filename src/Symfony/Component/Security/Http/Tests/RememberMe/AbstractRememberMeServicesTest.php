@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Security\Http\Tests\RememberMe;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,7 +54,7 @@ class AbstractRememberMeServicesTest extends TestCase
         $service
             ->expects($this->once())
             ->method('processAutoLoginCookie')
-            ->will($this->returnValue(null))
+            ->willReturn(null)
         ;
 
         $service->autoLogin($request);
@@ -68,13 +70,13 @@ class AbstractRememberMeServicesTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getRoles')
-            ->will($this->returnValue(array()))
+            ->willReturn(array())
         ;
 
         $service
             ->expects($this->once())
             ->method('processAutoLoginCookie')
-            ->will($this->returnValue($user))
+            ->willReturn($user)
         ;
 
         $returnedToken = $service->autoLogin($request);
@@ -84,10 +86,7 @@ class AbstractRememberMeServicesTest extends TestCase
         $this->assertSame('fookey', $returnedToken->getProviderKey());
     }
 
-    /**
-     * @dataProvider provideOptionsForLogout
-     */
-    public function testLogout(array $options)
+    #[DataProvider('provideOptionsForLogout')]    public function testLogout(array $options)
     {
         $service = $this->getService(null, $options);
         $request = new Request();
@@ -132,7 +131,7 @@ class AbstractRememberMeServicesTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->will($this->returnValue('foo'))
+            ->willReturn('foo')
         ;
 
         $service
@@ -155,13 +154,13 @@ class AbstractRememberMeServicesTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->will($this->returnValue($account))
+            ->willReturn($account)
         ;
 
         $service
             ->expects($this->never())
             ->method('onLoginSuccess')
-            ->will($this->returnValue(null))
+            ->willReturn(null)
         ;
 
         $this->assertFalse($request->request->has('foo'));
@@ -179,22 +178,19 @@ class AbstractRememberMeServicesTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->will($this->returnValue($account))
+            ->willReturn($account)
         ;
 
         $service
             ->expects($this->once())
             ->method('onLoginSuccess')
-            ->will($this->returnValue(null))
+            ->willReturn(null)
         ;
 
         $service->loginSuccess($request, $response, $token);
     }
 
-    /**
-     * @dataProvider getPositiveRememberMeParameterValues
-     */
-    public function testLoginSuccessWhenRememberMeParameterWithPathIsPositive($value)
+    #[DataProvider('getPositiveRememberMeParameterValues')]    public function testLoginSuccessWhenRememberMeParameterWithPathIsPositive($value)
     {
         $service = $this->getService(null, array('name' => 'foo', 'always_remember_me' => false, 'remember_me_parameter' => 'foo[bar]', 'path' => null, 'domain' => null));
 
@@ -206,22 +202,19 @@ class AbstractRememberMeServicesTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->will($this->returnValue($account))
+            ->willReturn($account)
         ;
 
         $service
             ->expects($this->once())
             ->method('onLoginSuccess')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $service->loginSuccess($request, $response, $token);
     }
 
-    /**
-     * @dataProvider getPositiveRememberMeParameterValues
-     */
-    public function testLoginSuccessWhenRememberMeParameterIsPositive($value)
+    #[DataProvider('getPositiveRememberMeParameterValues')]    public function testLoginSuccessWhenRememberMeParameterIsPositive($value)
     {
         $service = $this->getService(null, array('name' => 'foo', 'always_remember_me' => false, 'remember_me_parameter' => 'foo', 'path' => null, 'domain' => null));
 
@@ -233,13 +226,13 @@ class AbstractRememberMeServicesTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->will($this->returnValue($account))
+            ->willReturn($account)
         ;
 
         $service
             ->expects($this->once())
             ->method('onLoginSuccess')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $service->loginSuccess($request, $response, $token);
@@ -287,9 +280,9 @@ class AbstractRememberMeServicesTest extends TestCase
             $userProvider = $this->getProvider();
         }
 
-        return $this->getMockForAbstractClass('Symfony\Component\Security\Http\RememberMe\AbstractRememberMeServices', array(
+        return $this->getMockBuilder('Symfony\Component\Security\Http\RememberMe\AbstractRememberMeServices')->setConstructorArgs(array(
             array($userProvider), 'foosecret', 'fookey', $options, $logger,
-        ));
+        ))->onlyMethods(array('processAutoLoginCookie', 'onLoginSuccess'))->getMock();
     }
 
     protected function getProvider()
@@ -298,7 +291,7 @@ class AbstractRememberMeServicesTest extends TestCase
         $provider
             ->expects($this->any())
             ->method('supportsClass')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         return $provider;
@@ -308,7 +301,6 @@ class AbstractRememberMeServicesTest extends TestCase
     {
         $reflection = new \ReflectionClass(\get_class($object));
         $reflectionMethod = $reflection->getMethod($method);
-        $reflectionMethod->setAccessible(true);
 
         return $reflectionMethod->invokeArgs($object, $args);
     }

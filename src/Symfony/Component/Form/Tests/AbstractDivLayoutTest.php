@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Security\Csrf\CsrfToken;
 
@@ -473,7 +475,7 @@ abstract class AbstractDivLayoutTest extends AbstractLayoutTest
     {
         $this->csrfTokenManager->expects($this->any())
             ->method('getToken')
-            ->will($this->returnValue(new CsrfToken('token_id', 'foo&bar')));
+            ->willReturn(new CsrfToken('token_id', 'foo&bar'));
 
         $form = $this->factory->createNamedBuilder('name', 'Symfony\Component\Form\Extension\Core\Type\FormType')
             ->add($this->factory
@@ -601,10 +603,7 @@ abstract class AbstractDivLayoutTest extends AbstractLayoutTest
         );
     }
 
-    /**
-     * @dataProvider themeBlockInheritanceProvider
-     */
-    public function testThemeBlockInheritance($theme)
+    #[DataProvider('themeBlockInheritanceProvider')]    public function testThemeBlockInheritance($theme)
     {
         $view = $this->factory
             ->createNamed('name', 'Symfony\Component\Form\Extension\Core\Type\EmailType')
@@ -619,10 +618,7 @@ abstract class AbstractDivLayoutTest extends AbstractLayoutTest
         );
     }
 
-    /**
-     * @dataProvider themeInheritanceProvider
-     */
-    public function testThemeInheritance($parentTheme, $childTheme)
+    #[DataProvider('themeInheritanceProvider')]    public function testThemeInheritance($parentTheme, $childTheme)
     {
         $child = $this->factory->createNamedBuilder('child', 'Symfony\Component\Form\Extension\Core\Type\FormType')
             ->add('field', 'Symfony\Component\Form\Extension\Core\Type\TextType');

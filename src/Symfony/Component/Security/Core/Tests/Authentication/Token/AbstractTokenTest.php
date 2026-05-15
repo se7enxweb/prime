@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Security\Core\Tests\Authentication\Token;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Role\Role;
@@ -72,7 +74,7 @@ class AbstractTokenTest extends TestCase
         $this->assertEquals('fabien', $token->getUsername());
 
         $user = $this->getMockBuilder('Symfony\Component\Security\Core\User\UserInterface')->getMock();
-        $user->expects($this->once())->method('getUsername')->will($this->returnValue('fabien'));
+        $user->expects($this->once())->method('getUsername')->willReturn('fabien');
         $token->setUser($user);
         $this->assertEquals('fabien', $token->getUsername());
     }
@@ -172,10 +174,7 @@ class AbstractTokenTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider getUsers
-     */
-    public function testSetUser($user)
+    #[DataProvider('getUsers')]    public function testSetUser($user)
     {
         $token = $this->getToken();
         $token->setUser($user);
@@ -211,10 +210,7 @@ class AbstractTokenTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getUserChanges
-     */
-    public function testSetUserSetsAuthenticatedToFalseWhenUserChanges($firstUser, $secondUser)
+    #[DataProvider('getUserChanges')]    public function testSetUserSetsAuthenticatedToFalseWhenUserChanges($firstUser, $secondUser)
     {
         $token = $this->getToken();
         $token->setAuthenticated(true);
@@ -294,10 +290,7 @@ class AbstractTokenTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getUsers
-     */
-    public function testSetUserDoesNotSetAuthenticatedToFalseWhenUserDoesNotChange($user)
+    #[DataProvider('getUsers')]    public function testSetUserDoesNotSetAuthenticatedToFalseWhenUserDoesNotChange($user)
     {
         $token = $this->getToken();
         $token->setAuthenticated(true);
@@ -312,6 +305,6 @@ class AbstractTokenTest extends TestCase
 
     protected function getToken(array $roles = array())
     {
-        return $this->getMockForAbstractClass('Symfony\Component\Security\Core\Authentication\Token\AbstractToken', array($roles));
+        return $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\AbstractToken')->setConstructorArgs(array($roles))->onlyMethods(array('getCredentials'))->getMock();
     }
 }

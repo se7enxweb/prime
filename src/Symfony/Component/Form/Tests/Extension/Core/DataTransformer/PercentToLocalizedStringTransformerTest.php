@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\DataTransformer;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Core\DataTransformer\PercentToLocalizedStringTransformer;
 use Symfony\Component\Intl\Util\IntlTestHelper;
@@ -106,7 +108,7 @@ class PercentToLocalizedStringTransformerTest extends TestCase
     {
         $transformer = new PercentToLocalizedStringTransformer();
 
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('Symfony\Component\Form\Exception\TransformationFailedException');
+        $this->expectException('Symfony\Component\Form\Exception\TransformationFailedException');
 
         $transformer->transform('foo');
     }
@@ -115,7 +117,7 @@ class PercentToLocalizedStringTransformerTest extends TestCase
     {
         $transformer = new PercentToLocalizedStringTransformer();
 
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('Symfony\Component\Form\Exception\TransformationFailedException');
+        $this->expectException('Symfony\Component\Form\Exception\TransformationFailedException');
 
         $transformer->reverseTransform(1);
     }
@@ -230,15 +232,15 @@ class PercentToLocalizedStringTransformerTest extends TestCase
         $formatter->setAttribute(\NumberFormatter::GROUPING_USED, false);
 
         $transformer = $this->getMockBuilder('Symfony\Component\Form\Extension\Core\DataTransformer\PercentToLocalizedStringTransformer')
-            ->setMethods(array('getNumberFormatter'))
+            ->onlyMethods(array('getNumberFormatter'))
             ->setConstructorArgs(array(1, 'integer'))
             ->getMock();
         $transformer->expects($this->any())
             ->method('getNumberFormatter')
             ->willReturn($formatter);
 
-        $this->assertEquals(1234.5, $transformer->reverseTransform('1234,5'));
-        $this->assertEquals(1234.5, $transformer->reverseTransform('1234.5'));
+$this->assertEquals(1234.5, $transformer->reverseTransform('1234,5'));
+$this->assertEquals(1234.5, $transformer->reverseTransform('1234.5'));
     }
 
     /**
@@ -257,20 +259,17 @@ class PercentToLocalizedStringTransformerTest extends TestCase
     public function testReverseTransformDisallowsCenteredExtraCharacters()
     {
         $this->expectException(\Symfony\Component\Form\Exception\TransformationFailedException::class);
-        $this->expectExceptionMessage('The number contains unrecognized characters: \"foo3\"');
+        $this->expectExceptionMessage('The number contains unrecognized characters: "foo3"');
 
         $transformer = new PercentToLocalizedStringTransformer();
 
         $transformer->reverseTransform('12foo3');
     }
 
-    /**
-     * @requires extension mbstring
-     */
-    public function testReverseTransformDisallowsCenteredExtraCharactersMultibyte()
+    #[RequiresPhpExtension('mbstring')]    public function testReverseTransformDisallowsCenteredExtraCharactersMultibyte()
     {
         $this->expectException(\Symfony\Component\Form\Exception\TransformationFailedException::class);
-        $this->expectExceptionMessage('The number contains unrecognized characters: \"foo8\"');
+        $this->expectExceptionMessage('The number contains unrecognized characters: "foo8"');
 
         // Since we test against other locales, we need the full implementation
         IntlTestHelper::requireFullIntl($this, false);
@@ -287,20 +286,17 @@ class PercentToLocalizedStringTransformerTest extends TestCase
     public function testReverseTransformDisallowsTrailingExtraCharacters()
     {
         $this->expectException(\Symfony\Component\Form\Exception\TransformationFailedException::class);
-        $this->expectExceptionMessage('The number contains unrecognized characters: \"foo\"');
+        $this->expectExceptionMessage('The number contains unrecognized characters: "foo"');
 
         $transformer = new PercentToLocalizedStringTransformer();
 
         $transformer->reverseTransform('123foo');
     }
 
-    /**
-     * @requires extension mbstring
-     */
-    public function testReverseTransformDisallowsTrailingExtraCharactersMultibyte()
+    #[RequiresPhpExtension('mbstring')]    public function testReverseTransformDisallowsTrailingExtraCharactersMultibyte()
     {
         $this->expectException(\Symfony\Component\Form\Exception\TransformationFailedException::class);
-        $this->expectExceptionMessage('The number contains unrecognized characters: \"foo\"');
+        $this->expectExceptionMessage('The number contains unrecognized characters: "foo"');
 
         // Since we test against other locales, we need the full implementation
         IntlTestHelper::requireFullIntl($this, false);

@@ -11,14 +11,16 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Translation;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Symfony\Bundle\FrameworkBundle\Translation\PhpExtractor;
 use Symfony\Component\Translation\MessageCatalogue;
 
 class PhpExtractorTest extends TestCase
 {
+    #[DataProvider('resourcesProvider')]
     /**
-     * @dataProvider resourcesProvider
      *
      * @param array|string $resource
      */

@@ -111,6 +111,8 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
      */
     public function addResource($format, $resource, $locale, $domain = null)
     {
+        $locale = (string) $locale;
+
         if (null === $domain) {
             $domain = 'messages';
         }
@@ -232,8 +234,11 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
         if (null === $locale) {
             $locale = $this->getLocale();
         } else {
+            $locale = (string) $locale;
             $this->assertValidLocale($locale);
         }
+
+        $locale = (string) $locale;
 
         if (!isset($this->catalogues[$locale])) {
             $this->loadCatalogue($locale);
@@ -279,6 +284,8 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
      */
     protected function loadCatalogue($locale)
     {
+        $locale = (string) $locale;
+
         if (null === $this->cacheDir) {
             $this->initializeCatalogue($locale);
         } else {
@@ -291,6 +298,8 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
      */
     protected function initializeCatalogue($locale)
     {
+        $locale = (string) $locale;
+
         $this->assertValidLocale($locale);
 
         try {
@@ -308,6 +317,8 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
      */
     private function initializeCacheCatalogue($locale)
     {
+        $locale = (string) $locale;
+
         if (isset($this->catalogues[$locale])) {
             /* Catalogue already initialized. */
             return;
@@ -337,6 +348,8 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
      */
     public function dumpCatalogue($locale, ConfigCacheInterface $cache)
     {
+        $locale = (string) $locale;
+
         $this->initializeCatalogue($locale);
         $fallbackContent = $this->getFallbackContent($this->catalogues[$locale]);
 
@@ -392,11 +405,13 @@ EOF
 
     private function getCatalogueCachePath($locale)
     {
-        return $this->cacheDir.'/catalogue.'.$locale.'.'.sha1(serialize($this->fallbackLocales)).'.php';
+        return $this->cacheDir.'/catalogue.'.(string) $locale.'.'.sha1(serialize($this->fallbackLocales)).'.php';
     }
 
     private function doLoadCatalogue($locale)
     {
+        $locale = (string) $locale;
+
         $this->catalogues[$locale] = new MessageCatalogue($locale);
 
         if (isset($this->resources[$locale])) {
@@ -429,8 +444,12 @@ EOF
 
     protected function computeFallbackLocales($locale)
     {
+        $locale = (string) $locale;
+
         $locales = array();
         foreach ($this->fallbackLocales as $fallback) {
+            $fallback = (string) $fallback;
+
             if ($fallback === $locale) {
                 continue;
             }
@@ -454,7 +473,7 @@ EOF
      */
     protected function assertValidLocale($locale)
     {
-        if (1 !== preg_match('/^[a-z0-9@_\\.\\-]*$/i', $locale)) {
+        if (1 !== preg_match('/^[a-z0-9@_\\.\\-]*$/i', (string) $locale)) {
             throw new \InvalidArgumentException(sprintf('Invalid "%s" locale.', $locale));
         }
     }

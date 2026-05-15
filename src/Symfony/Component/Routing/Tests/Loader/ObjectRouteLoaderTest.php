@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Routing\Tests\Loader;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Loader\ObjectRouteLoader;
 use Symfony\Component\Routing\Route;
@@ -40,10 +42,7 @@ class ObjectRouteLoaderTest extends TestCase
         $this->assertNotEmpty($actualRoutes->getResources());
     }
 
-    /**
-     * @dataProvider getBadResourceStrings
-     */
-    public function testExceptionWithoutSyntax($resourceString)
+    #[DataProvider('getBadResourceStrings')]    public function testExceptionWithoutSyntax($resourceString)
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -88,12 +87,13 @@ class ObjectRouteLoaderTest extends TestCase
     {
         $this->expectException(\LogicException::class);
 
-        $service = $this->getMockBuilder('stdClass')
-            ->setMethods(array('loadRoutes'))
+        $service = $this->getMockBuilder('Symfony\Component\Routing\Tests\Loader\RouteService')
+            ->disableOriginalConstructor()
+            ->onlyMethods(array('loadRoutes'))
             ->getMock();
         $service->expects($this->once())
             ->method('loadRoutes')
-            ->will($this->returnValue('NOT_A_COLLECTION'));
+            ->willReturn('NOT_A_COLLECTION');
 
         $loader = new ObjectRouteLoaderForTest();
         $loader->loaderMap = array('my_service' => $service);

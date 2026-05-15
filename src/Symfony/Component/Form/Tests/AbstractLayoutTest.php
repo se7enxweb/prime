@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormView;
@@ -132,10 +134,7 @@ abstract class AbstractLayoutTest extends FormIntegrationTestCase
 
     abstract protected function setTheme(FormView $view, array $themes);
 
-    /**
-     * @group legacy
-     */
-    public function testEnctype()
+    #[Group('legacy')]    public function testEnctype()
     {
         $form = $this->factory->createNamedBuilder('name', 'Symfony\Component\Form\Extension\Core\Type\FormType')
             ->add('file', 'Symfony\Component\Form\Extension\Core\Type\FileType')
@@ -144,10 +143,7 @@ abstract class AbstractLayoutTest extends FormIntegrationTestCase
         $this->assertEquals('enctype="multipart/form-data"', $this->renderEnctype($form->createView()));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testNoEnctype()
+    #[Group('legacy')]    public function testNoEnctype()
     {
         $form = $this->factory->createNamedBuilder('name', 'Symfony\Component\Form\Extension\Core\Type\FormType')
             ->add('text', 'Symfony\Component\Form\Extension\Core\Type\TextType')
@@ -1769,10 +1765,7 @@ abstract class AbstractLayoutTest extends FormIntegrationTestCase
         );
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyReadOnly()
+    #[Group('legacy')]    public function testLegacyReadOnly()
     {
         $form = $this->factory->createNamed('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', null, array(
             'read_only' => true,

@@ -268,7 +268,7 @@ class TraceableEventDispatcher implements TraceableEventDispatcherInterface
                     $this->called[$eventName] = new \SplObjectStorage();
                 }
 
-                $this->called[$eventName]->attach($listener);
+                $this->called[$eventName]->offsetSet($listener, null);
             }
 
             if (null !== $this->logger && $skipped) {

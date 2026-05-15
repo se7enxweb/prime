@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Validator\Constraints;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Test\FormPerformanceTestCase;
 use Symfony\Component\Validator\Validation;
@@ -27,10 +29,10 @@ class FormValidatorPerformanceTest extends FormPerformanceTestCase
         );
     }
 
+    #[Group('benchmark')]
     /**
      * findClickedButton() used to have an exponential number of calls.
      *
-     * @group benchmark
      */
     public function testValidationPerformance()
     {

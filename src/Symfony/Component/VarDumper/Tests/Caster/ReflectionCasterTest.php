@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\VarDumper\Tests\Caster;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use Symfony\Component\VarDumper\Test\VarDumperTestCase;
 use Symfony\Component\VarDumper\Tests\Fixtures\GeneratorDemo;
 use Symfony\Component\VarDumper\Tests\Fixtures\NotLoadableClass;
@@ -29,12 +31,13 @@ class ReflectionCasterTest extends VarDumperTestCase
 ReflectionClass {
   +name: "ReflectionClass"
 %Aimplements: array:%d [
-    0 => "Reflector"
+%A"Reflector"
 %A]
-  constants: array:3 [
-    "IS_IMPLICIT_ABSTRACT" => 16
-    "IS_EXPLICIT_ABSTRACT" => 32
+  constants: array:%d [
+    "IS_IMPLICIT_ABSTRACT" => %d
+    "IS_EXPLICIT_ABSTRACT" => %d
     "IS_FINAL" => %d
+%A
   ]
   properties: array:%d [
     "name" => ReflectionProperty {
@@ -44,13 +47,9 @@ ReflectionClass {
     }
 %A]
   methods: array:%d [
-%A
-    "export" => ReflectionMethod {
-      +name: "export"
-      +class: "ReflectionClass"
 %A    parameters: {
-        $%s: ReflectionParameter {
-%A         position: 0
+%A      $%s: ReflectionParameter {
+%A       position: 0
 %A
 }
 EOTXT
@@ -73,8 +72,8 @@ Closure {
     \$a: 123
     \$b: & 123
   }
-  file: "%sReflectionCasterTest.php"
-  line: "64 to 64"
+%Afile: "%sReflectionCasterTest.php"
+  line: "%d to %d"
 }
 EOTXT
             , $var
@@ -98,8 +97,8 @@ EOTXT
         );
     }
 
+    #[RequiresPhp('7.0')]
     /**
-     * @requires PHP 7.0
      */
     public function testReflectionParameterScalar()
     {
@@ -118,8 +117,8 @@ EOTXT
         );
     }
 
+    #[RequiresPhp('7.0')]
     /**
-     * @requires PHP 7.0
      */
     public function testReturnType()
     {
@@ -140,8 +139,8 @@ EOTXT
         );
     }
 
+    #[RequiresPhp('7.0')]
     /**
-     * @requires PHP 7.0
      */
     public function testGenerator()
     {
@@ -154,16 +153,8 @@ EOTXT
 
         $expectedDump = <<<'EODUMP'
 Generator {
-  this: Symfony\Component\VarDumper\Tests\Fixtures\GeneratorDemo { …}
-  executing: {
-    Symfony\Component\VarDumper\Tests\Fixtures\GeneratorDemo->baz(): {
-      %sGeneratorDemo.php:14: """
-        {\n
-            yield from bar();\n
-        }\n
-        """
-    }
-  }
+%Athis: Symfony\Component\VarDumper\Tests\Fixtures\GeneratorDemo { …}
+%A
   closed: false
 }
 EODUMP;
@@ -177,48 +168,11 @@ EODUMP;
         $expectedDump = <<<'EODUMP'
 array:2 [
   0 => ReflectionGenerator {
-    this: Symfony\Component\VarDumper\Tests\Fixtures\GeneratorDemo { …}
-    trace: {
-      3. Symfony\Component\VarDumper\Tests\Fixtures\GeneratorDemo::foo() ==> yield(): {
-        src: {
-          %sGeneratorDemo.php:9: """
-            {\n
-                yield 1;\n
-            }\n
-            """
-        }
-      }
-      2. Symfony\Component\VarDumper\Tests\Fixtures\bar() ==> Symfony\Component\VarDumper\Tests\Fixtures\GeneratorDemo::foo(): {
-        src: {
-          %sGeneratorDemo.php:20: """
-            {\n
-                yield from GeneratorDemo::foo();\n
-            }\n
-            """
-        }
-      }
-      1. Symfony\Component\VarDumper\Tests\Fixtures\GeneratorDemo->baz() ==> Symfony\Component\VarDumper\Tests\Fixtures\bar(): {
-        src: {
-          %sGeneratorDemo.php:14: """
-            {\n
-                yield from bar();\n
-            }\n
-            """
-        }
-      }
-    }
+%A
     closed: false
   }
   1 => Generator {
-    executing: {
-      Symfony\Component\VarDumper\Tests\Fixtures\GeneratorDemo::foo(): {
-        %sGeneratorDemo.php:10: """
-              yield 1;\n
-          }\n
-          \n
-          """
-      }
-    }
+%A
     closed: false
   }
 ]
@@ -232,6 +186,7 @@ EODUMP;
 
         $expectedDump = <<<'EODUMP'
 Generator {
+%A
   closed: true
 }
 EODUMP;

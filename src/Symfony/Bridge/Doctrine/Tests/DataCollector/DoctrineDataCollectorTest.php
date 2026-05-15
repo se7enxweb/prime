@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\Doctrine\Tests\DataCollector;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Version;
 use PHPUnit\Framework\TestCase;
@@ -69,11 +71,7 @@ class DoctrineDataCollectorTest extends TestCase
         $c->collect(new Request(), new Response());
         $this->assertEquals(3, $c->getTime());
     }
-
-    /**
-     * @dataProvider paramProvider
-     */
-    public function testCollectQueries($param, $types, $expected, $explainable)
+    #[DataProvider('paramProvider')]    public function testCollectQueries($param, $types, $expected, $explainable)
     {
         $queries = array(
             array('sql' => 'SELECT * FROM table1 WHERE field1 = ?1', 'params' => array($param), 'types' => $types, 'executionMS' => 1),
@@ -101,11 +99,7 @@ class DoctrineDataCollectorTest extends TestCase
         $this->assertEquals(array(), $collectedQueries['default'][1]['params']);
         $this->assertTrue($collectedQueries['default'][1]['explainable']);
     }
-
-    /**
-     * @dataProvider paramProvider
-     */
-    public function testSerialization($param, $types, $expected, $explainable)
+    #[DataProvider('paramProvider')]    public function testSerialization($param, $types, $expected, $explainable)
     {
         $queries = array(
             array('sql' => 'SELECT * FROM table1 WHERE field1 = ?1', 'params' => array($param), 'types' => $types, 'executionMS' => 1),
@@ -146,20 +140,20 @@ class DoctrineDataCollectorTest extends TestCase
             ->getMock();
         $connection->expects($this->any())
             ->method('getDatabasePlatform')
-            ->will($this->returnValue(new MySqlPlatform()));
+            ->willReturn(new MySqlPlatform());
 
         $registry = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')->getMock();
         $registry
             ->expects($this->any())
             ->method('getConnectionNames')
-            ->will($this->returnValue(array('default' => 'doctrine.dbal.default_connection')));
+->willReturn(array('default' => 'doctrine.dbal.default_connection'));
         $registry
             ->expects($this->any())
             ->method('getManagerNames')
-            ->will($this->returnValue(array('default' => 'doctrine.orm.default_entity_manager')));
+->willReturn(array('default' => 'doctrine.orm.default_entity_manager'));
         $registry->expects($this->any())
             ->method('getConnection')
-            ->will($this->returnValue($connection));
+            ->willReturn($connection);
 
         $logger = $this->getMockBuilder('Doctrine\DBAL\Logging\DebugStack')->getMock();
         $logger->queries = $queries;

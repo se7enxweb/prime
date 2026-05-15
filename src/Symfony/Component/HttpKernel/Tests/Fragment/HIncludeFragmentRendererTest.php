@@ -81,11 +81,11 @@ class HIncludeFragmentRendererTest extends TestCase
         $engine->expects($this->once())
             ->method('exists')
             ->with('default')
-            ->will($this->throwException(new \InvalidArgumentException()));
+            ->willThrowException(new \InvalidArgumentException());
 
         // only default
         $strategy = new HIncludeFragmentRenderer($engine);
-        $this->assertEquals('<hx:include src="/foo">default</hx:include>', $strategy->render('/foo', Request::create('/'), array('default' => 'default'))->getContent());
+$this->assertEquals('<hx:include src="/foo">default</hx:include>', $strategy->render('/foo', Request::create('/'), array('default' => 'default'))->getContent());
     }
 
     public function testRenderWithEngineAndDefaultText()
@@ -94,10 +94,10 @@ class HIncludeFragmentRendererTest extends TestCase
         $engine->expects($this->once())
             ->method('exists')
             ->with('loading...')
-            ->will($this->throwException(new \RuntimeException()));
+            ->willThrowException(new \RuntimeException());
 
         // only default
         $strategy = new HIncludeFragmentRenderer($engine);
-        $this->assertEquals('<hx:include src="/foo">loading...</hx:include>', $strategy->render('/foo', Request::create('/'), array('default' => 'loading...'))->getContent());
+$this->assertEquals('<hx:include src="/foo">loading...</hx:include>', $strategy->render('/foo', Request::create('/'), array('default' => 'loading...'))->getContent());
     }
 }

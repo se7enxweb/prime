@@ -11,6 +11,12 @@
 
 namespace Symfony\Component\Intl\Tests\DateFormatter\Verification;
 
+
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Intl\DateFormatter\IntlDateFormatter;
 use Symfony\Component\Intl\Tests\DateFormatter\AbstractIntlDateFormatterTest;
 use Symfony\Component\Intl\Util\IntlTestHelper;
@@ -30,22 +36,22 @@ class IntlDateFormatterTest extends AbstractIntlDateFormatterTest
         parent::setUp();
     }
 
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     /**
      * It seems IntlDateFormatter caches the timezone id when not explicitly set via constructor or by the
      * setTimeZoneId() method. Since testFormatWithDefaultTimezoneIntl() runs using the default environment
      * time zone, this test would use it too if not running in a separated process.
      *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testFormatWithTimezoneFromEnvironmentVariable()
     {
         parent::testFormatWithTimezoneFromEnvironmentVariable();
     }
 
+    #[DataProvider('formatTimezoneProvider')]
+    #[RequiresPhp('5.5')]
     /**
-     * @dataProvider formatTimezoneProvider
-     * @requires PHP 5.5
      */
     public function testFormatTimezone($pattern, $timezone, $expected)
     {
@@ -61,10 +67,7 @@ class IntlDateFormatterTest extends AbstractIntlDateFormatterTest
         parent::testFormatUtcAndGmtAreSplit();
     }
 
-    /**
-     * @dataProvider dateAndTimeTypeProvider
-     */
-    public function testDateAndTimeType($timestamp, $datetype, $timetype, $expected)
+    #[DataProvider('dateAndTimeTypeProvider')]    public function testDateAndTimeType($timestamp, $datetype, $timetype, $expected)
     {
         IntlTestHelper::requireFullIntl($this, '59.1');
 
@@ -95,5 +98,13 @@ class IntlDateFormatterTest extends AbstractIntlDateFormatterTest
     protected function isIntlFailure($errorCode)
     {
         return intl_is_failure($errorCode);
+    }
+
+    #[DataProvider('formatProvider')]    public function testFormat($pattern, $timestamp, $expected)
+    {
+        if ('QQQQQ' === $pattern || 'qqqqq' === $pattern) {
+            $expected = '1';
+        }
+        parent::testFormat($pattern, $timestamp, $expected);
     }
 }

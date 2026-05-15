@@ -53,7 +53,7 @@ class SimpleAuthenticationHandlerTest extends TestCase
         $this->successHandler->expects($this->once())
             ->method('onAuthenticationSuccess')
             ->with($this->request, $this->token)
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $handler = new SimpleAuthenticationHandler($authenticator, $this->successHandler, $this->failureHandler);
         $result = $handler->onAuthenticationSuccess($this->request, $this->token);
@@ -66,11 +66,11 @@ class SimpleAuthenticationHandlerTest extends TestCase
         $this->successHandler->expects($this->never())
             ->method('onAuthenticationSuccess');
 
-        $authenticator = $this->getMockForAbstractClass('Symfony\Component\Security\Http\Tests\TestSuccessHandlerInterface');
+        $authenticator = $this->createMock('Symfony\Component\Security\Http\Tests\TestSuccessHandlerInterface');
         $authenticator->expects($this->once())
             ->method('onAuthenticationSuccess')
             ->with($this->request, $this->token)
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $handler = new SimpleAuthenticationHandler($authenticator, $this->successHandler, $this->failureHandler);
         $result = $handler->onAuthenticationSuccess($this->request, $this->token);
@@ -88,11 +88,11 @@ class SimpleAuthenticationHandlerTest extends TestCase
         $this->successHandler->expects($this->never())
             ->method('onAuthenticationSuccess');
 
-        $authenticator = $this->getMockForAbstractClass('Symfony\Component\Security\Http\Tests\TestSuccessHandlerInterface');
+        $authenticator = $this->createMock('Symfony\Component\Security\Http\Tests\TestSuccessHandlerInterface');
         $authenticator->expects($this->once())
             ->method('onAuthenticationSuccess')
             ->with($this->request, $this->token)
-            ->will($this->returnValue(new \stdClass()));
+            ->willReturn(new \stdClass());
 
         $handler = new SimpleAuthenticationHandler($authenticator, $this->successHandler, $this->failureHandler);
         $handler->onAuthenticationSuccess($this->request, $this->token);
@@ -103,13 +103,13 @@ class SimpleAuthenticationHandlerTest extends TestCase
         $this->successHandler->expects($this->once())
             ->method('onAuthenticationSuccess')
             ->with($this->request, $this->token)
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
-        $authenticator = $this->getMockForAbstractClass('Symfony\Component\Security\Http\Tests\TestSuccessHandlerInterface');
+        $authenticator = $this->createMock('Symfony\Component\Security\Http\Tests\TestSuccessHandlerInterface');
         $authenticator->expects($this->once())
             ->method('onAuthenticationSuccess')
             ->with($this->request, $this->token)
-            ->will($this->returnValue(null));
+            ->willReturn(null);
 
         $handler = new SimpleAuthenticationHandler($authenticator, $this->successHandler, $this->failureHandler);
         $result = $handler->onAuthenticationSuccess($this->request, $this->token);
@@ -124,7 +124,7 @@ class SimpleAuthenticationHandlerTest extends TestCase
         $this->failureHandler->expects($this->once())
             ->method('onAuthenticationFailure')
             ->with($this->request, $this->authenticationException)
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $handler = new SimpleAuthenticationHandler($authenticator, $this->successHandler, $this->failureHandler);
         $result = $handler->onAuthenticationFailure($this->request, $this->authenticationException);
@@ -137,11 +137,11 @@ class SimpleAuthenticationHandlerTest extends TestCase
         $this->failureHandler->expects($this->never())
             ->method('onAuthenticationFailure');
 
-        $authenticator = $this->getMockForAbstractClass('Symfony\Component\Security\Http\Tests\TestFailureHandlerInterface');
+        $authenticator = $this->createMock('Symfony\Component\Security\Http\Tests\TestFailureHandlerInterface');
         $authenticator->expects($this->once())
             ->method('onAuthenticationFailure')
             ->with($this->request, $this->authenticationException)
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
         $handler = new SimpleAuthenticationHandler($authenticator, $this->successHandler, $this->failureHandler);
         $result = $handler->onAuthenticationFailure($this->request, $this->authenticationException);
@@ -159,11 +159,11 @@ class SimpleAuthenticationHandlerTest extends TestCase
         $this->failureHandler->expects($this->never())
             ->method('onAuthenticationFailure');
 
-        $authenticator = $this->getMockForAbstractClass('Symfony\Component\Security\Http\Tests\TestFailureHandlerInterface');
+        $authenticator = $this->createMock('Symfony\Component\Security\Http\Tests\TestFailureHandlerInterface');
         $authenticator->expects($this->once())
             ->method('onAuthenticationFailure')
             ->with($this->request, $this->authenticationException)
-            ->will($this->returnValue(new \stdClass()));
+            ->willReturn(new \stdClass());
 
         $handler = new SimpleAuthenticationHandler($authenticator, $this->successHandler, $this->failureHandler);
         $handler->onAuthenticationFailure($this->request, $this->authenticationException);
@@ -174,13 +174,13 @@ class SimpleAuthenticationHandlerTest extends TestCase
         $this->failureHandler->expects($this->once())
             ->method('onAuthenticationFailure')
             ->with($this->request, $this->authenticationException)
-            ->will($this->returnValue($this->response));
+            ->willReturn($this->response);
 
-        $authenticator = $this->getMockForAbstractClass('Symfony\Component\Security\Http\Tests\TestFailureHandlerInterface');
+        $authenticator = $this->createMock('Symfony\Component\Security\Http\Tests\TestFailureHandlerInterface');
         $authenticator->expects($this->once())
             ->method('onAuthenticationFailure')
             ->with($this->request, $this->authenticationException)
-            ->will($this->returnValue(null));
+            ->willReturn(null);
 
         $handler = new SimpleAuthenticationHandler($authenticator, $this->successHandler, $this->failureHandler);
         $result = $handler->onAuthenticationFailure($this->request, $this->authenticationException);

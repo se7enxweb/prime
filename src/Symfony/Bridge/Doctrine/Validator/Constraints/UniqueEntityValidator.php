@@ -88,7 +88,11 @@ class UniqueEntityValidator extends ConstraintValidator
                 throw new ConstraintDefinitionException(sprintf('The field "%s" is not mapped by Doctrine, so it cannot be validated for uniqueness.', $fieldName));
             }
 
-            $fieldValue = $class->reflFields[$fieldName]->getValue($entity);
+            if (method_exists($class, 'getFieldValue')) {
+                $fieldValue = $class->getFieldValue($entity, $fieldName);
+            } else {
+                $fieldValue = $class->reflFields[$fieldName]->getValue($entity);
+            }
 
             if (null === $fieldValue) {
                 $hasNullValue = true;

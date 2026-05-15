@@ -84,63 +84,60 @@ class TranslationUpdateCommandTest extends TestCase
         $translator
             ->expects($this->any())
             ->method('getFallbackLocales')
-            ->will($this->returnValue(array('en')));
+            ->willReturn(array('en'));
 
         $extractor = $this->getMockBuilder('Symfony\Component\Translation\Extractor\ExtractorInterface')->getMock();
         $extractor
             ->expects($this->any())
             ->method('extract')
-            ->will(
-                $this->returnCallback(function ($path, $catalogue) use ($extractedMessages) {
-                    $catalogue->add($extractedMessages);
-                })
-            );
+            ->willReturnCallback(function ($path, $catalogue) use ($extractedMessages) {
+                $catalogue->add($extractedMessages);
+            })
+        ;
 
         $loader = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Translation\TranslationLoader')->getMock();
         $loader
             ->expects($this->any())
             ->method('loadMessages')
-            ->will(
-                $this->returnCallback(function ($path, $catalogue) use ($loadedMessages) {
-                    $catalogue->add($loadedMessages);
-                })
-            );
+            ->willReturnCallback(function ($path, $catalogue) use ($loadedMessages) {
+                $catalogue->add($loadedMessages);
+            })
+        ;
 
         $writer = $this->getMockBuilder('Symfony\Component\Translation\Writer\TranslationWriter')->getMock();
         $writer
             ->expects($this->any())
             ->method('getFormats')
-            ->will(
-                $this->returnValue(array('xlf', 'yml'))
-            );
+            ->willReturn(array('xlf', 'yml'))
+        ;
 
         if (null === $kernel) {
             $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')->getMock();
             $kernel
                 ->expects($this->any())
                 ->method('getBundle')
-                ->will($this->returnValueMap(array(
+                ->willReturnMap(array(
                     array('foo', true, $this->getBundle($this->translationDir)),
                     array('test', true, $this->getBundle('test')),
-                )));
+                ));
         }
 
         $kernel
             ->expects($this->any())
             ->method('getRootDir')
-            ->will($this->returnValue($this->translationDir));
+            ->willReturn($this->translationDir);
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
         $container
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnValueMap(array(
+            ->willReturnMap(array(
                 array('translation.extractor', 1, $extractor),
                 array('translation.loader', 1, $loader),
                 array('translation.writer', 1, $writer),
                 array('translator', 1, $translator),
                 array('kernel', 1, $kernel),
-            )));
+));
 
         return $container;
     }
@@ -151,7 +148,7 @@ class TranslationUpdateCommandTest extends TestCase
         $bundle
             ->expects($this->any())
             ->method('getPath')
-            ->will($this->returnValue($path))
+            ->willReturn($path)
         ;
 
         return $bundle;

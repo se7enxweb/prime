@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Intl\Util\IntlTestHelper;
 
@@ -25,10 +27,7 @@ class CurrencyTypeTest extends BaseTypeTest
         parent::setUp();
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('currency');
 
@@ -40,9 +39,9 @@ class CurrencyTypeTest extends BaseTypeTest
         $choices = $this->factory->create(static::TESTED_TYPE)
             ->createView()->vars['choices'];
 
-        $this->assertContains(new ChoiceView('EUR', 'EUR', 'Euro'), $choices, '', false, false);
-        $this->assertContains(new ChoiceView('USD', 'USD', 'US Dollar'), $choices, '', false, false);
-        $this->assertContains(new ChoiceView('SIT', 'SIT', 'Slovenian Tolar'), $choices, '', false, false);
+        $this->assertContainsEquals(new ChoiceView('EUR', 'EUR', 'Euro'), $choices);
+        $this->assertContainsEquals(new ChoiceView('USD', 'USD', 'US Dollar'), $choices);
+        $this->assertContainsEquals(new ChoiceView('SIT', 'SIT', 'Slovenian Tolar'), $choices);
     }
 
     public function testSubmitNull($expected = null, $norm = null, $view = null)

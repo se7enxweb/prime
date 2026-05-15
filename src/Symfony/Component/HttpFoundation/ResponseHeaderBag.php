@@ -128,7 +128,12 @@ class ResponseHeaderBag extends HeaderBag
 
     public function setCookie(Cookie $cookie)
     {
-        $this->cookies[$cookie->getDomain()][$cookie->getPath()][$cookie->getName()] = $cookie;
+        $domain = $cookie->getDomain();
+        if (null === $domain) {
+            $domain = '';
+        }
+
+        $this->cookies[$domain][$cookie->getPath()][$cookie->getName()] = $cookie;
     }
 
     /**
@@ -142,6 +147,10 @@ class ResponseHeaderBag extends HeaderBag
     {
         if (null === $path) {
             $path = '/';
+        }
+
+        if (null === $domain) {
+            $domain = '';
         }
 
         unset($this->cookies[$domain][$path][$name]);

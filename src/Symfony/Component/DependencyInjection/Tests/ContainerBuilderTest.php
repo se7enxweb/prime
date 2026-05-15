@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\DependencyInjection\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 require_once __DIR__.'/Fixtures/includes/classes.php';
 require_once __DIR__.'/Fixtures/includes/ProjectExtension.php';
 
@@ -62,12 +65,10 @@ class ContainerBuilderTest extends TestCase
         }
     }
 
-    /**
-     * @group legacy
-     * @expectedDeprecation The "deprecated_foo" service is deprecated. You should stop using it, as it will soon be removed.
-     */
-    public function testCreateDeprecatedService()
+    #[Group('legacy')]    public function testCreateDeprecatedService()
     {
+        $this->expectUserDeprecationMessage('The "deprecated_foo" service is deprecated. You should stop using it, as it will soon be removed.');
+
         $definition = new Definition('stdClass');
         $definition->setDeprecated(true);
 
@@ -131,10 +132,7 @@ class ContainerBuilderTest extends TestCase
         $this->assertNotSame($builder->get('bar'), $builder->get('bar'));
     }
 
-    /**
-     * @dataProvider provideBadId
-     */
-    public function testBadAliasId($id)
+    #[DataProvider('provideBadId')]    public function testBadAliasId($id)
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException::class);
 
@@ -142,10 +140,7 @@ class ContainerBuilderTest extends TestCase
         $builder->setAlias($id, 'foo');
     }
 
-    /**
-     * @dataProvider provideBadId
-     */
-    public function testBadDefinitionId($id)
+    #[DataProvider('provideBadId')]    public function testBadDefinitionId($id)
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException::class);
 
@@ -170,7 +165,7 @@ class ContainerBuilderTest extends TestCase
     public function testGetUnsetLoadingServiceWhenCreateServiceThrowsAnException()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
-        $this->expectExceptionMessage('You have requested a synthetic service (\"foo\"). The DIC does not know how to construct this service.');
+        $this->expectExceptionMessage('You have requested a synthetic service ("foo"). The DIC does not know how to construct this service.');
 
         $builder = new ContainerBuilder();
         $builder->register('foo', 'stdClass')->setSynthetic(true);
@@ -185,10 +180,7 @@ class ContainerBuilderTest extends TestCase
         $builder->get('foo');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testGetReturnsNullOnInactiveScope()
+    #[Group('legacy')]    public function testGetReturnsNullOnInactiveScope()
     {
         $builder = new ContainerBuilder();
         $builder->register('foo', 'stdClass')->setScope('request');
@@ -196,10 +188,7 @@ class ContainerBuilderTest extends TestCase
         $this->assertNull($builder->get('foo', ContainerInterface::NULL_ON_INVALID_REFERENCE));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testGetReturnsNullOnInactiveScopeWhenServiceIsCreatedByAMethod()
+    #[Group('legacy')]    public function testGetReturnsNullOnInactiveScopeWhenServiceIsCreatedByAMethod()
     {
         $builder = new ProjectContainer();
 
@@ -210,7 +199,6 @@ class ContainerBuilderTest extends TestCase
     {
         $builder = new ContainerBuilder();
         $builder->register('foo', 'stdClass');
-        $builder->bar = $bar = new \stdClass();
         $builder->register('bar', 'stdClass');
         $this->assertEquals(array('foo', 'bar', 'service_container'), $builder->getServiceIds(), '->getServiceIds() returns all defined service ids');
     }
@@ -370,10 +358,7 @@ class ContainerBuilderTest extends TestCase
         $this->assertTrue($builder->get('baz')->called, '->createService() uses another service as factory');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyCreateServiceFactory()
+    #[Group('legacy')]    public function testLegacyCreateServiceFactory()
     {
         $builder = new ContainerBuilder();
         $builder->register('bar', 'Bar\FooClass');
@@ -389,10 +374,7 @@ class ContainerBuilderTest extends TestCase
         $this->assertEquals(array('foo' => 'bar', 'bar' => 'foo', $builder->get('bar')), $builder->get('foo1')->arguments, '->createService() passes the arguments to the factory method');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyCreateServiceFactoryService()
+    #[Group('legacy')]    public function testLegacyCreateServiceFactoryService()
     {
         $builder = new ContainerBuilder();
         $builder->register('foo_service', 'Bar\FooClass');
@@ -492,7 +474,7 @@ class ContainerBuilderTest extends TestCase
     public function testResolveServicesWithDecoratedDefinition()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
-        $this->expectExceptionMessage('Constructing service \"foo\" from a parent definition is not supported at build time.');
+        $this->expectExceptionMessage('Constructing service "foo" from a parent definition is not supported at build time.');
 
         $builder = new ContainerBuilder();
         $builder->setDefinition('grandpa', new Definition('stdClass'));
@@ -697,14 +679,14 @@ class ContainerBuilderTest extends TestCase
         $container->registerExtension($extension = new \ProjectExtension());
         $this->assertSame($container->getExtension('project'), $extension, '->registerExtension() registers an extension');
 
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('LogicException');
+        $this->expectException('LogicException');
         $container->getExtension('no_registered');
     }
 
     public function testRegisteredButNotLoadedExtension()
     {
         $extension = $this->getMockBuilder('Symfony\\Component\\DependencyInjection\\Extension\\ExtensionInterface')->getMock();
-        $extension->expects($this->once())->method('getAlias')->will($this->returnValue('project'));
+        $extension->expects($this->once())->method('getAlias')->willReturn('project');
         $extension->expects($this->never())->method('load');
 
         $container = new ContainerBuilder();
@@ -716,13 +698,13 @@ class ContainerBuilderTest extends TestCase
     public function testRegisteredAndLoadedExtension()
     {
         $extension = $this->getMockBuilder('Symfony\\Component\\DependencyInjection\\Extension\\ExtensionInterface')->getMock();
-        $extension->expects($this->exactly(2))->method('getAlias')->will($this->returnValue('project'));
-        $extension->expects($this->once())->method('load')->with(array(array('foo' => 'bar')));
+        $extension->expects($this->exactly(2))->method('getAlias')->willReturn('project');
+$extension->expects($this->once())->method('load')->with(array(array('foo' => 'bar')));
 
         $container = new ContainerBuilder();
         $container->setResourceTracking(false);
         $container->registerExtension($extension);
-        $container->loadFromExtension('project', array('foo' => 'bar'));
+$container->loadFromExtension('project', array('foo' => 'bar'));
         $container->compile();
     }
 
@@ -776,10 +758,7 @@ class ContainerBuilderTest extends TestCase
         $this->assertEquals($a, $container->get('a'));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacySetOnSynchronizedService()
+    #[Group('legacy')]    public function testLegacySetOnSynchronizedService()
     {
         $container = new ContainerBuilder();
         $container->register('baz', 'BazClass')
@@ -796,10 +775,7 @@ class ContainerBuilderTest extends TestCase
         $this->assertSame($baz, $container->get('bar')->getBaz());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacySynchronizedServiceWithScopes()
+    #[Group('legacy')]    public function testLegacySynchronizedServiceWithScopes()
     {
         $container = new ContainerBuilder();
         $container->addScope(new Scope('foo'));
@@ -891,7 +867,6 @@ class ContainerBuilderTest extends TestCase
         $reflectionClass = new \ReflectionClass($class);
 
         $r = new \ReflectionProperty($container, 'resources');
-        $r->setAccessible(true);
         $resources = $r->getValue($container);
 
         $classInList = false;
@@ -954,14 +929,15 @@ class ContainerBuilderTest extends TestCase
         $this->assertEquals('a', (string) $container->getDefinition('b')->getArgument(0));
     }
 
+    #[Group('legacy')]
     /**
      * This test checks the trigger of a deprecation note and should not be removed in major releases.
      *
-     * @group legacy
-     * @expectedDeprecation The "foo" service is deprecated. You should stop using it, as it will soon be removed.
      */
     public function testPrivateServiceTriggersDeprecation()
     {
+        $this->expectUserDeprecationMessage('The "foo" service is deprecated. You should stop using it, as it will soon be removed.');
+
         $container = new ContainerBuilder();
         $container->register('foo', 'stdClass')
             ->setPublic(false)

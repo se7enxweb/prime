@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Console\Tests\Input;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -37,17 +39,10 @@ class InputArgumentTest extends TestCase
         $this->assertTrue($argument->isRequired(), '__construct() can take "InputArgument::REQUIRED" as its mode');
     }
 
-    /**
-     * @dataProvider provideInvalidModes
-     */
-    public function testInvalidModes($mode)
+    #[DataProvider('provideInvalidModes')]    public function testInvalidModes($mode)
     {
-        if (method_exists($this, 'expectException')) {
-            $this->expectException('InvalidArgumentException');
+$this->expectException('InvalidArgumentException');
             $this->expectExceptionMessage(sprintf('Argument mode "%s" is not valid.', $mode));
-        } else {
-            $this->setExpectedException('InvalidArgumentException', sprintf('Argument mode "%s" is not valid.', $mode));
-        }
 
         new InputArgument('foo', $mode);
     }

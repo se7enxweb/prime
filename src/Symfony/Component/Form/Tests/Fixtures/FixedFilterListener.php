@@ -32,7 +32,7 @@ class FixedFilterListener implements EventSubscriberInterface
     {
         $data = $event->getData();
 
-        if (isset($this->mapping['preSubmit'][$data])) {
+        if (null !== $data && isset($this->mapping['preSubmit'][$data])) {
             $event->setData($this->mapping['preSubmit'][$data]);
         }
     }
@@ -41,7 +41,7 @@ class FixedFilterListener implements EventSubscriberInterface
     {
         $data = $event->getData();
 
-        if (isset($this->mapping['onSubmit'][$data])) {
+        if (null !== $data && isset($this->mapping['onSubmit'][$data])) {
             $event->setData($this->mapping['onSubmit'][$data]);
         }
     }
@@ -50,7 +50,7 @@ class FixedFilterListener implements EventSubscriberInterface
     {
         $data = $event->getData();
 
-        if (isset($this->mapping['preSetData'][$data])) {
+        if (null !== $data && isset($this->mapping['preSetData'][$data])) {
             $event->setData($this->mapping['preSetData'][$data]);
         }
     }

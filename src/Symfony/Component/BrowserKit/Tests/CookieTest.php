@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\BrowserKit\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\BrowserKit\Cookie;
 
@@ -31,9 +33,7 @@ class CookieTest extends TestCase
         $this->assertEquals('foo=bar; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; httponly', (string) $cookie);
     }
 
-    /**
-     * @dataProvider getTestsForToFromString
-     */
+    #[DataProvider('getTestsForToFromString')]
     public function testToFromString($cookie, $url = null)
     {
         $this->assertEquals($cookie, (string) Cookie::fromString($cookie, $url));
@@ -59,10 +59,7 @@ class CookieTest extends TestCase
         $this->assertFalse(Cookie::fromString('foo=bar; secure', 'http://example.com/')->isSecure());
     }
 
-    /**
-     * @dataProvider getExpireCookieStrings
-     */
-    public function testFromStringAcceptsSeveralExpiresDateFormats($cookie)
+    #[DataProvider('getExpireCookieStrings')]    public function testFromStringAcceptsSeveralExpiresDateFormats($cookie)
     {
         $this->assertEquals(1596185377, Cookie::fromString($cookie)->getExpiresTime());
     }
@@ -100,7 +97,7 @@ class CookieTest extends TestCase
 
     public function testFromStringThrowsAnExceptionIfCookieIsNotValid()
     {
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         Cookie::fromString('foo');
     }
 
@@ -113,7 +110,7 @@ class CookieTest extends TestCase
 
     public function testFromStringThrowsAnExceptionIfUrlIsNotValid()
     {
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         Cookie::fromString('foo=bar', 'foobar');
     }
 
@@ -199,7 +196,7 @@ class CookieTest extends TestCase
     public function testConstructException()
     {
         $this->expectException(\UnexpectedValueException::class);
-        $this->expectExceptionMessage('The cookie expiration time \"string\" is not valid.');
+        $this->expectExceptionMessage('The cookie expiration time "string" is not valid.');
 
         $cookie = new Cookie('foo', 'bar', 'string');
     }

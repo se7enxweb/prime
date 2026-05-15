@@ -11,12 +11,14 @@
 
 namespace Symfony\Component\DependencyInjection\Tests\Compiler;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Compiler\ResolveParameterPlaceHoldersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyResolveParameterPlaceHoldersPassTest extends TestCase
 {

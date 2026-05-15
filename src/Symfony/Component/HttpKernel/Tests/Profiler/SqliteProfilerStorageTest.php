@@ -11,11 +11,15 @@
 
 namespace Symfony\Component\HttpKernel\Tests\Profiler;
 
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use Symfony\Component\HttpKernel\Profiler\SqliteProfilerStorage;
 
+#[Group('legacy')]
+#[RequiresPhpExtension('pdo_sqlite')]
 /**
- * @group legacy
- * @requires extension pdo_sqlite
  */
 class SqliteProfilerStorageTest extends AbstractProfilerStorageTest
 {

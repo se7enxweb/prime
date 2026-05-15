@@ -23,12 +23,12 @@ class DoctrineCacheTest extends TestCase
     {
         $meta = $this->getMockBuilder('Symfony\\Component\\Validator\\Mapping\\ClassMetadata')
             ->disableOriginalConstructor()
-            ->setMethods(array('getClassName'))
+            ->onlyMethods(array('getClassName'))
             ->getMock();
 
         $meta->expects($this->once())
             ->method('getClassName')
-            ->will($this->returnValue('bar'));
+            ->willReturn('bar');
 
         $this->cache->write($meta);
 
@@ -43,12 +43,12 @@ class DoctrineCacheTest extends TestCase
     {
         $meta = $this->getMockBuilder('Symfony\\Component\\Validator\\Mapping\\ClassMetadata')
             ->disableOriginalConstructor()
-            ->setMethods(array('getClassName'))
+            ->onlyMethods(array('getClassName'))
             ->getMock();
 
         $meta->expects($this->once())
             ->method('getClassName')
-            ->will($this->returnValue('bar'));
+            ->willReturn('bar');
 
         $this->assertFalse($this->cache->has('bar'), 'has() returns false when there is no entry');
 
@@ -60,12 +60,12 @@ class DoctrineCacheTest extends TestCase
     {
         $meta = $this->getMockBuilder('Symfony\\Component\\Validator\\Mapping\\ClassMetadata')
             ->disableOriginalConstructor()
-            ->setMethods(array('getClassName'))
+            ->onlyMethods(array('getClassName'))
             ->getMock();
 
         $meta->expects($this->once())
             ->method('getClassName')
-            ->will($this->returnValue('bar'));
+            ->willReturn('bar');
 
         $this->assertFalse($this->cache->read('bar'), 'read() returns false when there is no entry');
 

@@ -44,14 +44,21 @@ class TranslatorListenerTest extends TestCase
 
     public function testDefaultLocaleIsUsedOnExceptionsInOnKernelRequest()
     {
+        $calls = 0;
         $this->translator
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('setLocale')
-            ->will($this->throwException(new \InvalidArgumentException()));
-        $this->translator
-            ->expects($this->at(1))
-            ->method('setLocale')
-            ->with($this->equalTo('en'));
+            ->willReturnCallback(function ($locale) use (&$calls) {
+                ++$calls;
+
+                if (1 === $calls) {
+                    TestCase::assertSame('fr', $locale);
+
+                    throw new \InvalidArgumentException();
+                }
+
+                TestCase::assertSame('en', $locale);
+            });
 
         $event = new GetResponseEvent($this->createHttpKernel(), $this->createRequest('fr'), HttpKernelInterface::MASTER_REQUEST);
         $this->listener->onKernelRequest($event);
@@ -81,14 +88,21 @@ class TranslatorListenerTest extends TestCase
 
     public function testDefaultLocaleIsUsedOnExceptionsInOnKernelFinishRequest()
     {
+        $calls = 0;
         $this->translator
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('setLocale')
-            ->will($this->throwException(new \InvalidArgumentException()));
-        $this->translator
-            ->expects($this->at(1))
-            ->method('setLocale')
-            ->with($this->equalTo('en'));
+            ->willReturnCallback(function ($locale) use (&$calls) {
+                ++$calls;
+
+                if (1 === $calls) {
+                    TestCase::assertSame('fr', $locale);
+
+                    throw new \InvalidArgumentException();
+                }
+
+                TestCase::assertSame('en', $locale);
+            });
 
         $this->setMasterRequest($this->createRequest('fr'));
         $event = new FinishRequestEvent($this->createHttpKernel(), $this->createRequest('de'), HttpKernelInterface::SUB_REQUEST);
@@ -113,6 +127,6 @@ class TranslatorListenerTest extends TestCase
         $this->requestStack
             ->expects($this->any())
             ->method('getParentRequest')
-            ->will($this->returnValue($request));
+            ->willReturn($request);
     }
 }

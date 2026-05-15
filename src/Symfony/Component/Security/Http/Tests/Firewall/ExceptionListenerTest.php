@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Security\Http\Tests\Firewall;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,10 +30,7 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class ExceptionListenerTest extends TestCase
 {
-    /**
-     * @dataProvider getAuthenticationExceptionProvider
-     */
-    public function testAuthenticationExceptionWithoutEntryPoint(\Exception $exception, \Exception $eventException)
+    #[DataProvider('getAuthenticationExceptionProvider')]    public function testAuthenticationExceptionWithoutEntryPoint(\Exception $exception, \Exception $eventException)
     {
         $event = $this->createEvent($exception);
 
@@ -42,10 +41,7 @@ class ExceptionListenerTest extends TestCase
         $this->assertEquals($eventException, $event->getException());
     }
 
-    /**
-     * @dataProvider getAuthenticationExceptionProvider
-     */
-    public function testAuthenticationExceptionWithEntryPoint(\Exception $exception, ?\Exception $eventException = null)
+    #[DataProvider('getAuthenticationExceptionProvider')]    public function testAuthenticationExceptionWithEntryPoint(\Exception $exception, ?\Exception $eventException = null)
     {
         $event = $this->createEvent($exception = new AuthenticationException());
 
@@ -67,10 +63,7 @@ class ExceptionListenerTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getAccessDeniedExceptionProvider
-     */
-    public function testAccessDeniedExceptionFullFledgedAndWithoutAccessDeniedHandlerAndWithoutErrorPage(\Exception $exception, ?\Exception $eventException = null)
+    #[DataProvider('getAccessDeniedExceptionProvider')]    public function testAccessDeniedExceptionFullFledgedAndWithoutAccessDeniedHandlerAndWithoutErrorPage(\Exception $exception, ?\Exception $eventException = null)
     {
         $event = $this->createEvent($exception);
 
@@ -81,18 +74,15 @@ class ExceptionListenerTest extends TestCase
         $this->assertSame(null === $eventException ? $exception : $eventException, $event->getException()->getPrevious());
     }
 
-    /**
-     * @dataProvider getAccessDeniedExceptionProvider
-     */
-    public function testAccessDeniedExceptionFullFledgedAndWithoutAccessDeniedHandlerAndWithErrorPage(\Exception $exception, ?\Exception $eventException = null)
+    #[DataProvider('getAccessDeniedExceptionProvider')]    public function testAccessDeniedExceptionFullFledgedAndWithoutAccessDeniedHandlerAndWithErrorPage(\Exception $exception, ?\Exception $eventException = null)
     {
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
-        $kernel->expects($this->once())->method('handle')->will($this->returnValue(new Response('error')));
+        $kernel->expects($this->once())->method('handle')->willReturn(new Response('error'));
 
         $event = $this->createEvent($exception, $kernel);
 
         $httpUtils = $this->getMockBuilder('Symfony\Component\Security\Http\HttpUtils')->getMock();
-        $httpUtils->expects($this->once())->method('createRequest')->will($this->returnValue(Request::create('/error')));
+        $httpUtils->expects($this->once())->method('createRequest')->willReturn(Request::create('/error'));
 
         $listener = $this->createExceptionListener(null, $this->createTrustResolver(true), $httpUtils, null, '/error');
         $listener->onKernelException($event);
@@ -101,15 +91,12 @@ class ExceptionListenerTest extends TestCase
         $this->assertSame(null === $eventException ? $exception : $eventException, $event->getException()->getPrevious());
     }
 
-    /**
-     * @dataProvider getAccessDeniedExceptionProvider
-     */
-    public function testAccessDeniedExceptionFullFledgedAndWithAccessDeniedHandlerAndWithoutErrorPage(\Exception $exception, ?\Exception $eventException = null)
+    #[DataProvider('getAccessDeniedExceptionProvider')]    public function testAccessDeniedExceptionFullFledgedAndWithAccessDeniedHandlerAndWithoutErrorPage(\Exception $exception, ?\Exception $eventException = null)
     {
         $event = $this->createEvent($exception);
 
         $accessDeniedHandler = $this->getMockBuilder('Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface')->getMock();
-        $accessDeniedHandler->expects($this->once())->method('handle')->will($this->returnValue(new Response('error')));
+        $accessDeniedHandler->expects($this->once())->method('handle')->willReturn(new Response('error'));
 
         $listener = $this->createExceptionListener(null, $this->createTrustResolver(true), null, null, null, $accessDeniedHandler);
         $listener->onKernelException($event);
@@ -118,15 +105,13 @@ class ExceptionListenerTest extends TestCase
         $this->assertSame(null === $eventException ? $exception : $eventException, $event->getException()->getPrevious());
     }
 
-    /**
-     * @dataProvider getAccessDeniedExceptionProvider
-     */
+    #[DataProvider('getAccessDeniedExceptionProvider')]
     public function testAccessDeniedExceptionNotFullFledged(\Exception $exception, ?\Exception $eventException = null)
     {
         $event = $this->createEvent($exception);
 
         $tokenStorage = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')->getMock();
-        $tokenStorage->expects($this->once())->method('getToken')->will($this->returnValue($this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')->getMock()));
+        $tokenStorage->expects($this->once())->method('getToken')->willReturn($this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')->getMock());
 
         $listener = $this->createExceptionListener($tokenStorage, $this->createTrustResolver(false), null, $this->createEntryPoint());
         $listener->onKernelException($event);
@@ -149,7 +134,7 @@ class ExceptionListenerTest extends TestCase
     private function createEntryPoint()
     {
         $entryPoint = $this->getMockBuilder('Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface')->getMock();
-        $entryPoint->expects($this->once())->method('start')->will($this->returnValue(new Response('OK')));
+        $entryPoint->expects($this->once())->method('start')->willReturn(new Response('OK'));
 
         return $entryPoint;
     }
@@ -157,7 +142,7 @@ class ExceptionListenerTest extends TestCase
     private function createTrustResolver($fullFledged)
     {
         $trustResolver = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface')->getMock();
-        $trustResolver->expects($this->once())->method('isFullFledged')->will($this->returnValue($fullFledged));
+        $trustResolver->expects($this->once())->method('isFullFledged')->willReturn($fullFledged);
 
         return $trustResolver;
     }

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Intl\Util\IntlTestHelper;
 use Symfony\Component\Validator\Constraints\Country;
 use Symfony\Component\Validator\Constraints\CountryValidator;
@@ -51,10 +53,7 @@ class CountryValidatorTest extends AbstractConstraintValidatorTest
         $this->validator->validate(new \stdClass(), new Country());
     }
 
-    /**
-     * @dataProvider getValidCountries
-     */
-    public function testValidCountries($country)
+    #[DataProvider('getValidCountries')]    public function testValidCountries($country)
     {
         $this->validator->validate($country, new Country());
 
@@ -70,10 +69,7 @@ class CountryValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidCountries
-     */
-    public function testInvalidCountries($country)
+    #[DataProvider('getInvalidCountries')]    public function testInvalidCountries($country)
     {
         $constraint = new Country(array(
             'message' => 'myMessage',

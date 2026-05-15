@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Security\Http\Tests\Authentication;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
@@ -18,13 +20,10 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class DefaultAuthenticationSuccessHandlerTest extends TestCase
 {
-    /**
-     * @dataProvider getRequestRedirections
-     */
-    public function testRequestRedirections(Request $request, $options, $redirectedUrl)
+    #[DataProvider('getRequestRedirections')]    public function testRequestRedirections(Request $request, $options, $redirectedUrl)
     {
         $urlGenerator = $this->getMockBuilder('Symfony\Component\Routing\Generator\UrlGeneratorInterface')->getMock();
-        $urlGenerator->expects($this->any())->method('generate')->will($this->returnValue('http://localhost/login'));
+        $urlGenerator->expects($this->any())->method('generate')->willReturn('http://localhost/login');
         $httpUtils = new HttpUtils($urlGenerator);
         $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')->getMock();
         $handler = new DefaultAuthenticationSuccessHandler($httpUtils, $options);
@@ -36,9 +35,11 @@ class DefaultAuthenticationSuccessHandlerTest extends TestCase
 
     public static function getRequestRedirections()
     {
-        $session = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\SessionInterface')->getMock();
-        $session->expects($this->once())->method('get')->with('_security.admin.target_path')->will($this->returnValue('/admin/dashboard'));
-        $session->expects($this->once())->method('remove')->with('_security.admin.target_path');
+        $gen = new \PHPUnit\Framework\MockObject\Generator\Generator();
+        $session = $gen->testDouble('Symfony\Component\HttpFoundation\Session\SessionInterface', true, false);
+        $session->method('get')->willReturnMap(array(
+            array('_security.admin.target_path', null, '/admin/dashboard'),
+        ));
         $requestWithSession = Request::create('/');
         $requestWithSession->setSession($session);
 

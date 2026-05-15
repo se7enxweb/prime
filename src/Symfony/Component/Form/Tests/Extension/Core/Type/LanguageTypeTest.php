@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Intl\Util\IntlTestHelper;
 
@@ -25,10 +27,7 @@ class LanguageTypeTest extends BaseTypeTest
         parent::setUp();
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('language');
 
@@ -40,11 +39,11 @@ class LanguageTypeTest extends BaseTypeTest
         $choices = $this->factory->create(static::TESTED_TYPE)
             ->createView()->vars['choices'];
 
-        $this->assertContains(new ChoiceView('en', 'en', 'English'), $choices, '', false, false);
-        $this->assertContains(new ChoiceView('en_GB', 'en_GB', 'British English'), $choices, '', false, false);
-        $this->assertContains(new ChoiceView('en_US', 'en_US', 'American English'), $choices, '', false, false);
-        $this->assertContains(new ChoiceView('fr', 'fr', 'French'), $choices, '', false, false);
-        $this->assertContains(new ChoiceView('my', 'my', 'Burmese'), $choices, '', false, false);
+        $this->assertContainsEquals(new ChoiceView('en', 'en', 'English'), $choices);
+        $this->assertContainsEquals(new ChoiceView('en_GB', 'en_GB', 'British English'), $choices);
+        $this->assertContainsEquals(new ChoiceView('en_US', 'en_US', 'American English'), $choices);
+        $this->assertContainsEquals(new ChoiceView('fr', 'fr', 'French'), $choices);
+        $this->assertContainsEquals(new ChoiceView('my', 'my', 'Burmese'), $choices);
     }
 
     public function testMultipleLanguagesIsNotIncluded()

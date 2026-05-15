@@ -11,20 +11,18 @@
 
 namespace Symfony\Component\Config\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\FileLocator;
 
 class FileLocatorTest extends TestCase
 {
-    /**
-     * @dataProvider getIsAbsolutePathTests
-     */
-    public function testIsAbsolutePath($path)
+    #[DataProvider('getIsAbsolutePathTests')]    public function testIsAbsolutePath($path)
     {
         $loader = new FileLocator(array());
         $r = new \ReflectionObject($loader);
         $m = $r->getMethod('isAbsolutePath');
-        $m->setAccessible(true);
 
         $this->assertTrue($m->invoke($loader, $path), '->isAbsolutePath() returns true for an absolute path');
     }
@@ -91,7 +89,7 @@ class FileLocatorTest extends TestCase
     public function testLocateThrowsAnExceptionIfTheFileDoesNotExists()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The file \"foobar.xml\" does not exist');
+        $this->expectExceptionMessage('The file "foobar.xml" does not exist');
 
         $loader = new FileLocator(array(__DIR__.'/Fixtures'));
 

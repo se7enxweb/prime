@@ -11,11 +11,13 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\ChoiceList;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Extension\Core\View\ChoiceView;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class ChoiceListTest extends AbstractChoiceListTest
 {

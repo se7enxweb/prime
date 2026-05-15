@@ -11,16 +11,15 @@
 
 namespace Symfony\Bundle\WebProfilerBundle\Tests\DependencyInjection;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\WebProfilerBundle\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Processor;
 
 class ConfigurationTest extends TestCase
 {
-    /**
-     * @dataProvider getDebugModes
-     */
-    public function testConfigTree($options, $results)
+    #[DataProvider('getDebugModes')]    public function testConfigTree($options, $results)
     {
         $processor = new Processor();
         $configuration = new Configuration();

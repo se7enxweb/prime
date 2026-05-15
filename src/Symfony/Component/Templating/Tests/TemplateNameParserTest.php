@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Templating\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Templating\TemplateNameParser;
 use Symfony\Component\Templating\TemplateReference;
@@ -29,10 +31,7 @@ class TemplateNameParserTest extends TestCase
         $this->parser = null;
     }
 
-    /**
-     * @dataProvider getLogicalNameToTemplateProvider
-     */
-    public function testParse($name, $ref)
+    #[DataProvider('getLogicalNameToTemplateProvider')]    public function testParse($name, $ref)
     {
         $template = $this->parser->parse($name);
 

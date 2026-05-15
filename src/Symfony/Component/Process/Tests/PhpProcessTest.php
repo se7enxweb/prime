@@ -39,12 +39,12 @@ PHP
         $commandLine = $process->getCommandLine();
 
         $f = new PhpExecutableFinder();
-        $this->assertContains($f->find(), $commandLine, '::getCommandLine() returns the command line of PHP before start');
+        $this->assertStringContainsString($f->find(), $commandLine, '::getCommandLine() returns the command line of PHP before start');
 
         $process->start();
-        $this->assertContains($commandLine, $process->getCommandLine(), '::getCommandLine() returns the command line of PHP after start');
+        $this->assertStringContainsString($commandLine, $process->getCommandLine(), '::getCommandLine() returns the command line of PHP after start');
 
         $process->wait();
-        $this->assertContains($commandLine, $process->getCommandLine(), '::getCommandLine() returns the command line of PHP after wait');
+        $this->assertStringContainsString($commandLine, $process->getCommandLine(), '::getCommandLine() returns the command line of PHP after wait');
     }
 }

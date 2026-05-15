@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\ClassLoader\Tests;
 
+
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\ClassLoader\ClassCollectionLoader;
 
@@ -21,8 +25,8 @@ require_once __DIR__.'/Fixtures/ClassesWithParents/A.php';
 
 class ClassCollectionLoaderTest extends TestCase
 {
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function testTraitDependencies()
     {
@@ -30,7 +34,6 @@ class ClassCollectionLoaderTest extends TestCase
 
         $r = new \ReflectionClass('Symfony\Component\ClassLoader\ClassCollectionLoader');
         $m = $r->getMethod('getOrderedClasses');
-        $m->setAccessible(true);
 
         $ordered = $m->invoke(null, array('CTFoo'));
 
@@ -47,10 +50,7 @@ class ClassCollectionLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getDifferentOrders
-     */
-    public function testClassReordering(array $classes)
+    #[DataProvider('getDifferentOrders')]    public function testClassReordering(array $classes)
     {
         $expected = array(
             'ClassesWithParents\\GInterface',
@@ -61,7 +61,6 @@ class ClassCollectionLoaderTest extends TestCase
 
         $r = new \ReflectionClass('Symfony\Component\ClassLoader\ClassCollectionLoader');
         $m = $r->getMethod('getOrderedClasses');
-        $m->setAccessible(true);
 
         $ordered = $m->invoke(null, $classes);
 
@@ -93,9 +92,9 @@ class ClassCollectionLoaderTest extends TestCase
         );
     }
 
+    #[DataProvider('getDifferentOrdersForTraits')]
+    #[RequiresPhp('5.4')]
     /**
-     * @dataProvider getDifferentOrdersForTraits
-     * @requires PHP 5.4
      */
     public function testClassWithTraitsReordering(array $classes)
     {
@@ -119,7 +118,6 @@ class ClassCollectionLoaderTest extends TestCase
 
         $r = new \ReflectionClass('Symfony\Component\ClassLoader\ClassCollectionLoader');
         $m = $r->getMethod('getOrderedClasses');
-        $m->setAccessible(true);
 
         $ordered = $m->invoke(null, $classes);
 
@@ -139,8 +137,8 @@ class ClassCollectionLoaderTest extends TestCase
         );
     }
 
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function testFixClassWithTraitsOrdering()
     {
@@ -161,17 +159,13 @@ class ClassCollectionLoaderTest extends TestCase
 
         $r = new \ReflectionClass('Symfony\Component\ClassLoader\ClassCollectionLoader');
         $m = $r->getMethod('getOrderedClasses');
-        $m->setAccessible(true);
 
         $ordered = $m->invoke(null, $classes);
 
         $this->assertEquals($expected, array_map(function ($class) { return $class->getName(); }, $ordered));
     }
 
-    /**
-     * @dataProvider getFixNamespaceDeclarationsData
-     */
-    public function testFixNamespaceDeclarations($source, $expected)
+    #[DataProvider('getFixNamespaceDeclarationsData')]    public function testFixNamespaceDeclarations($source, $expected)
     {
         $this->assertEquals('<?php '.$expected, ClassCollectionLoader::fixNamespaceDeclarations('<?php '.$source));
     }
@@ -188,10 +182,7 @@ class ClassCollectionLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getFixNamespaceDeclarationsDataWithoutTokenizer
-     */
-    public function testFixNamespaceDeclarationsWithoutTokenizer($source, $expected)
+    #[DataProvider('getFixNamespaceDeclarationsDataWithoutTokenizer')]    public function testFixNamespaceDeclarationsWithoutTokenizer($source, $expected)
     {
         ClassCollectionLoader::enableTokenizer(false);
         $this->assertEquals('<?php '.$expected, ClassCollectionLoader::fixNamespaceDeclarations('<?php '.$source));

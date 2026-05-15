@@ -11,6 +11,8 @@
 
 namespace Symfony\Bundle\SecurityBundle\Tests\DependencyInjection\Security\Factory;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -47,10 +49,7 @@ class AbstractFactoryTest extends TestCase
         $this->assertEquals('entry_point', $entryPointId, '->create() does not change the default entry point.');
     }
 
-    /**
-     * @dataProvider getFailureHandlers
-     */
-    public function testDefaultFailureHandler($serviceId, $defaultHandlerInjection)
+    #[DataProvider('getFailureHandlers')]    public function testDefaultFailureHandler($serviceId, $defaultHandlerInjection)
     {
         $options = array(
             'remember_me' => true,
@@ -85,10 +84,7 @@ class AbstractFactoryTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getSuccessHandlers
-     */
-    public function testDefaultSuccessHandler($serviceId, $defaultHandlerInjection)
+    #[DataProvider('getSuccessHandlers')]    public function testDefaultSuccessHandler($serviceId, $defaultHandlerInjection)
     {
         $options = array(
             'remember_me' => true,
@@ -127,22 +123,22 @@ class AbstractFactoryTest extends TestCase
 
     protected function callFactory($id, $config, $userProviderId, $defaultEntryPointId)
     {
-        $factory = $this->getMockForAbstractClass('Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory', array());
+        $factory = $this->getMockBuilder('Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory')->setConstructorArgs(array())->onlyMethods(array('createAuthProvider', 'getListenerId', 'getKey', 'getPosition'))->getMock();
 
         $factory
             ->expects($this->once())
             ->method('createAuthProvider')
-            ->will($this->returnValue('auth_provider'))
+            ->willReturn('auth_provider')
         ;
         $factory
             ->expects($this->atLeastOnce())
             ->method('getListenerId')
-            ->will($this->returnValue('abstract_listener'))
+            ->willReturn('abstract_listener')
         ;
         $factory
             ->expects($this->any())
             ->method('getKey')
-            ->will($this->returnValue('abstract_factory'))
+            ->willReturn('abstract_factory')
         ;
 
         $container = new ContainerBuilder();

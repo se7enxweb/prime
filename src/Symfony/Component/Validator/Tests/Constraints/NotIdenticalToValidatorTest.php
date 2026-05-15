@@ -43,7 +43,7 @@ class NotIdenticalToValidatorTest extends AbstractComparisonValidatorTestCase
     /**
      * {@inheritdoc}
      */
-    public function provideValidComparisons()
+    public static function provideValidComparisons()
     {
         return array(
             array(1, 2),
@@ -61,13 +61,13 @@ class NotIdenticalToValidatorTest extends AbstractComparisonValidatorTestCase
 
     public static function provideAllInvalidComparisons()
     {
-        $this->setDefaultTimezone('UTC');
+        self::setDefaultTimezone('UTC');
 
         // Don't call addPhp5Dot5Comparisons() automatically, as it does
         // not take care of identical objects
-        $comparisons = $this->provideInvalidComparisons();
+        $comparisons = self::provideInvalidComparisons();
 
-        $this->restoreDefaultTimezone();
+        self::restoreDefaultTimezone();
 
         return $comparisons;
     }
@@ -75,7 +75,7 @@ class NotIdenticalToValidatorTest extends AbstractComparisonValidatorTestCase
     /**
      * {@inheritdoc}
      */
-    public function provideInvalidComparisons()
+    public static function provideInvalidComparisons()
     {
         $date = new \DateTime('2000-01-01');
         $object = new ComparisonTest_Class(2);
@@ -83,7 +83,7 @@ class NotIdenticalToValidatorTest extends AbstractComparisonValidatorTestCase
         $comparisons = array(
             array(3, '3', 3, '3', 'integer'),
             array('a', '"a"', 'a', '"a"', 'string'),
-            array($date, 'Jan 1, 2000, 12:00 AM', $date, 'Jan 1, 2000, 12:00 AM', 'DateTime'),
+            array($date, 'Jan 1, 2000, 12:00 AM', $date, 'Jan 1, 2000, 12:00 AM', 'DateTime'),
             array($object, '2', $object, '2', __NAMESPACE__.'\ComparisonTest_Class'),
         );
 

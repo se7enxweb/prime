@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\DomCrawler\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DomCrawler\Link;
 
@@ -65,10 +67,7 @@ class LinkTest extends TestCase
         $this->assertEquals('POST', $link->getMethod(), '->getMethod() returns the method of the link');
     }
 
-    /**
-     * @dataProvider getGetUriTests
-     */
-    public function testGetUri($url, $currentUri, $expected)
+    #[DataProvider('getGetUriTests')]    public function testGetUri($url, $currentUri, $expected)
     {
         $dom = new \DOMDocument();
         $dom->loadHTML(sprintf('<html><a href="%s">foo</a></html>', $url));
@@ -77,10 +76,7 @@ class LinkTest extends TestCase
         $this->assertEquals($expected, $link->getUri());
     }
 
-    /**
-     * @dataProvider getGetUriTests
-     */
-    public function testGetUriOnArea($url, $currentUri, $expected)
+    #[DataProvider('getGetUriTests')]    public function testGetUriOnArea($url, $currentUri, $expected)
     {
         $dom = new \DOMDocument();
         $dom->loadHTML(sprintf('<html><map><area href="%s" /></map></html>', $url));
@@ -89,10 +85,7 @@ class LinkTest extends TestCase
         $this->assertEquals($expected, $link->getUri());
     }
 
-    /**
-     * @dataProvider getGetUriTests
-     */
-    public function testGetUriOnLink($url, $currentUri, $expected)
+    #[DataProvider('getGetUriTests')]    public function testGetUriOnLink($url, $currentUri, $expected)
     {
         $dom = new \DOMDocument();
         $dom->loadHTML(sprintf('<html><head><link href="%s" /></head></html>', $url));

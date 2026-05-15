@@ -106,6 +106,11 @@ class AnnotationFileLoader extends FileLoader
                 $token = $tokens[$i];
             }
 
+            if (true === $namespace && \defined('T_NAME_QUALIFIED') && T_NAME_QUALIFIED === $token[0]) {
+                $namespace = $token[1];
+                $token = $tokens[++$i];
+            }
+
             if (T_CLASS === $token[0]) {
                 // Skip usage of ::class constant and anonymous classes
                 $skipClassToken = false;

@@ -36,7 +36,6 @@ class RemoteUserAuthenticationListenerTest extends TestCase
         );
 
         $method = new \ReflectionMethod($listener, 'getPreAuthenticatedData');
-        $method->setAccessible(true);
 
         $result = $method->invokeArgs($listener, array($request));
         $this->assertSame($result, array('TheUser', null));
@@ -61,7 +60,6 @@ class RemoteUserAuthenticationListenerTest extends TestCase
         );
 
         $method = new \ReflectionMethod($listener, 'getPreAuthenticatedData');
-        $method->setAccessible(true);
 
         $result = $method->invokeArgs($listener, array($request));
     }
@@ -85,7 +83,6 @@ class RemoteUserAuthenticationListenerTest extends TestCase
         );
 
         $method = new \ReflectionMethod($listener, 'getPreAuthenticatedData');
-        $method->setAccessible(true);
 
         $result = $method->invokeArgs($listener, array($request));
         $this->assertSame($result, $userCredentials);

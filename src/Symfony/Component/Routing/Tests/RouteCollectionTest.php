@@ -297,7 +297,7 @@ class RouteCollectionTest extends TestCase
         $collection->add('a', $routea);
         $collection->add('b', $routeb);
 
-        $collection->setMethods('PUT');
+        $collection->onlyMethods('PUT');
 
         $this->assertEquals(array('PUT'), $routea->getMethods());
         $this->assertEquals(array('PUT'), $routeb->getMethods());

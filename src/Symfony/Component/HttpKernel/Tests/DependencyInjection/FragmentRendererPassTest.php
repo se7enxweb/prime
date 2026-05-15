@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\HttpKernel\Tests\DependencyInjection;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -20,10 +22,7 @@ use Symfony\Component\HttpKernel\Fragment\FragmentRendererInterface;
 
 class FragmentRendererPassTest extends TestCase
 {
-    /**
-     * @group legacy
-     */
-    public function testLegacyFragmentRedererWithoutAlias()
+    #[Group('legacy')]    public function testLegacyFragmentRedererWithoutAlias()
     {
         $builder = new ContainerBuilder();
         $fragmentHandlerDefinition = $builder->register('fragment.handler');

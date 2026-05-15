@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\DataTransformer;
 
+
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToHtml5LocalDateTimeTransformer;
 
@@ -53,19 +57,16 @@ class DateTimeToHtml5LocalDateTimeTransformerTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider transformProvider
-     */
-    public function testTransform($fromTz, $toTz, $from, $to)
+    #[DataProvider('transformProvider')]    public function testTransform($fromTz, $toTz, $from, $to)
     {
         $transformer = new DateTimeToHtml5LocalDateTimeTransformer($fromTz, $toTz);
 
         $this->assertSame($to, $transformer->transform(null !== $from ? new \DateTime($from) : null));
     }
 
+    #[DataProvider('transformProvider')]
+    #[RequiresPhp('5.5')]
     /**
-     * @dataProvider transformProvider
-     * @requires PHP 5.5
      */
     public function testTransformDateTimeImmutable($fromTz, $toTz, $from, $to)
     {
@@ -84,10 +85,7 @@ class DateTimeToHtml5LocalDateTimeTransformerTest extends TestCase
         $transformer->transform('2010-01-01');
     }
 
-    /**
-     * @dataProvider reverseTransformProvider
-     */
-    public function testReverseTransform($toTz, $fromTz, $to, $from)
+    #[DataProvider('reverseTransformProvider')]    public function testReverseTransform($toTz, $fromTz, $to, $from)
     {
         $transformer = new DateTimeToHtml5LocalDateTimeTransformer($toTz, $fromTz);
 

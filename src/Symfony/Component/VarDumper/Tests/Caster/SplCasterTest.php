@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\VarDumper\Tests\Caster;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\VarDumper\Test\VarDumperTestCase;
 
 /**
@@ -59,9 +61,7 @@ SplFileInfo {
 EOTXT
             ),
         );
-    }
-
-    /** @dataProvider getCastFileInfoTests */
+    }    #[DataProvider('getCastFileInfoTests')]
     public function testCastFileInfo($file, $dump)
     {
         $this->assertDumpMatchesFormat($dump, new \SplFileInfo($file));
@@ -116,10 +116,7 @@ EOTXT;
         $this->assertDumpMatchesFormat($dump, $var);
     }
 
-    /**
-     * @dataProvider provideCastSplDoublyLinkedList
-     */
-    public function testCastSplDoublyLinkedList($modeValue, $modeDump)
+    #[DataProvider('provideCastSplDoublyLinkedList')]    public function testCastSplDoublyLinkedList($modeValue, $modeDump)
     {
         $var = new \SplDoublyLinkedList();
         $var->setIteratorMode($modeValue);
@@ -145,7 +142,7 @@ EOTXT;
     public function testCastObjectStorageIsntModified()
     {
         $var = new \SplObjectStorage();
-        $var->attach(new \stdClass());
+        $var->offsetSet(new \stdClass(), null);
         $var->rewind();
         $current = $var->current();
 
@@ -156,7 +153,7 @@ EOTXT;
     public function testCastObjectStorageDumpsInfo()
     {
         $var = new \SplObjectStorage();
-        $var->attach(new \stdClass(), new \DateTime());
+        $var->offsetSet(new \stdClass(), new \DateTime());
 
         $this->assertDumpMatchesFormat('%ADateTime%A', $var);
     }
@@ -167,11 +164,14 @@ EOTXT;
             $this->markTestSkipped('HHVM as different internal details.');
         }
         $var = new \ArrayObject(array(123));
-        $var->foo = 234;
+        @$var->foo = 234;
 
         $expected = <<<EOTXT
 ArrayObject {
   +"foo": 234
+  -storage: array:1 [
+    0 => 123
+  ]
   flag::STD_PROP_LIST: false
   flag::ARRAY_AS_PROPS: false
   iteratorClass: "ArrayIterator"
@@ -193,6 +193,9 @@ EOTXT;
         $expected = <<<EOTXT
 Symfony\Component\VarDumper\Tests\Caster\MyArrayIterator {
   -foo: 123
+  -storage: array:1 [
+    0 => 234
+  ]
   flag::STD_PROP_LIST: false
   flag::ARRAY_AS_PROPS: false
   storage: array:1 [

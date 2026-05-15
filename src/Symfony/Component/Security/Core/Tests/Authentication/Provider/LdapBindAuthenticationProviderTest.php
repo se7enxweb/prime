@@ -11,15 +11,14 @@
 
 namespace Symfony\Component\Security\Core\Tests\Authentication\Provider;
 
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Ldap\Exception\ConnectionException;
 use Symfony\Component\Security\Core\Authentication\Provider\LdapBindAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\User;
 
-/**
- * @requires extension ldap
- */
+#[RequiresPhpExtension('ldap')]
 class LdapBindAuthenticationProviderTest extends TestCase
 {
     /**
@@ -35,7 +34,6 @@ class LdapBindAuthenticationProviderTest extends TestCase
 
         $provider = new LdapBindAuthenticationProvider($userProvider, $userChecker, 'key', $ldap);
         $reflection = new \ReflectionMethod($provider, 'checkAuthentication');
-        $reflection->setAccessible(true);
 
         $reflection->invoke($provider, new User('foo', null), new UsernamePasswordToken('foo', '', 'key'));
     }
@@ -53,7 +51,6 @@ class LdapBindAuthenticationProviderTest extends TestCase
 
         $provider = new LdapBindAuthenticationProvider($userProvider, $userChecker, 'key', $ldap);
         $reflection = new \ReflectionMethod($provider, 'checkAuthentication');
-        $reflection->setAccessible(true);
 
         $reflection->invoke($provider, new User('foo', null), new UsernamePasswordToken('foo', null, 'key'));
     }
@@ -70,13 +67,13 @@ class LdapBindAuthenticationProviderTest extends TestCase
         $ldap
             ->expects($this->once())
             ->method('bind')
-            ->will($this->throwException(new ConnectionException()))
+            ->willThrowException(new ConnectionException())
+
         ;
         $userChecker = $this->getMockBuilder('Symfony\Component\Security\Core\User\UserCheckerInterface')->getMock();
 
         $provider = new LdapBindAuthenticationProvider($userProvider, $userChecker, 'key', $ldap);
         $reflection = new \ReflectionMethod($provider, 'checkAuthentication');
-        $reflection->setAccessible(true);
 
         $reflection->invoke($provider, new User('foo', null), new UsernamePasswordToken('foo', 'bar', 'key'));
     }
@@ -95,7 +92,6 @@ class LdapBindAuthenticationProviderTest extends TestCase
 
         $provider = new LdapBindAuthenticationProvider($userProvider, $userChecker, 'key', $ldap);
         $reflection = new \ReflectionMethod($provider, 'retrieveUser');
-        $reflection->setAccessible(true);
 
         $reflection->invoke($provider, 'foo', new UsernamePasswordToken('foo', 'bar', 'key'));
     }

@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Symfony\Component\Templating\TemplateReference as BaseTemplateReference;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class TemplateNameParserTest extends TestCase
 {
@@ -26,13 +27,14 @@ class TemplateNameParserTest extends TestCase
         $kernel
             ->expects($this->any())
             ->method('getBundle')
-            ->will($this->returnCallback(function ($bundle) {
+            ->willReturnCallback(function ($bundle) {
                 if (\in_array($bundle, array('SensioFooBundle', 'SensioCmsFooBundle', 'FooBundle'))) {
                     return true;
                 }
 
                 throw new \InvalidArgumentException();
-            }))
+            })
+
         ;
         $this->parser = new TemplateNameParser($kernel);
     }
@@ -42,9 +44,7 @@ class TemplateNameParserTest extends TestCase
         $this->parser = null;
     }
 
-    /**
-     * @dataProvider parseProvider
-     */
+    #[DataProvider('parseProvider')]
     public function testParse($name, $logicalName, $path, $ref)
     {
         $template = $this->parser->parse($name);

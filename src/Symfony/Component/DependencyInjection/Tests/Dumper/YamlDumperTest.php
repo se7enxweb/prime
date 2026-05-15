@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\DependencyInjection\Tests\Dumper;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -41,10 +43,7 @@ class YamlDumperTest extends TestCase
         $this->assertEqualYamlStructure(file_get_contents(self::$fixturesPath.'/yaml/services8.yml'), $dumper->dump(), '->dump() dumps parameters');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyAddService()
+    #[Group('legacy')]    public function testLegacyAddService()
     {
         $container = include self::$fixturesPath.'/containers/legacy-container9.php';
         $dumper = new YamlDumper($container);

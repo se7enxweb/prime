@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Validator\EventListener;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Validator\Constraints\Form;
 use Symfony\Component\Form\Extension\Validator\EventListener\ValidationListener;
@@ -99,13 +101,13 @@ class ValidationListenerTest extends TestCase
 
         $this->validator->expects($this->once())
             ->method('validate')
-            ->will($this->returnValue(array($violation)));
+            ->willReturn(array($violation));
 
         $this->violationMapper->expects($this->once())
             ->method('mapViolation')
             ->with($violation, $form, false);
 
-        $this->listener->validateForm(new FormEvent($form, null));
+$this->listener->validateForm(new FormEvent($form, null));
     }
 
     public function testMapViolationAllowsNonSyncIfInvalid()
@@ -115,14 +117,14 @@ class ValidationListenerTest extends TestCase
 
         $this->validator->expects($this->once())
             ->method('validate')
-            ->will($this->returnValue(array($violation)));
+            ->willReturn(array($violation));
 
         $this->violationMapper->expects($this->once())
             ->method('mapViolation')
             // pass true now
             ->with($violation, $form, true);
 
-        $this->listener->validateForm(new FormEvent($form, null));
+$this->listener->validateForm(new FormEvent($form, null));
     }
 
     public function testMapViolationAllowsNonSyncIfInvalidWithoutConstraintReference()
@@ -136,14 +138,14 @@ class ValidationListenerTest extends TestCase
 
         $this->validator->expects($this->once())
             ->method('validate')
-            ->will($this->returnValue(array($violation)));
+            ->willReturn(array($violation));
 
         $this->violationMapper->expects($this->once())
             ->method('mapViolation')
             // pass true now
             ->with($violation, $form, true);
 
-        $this->listener->validateForm(new FormEvent($form, null));
+$this->listener->validateForm(new FormEvent($form, null));
     }
 
     public function testValidateIgnoresNonRoot()
@@ -151,7 +153,7 @@ class ValidationListenerTest extends TestCase
         $form = $this->getMockForm();
         $form->expects($this->once())
             ->method('isRoot')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->validator->expects($this->never())
             ->method('validate');
@@ -159,7 +161,7 @@ class ValidationListenerTest extends TestCase
         $this->violationMapper->expects($this->never())
             ->method('mapViolation');
 
-        $this->listener->validateForm(new FormEvent($form, null));
+$this->listener->validateForm(new FormEvent($form, null));
     }
 
     public function testValidateWithEmptyViolationList()
@@ -167,18 +169,18 @@ class ValidationListenerTest extends TestCase
         $form = $this->getMockForm();
         $form->expects($this->once())
             ->method('isRoot')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $this->validator
             ->expects($this->once())
             ->method('validate')
-            ->will($this->returnValue(new ConstraintViolationList()));
+->willReturn(new ConstraintViolationList());
 
         $this->violationMapper
             ->expects($this->never())
             ->method('mapViolation');
 
-        $this->listener->validateForm(new FormEvent($form, null));
+$this->listener->validateForm(new FormEvent($form, null));
     }
 
     public function testValidatorInterfaceSinceSymfony25()
@@ -187,25 +189,19 @@ class ValidationListenerTest extends TestCase
         $validator = $this->getMockBuilder('Symfony\Component\Validator\Validator\ValidatorInterface')->getMock();
 
         $listener = new ValidationListener($validator, $this->violationMapper);
-        $this->assertAttributeSame($validator, 'validator', $listener);
+        $this->assertSame($validator, (new \ReflectionProperty($listener, 'validator'))->getValue($listener));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testValidatorInterfaceUntilSymfony24()
+    #[Group('legacy')]    public function testValidatorInterfaceUntilSymfony24()
     {
         // Mock of ValidatorInterface until apiVersion 2.4
         $validator = $this->getMockBuilder('Symfony\Component\Validator\ValidatorInterface')->getMock();
 
         $listener = new ValidationListener($validator, $this->violationMapper);
-        $this->assertAttributeSame($validator, 'validator', $listener);
+        $this->assertSame($validator, (new \ReflectionProperty($listener, 'validator'))->getValue($listener));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testInvalidValidatorInterface()
+    #[Group('legacy')]    public function testInvalidValidatorInterface()
     {
         $this->expectException(\InvalidArgumentException::class);
 

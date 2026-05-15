@@ -66,7 +66,6 @@ class BasePasswordEncoderTest extends TestCase
         $encoder = new PasswordEncoder();
         $r = new \ReflectionObject($encoder);
         $m = $r->getMethod('demergePasswordAndSalt');
-        $m->setAccessible(true);
 
         return $m->invoke($encoder, $password);
     }
@@ -76,7 +75,6 @@ class BasePasswordEncoderTest extends TestCase
         $encoder = new PasswordEncoder();
         $r = new \ReflectionObject($encoder);
         $m = $r->getMethod('mergePasswordAndSalt');
-        $m->setAccessible(true);
 
         return $m->invoke($encoder, $password, $salt);
     }
@@ -86,7 +84,6 @@ class BasePasswordEncoderTest extends TestCase
         $encoder = new PasswordEncoder();
         $r = new \ReflectionObject($encoder);
         $m = $r->getMethod('comparePasswords');
-        $m->setAccessible(true);
 
         return $m->invoke($encoder, $p1, $p2);
     }
@@ -96,7 +93,6 @@ class BasePasswordEncoderTest extends TestCase
         $encoder = new PasswordEncoder();
         $r = new \ReflectionObject($encoder);
         $m = $r->getMethod('isPasswordTooLong');
-        $m->setAccessible(true);
 
         return $m->invoke($encoder, $p);
     }

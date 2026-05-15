@@ -11,11 +11,15 @@
 
 namespace Symfony\Component\Security\Core\Tests\Authorization\Voter;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class AbstractVoterTest extends TestCase
 {
@@ -45,7 +49,7 @@ class AbstractVoterTest extends TestCase
 
             array(array('DELETE'), VoterInterface::ACCESS_ABSTAIN, new \stdClass(), 'ACCESS_ABSTAIN if no attribute is supported'),
 
-            array(array('EDIT'), VoterInterface::ACCESS_ABSTAIN, $this, 'ACCESS_ABSTAIN if class is not supported'),
+            array(array('EDIT'), VoterInterface::ACCESS_ABSTAIN, new \ArrayObject(), 'ACCESS_ABSTAIN if class is not supported'),
 
             array(array('EDIT'), VoterInterface::ACCESS_ABSTAIN, null, 'ACCESS_ABSTAIN if object is null'),
 
@@ -53,10 +57,7 @@ class AbstractVoterTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getTests
-     */
-    public function testVote(array $attributes, $expectedVote, $object, $message)
+    #[DataProvider('getTests')]    public function testVote(array $attributes, $expectedVote, $object, $message)
     {
         $voter = new Fixtures\MyVoter();
 
@@ -114,8 +115,8 @@ class AbstractVoterTest extends TestCase
         );
     }
 
+    #[DataProvider('getSupportsAttributeData')]
     /**
-     * @dataProvider getSupportsAttributeData
      *
      * @param bool   $expected
      * @param string $attribute

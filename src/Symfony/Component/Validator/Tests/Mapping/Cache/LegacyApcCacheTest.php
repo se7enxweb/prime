@@ -11,12 +11,16 @@
 
 namespace Symfony\Component\Validator\Tests\Mapping\Cache;
 
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Mapping\Cache\ApcCache;
 
+#[Group('legacy')]
+#[RequiresPhpExtension('apc')]
 /**
- * @group legacy
- * @requires extension apc
  */
 class LegacyApcCacheTest extends TestCase
 {
@@ -31,12 +35,12 @@ class LegacyApcCacheTest extends TestCase
     {
         $meta = $this->getMockBuilder('Symfony\\Component\\Validator\\Mapping\\ClassMetadata')
             ->disableOriginalConstructor()
-            ->setMethods(array('getClassName'))
+            ->onlyMethods(array('getClassName'))
             ->getMock();
 
         $meta->expects($this->once())
             ->method('getClassName')
-            ->will($this->returnValue('bar'));
+            ->willReturn('bar');
 
         $cache = new ApcCache('foo');
         $cache->write($meta);
@@ -48,12 +52,12 @@ class LegacyApcCacheTest extends TestCase
     {
         $meta = $this->getMockBuilder('Symfony\\Component\\Validator\\Mapping\\ClassMetadata')
             ->disableOriginalConstructor()
-            ->setMethods(array('getClassName'))
+            ->onlyMethods(array('getClassName'))
             ->getMock();
 
         $meta->expects($this->once())
             ->method('getClassName')
-            ->will($this->returnValue('bar'));
+            ->willReturn('bar');
 
         apc_delete('foobar');
 
@@ -68,12 +72,12 @@ class LegacyApcCacheTest extends TestCase
     {
         $meta = $this->getMockBuilder('Symfony\\Component\\Validator\\Mapping\\ClassMetadata')
             ->disableOriginalConstructor()
-            ->setMethods(array('getClassName'))
+            ->onlyMethods(array('getClassName'))
             ->getMock();
 
         $meta->expects($this->once())
             ->method('getClassName')
-            ->will($this->returnValue('bar'));
+            ->willReturn('bar');
 
         $cache = new ApcCache('foo');
         $cache->write($meta);

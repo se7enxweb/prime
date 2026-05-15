@@ -11,13 +11,13 @@
 
 namespace Symfony\Component\Intl\Tests\Util;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Intl\Util\GitRepository;
 
-/**
- * @group intl-data
- */
+#[Group('intl-data')]
 class GitRepositoryTest extends TestCase
 {
     private $targetDir;

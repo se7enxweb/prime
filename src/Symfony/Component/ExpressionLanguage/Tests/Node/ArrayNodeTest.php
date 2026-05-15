@@ -31,27 +31,27 @@ class ArrayNodeTest extends AbstractNodeTest
     public static function getEvaluateData()
     {
         return array(
-            array(array('b' => 'a', 'b'), $this->getArrayNode()),
+            array(array('b' => 'a', 'b'), self::getArrayNode()),
         );
     }
 
     public static function getCompileData()
     {
         return array(
-            array('array("b" => "a", 0 => "b")', $this->getArrayNode()),
+            array('array("b" => "a", 0 => "b")', self::getArrayNode()),
         );
     }
 
-    protected function getArrayNode()
+    protected static function getArrayNode()
     {
-        $array = $this->createArrayNode();
+        $array = static::createArrayNode();
         $array->addElement(new ConstantNode('a'), new ConstantNode('b'));
         $array->addElement(new ConstantNode('b'));
 
         return $array;
     }
 
-    protected function createArrayNode()
+    protected static function createArrayNode()
     {
         return new ArrayNode();
     }

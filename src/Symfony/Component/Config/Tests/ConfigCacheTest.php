@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Config\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Tests\Resource\ResourceStub;
@@ -35,10 +37,7 @@ class ConfigCacheTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider debugModes
-     */
-    public function testCacheIsNotValidIfNothingHasBeenCached($debug)
+    #[DataProvider('debugModes')]    public function testCacheIsNotValidIfNothingHasBeenCached($debug)
     {
         unlink($this->cacheFile); // remove tempnam() side effect
         $cache = new ConfigCache($this->cacheFile, $debug);
@@ -57,10 +56,7 @@ class ConfigCacheTest extends TestCase
         $this->assertTrue($cache->isFresh());
     }
 
-    /**
-     * @dataProvider debugModes
-     */
-    public function testIsFreshWhenNoResourceProvided($debug)
+    #[DataProvider('debugModes')]    public function testIsFreshWhenNoResourceProvided($debug)
     {
         $cache = new ConfigCache($this->cacheFile, $debug);
         $cache->write('', array());

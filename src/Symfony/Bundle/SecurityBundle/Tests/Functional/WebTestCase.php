@@ -16,6 +16,9 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class WebTestCase extends BaseWebTestCase
 {
+    private $previousExceptionHandler;
+    private $previousErrorHandler;
+
     public static function assertRedirect($response, $location)
     {
         self::assertTrue($response->isRedirect(), 'Response is not a redirect, got status code: '.substr($response, 0, 2000));
@@ -69,5 +72,39 @@ class WebTestCase extends BaseWebTestCase
     protected static function getVarDir()
     {
         return substr(strrchr(\get_called_class(), '\\'), 1);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->previousExceptionHandler = set_exception_handler(function () {
+        });
+        restore_exception_handler();
+
+        $this->previousErrorHandler = set_error_handler(function () {
+        });
+        restore_error_handler();
+    }
+
+    protected function tearDown(): void
+    {
+        for ($i = 0; $i < 20; $i++) {
+            $current = set_exception_handler(null);
+            restore_exception_handler();
+            if ($current === $this->previousExceptionHandler) {
+                break;
+            }
+            restore_exception_handler();
+        }
+        for ($i = 0; $i < 20; $i++) {
+            $current = set_error_handler(null);
+            restore_error_handler();
+            if ($current === $this->previousErrorHandler) {
+                break;
+            }
+            restore_error_handler();
+        }
+        parent::tearDown();
     }
 }

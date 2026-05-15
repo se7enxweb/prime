@@ -11,14 +11,16 @@
 
 namespace Symfony\Component\ClassLoader\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\ClassLoader\Psr4ClassLoader;
 
 class Psr4ClassLoaderTest extends TestCase
 {
+    #[DataProvider('getLoadClassTests')]
     /**
      * @param string $className
-     * @dataProvider getLoadClassTests
      */
     public function testLoadClass($className)
     {
@@ -44,9 +46,9 @@ class Psr4ClassLoaderTest extends TestCase
         );
     }
 
+    #[DataProvider('getLoadNonexistentClassTests')]
     /**
      * @param string $className
-     * @dataProvider getLoadNonexistentClassTests
      */
     public function testLoadNonexistentClass($className)
     {

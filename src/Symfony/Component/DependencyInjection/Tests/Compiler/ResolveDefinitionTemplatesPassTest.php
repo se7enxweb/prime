@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\DependencyInjection\Tests\Compiler;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Compiler\ResolveDefinitionTemplatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -80,10 +82,7 @@ class ResolveDefinitionTemplatesPassTest extends TestCase
         $this->assertFalse($def->isAbstract());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testProcessDoesNotCopyScope()
+    #[Group('legacy')]    public function testProcessDoesNotCopyScope()
     {
         $container = new ContainerBuilder();
 

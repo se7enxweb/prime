@@ -11,17 +11,18 @@
 
 namespace Symfony\Bridge\Doctrine\Tests\Form\ChoiceList;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityChoiceList;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\ORMQueryBuilderLoader;
 
 if (!class_exists('Symfony\Component\Form\Tests\Extension\Core\ChoiceList\AbstractChoiceListTest')) {
     return;
 }
-
+    #[Group('legacy')]
 /**
  * @author Premi Giorgio <giosh94mhz@gmail.com>
  * @author Bernhard Schussek <bschussek@gmail.com>
- * @group legacy
  */
 class UnloadedEntityChoiceListSingleAssociationToIntIdWithQueryBuilderTest extends UnloadedEntityChoiceListSingleAssociationToIntIdTest
 {

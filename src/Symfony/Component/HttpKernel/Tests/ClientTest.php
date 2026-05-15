@@ -55,7 +55,6 @@ class ClientTest extends TestCase
 
         $r = new \ReflectionObject($client);
         $m = $r->getMethod('filterResponse');
-        $m->setAccessible(true);
 
         $expected = array(
             'foo=bar; expires=Sun, 15 Feb 2009 20:00:00 GMT; domain=http://example.com; path=/foo; secure; httponly',
@@ -81,7 +80,6 @@ class ClientTest extends TestCase
 
         $r = new \ReflectionObject($client);
         $m = $r->getMethod('filterResponse');
-        $m->setAccessible(true);
 
         $response = new StreamedResponse(function () {
             echo 'foo';
@@ -152,13 +150,13 @@ class ClientTest extends TestCase
         $file = $this
             ->getMockBuilder('Symfony\Component\HttpFoundation\File\UploadedFile')
             ->setConstructorArgs(array($source, 'original', 'mime/original', 123, UPLOAD_ERR_OK, true))
-            ->setMethods(array('getSize'))
+            ->onlyMethods(array('getSize'))
             ->getMock()
         ;
 
         $file->expects($this->once())
             ->method('getSize')
-            ->will($this->returnValue(INF))
+            ->willReturn(PHP_INT_MAX)
         ;
 
         $client->request('POST', '/', array(), array($file));

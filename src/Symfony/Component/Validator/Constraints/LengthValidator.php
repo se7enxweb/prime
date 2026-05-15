@@ -40,8 +40,12 @@ class LengthValidator extends ConstraintValidator
 
         $stringValue = (string) $value;
 
-        if (!$invalidCharset = !@mb_check_encoding($stringValue, $constraint->charset)) {
-            $length = mb_strlen($stringValue, $constraint->charset);
+        try {
+            if (!$invalidCharset = !@mb_check_encoding($stringValue, $constraint->charset)) {
+                $length = mb_strlen($stringValue, $constraint->charset);
+            }
+        } catch (\ValueError $e) {
+            $invalidCharset = true;
         }
 
         if ($invalidCharset) {

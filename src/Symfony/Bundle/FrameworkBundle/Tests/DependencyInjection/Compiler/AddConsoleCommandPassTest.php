@@ -45,7 +45,7 @@ class AddConsoleCommandPassTest extends TestCase
     public function testProcessThrowAnExceptionIfTheServiceIsNotPublic()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The service \"my-command\" tagged \"console.command\" must be public.');
+        $this->expectExceptionMessage('The service "my-command" tagged "console.command" must be public.');
 
         $container = new ContainerBuilder();
         $container->addCompilerPass(new AddConsoleCommandPass());
@@ -63,7 +63,7 @@ class AddConsoleCommandPassTest extends TestCase
     public function testProcessThrowAnExceptionIfTheServiceIsAbstract()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The service \"my-command\" tagged \"console.command\" must not be abstract.');
+        $this->expectExceptionMessage('The service "my-command" tagged "console.command" must not be abstract.');
 
         $container = new ContainerBuilder();
         $container->addCompilerPass(new AddConsoleCommandPass());
@@ -81,7 +81,7 @@ class AddConsoleCommandPassTest extends TestCase
     public function testProcessThrowAnExceptionIfTheServiceIsNotASubclassOfCommand()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The service \"my-command\" tagged \"console.command\" must be a subclass of \"Symfony\\Component\\Console\\Command\\Command\".');
+        $this->expectExceptionMessage('The service "my-command" tagged "console.command" must be a subclass of "Symfony\\Component\\Console\\Command\\Command".');
 
         $container = new ContainerBuilder();
         $container->addCompilerPass(new AddConsoleCommandPass());

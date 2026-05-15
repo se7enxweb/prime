@@ -11,6 +11,12 @@
 
 namespace Symfony\Component\Process\Tests;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Exception\LogicException;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
@@ -99,10 +105,7 @@ class ProcessTest extends TestCase
         $this->assertNull($p->getTimeout());
     }
 
-    /**
-     * @requires extension pcntl
-     */
-    public function testStopWithTimeoutIsActuallyWorking()
+    #[RequiresPhpExtension('pcntl')]    public function testStopWithTimeoutIsActuallyWorking()
     {
         $p = $this->getProcess(self::$phpBin.' '.__DIR__.'/NonStopableProcess.php 30');
         $p->start();
@@ -136,7 +139,6 @@ class ProcessTest extends TestCase
 
         // Don't call Process::run nor Process::wait to avoid any read of pipes
         $h = new \ReflectionProperty($p, 'process');
-        $h->setAccessible(true);
         $h = $h->getValue($p);
         $s = @proc_get_status($h);
 
@@ -162,10 +164,10 @@ class ProcessTest extends TestCase
         $this->assertSame('foo'.PHP_EOL, $data);
     }
 
+    #[DataProvider('responsesCodeProvider')]
     /**
      * tests results from sub processes.
      *
-     * @dataProvider responsesCodeProvider
      */
     public function testProcessResponses($expected, $getter, $code)
     {
@@ -175,10 +177,10 @@ class ProcessTest extends TestCase
         $this->assertSame($expected, $p->$getter());
     }
 
+    #[DataProvider('pipesCodeProvider')]
     /**
      * tests results from sub processes.
      *
-     * @dataProvider pipesCodeProvider
      */
     public function testProcessPipes($code, $size)
     {
@@ -193,10 +195,7 @@ class ProcessTest extends TestCase
         $this->assertEquals($expectedLength, \strlen($p->getErrorOutput()));
     }
 
-    /**
-     * @dataProvider pipesCodeProvider
-     */
-    public function testSetStreamAsInput($code, $size)
+    #[DataProvider('pipesCodeProvider')]    public function testSetStreamAsInput($code, $size)
     {
         $expected = str_repeat(str_repeat('*', 1024), $size).'!';
         $expectedLength = (1024 * $size) + 1;
@@ -253,10 +252,7 @@ class ProcessTest extends TestCase
         throw $e;
     }
 
-    /**
-     * @dataProvider provideInvalidInputValues
-     */
-    public function testInvalidInput($value)
+    #[DataProvider('provideInvalidInputValues')]    public function testInvalidInput($value)
     {
         $this->expectException(\Symfony\Component\Process\Exception\InvalidArgumentException::class);
         $this->expectExceptionMessage('Symfony\\Component\\Process\\Process::setInput only accepts strings or stream resources.');
@@ -273,10 +269,7 @@ class ProcessTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideInputValues
-     */
-    public function testValidInput($expected, $value)
+    #[DataProvider('provideInputValues')]    public function testValidInput($expected, $value)
     {
         $process = $this->getProcess('foo');
         $process->setInput($value);
@@ -292,9 +285,9 @@ class ProcessTest extends TestCase
         );
     }
 
+    #[DataProvider('provideLegacyInputValues')]
+    #[Group('legacy')]
     /**
-     * @dataProvider provideLegacyInputValues
-     * @group legacy
      */
     public function testLegacyValidInput($expected, $value)
     {
@@ -324,10 +317,7 @@ class ProcessTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider chainedCommandsOutputProvider
-     */
-    public function testChainedCommandsOutput($expected, $operator, $input)
+    #[DataProvider('chainedCommandsOutputProvider')]    public function testChainedCommandsOutput($expected, $operator, $input)
     {
         $process = $this->getProcess(sprintf('echo %s %s echo %s', $input, $operator, $input));
         $process->run();
@@ -363,10 +353,7 @@ class ProcessTest extends TestCase
         $this->assertEmpty($p->getErrorOutput());
     }
 
-    /**
-     * @dataProvider provideIncrementalOutput
-     */
-    public function testIncrementalOutput($getOutput, $getIncrementalOutput, $uri)
+    #[DataProvider('provideIncrementalOutput')]    public function testIncrementalOutput($getOutput, $getIncrementalOutput, $uri)
     {
         $lock = tempnam(sys_get_temp_dir(), __FUNCTION__);
 
@@ -547,7 +534,6 @@ class ProcessTest extends TestCase
         $process = $this->getProcess('');
         $r = new \ReflectionObject($process);
         $p = $r->getProperty('exitcode');
-        $p->setAccessible(true);
 
         $p->setValue($process, 2);
         $this->assertEquals('Misuse of shell builtins', $process->getExitCodeText());
@@ -883,10 +869,7 @@ class ProcessTest extends TestCase
         $this->assertNull($process->getPid());
     }
 
-    /**
-     * @requires extension pcntl
-     */
-    public function testSignal()
+    #[RequiresPhpExtension('pcntl')]    public function testSignal()
     {
         $process = $this->getProcess(self::$phpBin.' '.__DIR__.'/SignalListener.php');
         $process->start();
@@ -900,10 +883,7 @@ class ProcessTest extends TestCase
         $this->assertEquals('Caught SIGUSR1', $process->getOutput());
     }
 
-    /**
-     * @requires extension pcntl
-     */
-    public function testExitCodeIsAvailableAfterSignal()
+    #[RequiresPhpExtension('pcntl')]    public function testExitCodeIsAvailableAfterSignal()
     {
         $this->skipIfNotEnhancedSigchild();
 
@@ -932,19 +912,12 @@ class ProcessTest extends TestCase
         $process->signal(1); // SIGHUP
     }
 
-    /**
-     * @dataProvider provideMethodsThatNeedARunningProcess
-     */
-    public function testMethodsThatNeedARunningProcess($method)
+    #[DataProvider('provideMethodsThatNeedARunningProcess')]    public function testMethodsThatNeedARunningProcess($method)
     {
         $process = $this->getProcess('foo');
 
-        if (method_exists($this, 'expectException')) {
-            $this->expectException('Symfony\Component\Process\Exception\LogicException');
+$this->expectException('Symfony\Component\Process\Exception\LogicException');
             $this->expectExceptionMessage(sprintf('Process must be started before calling %s.', $method));
-        } else {
-            $this->setExpectedException('Symfony\Component\Process\Exception\LogicException', sprintf('Process must be started before calling %s.', $method));
-        }
 
         $process->{$method}();
     }
@@ -960,10 +933,7 @@ class ProcessTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideMethodsThatNeedATerminatedProcess
-     */
-    public function testMethodsThatNeedATerminatedProcess($method)
+    #[DataProvider('provideMethodsThatNeedATerminatedProcess')]    public function testMethodsThatNeedATerminatedProcess($method)
     {
         $this->expectException(\Symfony\Component\Process\Exception\LogicException::class);
         $this->expectExceptionMessage('Process must be terminated before calling');
@@ -991,10 +961,7 @@ class ProcessTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideWrongSignal
-     */
-    public function testWrongSignal($signal)
+    #[DataProvider('provideWrongSignal')]    public function testWrongSignal($signal)
     {
         $this->expectException(\Symfony\Component\Process\Exception\RuntimeException::class);
 
@@ -1098,10 +1065,7 @@ class ProcessTest extends TestCase
         $this->assertSame($process, $process->setIdleTimeout(null));
     }
 
-    /**
-     * @dataProvider provideStartMethods
-     */
-    public function testStartWithACallbackAndDisabledOutput($startMethod, $exception, $exceptionMessage)
+    #[DataProvider('provideStartMethods')]    public function testStartWithACallbackAndDisabledOutput($startMethod, $exception, $exceptionMessage)
     {
         $p = $this->getProcess('foo');
         $p->disableOutput();
@@ -1110,7 +1074,8 @@ class ProcessTest extends TestCase
             $this->expectException($exception);
             $this->expectExceptionMessage($exceptionMessage);
         } else {
-            $this->setExpectedException($exception, $exceptionMessage);
+            $this->expectException($exception);
+        $this->expectExceptionMessage($exceptionMessage);
         }
 
         if ('mustRun' === $startMethod) {
@@ -1128,10 +1093,7 @@ class ProcessTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideOutputFetchingMethods
-     */
-    public function testGetOutputWhileDisabled($fetchMethod)
+    #[DataProvider('provideOutputFetchingMethods')]    public function testGetOutputWhileDisabled($fetchMethod)
     {
         $this->expectException(\Symfony\Component\Process\Exception\LogicException::class);
         $this->expectExceptionMessage('Output has been disabled.');
@@ -1213,10 +1175,7 @@ class ProcessTest extends TestCase
         return $codes;
     }
 
-    /**
-     * @dataProvider provideVariousIncrementals
-     */
-    public function testIncrementalOutputDoesNotRequireAnotherCall($stream, $method)
+    #[DataProvider('provideVariousIncrementals')]    public function testIncrementalOutputDoesNotRequireAnotherCall($stream, $method)
     {
         $process = $this->getProcess(self::$phpBin.' -r '.escapeshellarg('$n = 0; while ($n < 3) { file_put_contents(\''.$stream.'\', $n, 1); $n++; usleep(1000); }'), null, null, null, null);
         $process->start();
@@ -1286,7 +1245,8 @@ class ProcessTest extends TestCase
                     $this->expectException('Symfony\Component\Process\Exception\RuntimeException');
                     $this->expectExceptionMessage('This PHP has been compiled with --enable-sigchild.');
                 } else {
-                    $this->setExpectedException('Symfony\Component\Process\Exception\RuntimeException', 'This PHP has been compiled with --enable-sigchild.');
+                    $this->expectException('Symfony\Component\Process\Exception\RuntimeException');
+        $this->expectExceptionMessage('This PHP has been compiled with --enable-sigchild.');
                 }
             }
         }

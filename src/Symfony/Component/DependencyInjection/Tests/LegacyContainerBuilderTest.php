@@ -11,12 +11,14 @@
 
 namespace Symfony\Component\DependencyInjection\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyContainerBuilderTest extends TestCase
 {

@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\DependencyInjection\Tests;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 
@@ -24,10 +28,7 @@ class DefinitionDecoratorTest extends TestCase
         $this->assertEquals(array(), $def->getChanges());
     }
 
-    /**
-     * @dataProvider getPropertyTests
-     */
-    public function testSetProperty($property, $changeKey)
+    #[DataProvider('getPropertyTests')]    public function testSetProperty($property, $changeKey)
     {
         $def = new DefinitionDecorator('foo');
 
@@ -50,9 +51,9 @@ class DefinitionDecoratorTest extends TestCase
         );
     }
 
+    #[DataProvider('provideLegacyPropertyTests')]
+    #[Group('legacy')]
     /**
-     * @dataProvider provideLegacyPropertyTests
-     * @group legacy
      */
     public function testLegacySetProperty($property, $changeKey)
     {

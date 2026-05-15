@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Intl\Tests\Data\Provider;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Intl\Data\Provider\RegionDataProvider;
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Intl\Locale;
@@ -300,10 +302,7 @@ abstract class AbstractRegionDataProviderTest extends AbstractDataProviderTest
         $this->assertSame(static::$territories, $this->dataProvider->getRegions());
     }
 
-    /**
-     * @dataProvider provideLocales
-     */
-    public function testGetNames($displayLocale)
+    #[DataProvider('provideLocales')]    public function testGetNames($displayLocale)
     {
         $countries = array_keys($this->dataProvider->getNames($displayLocale));
 
@@ -322,10 +321,7 @@ abstract class AbstractRegionDataProviderTest extends AbstractDataProviderTest
         );
     }
 
-    /**
-     * @dataProvider provideLocaleAliases
-     */
-    public function testGetNamesSupportsAliases($alias, $ofLocale)
+    #[DataProvider('provideLocaleAliases')]    public function testGetNamesSupportsAliases($alias, $ofLocale)
     {
         // Can't use assertSame(), because some aliases contain scripts with
         // different collation (=order of output) than their aliased locale
@@ -336,10 +332,7 @@ abstract class AbstractRegionDataProviderTest extends AbstractDataProviderTest
         );
     }
 
-    /**
-     * @dataProvider provideLocales
-     */
-    public function testGetName($displayLocale)
+    #[DataProvider('provideLocales')]    public function testGetName($displayLocale)
     {
         $names = $this->dataProvider->getNames($displayLocale);
 

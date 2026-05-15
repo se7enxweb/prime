@@ -11,16 +11,15 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 class FileTest extends TestCase
 {
-    /**
-     * @dataProvider provideValidSizes
-     */
-    public function testMaxSize($maxSize, $bytes, $binaryFormat)
+    #[DataProvider('provideValidSizes')]    public function testMaxSize($maxSize, $bytes, $binaryFormat)
     {
         $file = new File(array('maxSize' => $maxSize));
 
@@ -38,10 +37,7 @@ class FileTest extends TestCase
         $this->assertFalse($file->__isset('toto'));
     }
 
-    /**
-     * @dataProvider provideValidSizes
-     */
-    public function testMaxSizeCanBeSetAfterInitialization($maxSize, $bytes, $binaryFormat)
+    #[DataProvider('provideValidSizes')]    public function testMaxSizeCanBeSetAfterInitialization($maxSize, $bytes, $binaryFormat)
     {
         $file = new File();
         $file->maxSize = $maxSize;
@@ -50,10 +46,7 @@ class FileTest extends TestCase
         $this->assertSame($binaryFormat, $file->binaryFormat);
     }
 
-    /**
-     * @dataProvider provideInvalidSizes
-     */
-    public function testInvalidValueForMaxSizeThrowsExceptionAfterInitialization($maxSize)
+    #[DataProvider('provideInvalidSizes')]    public function testInvalidValueForMaxSizeThrowsExceptionAfterInitialization($maxSize)
     {
         $this->expectException(\Symfony\Component\Validator\Exception\ConstraintDefinitionException::class);
 
@@ -61,10 +54,7 @@ class FileTest extends TestCase
         $file->maxSize = $maxSize;
     }
 
-    /**
-     * @dataProvider provideInvalidSizes
-     */
-    public function testMaxSizeCannotBeSetToInvalidValueAfterInitialization($maxSize)
+    #[DataProvider('provideInvalidSizes')]    public function testMaxSizeCannotBeSetToInvalidValueAfterInitialization($maxSize)
     {
         $file = new File(array('maxSize' => 1000));
 
@@ -76,10 +66,7 @@ class FileTest extends TestCase
         $this->assertSame(1000, $file->maxSize);
     }
 
-    /**
-     * @dataProvider provideInValidSizes
-     */
-    public function testInvalidMaxSize($maxSize)
+    #[DataProvider('provideInValidSizes')]    public function testInvalidMaxSize($maxSize)
     {
         $this->expectException(\Symfony\Component\Validator\Exception\ConstraintDefinitionException::class);
 
@@ -114,10 +101,7 @@ class FileTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideFormats
-     */
-    public function testBinaryFormat($maxSize, $guessedFormat, $binaryFormat)
+    #[DataProvider('provideFormats')]    public function testBinaryFormat($maxSize, $guessedFormat, $binaryFormat)
     {
         $file = new File(array('maxSize' => $maxSize, 'binaryFormat' => $guessedFormat));
 

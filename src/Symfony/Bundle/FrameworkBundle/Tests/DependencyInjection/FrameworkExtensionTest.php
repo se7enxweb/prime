@@ -11,6 +11,11 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\DependencyInjection;
 
+
+
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\FrameworkExtension;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -70,8 +75,7 @@ abstract class FrameworkExtensionTest extends TestCase
 
         $this->assertTrue($container->hasDefinition('security.csrf.token_manager'));
     }
-
-    /** @group legacy */
+    #[Group('legacy')]
     public function testSecureRandomIsAvailableIfCsrfIsDisabled()
     {
         $container = $this->createContainerFromFile('csrf_disabled');
@@ -232,11 +236,7 @@ abstract class FrameworkExtensionTest extends TestCase
         $this->assertEquals(array('FrameworkBundle:Form', 'theme1', 'theme2'), $container->getParameter('templating.helper.form.resources'), '->registerTemplatingConfiguration() registers the theme and adds the base theme');
         $this->assertEquals('global_hinclude_template', $container->getParameter('fragment.renderer.hinclude.global_template'), '->registerTemplatingConfiguration() registers the global hinclude.js template');
     }
-
-    /**
-     * @group legacy
-     */
-    public function testLegacyTemplatingAssets()
+    #[Group('legacy')]    public function testLegacyTemplatingAssets()
     {
         $this->checkAssetsPackages($this->createContainerFromFile('legacy_templating_assets'), true);
     }
@@ -324,10 +324,9 @@ abstract class FrameworkExtensionTest extends TestCase
         $this->assertSame('setMetadataCache', $calls[5][0]);
         $this->assertEquals(array(new Reference('validator.mapping.cache.doctrine.apc')), $calls[5][1]);
     }
-
+    #[Group('legacy')]
+    #[RequiresPhpExtension('apc')]
     /**
-     * @group legacy
-     * @requires extension apc
      */
     public function testLegacyFullyConfiguredValidationService()
     {
@@ -469,22 +468,14 @@ abstract class FrameworkExtensionTest extends TestCase
 
         $this->assertFalse($container->getParameter('form.type_extension.csrf.enabled'));
     }
-
-    /**
-     * @group legacy
-     */
-    public function testLegacyFormCsrfFieldNameCanBeSetUnderCsrfSettings()
+    #[Group('legacy')]    public function testLegacyFormCsrfFieldNameCanBeSetUnderCsrfSettings()
     {
         $container = $this->createContainerFromFile('form_csrf_sets_field_name');
 
         $this->assertTrue($container->getParameter('form.type_extension.csrf.enabled'));
         $this->assertEquals('_custom', $container->getParameter('form.type_extension.csrf.field_name'));
     }
-
-    /**
-     * @group legacy
-     */
-    public function testLegacyFormCsrfFieldNameUnderFormSettingsTakesPrecedence()
+    #[Group('legacy')]    public function testLegacyFormCsrfFieldNameUnderFormSettingsTakesPrecedence()
     {
         $container = $this->createContainerFromFile('form_csrf_under_form_sets_field_name');
 

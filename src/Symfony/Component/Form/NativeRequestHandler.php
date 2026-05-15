@@ -48,7 +48,7 @@ class NativeRequestHandler implements RequestHandlerInterface
             throw new UnexpectedTypeException($request, 'null');
         }
 
-        $name = $form->getName();
+        $name = (string) $form->getName();
         $method = $form->getConfig()->getMethod();
 
         if ($method !== self::getRequestMethod()) {
@@ -94,7 +94,7 @@ class NativeRequestHandler implements RequestHandlerInterface
             if ('' === $name) {
                 $params = $_POST;
                 $files = $fixedFiles;
-            } elseif (array_key_exists($name, $_POST) || array_key_exists($name, $fixedFiles)) {
+            } elseif ('' !== (string) $name && (array_key_exists($name, $_POST) || array_key_exists($name, $fixedFiles))) {
                 $default = $form->getConfig()->getCompound() ? array() : null;
                 $params = array_key_exists($name, $_POST) ? $_POST[$name] : $default;
                 $files = array_key_exists($name, $fixedFiles) ? $fixedFiles[$name] : $default;
@@ -108,11 +108,19 @@ class NativeRequestHandler implements RequestHandlerInterface
             } else {
                 $data = $params ?: $files;
             }
+
+            if ('' === $name && \is_array($data) && array_keys($data) === array('')) {
+                $data = $data[''];
+            }
         }
 
         // Don't auto-submit the form unless at least one field is present.
-        if ('' === $name && \count(array_intersect_key($data, $form->all())) <= 0) {
-            return;
+        if ('' === $name) {
+            $fields = $form->all();
+
+            if (\is_array($data) && \is_array($fields) && \count(array_intersect_key($data, $fields)) <= 0) {
+                return;
+            }
         }
 
         $form->submit($data, 'PATCH' !== $method);

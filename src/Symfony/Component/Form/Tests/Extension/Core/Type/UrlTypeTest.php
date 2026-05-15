@@ -11,14 +11,13 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+use PHPUnit\Framework\Attributes\Group;
 class UrlTypeTest extends TextTypeTest
 {
     const TESTED_TYPE = 'Symfony\Component\Form\Extension\Core\Type\UrlType';
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('url');
 

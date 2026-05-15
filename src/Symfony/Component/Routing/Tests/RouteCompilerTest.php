@@ -11,16 +11,15 @@
 
 namespace Symfony\Component\Routing\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCompiler;
 
 class RouteCompilerTest extends TestCase
 {
-    /**
-     * @dataProvider provideCompileData
-     */
-    public function testCompile($name, $arguments, $prefix, $regex, $variables, $tokens)
+    #[DataProvider('provideCompileData')]    public function testCompile($name, $arguments, $prefix, $regex, $variables, $tokens)
     {
         $r = new \ReflectionClass('Symfony\\Component\\Routing\\Route');
         $route = $r->newInstanceArgs($arguments);
@@ -178,10 +177,7 @@ class RouteCompilerTest extends TestCase
         $compiled = $route->compile();
     }
 
-    /**
-     * @dataProvider getVariableNamesStartingWithADigit
-     */
-    public function testRouteWithVariableNameStartingWithADigit($name)
+    #[DataProvider('getVariableNamesStartingWithADigit')]    public function testRouteWithVariableNameStartingWithADigit($name)
     {
         $this->expectException(\DomainException::class);
 
@@ -198,10 +194,7 @@ class RouteCompilerTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideCompileWithHostData
-     */
-    public function testCompileWithHost($name, $arguments, $prefix, $regex, $variables, $pathVariables, $tokens, $hostRegex, $hostVariables, $hostTokens)
+    #[DataProvider('provideCompileWithHostData')]    public function testCompileWithHost($name, $arguments, $prefix, $regex, $variables, $pathVariables, $tokens, $hostRegex, $hostVariables, $hostTokens)
     {
         $r = new \ReflectionClass('Symfony\\Component\\Routing\\Route');
         $route = $r->newInstanceArgs($arguments);

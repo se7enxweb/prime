@@ -11,6 +11,11 @@
 
 namespace Symfony\Component\Console\Tests\Command;
 
+
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
@@ -45,7 +50,7 @@ class CommandTest extends TestCase
     public function testCommandNameCannotBeEmpty()
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('The command defined in \"Symfony\\Component\\Console\\Command\\Command\" cannot have an empty name.');
+        $this->expectExceptionMessage('The command defined in "Symfony\\Component\\Console\\Command\\Command" cannot have an empty name.');
 
         new Command();
     }
@@ -106,17 +111,10 @@ class CommandTest extends TestCase
         $this->assertEquals('foobar:bar', $command->getName(), '->setName() sets the command name');
     }
 
-    /**
-     * @dataProvider provideInvalidCommandNames
-     */
-    public function testInvalidCommandNames($name)
+    #[DataProvider('provideInvalidCommandNames')]    public function testInvalidCommandNames($name)
     {
-        if (method_exists($this, 'expectException')) {
-            $this->expectException('InvalidArgumentException');
+$this->expectException('InvalidArgumentException');
             $this->expectExceptionMessage(sprintf('Command name "%s" is invalid.', $name));
-        } else {
-            $this->setExpectedException('InvalidArgumentException', sprintf('Command name "%s" is invalid.', $name));
-        }
 
         $command = new \TestCommand();
         $command->setName($name);
@@ -154,12 +152,12 @@ class CommandTest extends TestCase
     {
         $command = new \TestCommand();
         $command->setHelp('The %command.name% command does... Example: php %command.full_name%.');
-        $this->assertContains('The namespace:name command does...', $command->getProcessedHelp(), '->getProcessedHelp() replaces %command.name% correctly');
-        $this->assertNotContains('%command.full_name%', $command->getProcessedHelp(), '->getProcessedHelp() replaces %command.full_name%');
+        $this->assertStringContainsString('The namespace:name command does...', $command->getProcessedHelp(), '->getProcessedHelp() replaces %command.name% correctly');
+        $this->assertStringNotContainsString('%command.full_name%', $command->getProcessedHelp(), '->getProcessedHelp() replaces %command.full_name%');
 
         $command = new \TestCommand();
         $command->setHelp('');
-        $this->assertContains('description', $command->getProcessedHelp(), '->getProcessedHelp() falls back to the description');
+        $this->assertStringContainsString('description', $command->getProcessedHelp(), '->getProcessedHelp() falls back to the description');
     }
 
     public function testGetSetAliases()
@@ -174,7 +172,7 @@ class CommandTest extends TestCase
     public function testSetAliasesNull()
     {
         $command = new \TestCommand();
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $command->setAliases(null);
     }
 
@@ -191,8 +189,8 @@ class CommandTest extends TestCase
         $command = new \TestCommand();
         $command->addUsage('foo1');
         $command->addUsage('foo2');
-        $this->assertStringContainsString('namespace:name foo1', $command->getUsages());
-        $this->assertStringContainsString('namespace:name foo2', $command->getUsages());
+        $this->assertContains('namespace:name foo1', $command->getUsages());
+        $this->assertContains('namespace:name foo2', $command->getUsages());
     }
 
     public function testGetHelper()
@@ -209,7 +207,7 @@ class CommandTest extends TestCase
     public function testGetHelperWithoutHelperSet()
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Cannot retrieve helper \"formatter\" because there is no HelperSet defined.');
+        $this->expectExceptionMessage('Cannot retrieve helper "formatter" because there is no HelperSet defined.');
 
         $command = new \TestCommand();
         $command->getHelper('formatter');
@@ -226,7 +224,6 @@ class CommandTest extends TestCase
 
         $r = new \ReflectionObject($command);
         $m = $r->getMethod('mergeApplicationDefinition');
-        $m->setAccessible(true);
         $m->invoke($command);
         $this->assertTrue($command->getDefinition()->hasArgument('foo'), '->mergeApplicationDefinition() merges the application arguments and the command arguments');
         $this->assertTrue($command->getDefinition()->hasArgument('bar'), '->mergeApplicationDefinition() merges the application arguments and the command arguments');
@@ -248,7 +245,6 @@ class CommandTest extends TestCase
 
         $r = new \ReflectionObject($command);
         $m = $r->getMethod('mergeApplicationDefinition');
-        $m->setAccessible(true);
         $m->invoke($command, false);
         $this->assertTrue($command->getDefinition()->hasOption('bar'), '->mergeApplicationDefinition(false) merges the application and the command options');
         $this->assertFalse($command->getDefinition()->hasArgument('foo'), '->mergeApplicationDefinition(false) does not merge the application arguments');
@@ -294,7 +290,7 @@ class CommandTest extends TestCase
     public function testRunWithInvalidOption()
     {
         $this->expectException(\Symfony\Component\Console\Exception\InvalidOptionException::class);
-        $this->expectExceptionMessage('The \"--bar\" option does not exist.');
+        $this->expectExceptionMessage('The "--bar" option does not exist.');
 
         $command = new \TestCommand();
         $tester = new CommandTester($command);
@@ -307,19 +303,19 @@ class CommandTest extends TestCase
         $exitCode = $command->run(new StringInput(''), new NullOutput());
         $this->assertSame(0, $exitCode, '->run() returns integer exit code (treats null as 0)');
 
-        $command = $this->getMockBuilder('TestCommand')->setMethods(array('execute'))->getMock();
+        $command = $this->getMockBuilder('TestCommand')->onlyMethods(array('execute'))->getMock();
         $command->expects($this->once())
             ->method('execute')
-            ->will($this->returnValue('2.3'));
-        $exitCode = $command->run(new StringInput(''), new NullOutput());
+            ->willReturn('2.3');
+$exitCode = $command->run(new StringInput(''), new NullOutput());
         $this->assertSame(2, $exitCode, '->run() returns integer exit code (casts numeric to int)');
     }
 
     public function testRunWithApplication()
     {
         $command = new \TestCommand();
-        $command->setApplication(new Application());
-        $exitCode = $command->run(new StringInput(''), new NullOutput());
+$command->setApplication(new Application());
+$exitCode = $command->run(new StringInput(''), new NullOutput());
 
         $this->assertSame(0, $exitCode, '->run() returns an integer exit code');
     }
@@ -365,9 +361,9 @@ class CommandTest extends TestCase
         );
     }
 
+    #[DataProvider('getSetCodeBindToClosureTests')]
+    #[RequiresPhp('5.4')]
     /**
-     * @dataProvider getSetCodeBindToClosureTests
-     * @requires PHP 5.4
      */
     public function testSetCodeBindToClosure($previouslyBound, $expected)
     {
@@ -432,10 +428,7 @@ class CommandTest extends TestCase
         $output->writeln('from the code...');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyAsText()
+    #[Group('legacy')]    public function testLegacyAsText()
     {
         $command = new \TestCommand();
         $command->setApplication(new Application());
@@ -444,10 +437,7 @@ class CommandTest extends TestCase
         $this->assertStringEqualsFile(self::$fixturesPath.'/command_astext.txt', $command->asText(), '->asText() returns a text representation of the command');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyAsXml()
+    #[Group('legacy')]    public function testLegacyAsXml()
     {
         $command = new \TestCommand();
         $command->setApplication(new Application());

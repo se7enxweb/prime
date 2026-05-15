@@ -11,14 +11,16 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\DependencyInjection\Compiler;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\TemplatingAssetHelperPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-
+    #[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyTemplatingAssetHelperPassTest extends TestCase
 {
@@ -29,8 +31,7 @@ class LegacyTemplatingAssetHelperPassTest extends TestCase
             array('request'),
         );
     }
-
-    /** @dataProvider getScopesTests */
+    #[DataProvider('getScopesTests')]
     public function testFindLowestScopeInDefaultPackageWithReference($scope)
     {
         $container = new ContainerBuilder();
@@ -47,8 +48,7 @@ class LegacyTemplatingAssetHelperPassTest extends TestCase
 
         $this->assertSame($scope, $definition->getScope());
     }
-
-    /** @dataProvider getScopesTests */
+    #[DataProvider('getScopesTests')]
     public function testFindLowestScopeInDefaultPackageWithDefinition($scope)
     {
         $container = new ContainerBuilder();
@@ -64,8 +64,7 @@ class LegacyTemplatingAssetHelperPassTest extends TestCase
 
         $this->assertSame($scope, $definition->getScope());
     }
-
-    /** @dataProvider getScopesTests */
+    #[DataProvider('getScopesTests')]
     public function testFindLowestScopeInNamedPackageWithReference($scope)
     {
         $container = new ContainerBuilder();
@@ -95,8 +94,7 @@ class LegacyTemplatingAssetHelperPassTest extends TestCase
 
         $this->assertSame($scope, $definition->getScope());
     }
-
-    /** @dataProvider getScopesTests */
+    #[DataProvider('getScopesTests')]
     public function testFindLowestScopeInNamedPackageWithDefinition($scope)
     {
         $container = new ContainerBuilder();

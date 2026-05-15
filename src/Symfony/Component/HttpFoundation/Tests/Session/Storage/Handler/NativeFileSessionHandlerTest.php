@@ -11,17 +11,22 @@
 
 namespace Symfony\Component\HttpFoundation\Tests\Session\Storage\Handler;
 
+
+
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 
+#[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
 /**
  * Test class for NativeFileSessionHandler.
  *
  * @author Drak <drak@zikula.org>
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
 class NativeFileSessionHandlerTest extends TestCase
 {
@@ -41,10 +46,7 @@ class NativeFileSessionHandlerTest extends TestCase
         $this->assertEquals('TESTING', ini_get('session.name'));
     }
 
-    /**
-     * @dataProvider savePathDataProvider
-     */
-    public function testConstructSavePath($savePath, $expectedSavePath, $path)
+    #[DataProvider('savePathDataProvider')]    public function testConstructSavePath($savePath, $expectedSavePath, $path)
     {
         $handler = new NativeFileSessionHandler($savePath);
         $this->assertEquals($expectedSavePath, ini_get('session.save_path'));

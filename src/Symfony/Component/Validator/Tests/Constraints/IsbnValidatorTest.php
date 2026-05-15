@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\Constraints\Isbn;
 use Symfony\Component\Validator\Constraints\IsbnValidator;
 use Symfony\Component\Validator\Validation;
@@ -110,8 +112,8 @@ class IsbnValidatorTest extends AbstractConstraintValidatorTest
     public static function getValidIsbn()
     {
         return array_merge(
-            $this->getValidIsbn10(),
-            $this->getValidIsbn13()
+            self::getValidIsbn10(),
+            self::getValidIsbn13()
         );
     }
 
@@ -152,10 +154,7 @@ class IsbnValidatorTest extends AbstractConstraintValidatorTest
         $this->validator->validate(new \stdClass(), $constraint);
     }
 
-    /**
-     * @dataProvider getValidIsbn10
-     */
-    public function testValidIsbn10($isbn)
+    #[DataProvider('getValidIsbn10')]    public function testValidIsbn10($isbn)
     {
         $constraint = new Isbn(array(
             'type' => 'isbn10',
@@ -166,10 +165,7 @@ class IsbnValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getInvalidIsbn10
-     */
-    public function testInvalidIsbn10($isbn, $code)
+    #[DataProvider('getInvalidIsbn10')]    public function testInvalidIsbn10($isbn, $code)
     {
         $constraint = new Isbn(array(
             'type' => 'isbn10',
@@ -184,10 +180,7 @@ class IsbnValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    /**
-     * @dataProvider getValidIsbn13
-     */
-    public function testValidIsbn13($isbn)
+    #[DataProvider('getValidIsbn13')]    public function testValidIsbn13($isbn)
     {
         $constraint = new Isbn(array('type' => 'isbn13'));
 
@@ -196,10 +189,7 @@ class IsbnValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getInvalidIsbn13
-     */
-    public function testInvalidIsbn13($isbn, $code)
+    #[DataProvider('getInvalidIsbn13')]    public function testInvalidIsbn13($isbn, $code)
     {
         $constraint = new Isbn(array(
             'type' => 'isbn13',
@@ -214,10 +204,7 @@ class IsbnValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    /**
-     * @dataProvider getValidIsbn
-     */
-    public function testValidIsbnAny($isbn)
+    #[DataProvider('getValidIsbn')]    public function testValidIsbnAny($isbn)
     {
         $constraint = new Isbn();
 
@@ -226,10 +213,7 @@ class IsbnValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getInvalidIsbn10
-     */
-    public function testInvalidIsbnAnyIsbn10($isbn, $code)
+    #[DataProvider('getInvalidIsbn10')]    public function testInvalidIsbnAnyIsbn10($isbn, $code)
     {
         $constraint = new Isbn(array(
             'bothIsbnMessage' => 'myMessage',
@@ -248,10 +232,7 @@ class IsbnValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    /**
-     * @dataProvider getInvalidIsbn13
-     */
-    public function testInvalidIsbnAnyIsbn13($isbn, $code)
+    #[DataProvider('getInvalidIsbn13')]    public function testInvalidIsbnAnyIsbn13($isbn, $code)
     {
         $constraint = new Isbn(array(
             'bothIsbnMessage' => 'myMessage',

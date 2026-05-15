@@ -11,15 +11,14 @@
 
 namespace Symfony\Component\Intl\Tests\Data\Provider\Json;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Intl\Data\Bundle\Reader\BundleReaderInterface;
 use Symfony\Component\Intl\Data\Bundle\Reader\JsonBundleReader;
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Intl\Tests\Data\Provider\AbstractScriptDataProviderTest;
 
-/**
- * @author Bernhard Schussek <bschussek@gmail.com>
- * @group intl-data
- */
+#[Group('intl-data')]
 class JsonScriptDataProviderTest extends AbstractScriptDataProviderTest
 {
     protected function getDataDirectory()

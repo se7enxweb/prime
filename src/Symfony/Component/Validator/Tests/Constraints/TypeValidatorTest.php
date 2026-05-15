@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\TypeValidator;
 use Symfony\Component\Validator\Validation;
@@ -63,10 +65,7 @@ class TypeValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    /**
-     * @dataProvider getValidValues
-     */
-    public function testValidValues($value, $type)
+    #[DataProvider('getValidValues')]    public function testValidValues($value, $type)
     {
         $constraint = new Type(array('type' => $type));
 
@@ -78,7 +77,7 @@ class TypeValidatorTest extends AbstractConstraintValidatorTest
     public static function getValidValues()
     {
         $object = new \stdClass();
-        $file = $this->createFile();
+        $file = self::createFile();
 
         return array(
             array(true, 'Boolean'),
@@ -112,10 +111,7 @@ class TypeValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidValues
-     */
-    public function testInvalidValues($value, $type, $valueAsString)
+    #[DataProvider('getInvalidValues')]    public function testInvalidValues($value, $type, $valueAsString)
     {
         $constraint = new Type(array(
             'type' => $type,
@@ -134,7 +130,7 @@ class TypeValidatorTest extends AbstractConstraintValidatorTest
     public static function getInvalidValues()
     {
         $object = new \stdClass();
-        $file = $this->createFile();
+        $file = self::createFile();
 
         return array(
             array('foobar', 'numeric', '"foobar"'),
@@ -168,7 +164,7 @@ class TypeValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    protected function createFile()
+    protected static function createFile()
     {
         if (!static::$file) {
             static::$file = fopen(__FILE__, 'r');

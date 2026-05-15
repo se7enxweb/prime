@@ -11,6 +11,8 @@
 
 namespace Symfony\Bundle\SecurityBundle\Tests\DependencyInjection\Security\Factory;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\GuardAuthenticationFactory;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
@@ -19,10 +21,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class GuardAuthenticationFactoryTest extends TestCase
 {
-    /**
-     * @dataProvider getValidConfigurationTests
-     */
-    public function testAddValidConfiguration(array $inputConfig, array $expectedConfig)
+    #[DataProvider('getValidConfigurationTests')]    public function testAddValidConfiguration(array $inputConfig, array $expectedConfig)
     {
         $factory = new GuardAuthenticationFactory();
         $nodeDefinition = new ArrayNodeDefinition('guard');
@@ -35,10 +34,7 @@ class GuardAuthenticationFactoryTest extends TestCase
         $this->assertEquals($expectedConfig, $finalizedConfig);
     }
 
-    /**
-     * @dataProvider getInvalidConfigurationTests
-     */
-    public function testAddInvalidConfiguration(array $inputConfig)
+    #[DataProvider('getInvalidConfigurationTests')]    public function testAddInvalidConfiguration(array $inputConfig)
     {
         $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
 

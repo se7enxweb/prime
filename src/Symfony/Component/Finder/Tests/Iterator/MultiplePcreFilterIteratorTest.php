@@ -11,15 +11,14 @@
 
 namespace Symfony\Component\Finder\Tests\Iterator;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Iterator\MultiplePcreFilterIterator;
 
 class MultiplePcreFilterIteratorTest extends TestCase
 {
-    /**
-     * @dataProvider getIsRegexFixtures
-     */
-    public function testIsRegex($string, $isRegex, $message)
+    #[DataProvider('getIsRegexFixtures')]    public function testIsRegex($string, $isRegex, $message)
     {
         $testIterator = new TestMultiplePcreFilterIterator();
         $this->assertEquals($isRegex, $testIterator->isRegex($string), $message);

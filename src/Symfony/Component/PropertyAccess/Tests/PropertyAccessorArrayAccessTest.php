@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\PropertyAccess\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -27,20 +29,17 @@ abstract class PropertyAccessorArrayAccessTest extends TestCase
         $this->propertyAccessor = new PropertyAccessor();
     }
 
-    abstract protected function getContainer(array $array);
+    abstract protected static function getContainer(array $array);
 
     public static function getValidPropertyPaths()
     {
         return array(
-            array($this->getContainer(array('firstName' => 'Bernhard')), '[firstName]', 'Bernhard'),
-            array($this->getContainer(array('person' => $this->getContainer(array('firstName' => 'Bernhard')))), '[person][firstName]', 'Bernhard'),
+            array(static::getContainer(array('firstName' => 'Bernhard')), '[firstName]', 'Bernhard'),
+            array(static::getContainer(array('person' => static::getContainer(array('firstName' => 'Bernhard')))), '[person][firstName]', 'Bernhard'),
         );
     }
 
-    /**
-     * @dataProvider getValidPropertyPaths
-     */
-    public function testGetValue($collection, $path, $value)
+    #[DataProvider('getValidPropertyPaths')]    public function testGetValue($collection, $path, $value)
     {
         $this->assertSame($value, $this->propertyAccessor->getValue($collection, $path));
     }
@@ -55,33 +54,24 @@ abstract class PropertyAccessorArrayAccessTest extends TestCase
             ->enableExceptionOnInvalidIndex()
             ->getPropertyAccessor();
 
-        $object = $this->getContainer(array('firstName' => 'Bernhard'));
+        $object = static::getContainer(array('firstName' => 'Bernhard'));
 
         $this->propertyAccessor->getValue($object, '[lastName]');
     }
 
-    /**
-     * @dataProvider getValidPropertyPaths
-     */
-    public function testSetValue($collection, $path)
+    #[DataProvider('getValidPropertyPaths')]    public function testSetValue($collection, $path)
     {
         $this->propertyAccessor->setValue($collection, $path, 'Updated');
 
         $this->assertSame('Updated', $this->propertyAccessor->getValue($collection, $path));
     }
 
-    /**
-     * @dataProvider getValidPropertyPaths
-     */
-    public function testIsReadable($collection, $path)
+    #[DataProvider('getValidPropertyPaths')]    public function testIsReadable($collection, $path)
     {
         $this->assertTrue($this->propertyAccessor->isReadable($collection, $path));
     }
 
-    /**
-     * @dataProvider getValidPropertyPaths
-     */
-    public function testIsWritable($collection, $path)
+    #[DataProvider('getValidPropertyPaths')]    public function testIsWritable($collection, $path)
     {
         $this->assertTrue($this->propertyAccessor->isWritable($collection, $path));
     }

@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\ChoiceList\View\ChoiceGroupView;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ObjectChoiceList;
@@ -93,10 +96,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->objectChoices = null;
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('choice');
 
@@ -154,10 +154,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertCount(\count($this->choices), $form, 'Each choice should become a new field');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testExpandedFlippedChoicesOptionsTurnIntoChildren()
+    #[Group('legacy')]    public function testExpandedFlippedChoicesOptionsTurnIntoChildren()
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'expanded' => true,
@@ -416,10 +413,7 @@ class ChoiceTypeTest extends BaseTypeTest
         }
     }
 
-    /**
-     * @group legacy
-     */
-    public function testExpandedChoicesFlippedOptionsAreFlattened()
+    #[Group('legacy')]    public function testExpandedChoicesFlippedOptionsAreFlattened()
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'expanded' => true,
@@ -838,10 +832,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertSame(array('test'), $form->getData());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyNullChoices()
+    #[Group('legacy')]    public function testLegacyNullChoices()
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'multiple' => false,
@@ -853,10 +844,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertFalse($form->getConfig()->getOption('expanded'));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacySubmitSingleNonExpandedObjectChoices()
+    #[Group('legacy')]    public function testLegacySubmitSingleNonExpandedObjectChoices()
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'multiple' => false,
@@ -981,10 +969,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertTrue($form->isSynchronized());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacySubmitMultipleNonExpandedObjectChoices()
+    #[Group('legacy')]    public function testLegacySubmitMultipleNonExpandedObjectChoices()
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'multiple' => true,
@@ -1482,10 +1467,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertNull($form[4]->getViewData());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacySubmitSingleExpandedObjectChoices()
+    #[Group('legacy')]    public function testLegacySubmitSingleExpandedObjectChoices()
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'multiple' => false,
@@ -1518,10 +1500,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertNull($form[4]->getViewData());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testSubmitSingleExpandedNumericChoicesFlipped()
+    #[Group('legacy')]    public function testSubmitSingleExpandedNumericChoicesFlipped()
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'multiple' => false,
@@ -1728,10 +1707,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertNull($form[4]->getViewData());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacySubmitMultipleExpandedObjectChoices()
+    #[Group('legacy')]    public function testLegacySubmitMultipleExpandedObjectChoices()
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'multiple' => true,
@@ -1764,10 +1740,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertNull($form[4]->getViewData());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testSubmitMultipleExpandedNumericChoices()
+    #[Group('legacy')]    public function testSubmitMultipleExpandedNumericChoices()
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'multiple' => true,
@@ -1843,11 +1816,11 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertFalse($selectedChecker($view->vars['choices'][1]->value, $view->vars['value']));
     }
 
+    #[Group('legacy')]
     /**
      * We need this functionality to create choice fields for Boolean types,
      * e.g. false => 'No', true => 'Yes'.
      *
-     * @group legacy
      */
     public function testSetDataSingleNonExpandedAcceptsBoolean()
     {
@@ -1864,10 +1837,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertTrue($form->isSynchronized());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testSetDataMultipleNonExpandedAcceptsBoolean()
+    #[Group('legacy')]    public function testSetDataMultipleNonExpandedAcceptsBoolean()
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'multiple' => true,
@@ -2005,10 +1975,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertSame('', $view->vars['placeholder']);
     }
 
-    /**
-     * @dataProvider getOptionsWithPlaceholder
-     */
-    public function testPassPlaceholderToView($multiple, $expanded, $required, $placeholder, $viewValue)
+    #[DataProvider('getOptionsWithPlaceholder')]    public function testPassPlaceholderToView($multiple, $expanded, $required, $placeholder, $viewValue)
     {
         $view = $this->factory->create(static::TESTED_TYPE, null, array(
             'multiple' => $multiple,
@@ -2024,9 +1991,9 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertFalse($view->vars['placeholder_in_choices']);
     }
 
+    #[DataProvider('getOptionsWithPlaceholder')]
+    #[Group('legacy')]
     /**
-     * @dataProvider getOptionsWithPlaceholder
-     * @group legacy
      */
     public function testPassEmptyValueBC($multiple, $expanded, $required, $placeholder, $viewValue)
     {
@@ -2046,10 +2013,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertFalse($view->vars['empty_value_in_choices']);
     }
 
-    /**
-     * @dataProvider getOptionsWithPlaceholder
-     */
-    public function testDontPassPlaceholderIfContainedInChoices($multiple, $expanded, $required, $placeholder, $viewValue)
+    #[DataProvider('getOptionsWithPlaceholder')]    public function testDontPassPlaceholderIfContainedInChoices($multiple, $expanded, $required, $placeholder, $viewValue)
     {
         $view = $this->factory->create(static::TESTED_TYPE, null, array(
             'multiple' => $multiple,
@@ -2109,9 +2073,9 @@ class ChoiceTypeTest extends BaseTypeTest
         );
     }
 
+    #[DataProvider('getOptionsWithPlaceholderAndEmptyValue')]
+    #[Group('legacy')]
     /**
-     * @dataProvider getOptionsWithPlaceholderAndEmptyValue
-     * @group legacy
      */
     public function testPlaceholderOptionWithEmptyValueOption($multiple, $expanded, $required, $placeholder, $emptyValue, $viewValue)
     {
@@ -2321,10 +2285,7 @@ class ChoiceTypeTest extends BaseTypeTest
         ), $view->vars['choices']);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testDuplicateChoiceLabels()
+    #[Group('legacy')]    public function testDuplicateChoiceLabels()
     {
         $view = $this->factory->create(static::TESTED_TYPE, null, array(
             'choices' => array('a' => 'A', 'b' => 'B', 'c' => 'A'),
@@ -2408,10 +2369,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertNull($form->get('subChoice')->getConfig()->getOption('choice_label'));
     }
 
-    /**
-     * @dataProvider invalidNestedValueTestMatrix
-     */
-    public function testSubmitInvalidNestedValue($multiple, $expanded, $submissionData)
+    #[DataProvider('invalidNestedValueTestMatrix')]    public function testSubmitInvalidNestedValue($multiple, $expanded, $submissionData)
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'choices' => $this->choices,
@@ -2572,10 +2530,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertEquals('_09name', $view->vars['full_name']);
     }
 
-    /**
-     * @dataProvider provideTrimCases
-     */
-    public function testTrimIsDisabled($multiple, $expanded)
+    #[DataProvider('provideTrimCases')]    public function testTrimIsDisabled($multiple, $expanded)
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'multiple' => $multiple,
@@ -2595,10 +2550,7 @@ class ChoiceTypeTest extends BaseTypeTest
         $this->assertNull($form->getData());
     }
 
-    /**
-     * @dataProvider provideTrimCases
-     */
-    public function testSubmitValueWithWhiteSpace($multiple, $expanded)
+    #[DataProvider('provideTrimCases')]    public function testSubmitValueWithWhiteSpace($multiple, $expanded)
     {
         $valueWhitWhiteSpace = '1 ';
 

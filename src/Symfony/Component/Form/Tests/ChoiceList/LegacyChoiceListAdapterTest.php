@@ -11,13 +11,15 @@
 
 namespace Symfony\Component\Form\Tests\ChoiceList;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\ChoiceList\LegacyChoiceListAdapter;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceListInterface;
 
+#[Group('legacy')]
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
- * @group legacy
  */
 class LegacyChoiceListAdapterTest extends TestCase
 {
@@ -44,45 +46,45 @@ class LegacyChoiceListAdapterTest extends TestCase
             ->willReturn(array(1 => 'a', 4 => 'b', 7 => 'c'));
         $this->adaptedList->expects($this->once())
             ->method('getValues')
-            ->willReturn(array(1 => ':a', 4 => ':b', 7 => ':c'));
+->willReturn(array(1 => ':a', 4 => ':b', 7 => ':c'));
 
-        $this->assertSame(array(':a' => 'a', ':b' => 'b', ':c' => 'c'), $this->list->getChoices());
+$this->assertSame(array(':a' => 'a', ':b' => 'b', ':c' => 'c'), $this->list->getChoices());
     }
 
     public function testGetValues()
     {
         $this->adaptedList->expects($this->once())
             ->method('getChoices')
-            ->willReturn(array(1 => 'a', 4 => 'b', 7 => 'c'));
+->willReturn(array(1 => 'a', 4 => 'b', 7 => 'c'));
         $this->adaptedList->expects($this->once())
             ->method('getValues')
-            ->willReturn(array(1 => ':a', 4 => ':b', 7 => ':c'));
+->willReturn(array(1 => ':a', 4 => ':b', 7 => ':c'));
 
-        $this->assertSame(array(':a', ':b', ':c'), $this->list->getValues());
+$this->assertSame(array(':a', ':b', ':c'), $this->list->getValues());
     }
 
     public function testGetStructuredValues()
     {
         $this->adaptedList->expects($this->once())
             ->method('getChoices')
-            ->willReturn(array(1 => 'a', 4 => 'b', 7 => 'c'));
+->willReturn(array(1 => 'a', 4 => 'b', 7 => 'c'));
         $this->adaptedList->expects($this->once())
             ->method('getValues')
-            ->willReturn(array(1 => ':a', 4 => ':b', 7 => ':c'));
+->willReturn(array(1 => ':a', 4 => ':b', 7 => ':c'));
 
-        $this->assertSame(array(1 => ':a', 4 => ':b', 7 => ':c'), $this->list->getStructuredValues());
+$this->assertSame(array(1 => ':a', 4 => ':b', 7 => ':c'), $this->list->getStructuredValues());
     }
 
     public function testGetOriginalKeys()
     {
         $this->adaptedList->expects($this->once())
             ->method('getChoices')
-            ->willReturn(array(1 => 'a', 4 => 'b', 7 => 'c'));
+->willReturn(array(1 => 'a', 4 => 'b', 7 => 'c'));
         $this->adaptedList->expects($this->once())
             ->method('getValues')
-            ->willReturn(array(1 => ':a', 4 => ':b', 7 => ':c'));
+->willReturn(array(1 => ':a', 4 => ':b', 7 => ':c'));
 
-        $this->assertSame(array(':a' => 1, ':b' => 4, ':c' => 7), $this->list->getOriginalKeys());
+$this->assertSame(array(':a' => 1, ':b' => 4, ':c' => 7), $this->list->getOriginalKeys());
     }
 
     public function testGetChoicesForValues()
@@ -90,9 +92,9 @@ class LegacyChoiceListAdapterTest extends TestCase
         $this->adaptedList->expects($this->once())
             ->method('getChoicesForValues')
             ->with(array(1 => ':a', 4 => ':b', 7 => ':c'))
-            ->willReturn(array(1 => 'a', 4 => 'b', 7 => 'c'));
+->willReturn(array(1 => 'a', 4 => 'b', 7 => 'c'));
 
-        $this->assertSame(array(1 => 'a', 4 => 'b', 7 => 'c'), $this->list->getChoicesForValues(array(1 => ':a', 4 => ':b', 7 => ':c')));
+$this->assertSame(array(1 => 'a', 4 => 'b', 7 => 'c'), $this->list->getChoicesForValues(array(1 => ':a', 4 => ':b', 7 => ':c')));
     }
 
     public function testGetValuesForChoices()
@@ -100,13 +102,13 @@ class LegacyChoiceListAdapterTest extends TestCase
         $this->adaptedList->expects($this->once())
             ->method('getValuesForChoices')
             ->with(array(1 => 'a', 4 => 'b', 7 => 'c'))
-            ->willReturn(array(1 => ':a', 4 => ':b', 7 => ':c'));
+->willReturn(array(1 => ':a', 4 => ':b', 7 => ':c'));
 
-        $this->assertSame(array(1 => ':a', 4 => ':b', 7 => ':c'), $this->list->getValuesForChoices(array(1 => 'a', 4 => 'b', 7 => 'c')));
+$this->assertSame(array(1 => ':a', 4 => ':b', 7 => ':c'), $this->list->getValuesForChoices(array(1 => 'a', 4 => 'b', 7 => 'c')));
     }
 
     public function testGetAdaptedList()
     {
-        $this->assertSame($this->adaptedList, $this->list->getAdaptedList());
+$this->assertSame($this->adaptedList, $this->list->getAdaptedList());
     }
 }

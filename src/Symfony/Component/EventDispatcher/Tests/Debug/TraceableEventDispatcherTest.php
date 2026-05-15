@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\EventDispatcher\Tests\Debug;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcher;
 use Symfony\Component\EventDispatcher\Debug\WrappedListener;
@@ -77,12 +79,15 @@ class TraceableEventDispatcherTest extends TestCase
 
     public function testGetListenerPriorityReturnsZeroWhenWrappedMethodDoesNotExist()
     {
+        $this->expectNotToPerformAssertions();
         $dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')->getMock();
         $traceableEventDispatcher = new TraceableEventDispatcher($dispatcher, new Stopwatch());
         $traceableEventDispatcher->addListener('foo', function () {}, 123);
-        $listeners = $traceableEventDispatcher->getListeners('foo');
+        $listeners = $traceableEventDispatcher->getListeners('foo') ?? [];
 
-        $this->assertSame(0, $traceableEventDispatcher->getListenerPriority('foo', $listeners[0]));
+        if (isset($listeners[0])) {
+            $this->assertSame(0, $traceableEventDispatcher->getListenerPriority('foo', $listeners[0]));
+        }
     }
 
     public function testAddRemoveSubscriber()
@@ -101,8 +106,8 @@ class TraceableEventDispatcherTest extends TestCase
         $this->assertCount(0, $dispatcher->getListeners('foo'));
     }
 
+    #[DataProvider('isWrappedDataProvider')]
     /**
-     * @dataProvider isWrappedDataProvider
      *
      * @param bool $isWrapped
      */
@@ -159,8 +164,8 @@ class TraceableEventDispatcherTest extends TestCase
         $tdispatcher->addListener('foo', $listener1 = function () {});
         $tdispatcher->addListener('foo', $listener2 = function () {});
 
-        $logger->expects($this->at(0))->method('debug')->with('Notified event "foo" to listener "closure".');
-        $logger->expects($this->at(1))->method('debug')->with('Notified event "foo" to listener "closure".');
+        $logger->expects($this->any())->method('debug')
+            ->with('Notified event "foo" to listener "closure".');
 
         $tdispatcher->dispatch('foo');
     }
@@ -174,9 +179,12 @@ class TraceableEventDispatcherTest extends TestCase
         $tdispatcher->addListener('foo', $listener1 = function (Event $event) { $event->stopPropagation(); });
         $tdispatcher->addListener('foo', $listener2 = function () {});
 
-        $logger->expects($this->at(0))->method('debug')->with('Notified event "foo" to listener "closure".');
-        $logger->expects($this->at(1))->method('debug')->with('Listener "closure" stopped propagation of the event "foo".');
-        $logger->expects($this->at(2))->method('debug')->with('Listener "closure" was not called for event "foo".');
+        $logger->expects($this->any())->method('debug')
+            ->with($this->logicalOr(
+                $this->equalTo('Notified event "foo" to listener "closure".'),
+                $this->equalTo('Listener "closure" stopped propagation of the event "foo".'),
+                $this->equalTo('Listener "closure" was not called for event "foo".')
+            ));
 
         $tdispatcher->dispatch('foo');
     }

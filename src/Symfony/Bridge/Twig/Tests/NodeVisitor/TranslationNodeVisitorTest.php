@@ -12,6 +12,7 @@
 namespace Symfony\Bridge\Twig\Tests\NodeVisitor;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bridge\Twig\NodeVisitor\TranslationNodeVisitor;
 use Twig\Environment;
 use Twig\Node\Expression\ArrayExpression;
@@ -21,8 +22,7 @@ use Twig\Node\Expression\NameExpression;
 use Twig\Node\Node;
 
 class TranslationNodeVisitorTest extends TestCase
-{
-    /** @dataProvider getMessagesExtractionTestData */
+{    #[DataProvider('getMessagesExtractionTestData')]
     public function testMessagesExtraction(Node $node, array $expectedMessages)
     {
         $env = new Environment($this->getMockBuilder('Twig\Loader\LoaderInterface')->getMock(), array('cache' => false, 'autoescape' => false, 'optimizations' => 0));

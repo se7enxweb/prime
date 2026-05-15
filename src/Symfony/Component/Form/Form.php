@@ -983,6 +983,7 @@ class Form implements \IteratorAggregate, FormInterface
      *
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($name)
     {
         return $this->has($name);
@@ -997,6 +998,7 @@ class Form implements \IteratorAggregate, FormInterface
      *
      * @throws \OutOfBoundsException if the named child does not exist
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($name)
     {
         return $this->get($name);
@@ -1013,6 +1015,7 @@ class Form implements \IteratorAggregate, FormInterface
      *
      * @see self::add()
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($name, $child)
     {
         $this->add($child);
@@ -1025,6 +1028,7 @@ class Form implements \IteratorAggregate, FormInterface
      *
      * @throws AlreadySubmittedException if the form has already been submitted
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($name)
     {
         $this->remove($name);
@@ -1045,6 +1049,7 @@ class Form implements \IteratorAggregate, FormInterface
      *
      * @return int The number of embedded form children
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return \count($this->children);

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Security\Core\Tests\Authorization;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -21,10 +23,7 @@ use Symfony\Component\Security\Core\User\User;
 
 class ExpressionLanguageTest extends TestCase
 {
-    /**
-     * @dataProvider provider
-     */
-    public function testIsAuthenticated($token, $expression, $result, array $roles = array())
+    #[DataProvider('provider')]    public function testIsAuthenticated($token, $expression, $result, array $roles = array())
     {
         $anonymousTokenClass = 'Symfony\\Component\\Security\\Core\\Authentication\\Token\\AnonymousToken';
         $rememberMeTokenClass = 'Symfony\\Component\\Security\\Core\\Authentication\\Token\\RememberMeToken';

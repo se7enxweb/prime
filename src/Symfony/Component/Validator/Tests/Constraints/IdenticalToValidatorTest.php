@@ -42,13 +42,13 @@ class IdenticalToValidatorTest extends AbstractComparisonValidatorTestCase
 
     public static function provideAllValidComparisons()
     {
-        $this->setDefaultTimezone('UTC');
+        self::setDefaultTimezone('UTC');
 
         // Don't call addPhp5Dot5Comparisons() automatically, as it does
         // not take care of identical objects
-        $comparisons = $this->provideValidComparisons();
+        $comparisons = self::provideValidComparisons();
 
-        $this->restoreDefaultTimezone();
+        self::restoreDefaultTimezone();
 
         return $comparisons;
     }
@@ -56,7 +56,7 @@ class IdenticalToValidatorTest extends AbstractComparisonValidatorTestCase
     /**
      * {@inheritdoc}
      */
-    public function provideValidComparisons()
+    public static function provideValidComparisons()
     {
         $date = new \DateTime('2000-01-01');
         $object = new ComparisonTest_Class(2);
@@ -80,14 +80,14 @@ class IdenticalToValidatorTest extends AbstractComparisonValidatorTestCase
     /**
      * {@inheritdoc}
      */
-    public function provideInvalidComparisons()
+    public static function provideInvalidComparisons()
     {
         return array(
             array(1, '1', 2, '2', 'integer'),
             array(2, '2', '2', '"2"', 'string'),
             array('22', '"22"', '333', '"333"', 'string'),
-            array(new \DateTime('2001-01-01'), 'Jan 1, 2001, 12:00 AM', new \DateTime('2001-01-01'), 'Jan 1, 2001, 12:00 AM', 'DateTime'),
-            array(new \DateTime('2001-01-01'), 'Jan 1, 2001, 12:00 AM', new \DateTime('1999-01-01'), 'Jan 1, 1999, 12:00 AM', 'DateTime'),
+            array(new \DateTime('2001-01-01'), 'Jan 1, 2001, 12:00 AM', new \DateTime('2001-01-01'), 'Jan 1, 2001, 12:00 AM', 'DateTime'),
+            array(new \DateTime('2001-01-01'), 'Jan 1, 2001, 12:00 AM', new \DateTime('1999-01-01'), 'Jan 1, 1999, 12:00 AM', 'DateTime'),
             array(new ComparisonTest_Class(4), '4', new ComparisonTest_Class(5), '5', __NAMESPACE__.'\ComparisonTest_Class'),
         );
     }

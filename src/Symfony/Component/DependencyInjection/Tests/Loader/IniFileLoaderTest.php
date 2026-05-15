@@ -45,7 +45,7 @@ class IniFileLoaderTest extends TestCase
     public function testExceptionIsRaisedWhenIniFileDoesNotExist()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The file \"foo.ini\" does not exist (in:');
+        $this->expectExceptionMessage('The file "foo.ini" does not exist (in:');
 
         $this->loader->load('foo.ini');
     }
@@ -55,7 +55,7 @@ class IniFileLoaderTest extends TestCase
     public function testExceptionIsRaisedWhenIniFileCannotBeParsed()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The \"nonvalid.ini\" file is not valid.');
+        $this->expectExceptionMessage('The "nonvalid.ini" file is not valid.');
 
         @$this->loader->load('nonvalid.ini');
     }

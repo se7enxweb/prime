@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Intl\Tests\Collator;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Intl\Collator\Collator;
 
@@ -21,10 +23,7 @@ use Symfony\Component\Intl\Collator\Collator;
  */
 abstract class AbstractCollatorTest extends TestCase
 {
-    /**
-     * @dataProvider asortProvider
-     */
-    public function testAsort($array, $sortFlag, $expected)
+    #[DataProvider('asortProvider')]    public function testAsort($array, $sortFlag, $expected)
     {
         $collator = $this->getCollator('en');
         $collator->asort($array, $sortFlag);

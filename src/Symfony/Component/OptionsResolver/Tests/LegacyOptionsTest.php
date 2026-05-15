@@ -11,12 +11,14 @@
 
 namespace Symfony\Component\OptionsResolver\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyOptionsTest extends TestCase
 {

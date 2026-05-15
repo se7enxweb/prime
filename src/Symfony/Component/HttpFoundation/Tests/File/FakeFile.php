@@ -23,21 +23,25 @@ class FakeFile extends OrigFile
         parent::__construct($path, false);
     }
 
+    #[\ReturnTypeWillChange]
     public function isReadable()
     {
         return true;
     }
 
+    #[\ReturnTypeWillChange]
     public function getRealpath()
     {
         return $this->realpath;
     }
 
+    #[\ReturnTypeWillChange]
     public function getSize()
     {
         return 42;
     }
 
+    #[\ReturnTypeWillChange]
     public function getMTime()
     {
         return time();

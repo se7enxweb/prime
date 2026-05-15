@@ -11,6 +11,8 @@
 
 namespace Symfony\Bundle\WebProfilerBundle\Tests\DependencyInjection;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\WebProfilerBundle\DependencyInjection\WebProfilerExtension;
 use Symfony\Bundle\WebProfilerBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\Container;
@@ -48,7 +50,7 @@ class WebProfilerExtensionTest extends TestCase
         $this->kernel = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\KernelInterface')->getMock();
 
         $this->container = new ContainerBuilder();
-        $this->container->register('router', $this->getMockClass('Symfony\\Component\\Routing\\RouterInterface'));
+        $this->container->register('router', get_class($this->createMock('Symfony\\Component\\Routing\\RouterInterface')));
         $this->container->register('twig', 'Twig\Environment');
         $this->container->register('twig_loader', 'Twig\Loader\ArrayLoader')->addArgument(array());
         $this->container->register('twig', 'Twig\Environment')->addArgument(new Reference('twig_loader'));
@@ -57,8 +59,8 @@ class WebProfilerExtensionTest extends TestCase
         $this->container->setParameter('kernel.debug', false);
         $this->container->setParameter('kernel.root_dir', __DIR__);
         $this->container->setParameter('profiler.class', array('Symfony\\Component\\HttpKernel\\Profiler\\Profiler'));
-        $this->container->register('profiler', $this->getMockClass('Symfony\\Component\\HttpKernel\\Profiler\\Profiler'))
-            ->addArgument(new Definition($this->getMockClass('Symfony\\Component\\HttpKernel\\Profiler\\ProfilerStorageInterface')));
+        $this->container->register('profiler', get_class($this->createMock('Symfony\\Component\\HttpKernel\\Profiler\\Profiler')))
+            ->addArgument(new Definition(get_class($this->createMock('Symfony\\Component\\HttpKernel\\Profiler\\ProfilerStorageInterface'))));
         $this->container->setParameter('data_collector.templates', array());
         $this->container->set('kernel', $this->kernel);
     }
@@ -71,10 +73,7 @@ class WebProfilerExtensionTest extends TestCase
         $this->kernel = null;
     }
 
-    /**
-     * @dataProvider getDebugModes
-     */
-    public function testDefaultConfig($debug)
+    #[DataProvider('getDebugModes')]    public function testDefaultConfig($debug)
     {
         $this->container->setParameter('kernel.debug', $debug);
 
@@ -86,10 +85,7 @@ class WebProfilerExtensionTest extends TestCase
         $this->assertSaneContainer($this->getDumpedContainer());
     }
 
-    /**
-     * @dataProvider getDebugModes
-     */
-    public function testToolbarConfig($toolbarEnabled, $interceptRedirects, $listenerInjected, $listenerEnabled)
+    #[DataProvider('getDebugModes')]    public function testToolbarConfig($toolbarEnabled, $interceptRedirects, $listenerInjected, $listenerEnabled)
     {
         $extension = new WebProfilerExtension();
         $extension->load(array(array('toolbar' => $toolbarEnabled, 'intercept_redirects' => $interceptRedirects)), $this->container);

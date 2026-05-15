@@ -11,16 +11,15 @@
 
 namespace Symfony\Component\Security\Http\Tests\EntryPoint;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint;
 
 class RetryAuthenticationEntryPointTest extends TestCase
 {
-    /**
-     * @dataProvider dataForStart
-     */
-    public function testStart($httpPort, $httpsPort, $request, $expectedUrl)
+    #[DataProvider('dataForStart')]    public function testStart($httpPort, $httpsPort, $request, $expectedUrl)
     {
         $entryPoint = new RetryAuthenticationEntryPoint($httpPort, $httpsPort);
         $response = $entryPoint->start($request);

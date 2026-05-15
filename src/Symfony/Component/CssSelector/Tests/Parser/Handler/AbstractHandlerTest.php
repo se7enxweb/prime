@@ -12,6 +12,7 @@
 namespace Symfony\Component\CssSelector\Tests\Parser\Handler;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\CssSelector\Parser\Reader;
 use Symfony\Component\CssSelector\Parser\Token;
 use Symfony\Component\CssSelector\Parser\TokenStream;
@@ -20,8 +21,7 @@ use Symfony\Component\CssSelector\Parser\TokenStream;
  * @author Jean-François Simon <contact@jfsimon.fr>
  */
 abstract class AbstractHandlerTest extends TestCase
-{
-    /** @dataProvider getHandleValueTestData */
+{    #[DataProvider('getHandleValueTestData')]
     public function testHandleValue($value, Token $expectedToken, $remainingContent)
     {
         $reader = new Reader($value);
@@ -30,9 +30,7 @@ abstract class AbstractHandlerTest extends TestCase
         $this->assertTrue($this->generateHandler()->handle($reader, $stream));
         $this->assertEquals($expectedToken, $stream->getNext());
         $this->assertRemainingContent($reader, $remainingContent);
-    }
-
-    /** @dataProvider getDontHandleValueTestData */
+    }    #[DataProvider('getDontHandleValueTestData')]
     public function testDontHandleValue($value)
     {
         $reader = new Reader($value);
@@ -52,7 +50,6 @@ abstract class AbstractHandlerTest extends TestCase
     protected function assertStreamEmpty(TokenStream $stream)
     {
         $property = new \ReflectionProperty($stream, 'tokens');
-        $property->setAccessible(true);
 
         $this->assertEquals(array(), $property->getValue($stream));
     }

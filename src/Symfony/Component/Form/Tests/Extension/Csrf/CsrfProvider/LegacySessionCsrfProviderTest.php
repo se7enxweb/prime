@@ -11,11 +11,13 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Csrf\CsrfProvider;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\SessionCsrfProvider;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacySessionCsrfProviderTest extends TestCase
 {
@@ -38,7 +40,7 @@ class LegacySessionCsrfProviderTest extends TestCase
     {
         $this->session->expects($this->once())
             ->method('getId')
-            ->will($this->returnValue('ABCDEF'));
+            ->willReturn('ABCDEF');
 
         $token = $this->provider->generateCsrfToken('foo');
 
@@ -49,21 +51,21 @@ class LegacySessionCsrfProviderTest extends TestCase
     {
         $this->session->expects($this->once())
             ->method('getId')
-            ->will($this->returnValue('ABCDEF'));
+            ->willReturn('ABCDEF');
 
         $token = sha1('SECRET'.'foo'.'ABCDEF');
 
-        $this->assertTrue($this->provider->isCsrfTokenValid('foo', $token));
+$this->assertTrue($this->provider->isCsrfTokenValid('foo', $token));
     }
 
     public function testIsCsrfTokenValidFails()
     {
         $this->session->expects($this->once())
             ->method('getId')
-            ->will($this->returnValue('ABCDEF'));
+            ->willReturn('ABCDEF');
 
         $token = sha1('SECRET'.'bar'.'ABCDEF');
 
-        $this->assertFalse($this->provider->isCsrfTokenValid('foo', $token));
+$this->assertFalse($this->provider->isCsrfTokenValid('foo', $token));
     }
 }

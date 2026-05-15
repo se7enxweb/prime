@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Console\Tests\Logger;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -65,10 +67,7 @@ class ConsoleLoggerTest extends TestCase
         $this->assertInstanceOf('Psr\Log\LoggerInterface', $this->getLogger());
     }
 
-    /**
-     * @dataProvider provideLevelsAndMessages
-     */
-    public function testLogsAtAllLevels($level, $message)
+    #[DataProvider('provideLevelsAndMessages')]    public function testLogsAtAllLevels($level, $message)
     {
         $logger = $this->getLogger();
         $logger->{$level}($message, array('user' => 'Bob'));
@@ -123,12 +122,12 @@ class ConsoleLoggerTest extends TestCase
         }
         $dummy->expects($this->once())
             ->method('__toString')
-            ->will($this->returnValue('DUMMY'));
+            ->willReturn('DUMMY');
 
         $this->getLogger()->warning($dummy);
 
         $expected = array('warning DUMMY');
-        $this->assertEquals($expected, $this->getLogs());
+$this->assertEquals($expected, $this->getLogs());
     }
 
     public function testContextCanContainAnything()

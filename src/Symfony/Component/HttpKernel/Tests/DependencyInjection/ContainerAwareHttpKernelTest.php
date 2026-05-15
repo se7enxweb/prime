@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\HttpKernel\Tests\DependencyInjection;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,15 +23,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DependencyInjection\ContainerAwareHttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class ContainerAwareHttpKernelTest extends TestCase
 {
-    /**
-     * @dataProvider getProviderTypes
-     */
-    public function testHandle($type)
+    #[DataProvider('getProviderTypes')]    public function testHandle($type)
     {
         $request = new Request();
         $expected = new Response();
@@ -36,11 +37,20 @@ class ContainerAwareHttpKernelTest extends TestCase
         };
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
+        $calls = 0;
+        $container
+            ->expects($this->exactly(2))
+            ->method('set')
+            ->willReturnCallback(function ($id, $value, $scope) use (&$calls, $request) {
+                ++$calls;
+
+                TestCase::assertSame('request', $id);
+                TestCase::assertSame('request', $scope);
+                TestCase::assertSame(1 === $calls ? $request : null, $value);
+            });
         $this
             ->expectsEnterScopeOnce($container)
             ->expectsLeaveScopeOnce($container)
-            ->expectsSetRequestWithAt($container, $request, 3)
-            ->expectsSetRequestWithAt($container, null, 4)
         ;
 
         $dispatcher = new EventDispatcher();
@@ -53,10 +63,7 @@ class ContainerAwareHttpKernelTest extends TestCase
         $this->assertSame($expected, $actual, '->handle() returns the response');
     }
 
-    /**
-     * @dataProvider getProviderTypes
-     */
-    public function testVerifyRequestStackPushPopDuringHandle($type)
+    #[DataProvider('getProviderTypes')]    public function testVerifyRequestStackPushPopDuringHandle($type)
     {
         $request = new Request();
         $expected = new Response();
@@ -64,9 +71,9 @@ class ContainerAwareHttpKernelTest extends TestCase
             return $expected;
         };
 
-        $stack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->setMethods(array('push', 'pop'))->getMock();
-        $stack->expects($this->at(0))->method('push')->with($this->equalTo($request));
-        $stack->expects($this->at(1))->method('pop');
+        $stack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->onlyMethods(array('push', 'pop'))->getMock();
+        $stack->expects($this->any())->method('push')->with($this->equalTo($request));
+        $stack->expects($this->any())->method('pop');
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
         $dispatcher = new EventDispatcher();
@@ -76,10 +83,7 @@ class ContainerAwareHttpKernelTest extends TestCase
         $kernel->handle($request, $type);
     }
 
-    /**
-     * @dataProvider getProviderTypes
-     */
-    public function testHandleRestoresThePreviousRequestOnException($type)
+    #[DataProvider('getProviderTypes')]    public function testHandleRestoresThePreviousRequestOnException($type)
     {
         $request = new Request();
         $expected = new \Exception();
@@ -88,11 +92,20 @@ class ContainerAwareHttpKernelTest extends TestCase
         };
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
+        $calls = 0;
+        $container
+            ->expects($this->exactly(2))
+            ->method('set')
+            ->willReturnCallback(function ($id, $value, $scope) use (&$calls, $request) {
+                ++$calls;
+
+                TestCase::assertSame('request', $id);
+                TestCase::assertSame('request', $scope);
+                TestCase::assertSame(1 === $calls ? $request : null, $value);
+            });
         $this
             ->expectsEnterScopeOnce($container)
             ->expectsLeaveScopeOnce($container)
-            ->expectsSetRequestWithAt($container, $request, 3)
-            ->expectsSetRequestWithAt($container, null, 4)
         ;
 
         $dispatcher = new EventDispatcher();
@@ -127,24 +140,13 @@ class ContainerAwareHttpKernelTest extends TestCase
         $resolver->expects($this->once())
             ->method('getController')
             ->with($request)
-            ->will($this->returnValue($controller));
+            ->willReturn($controller);
         $resolver->expects($this->once())
             ->method('getArguments')
             ->with($request, $controller)
-            ->will($this->returnValue(array()));
+->willReturn(array());
 
         return $resolver;
-    }
-
-    private function expectsSetRequestWithAt($container, $with, $at)
-    {
-        $container
-            ->expects($this->at($at))
-            ->method('set')
-            ->with($this->equalTo('request'), $this->equalTo($with), $this->equalTo('request'))
-        ;
-
-        return $this;
     }
 
     private function expectsEnterScopeOnce($container)

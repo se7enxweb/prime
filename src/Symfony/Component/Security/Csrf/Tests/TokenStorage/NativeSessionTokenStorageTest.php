@@ -11,14 +11,20 @@
 
 namespace Symfony\Component\Security\Csrf\Tests\TokenStorage;
 
+
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Csrf\TokenStorage\NativeSessionTokenStorage;
 
+#[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
 class NativeSessionTokenStorageTest extends TestCase
 {
@@ -43,8 +49,8 @@ class NativeSessionTokenStorageTest extends TestCase
         $this->assertSame(array(self::SESSION_NAMESPACE => array('token_id' => 'TOKEN')), $_SESSION);
     }
 
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function testStoreTokenInClosedSessionWithExistingSessionId()
     {
@@ -67,10 +73,7 @@ class NativeSessionTokenStorageTest extends TestCase
         $this->assertSame(array(self::SESSION_NAMESPACE => array('token_id' => 'TOKEN')), $_SESSION);
     }
 
-    /**
-     * @depends testStoreTokenInClosedSession
-     */
-    public function testCheckToken()
+    #[Depends('testStoreTokenInClosedSession')]    public function testCheckToken()
     {
         $this->assertFalse($this->storage->hasToken('token_id'));
 
@@ -79,10 +82,7 @@ class NativeSessionTokenStorageTest extends TestCase
         $this->assertTrue($this->storage->hasToken('token_id'));
     }
 
-    /**
-     * @depends testStoreTokenInClosedSession
-     */
-    public function testGetExistingToken()
+    #[Depends('testStoreTokenInClosedSession')]    public function testGetExistingToken()
     {
         $this->storage->setToken('token_id', 'TOKEN');
 
@@ -98,19 +98,13 @@ class NativeSessionTokenStorageTest extends TestCase
         $this->storage->getToken('token_id');
     }
 
-    /**
-     * @depends testCheckToken
-     */
-    public function testRemoveNonExistingToken()
+    #[Depends('testCheckToken')]    public function testRemoveNonExistingToken()
     {
         $this->assertNull($this->storage->removeToken('token_id'));
         $this->assertFalse($this->storage->hasToken('token_id'));
     }
 
-    /**
-     * @depends testCheckToken
-     */
-    public function testRemoveExistingToken()
+    #[Depends('testCheckToken')]    public function testRemoveExistingToken()
     {
         $this->storage->setToken('token_id', 'TOKEN');
 

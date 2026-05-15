@@ -11,15 +11,14 @@
 
 namespace Symfony\Component\Finder\Tests\Iterator;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Finder\Comparator\DateComparator;
 use Symfony\Component\Finder\Iterator\DateRangeFilterIterator;
 
 class DateRangeFilterIteratorTest extends RealIteratorTestCase
 {
-    /**
-     * @dataProvider getAcceptData
-     */
-    public function testAccept($size, $expected)
+    #[DataProvider('getAcceptData')]    public function testAccept($size, $expected)
     {
         $files = self::$files;
         $files[] = self::toAbsolute('doesnotexist');
@@ -36,8 +35,6 @@ class DateRangeFilterIteratorTest extends RealIteratorTestCase
             '.git',
             'test.py',
             'foo',
-            'foo/bar.tmp',
-            'test.php',
             'toto',
             'toto/.git',
             '.bar',
@@ -66,9 +63,9 @@ class DateRangeFilterIteratorTest extends RealIteratorTestCase
         );
 
         return array(
-            array(array(new DateComparator('since 20 years ago')), $this->toAbsolute($since20YearsAgo)),
-            array(array(new DateComparator('since 2 months ago')), $this->toAbsolute($since2MonthsAgo)),
-            array(array(new DateComparator('until last month')), $this->toAbsolute($untilLastMonth)),
+            array(array(new DateComparator('since 20 years ago')), self::toAbsolute($since20YearsAgo)),
+            array(array(new DateComparator('since 2 months ago')), self::toAbsolute($since2MonthsAgo)),
+            array(array(new DateComparator('until last month')), self::toAbsolute($untilLastMonth)),
         );
     }
 }

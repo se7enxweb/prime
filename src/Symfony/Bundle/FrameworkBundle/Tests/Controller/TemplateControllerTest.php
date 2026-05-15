@@ -26,14 +26,13 @@ class TemplateControllerTest extends TestCase
         $twig->expects($this->once())->method('render')->willReturn('bar');
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('has')->will($this->returnValue(false));
-        $container->expects($this->at(1))->method('has')->will($this->returnValue(true));
-        $container->expects($this->at(2))->method('get')->will($this->returnValue($twig));
+        $container->expects($this->any())->method('has')->willReturnCallback(function ($id) { return $id === 'twig'; });
+        $container->expects($this->any())->method('get')->willReturn($twig);
 
         $controller = new TemplateController();
         $controller->setContainer($container);
 
-        $this->assertEquals('bar', $controller->templateAction('mytemplate')->getContent());
+$this->assertEquals('bar', $controller->templateAction('mytemplate')->getContent());
     }
 
     public function testTemplating()
@@ -42,13 +41,13 @@ class TemplateControllerTest extends TestCase
         $templating->expects($this->once())->method('renderResponse')->willReturn(new Response('bar'));
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('has')->willReturn(true);
-        $container->expects($this->at(1))->method('get')->will($this->returnValue($templating));
+        $container->expects($this->any())->method('has')->willReturn(true);
+        $container->expects($this->any())->method('get')->willReturn($templating);
 
         $controller = new TemplateController();
         $controller->setContainer($container);
 
-        $this->assertEquals('bar', $controller->templateAction('mytemplate')->getContent());
+$this->assertEquals('bar', $controller->templateAction('mytemplate')->getContent());
     }
 
     /**
@@ -59,8 +58,8 @@ class TemplateControllerTest extends TestCase
         $this->expectExceptionMessage('You can not use the TemplateController if the Templating Component or the Twig Bundle are not available.');
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('has')->willReturn(false);
-        $container->expects($this->at(1))->method('has')->willReturn(false);
+        $container->expects($this->any())->method('has')->willReturn(false);
+        $container->expects($this->any())->method('has')->willReturn(false);
 
         $controller = new TemplateController();
         $controller->setContainer($container);

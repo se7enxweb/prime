@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\HttpFoundation\Tests;
 
+
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -74,9 +78,9 @@ class ParameterBagTest extends TestCase
         $this->assertNull($bag->get('foo[bar]'));
     }
 
+    #[Group('legacy')]
+    #[DataProvider('getInvalidPaths')]
     /**
-     * @group legacy
-     * @dataProvider getInvalidPaths
      */
     public function testGetDeepWithInvalidPaths($path)
     {
@@ -97,10 +101,7 @@ class ParameterBagTest extends TestCase
         );
     }
 
-    /**
-     * @group legacy
-     */
-    public function testGetDeep()
+    #[Group('legacy')]    public function testGetDeep()
     {
         $bag = new ParameterBag(array('foo' => array('bar' => array('moo' => 'boo'))));
 

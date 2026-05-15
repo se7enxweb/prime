@@ -98,7 +98,7 @@ class ApplicationTest extends TestCase
 
     public function testBundleCommandsHaveRightContainer()
     {
-        $command = $this->getMockForAbstractClass('Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand', array('foo'), '', true, true, true, array('setContainer'));
+        $command = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand')->setConstructorArgs(array('foo'))->onlyMethods(array('setContainer'))->getMock();
         $command->setCode(function () {});
         $command->expects($this->exactly(2))->method('setContainer');
 
@@ -144,32 +144,36 @@ class ApplicationTest extends TestCase
                 ->expects($this->atLeastOnce())
                 ->method('get')
                 ->with($this->equalTo('event_dispatcher'))
-                ->will($this->returnValue($dispatcher));
+                ->willReturn($dispatcher);
         }
 
         $container
             ->expects($this->once())
             ->method('hasParameter')
             ->with($this->equalTo('console.command.ids'))
-            ->will($this->returnValue(true))
+            ->willReturn(true)
+
         ;
         $container
             ->expects($this->once())
             ->method('getParameter')
             ->with($this->equalTo('console.command.ids'))
-            ->will($this->returnValue(array()))
+            ->willReturn(array())
+
         ;
 
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')->getMock();
         $kernel
             ->expects($this->any())
             ->method('getBundles')
-            ->will($this->returnValue($bundles))
+            ->willReturn($bundles)
+
         ;
         $kernel
             ->expects($this->any())
             ->method('getContainer')
-            ->will($this->returnValue($container))
+            ->willReturn($container)
+
         ;
 
         return $kernel;
@@ -181,9 +185,10 @@ class ApplicationTest extends TestCase
         $bundle
             ->expects($this->once())
             ->method('registerCommands')
-            ->will($this->returnCallback(function (Application $application) use ($commands) {
+            ->willReturnCallback(function (Application $application) use ($commands) {
                 $application->addCommands($commands);
-            }))
+            })
+
         ;
 
         return $bundle;

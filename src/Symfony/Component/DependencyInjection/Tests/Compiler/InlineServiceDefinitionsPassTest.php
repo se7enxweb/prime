@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\DependencyInjection\Tests\Compiler;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Compiler\AnalyzeServiceReferencesPass;
 use Symfony\Component\DependencyInjection\Compiler\InlineServiceDefinitionsPass;
@@ -62,10 +64,7 @@ class InlineServiceDefinitionsPassTest extends TestCase
         $this->assertSame($ref, $arguments[0]);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testProcessDoesNotInlineWhenAliasedServiceIsNotOfPrototypeScope()
+    #[Group('legacy')]    public function testProcessDoesNotInlineWhenAliasedServiceIsNotOfPrototypeScope()
     {
         $container = new ContainerBuilder();
         $container
@@ -114,10 +113,7 @@ class InlineServiceDefinitionsPassTest extends TestCase
         $this->assertNotSame($container->getDefinition('bar'), $arguments[2]);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testProcessDoesInlineServiceOfPrototypeScope()
+    #[Group('legacy')]    public function testProcessDoesInlineServiceOfPrototypeScope()
     {
         $container = new ContainerBuilder();
         $container
@@ -244,10 +240,7 @@ class InlineServiceDefinitionsPassTest extends TestCase
         $this->assertSame($ref, $args[0]);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testProcessInlinesOnlyIfSameScope()
+    #[Group('legacy')]    public function testProcessInlinesOnlyIfSameScope()
     {
         $container = new ContainerBuilder();
 

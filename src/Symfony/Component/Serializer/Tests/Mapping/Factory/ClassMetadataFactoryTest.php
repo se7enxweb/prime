@@ -52,7 +52,7 @@ class ClassMetadataFactoryTest extends TestCase
         $cache
             ->expects($this->once())
             ->method('fetch')
-            ->will($this->returnValue('foo'))
+            ->willReturn('foo')
         ;
 
         $factory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()), $cache);
@@ -64,7 +64,7 @@ class ClassMetadataFactoryTest extends TestCase
         $cache = $this->getMockBuilder('Doctrine\Common\Cache\Cache')->getMock();
         $cache
             ->method('fetch')
-            ->will($this->returnValue(false))
+            ->willReturn(false)
         ;
 
         $cache

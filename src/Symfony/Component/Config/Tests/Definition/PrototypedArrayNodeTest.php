@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Config\Tests\Definition;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\PrototypedArrayNode;
@@ -180,6 +182,7 @@ class PrototypedArrayNodeTest extends TestCase
         return $node;
     }
 
+    #[DataProvider('getDataForKeyRemovedLeftValueOnly')]
     /**
      * Tests that when a key attribute is mapped, that key is removed from the array.
      * And if only 'value' element is left in the array, it will replace its wrapper array.
@@ -263,7 +266,6 @@ class PrototypedArrayNodeTest extends TestCase
      * )
      *
      *
-     * @dataProvider getDataForKeyRemovedLeftValueOnly
      */
     public function testMappedAttributeKeyIsRemovedLeftValueOnly($value, $children, $expected)
     {

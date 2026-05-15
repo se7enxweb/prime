@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\PropertyInfo\Tests\PhpDocExtractors;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\Type;
@@ -30,10 +32,7 @@ class PhpDocExtractorTest extends TestCase
         $this->extractor = new PhpDocExtractor();
     }
 
-    /**
-     * @dataProvider typesProvider
-     */
-    public function testExtract($property, ?array $type, $shortDescription, $longDescription)
+    #[DataProvider('typesProvider')]    public function testExtract($property, ?array $type, $shortDescription, $longDescription)
     {
         $this->assertEquals($type, $this->extractor->getTypes('Symfony\Component\PropertyInfo\Tests\Fixtures\Dummy', $property));
         $this->assertSame($shortDescription, $this->extractor->getShortDescription('Symfony\Component\PropertyInfo\Tests\Fixtures\Dummy', $property));

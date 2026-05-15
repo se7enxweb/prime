@@ -96,7 +96,7 @@ class SymfonyQuestionHelper extends QuestionHelper
             $width = max(array_map('strlen', array_keys($question->getChoices())));
 
             foreach ($question->getChoices() as $key => $value) {
-                $output->writeln(sprintf("  [<comment>%-${width}s</comment>] %s", $key, $value));
+                $output->writeln(sprintf("  [<comment>%-{$width}s</comment>] %s", $key, $value));
             }
         }
 

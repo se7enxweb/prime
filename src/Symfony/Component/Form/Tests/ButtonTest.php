@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\ButtonBuilder;
 use Symfony\Component\Form\FormBuilder;
@@ -45,10 +47,7 @@ class ButtonTest extends TestCase
         $button->setParent($this->getFormBuilder('form')->getForm());
     }
 
-    /**
-     * @dataProvider getDisabledStates
-     */
-    public function testDisabledIfParentIsDisabled($parentDisabled, $buttonDisabled, $result)
+    #[DataProvider('getDisabledStates')]    public function testDisabledIfParentIsDisabled($parentDisabled, $buttonDisabled, $result)
     {
         $form = $this->getFormBuilder('form')
             ->setDisabled($parentDisabled)

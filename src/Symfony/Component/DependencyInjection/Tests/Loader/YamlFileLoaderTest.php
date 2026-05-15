@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\DependencyInjection\Tests\Loader;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderResolver;
@@ -43,7 +46,6 @@ class YamlFileLoaderTest extends TestCase
         $loader = new YamlFileLoader(new ContainerBuilder(), new FileLocator(self::$fixturesPath.'/ini'));
         $r = new \ReflectionObject($loader);
         $m = $r->getMethod('loadFile');
-        $m->setAccessible(true);
 
         $m->invoke($loader, 'foo.yml');
     }
@@ -59,15 +61,11 @@ class YamlFileLoaderTest extends TestCase
         $loader = new YamlFileLoader(new ContainerBuilder(), new FileLocator($path));
         $r = new \ReflectionObject($loader);
         $m = $r->getMethod('loadFile');
-        $m->setAccessible(true);
 
         $m->invoke($loader, $path.'/parameters.ini');
     }
 
-    /**
-     * @dataProvider provideInvalidFiles
-     */
-    public function testLoadInvalidFile($file)
+    #[DataProvider('provideInvalidFiles')]    public function testLoadInvalidFile($file)
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException::class);
 
@@ -119,10 +117,7 @@ class YamlFileLoaderTest extends TestCase
         $loader->load('services4_bad_import.yml');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyLoadServices()
+    #[Group('legacy')]    public function testLegacyLoadServices()
     {
         $container = new ContainerBuilder();
         $loader = new YamlFileLoader($container, new FileLocator(self::$fixturesPath.'/yaml'));
@@ -249,7 +244,7 @@ class YamlFileLoaderTest extends TestCase
     public function testNonArrayTagThrowsException()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException::class);
-        $this->expectExceptionMessage('A \"tags\" entry must be an array for service');
+        $this->expectExceptionMessage('A "tags" entry must be an array for service');
 
         $loader = new YamlFileLoader(new ContainerBuilder(), new FileLocator(self::$fixturesPath.'/yaml'));
         $loader->load('badtag4.yml');
@@ -302,12 +297,10 @@ class YamlFileLoaderTest extends TestCase
         $loader->load('tag_name_empty_string.yml');
     }
 
-    /**
-     * @expectedExceptionMessageREgExp /The tag name for service "\.+" must be a non-empty string/
-     */
     public function testTagWithNonStringNameThrowsException()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/The tag name for service "[^"]+" in .+ must be a non-empty string/');
 
         $loader = new YamlFileLoader(new ContainerBuilder(), new FileLocator(self::$fixturesPath.'/yaml'));
         $loader->load('tag_name_no_string.yml');
@@ -357,7 +350,7 @@ class YamlFileLoaderTest extends TestCase
     public function testDecoratedServicesWithWrongSyntaxThrowsException()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The value of the \"decorates\" option for the \"bar\" service must be the id of the service without the \"@\" prefix (replace \"@foo\" with \"foo\").');
+        $this->expectExceptionMessage('The value of the "decorates" option for the "bar" service must be the id of the service without the "@" prefix (replace "@foo" with "foo").');
 
         $loader = new YamlFileLoader(new ContainerBuilder(), new FileLocator(self::$fixturesPath.'/yaml'));
         $loader->load('bad_decorates.yml');

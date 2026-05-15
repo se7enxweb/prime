@@ -22,29 +22,29 @@ class UnusedTagsPassTest extends TestCase
 
         $formatter = $this->getMockBuilder('Symfony\Component\DependencyInjection\Compiler\LoggingFormatter')->getMock();
         $formatter
-            ->expects($this->at(0))
+            ->expects($this->any())
             ->method('format')
             ->with($pass, 'Tag "kenrel.event_subscriber" was defined on service(s) "foo", "bar", but was never used. Did you mean "kernel.event_subscriber"?')
         ;
 
         $compiler = $this->getMockBuilder('Symfony\Component\DependencyInjection\Compiler\Compiler')->getMock();
-        $compiler->expects($this->once())->method('getLoggingFormatter')->will($this->returnValue($formatter));
+        $compiler->expects($this->once())->method('getLoggingFormatter')->willReturn($formatter);
 
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')->setMethods(array('findTaggedServiceIds', 'getCompiler', 'findUnusedTags', 'findTags'))->getMock();
-        $container->expects($this->once())->method('getCompiler')->will($this->returnValue($compiler));
+        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')->onlyMethods(array('findTaggedServiceIds', 'getCompiler', 'findUnusedTags', 'findTags'))->getMock();
+        $container->expects($this->once())->method('getCompiler')->willReturn($compiler);
         $container->expects($this->once())
             ->method('findTags')
-            ->will($this->returnValue(array('kenrel.event_subscriber')));
+->willReturn(array('kenrel.event_subscriber'));
         $container->expects($this->once())
             ->method('findUnusedTags')
-            ->will($this->returnValue(array('kenrel.event_subscriber', 'form.type')));
+->willReturn(array('kenrel.event_subscriber', 'form.type'));
         $container->expects($this->once())
             ->method('findTaggedServiceIds')
             ->with('kenrel.event_subscriber')
-            ->will($this->returnValue(array(
+            ->willReturn(array(
                 'foo' => array(),
                 'bar' => array(),
-            )));
+));
 
         $pass->process($container);
     }

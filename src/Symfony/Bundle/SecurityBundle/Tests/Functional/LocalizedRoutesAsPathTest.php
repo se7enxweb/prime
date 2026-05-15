@@ -11,12 +11,11 @@
 
 namespace Symfony\Bundle\SecurityBundle\Tests\Functional;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 class LocalizedRoutesAsPathTest extends WebTestCase
 {
-    /**
-     * @dataProvider getLocales
-     */
-    public function testLoginLogoutProcedure($locale)
+    #[DataProvider('getLocales')]    public function testLoginLogoutProcedure($locale)
     {
         $client = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => 'localized_routes.yml'));
 
@@ -34,10 +33,7 @@ class LocalizedRoutesAsPathTest extends WebTestCase
         $this->assertEquals('Homepage', $client->followRedirect()->text());
     }
 
-    /**
-     * @dataProvider getLocales
-     */
-    public function testLoginFailureWithLocalizedFailurePath($locale)
+    #[DataProvider('getLocales')]    public function testLoginFailureWithLocalizedFailurePath($locale)
     {
         $client = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => 'localized_form_failure_handler.yml'));
 
@@ -50,10 +46,7 @@ class LocalizedRoutesAsPathTest extends WebTestCase
         $this->assertRedirect($client->getResponse(), '/'.$locale.'/login');
     }
 
-    /**
-     * @dataProvider getLocales
-     */
-    public function testAccessRestrictedResource($locale)
+    #[DataProvider('getLocales')]    public function testAccessRestrictedResource($locale)
     {
         $client = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => 'localized_routes.yml'));
 
@@ -61,10 +54,7 @@ class LocalizedRoutesAsPathTest extends WebTestCase
         $this->assertRedirect($client->getResponse(), '/'.$locale.'/login');
     }
 
-    /**
-     * @dataProvider getLocales
-     */
-    public function testAccessRestrictedResourceWithForward($locale)
+    #[DataProvider('getLocales')]    public function testAccessRestrictedResourceWithForward($locale)
     {
         $client = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => 'localized_routes_with_forward.yml'));
 

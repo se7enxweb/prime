@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\Doctrine\Tests\Form\Type;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bridge\Doctrine\Form\DoctrineOrmExtension;
 use Symfony\Bridge\Doctrine\Test\DoctrineTestHelper;
@@ -36,11 +38,11 @@ class EntityTypePerformanceTest extends FormPerformanceTestCase
 
         $manager->expects($this->any())
             ->method('getManager')
-            ->will($this->returnValue($this->em));
+            ->willReturn($this->em);
 
         $manager->expects($this->any())
             ->method('getManagerForClass')
-            ->will($this->returnValue($this->em));
+            ->willReturn($this->em);
 
         return array(
             new CoreExtension(),
@@ -78,15 +80,16 @@ class EntityTypePerformanceTest extends FormPerformanceTestCase
 
         $this->em->flush();
     }
-
+    #[Group('benchmark')]
     /**
      * This test case is realistic in collection forms where each
      * row contains the same entity field.
      *
-     * @group benchmark
      */
     public function testCollapsedEntityField()
     {
+        $this->expectNotToPerformAssertions();
+
         $this->setMaxRunningTime(1);
 
         for ($i = 0; $i < 40; ++$i) {
@@ -98,12 +101,10 @@ class EntityTypePerformanceTest extends FormPerformanceTestCase
             $form->createView();
         }
     }
-
-    /**
-     * @group benchmark
-     */
-    public function testCollapsedEntityFieldWithChoices()
+    #[Group('benchmark')]    public function testCollapsedEntityFieldWithChoices()
     {
+        $this->expectNotToPerformAssertions();
+
         $choices = $this->em->createQuery('SELECT c FROM '.self::ENTITY_CLASS.' c')->getResult();
         $this->setMaxRunningTime(1);
 
@@ -117,12 +118,10 @@ class EntityTypePerformanceTest extends FormPerformanceTestCase
             $form->createView();
         }
     }
-
-    /**
-     * @group benchmark
-     */
-    public function testCollapsedEntityFieldWithPreferredChoices()
+    #[Group('benchmark')]    public function testCollapsedEntityFieldWithPreferredChoices()
     {
+        $this->expectNotToPerformAssertions();
+
         $choices = $this->em->createQuery('SELECT c FROM '.self::ENTITY_CLASS.' c')->getResult();
         $this->setMaxRunningTime(1);
 

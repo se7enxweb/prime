@@ -20,18 +20,18 @@ class FunctionNodeTest extends AbstractNodeTest
     public static function getEvaluateData()
     {
         return array(
-            array('bar', new FunctionNode('foo', new Node(array(new ConstantNode('bar')))), array(), array('foo' => $this->getCallables())),
+            array('bar', new FunctionNode('foo', new Node(array(new ConstantNode('bar')))), array(), array('foo' => self::getCallables())),
         );
     }
 
     public static function getCompileData()
     {
         return array(
-            array('foo("bar")', new FunctionNode('foo', new Node(array(new ConstantNode('bar')))), array('foo' => $this->getCallables())),
+            array('foo("bar")', new FunctionNode('foo', new Node(array(new ConstantNode('bar')))), array('foo' => self::getCallables())),
         );
     }
 
-    protected function getCallables()
+    protected static function getCallables()
     {
         return array(
             'compiler' => function ($arg) {

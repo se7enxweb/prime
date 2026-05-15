@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Security\Core\Tests\Authorization\Voter;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -25,10 +27,7 @@ class RoleVoterTest extends TestCase
         $this->assertTrue($voter->supportsClass('Foo'));
     }
 
-    /**
-     * @dataProvider getVoteTests
-     */
-    public function testVote($roles, $attributes, $expected)
+    #[DataProvider('getVoteTests')]    public function testVote($roles, $attributes, $expected)
     {
         $voter = new RoleVoter();
 
@@ -61,7 +60,7 @@ class RoleVoterTest extends TestCase
         $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')->getMock();
         $token->expects($this->once())
               ->method('getRoles')
-              ->will($this->returnValue($roles));
+              ->willReturn($roles);
 
         return $token;
     }

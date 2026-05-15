@@ -60,7 +60,7 @@ class Cookie
             $this->rawValue = $value;
         } else {
             $this->value = $value;
-            $this->rawValue = rawurlencode($value);
+            $this->rawValue = rawurlencode((string) $value);
         }
         $this->name = $name;
         $this->path = empty($path) ? '/' : $path;

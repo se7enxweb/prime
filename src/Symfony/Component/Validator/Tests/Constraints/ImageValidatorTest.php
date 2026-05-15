@@ -11,12 +11,15 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\ImageValidator;
 use Symfony\Component\Validator\Validation;
 
+#[RequiresPhpExtension('fileinfo')]
 /**
- * @requires extension fileinfo
  */
 class ImageValidatorTest extends AbstractConstraintValidatorTest
 {

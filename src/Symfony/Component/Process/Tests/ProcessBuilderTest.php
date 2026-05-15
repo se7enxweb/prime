@@ -83,7 +83,6 @@ class ProcessBuilderTest extends TestCase
 
         $r = new \ReflectionObject($pb);
         $p = $r->getProperty('timeout');
-        $p->setAccessible(true);
 
         $this->assertNull($p->getValue($pb));
     }

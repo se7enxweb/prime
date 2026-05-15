@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\HttpFoundation\Tests\Session\Storage;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
@@ -20,6 +24,8 @@ use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\Proxy\NativeProxy;
 use Symfony\Component\HttpFoundation\Session\Storage\Proxy\SessionHandlerProxy;
 
+#[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
 /**
  * Test class for NativeSessionStorage.
  *
@@ -27,8 +33,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\Proxy\SessionHandlerProxy;
  *
  * These tests require separate processes.
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
 class NativeSessionStorageTest extends TestCase
 {
@@ -36,8 +40,8 @@ class NativeSessionStorageTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->iniSet('session.save_handler', 'files');
-        $this->iniSet('session.save_path', $this->savePath = sys_get_temp_dir().'/sf2test');
+        ini_set('session.save_handler', 'files');
+        ini_set('session.save_path', $this->savePath = sys_get_temp_dir().'/sf2test');
         if (!is_dir($this->savePath)) {
             mkdir($this->savePath);
         }
@@ -46,6 +50,8 @@ class NativeSessionStorageTest extends TestCase
     protected function tearDown(): void
     {
         session_write_close();
+        ini_restore('session.save_handler');
+        ini_restore('session.save_path');
         array_map('unlink', glob($this->savePath.'/*'));
         if (is_dir($this->savePath)) {
             rmdir($this->savePath);
@@ -150,18 +156,20 @@ class NativeSessionStorageTest extends TestCase
 
     public function testDefaultSessionCacheLimiter()
     {
-        $this->iniSet('session.cache_limiter', 'nocache');
+        ini_set('session.cache_limiter', 'nocache');
 
         $storage = new NativeSessionStorage();
         $this->assertEquals('', ini_get('session.cache_limiter'));
+        ini_restore('session.cache_limiter');
     }
 
     public function testExplicitSessionCacheLimiter()
     {
-        $this->iniSet('session.cache_limiter', 'nocache');
+        ini_set('session.cache_limiter', 'nocache');
 
         $storage = new NativeSessionStorage(array('cache_limiter' => 'public'));
         $this->assertEquals('public', ini_get('session.cache_limiter'));
+        ini_restore('session.cache_limiter');
     }
 
     public function testCookieOptions()
@@ -182,7 +190,7 @@ class NativeSessionStorageTest extends TestCase
             $gco['cookie_'.$key] = $value;
         }
 
-        $this->assertEquals($options, $gco);
+        $this->assertEquals($options, array_intersect_key($gco, $options));
     }
 
     public function testSessionOptions()
@@ -234,12 +242,12 @@ class NativeSessionStorageTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Storage\Proxy\NativeProxy', $storage->getSaveHandler());
     }
 
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function testSetSaveHandler54()
     {
-        $this->iniSet('session.save_handler', 'files');
+        ini_set('session.save_handler', 'files');
         $storage = $this->getStorage();
         $storage->setSaveHandler();
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Storage\Proxy\SessionHandlerProxy', $storage->getSaveHandler());
@@ -292,8 +300,8 @@ class NativeSessionStorageTest extends TestCase
         $this->assertSame(7, $storage->getBag('attributes')->get('lucky'), 'Data still available');
     }
 
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function testCanCreateNativeSessionStorageWhenSessionAlreadyStarted()
     {
@@ -304,8 +312,8 @@ class NativeSessionStorageTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function testSetSessionOptionsOnceSessionStartedIsIgnored()
     {
@@ -318,8 +326,8 @@ class NativeSessionStorageTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function testGetBagsOnceSessionStartedIsIgnored()
     {

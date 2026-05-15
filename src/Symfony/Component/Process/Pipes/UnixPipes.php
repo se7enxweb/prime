@@ -118,7 +118,10 @@ class UnixPipes extends AbstractPipes
             $read[$type = array_search($pipe, $this->pipes, true)] = '';
 
             do {
-                $data = fread($pipe, self::CHUNK_SIZE);
+                $data = @fread($pipe, self::CHUNK_SIZE);
+                if (false === $data) {
+                    break;
+                }
                 $read[$type] .= $data;
             } while (isset($data[0]) && ($close || isset($data[self::CHUNK_SIZE - 1])));
 

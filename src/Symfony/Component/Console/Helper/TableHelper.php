@@ -248,7 +248,6 @@ class TableHelper extends Helper
     public function render(OutputInterface $output)
     {
         $p = new \ReflectionProperty($this->table, 'output');
-        $p->setAccessible(true);
         $p->setValue($this->table, $output);
 
         $this->table->render();

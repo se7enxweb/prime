@@ -67,12 +67,12 @@ class RouterMatchCommandTest extends TestCase
         $router
             ->expects($this->any())
             ->method('getRouteCollection')
-            ->will($this->returnValue($routeCollection))
+            ->willReturn($routeCollection)
         ;
         $router
             ->expects($this->any())
             ->method('getContext')
-            ->will($this->returnValue($requestContext))
+            ->willReturn($requestContext)
         ;
 
         $loader = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Routing\DelegatingLoader')
@@ -84,12 +84,12 @@ class RouterMatchCommandTest extends TestCase
             ->expects($this->once())
             ->method('has')
             ->with('router')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $container->method('get')
-            ->will($this->returnValueMap(array(
+            ->willReturnMap(array(
                 array('router', 1, $router),
                 array('controller_name_converter', 1, $loader),
-            )));
+));
 
         return $container;
     }

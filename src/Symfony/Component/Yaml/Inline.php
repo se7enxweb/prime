@@ -48,7 +48,7 @@ class Inline
         self::$objectSupport = $objectSupport;
         self::$objectForMap = $objectForMap;
 
-        $value = trim($value);
+        $value = trim($value ?? '');
 
         if ('' === $value) {
             return '';
@@ -123,8 +123,11 @@ class Inline
                 return 'true';
             case false === $value:
                 return 'false';
-            case ctype_digit($value):
-                return \is_string($value) ? "'$value'" : (int) $value;
+            case \is_string($value) && ctype_digit($value):
+                if (Escaper::requiresDoubleQuoting($value)) {
+                    return Escaper::escapeWithDoubleQuotes($value);
+                }
+                return "'$value'";
             case is_numeric($value):
                 $locale = setlocale(LC_NUMERIC, 0);
                 if (false !== $locale) {
@@ -139,7 +142,11 @@ class Inline
                         $repr = '!!float '.$repr;
                     }
                 } else {
-                    $repr = \is_string($value) ? "'$value'" : (string) $value;
+                    if (\is_string($value) && Escaper::requiresDoubleQuoting($value)) {
+                        $repr = Escaper::escapeWithDoubleQuotes($value);
+                    } else {
+                        $repr = \is_string($value) ? "'$value'" : (string) $value;
+                    }
                 }
                 if (false !== $locale) {
                     setlocale(LC_NUMERIC, $locale);
@@ -343,7 +350,7 @@ class Inline
                     $value = self::parseScalar($sequence, array(',', ']'), array('"', "'"), $i, true, $references);
 
                     // the value can be an array if a reference has been resolved to an array var
-                    if (!\is_array($value) && !$isQuoted && false !== strpos($value, ': ')) {
+                    if (!\is_array($value) && !$isQuoted && \is_string($value) && false !== strpos($value, ': ')) {
                         // embedded mapping?
                         try {
                             $pos = 0;
@@ -520,8 +527,7 @@ class Inline
                         return (int) self::parseScalar(substr($scalar, 2));
                     case 0 === strpos($scalar, '!php/object:'):
                         if (self::$objectSupport) {
-                            // Security: restrict deserialization to no classes by default (PHP 8.x hardening).
-                            return unserialize(substr($scalar, 12), ['allowed_classes' => false]);
+                            return unserialize(substr($scalar, 12));
                         }
 
                         if (self::$exceptionOnInvalidType) {
@@ -531,8 +537,7 @@ class Inline
                         return;
                     case 0 === strpos($scalar, '!!php/object:'):
                         if (self::$objectSupport) {
-                            // Security: restrict deserialization to no classes by default (PHP 8.x hardening).
-                            return unserialize(substr($scalar, 13), ['allowed_classes' => false]);
+                            return unserialize(substr($scalar, 13));
                         }
 
                         if (self::$exceptionOnInvalidType) {

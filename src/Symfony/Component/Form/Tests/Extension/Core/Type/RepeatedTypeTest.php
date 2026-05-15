@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\Form;
 
 class RepeatedTypeTest extends BaseTypeTest
@@ -31,10 +33,7 @@ class RepeatedTypeTest extends BaseTypeTest
         ));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('repeated', array(
             'type' => 'text',

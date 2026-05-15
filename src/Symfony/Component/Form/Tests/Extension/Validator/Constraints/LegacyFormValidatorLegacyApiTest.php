@@ -11,11 +11,13 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Validator\Constraints;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\Validation;
 
+#[Group('legacy')]
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
- * @group  legacy
  */
 class LegacyFormValidatorLegacyApiTest extends FormValidatorTest
 {

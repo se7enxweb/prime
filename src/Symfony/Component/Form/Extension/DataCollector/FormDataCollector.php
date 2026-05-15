@@ -231,7 +231,7 @@ class FormDataCollector extends DataCollector implements FormDataCollectorInterf
         }
     }
 
-    private function recursiveBuildFinalFormTree(?FormInterface $form = null, FormView $view, &$output, array &$outputByHash)
+    private function recursiveBuildFinalFormTree(?FormInterface $form, FormView $view, &$output, array &$outputByHash)
     {
         $viewHash = spl_object_hash($view);
         $formHash = null;

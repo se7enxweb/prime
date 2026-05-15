@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\ChoiceList\Factory;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\ChoiceList\ArrayChoiceList;
 use Symfony\Component\Form\ChoiceList\ChoiceListInterface;
@@ -194,10 +196,7 @@ class DefaultChoiceListFactoryTest extends TestCase
         $this->assertObjectListWithCustomValues($list);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testCreateFromFlippedChoicesEmpty()
+    #[Group('legacy')]    public function testCreateFromFlippedChoicesEmpty()
     {
         $list = $this->factory->createListFromFlippedChoices(array());
 
@@ -205,10 +204,7 @@ class DefaultChoiceListFactoryTest extends TestCase
         $this->assertSame(array(), $list->getValues());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testCreateFromFlippedChoicesFlat()
+    #[Group('legacy')]    public function testCreateFromFlippedChoicesFlat()
     {
         $list = $this->factory->createListFromFlippedChoices(
             array('a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D')
@@ -217,10 +213,7 @@ class DefaultChoiceListFactoryTest extends TestCase
         $this->assertScalarListWithChoiceValues($list);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testCreateFromFlippedChoicesFlatTraversable()
+    #[Group('legacy')]    public function testCreateFromFlippedChoicesFlatTraversable()
     {
         $list = $this->factory->createListFromFlippedChoices(
             new \ArrayIterator(array('a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D'))
@@ -229,10 +222,7 @@ class DefaultChoiceListFactoryTest extends TestCase
         $this->assertScalarListWithChoiceValues($list);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testCreateFromFlippedChoicesFlatValuesAsCallable()
+    #[Group('legacy')]    public function testCreateFromFlippedChoicesFlatValuesAsCallable()
     {
         $list = $this->factory->createListFromFlippedChoices(
             array('a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D'),
@@ -242,10 +232,7 @@ class DefaultChoiceListFactoryTest extends TestCase
         $this->assertScalarListWithCustomValues($list);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testCreateFromFlippedChoicesFlatValuesAsClosure()
+    #[Group('legacy')]    public function testCreateFromFlippedChoicesFlatValuesAsClosure()
     {
         $list = $this->factory->createListFromFlippedChoices(
             array('a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D'),
@@ -262,10 +249,7 @@ class DefaultChoiceListFactoryTest extends TestCase
         $this->assertScalarListWithCustomValues($list);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testCreateFromFlippedChoicesGrouped()
+    #[Group('legacy')]    public function testCreateFromFlippedChoicesGrouped()
     {
         $list = $this->factory->createListFromFlippedChoices(
             array(
@@ -277,10 +261,7 @@ class DefaultChoiceListFactoryTest extends TestCase
         $this->assertScalarListWithChoiceValues($list);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testCreateFromFlippedChoicesGroupedTraversable()
+    #[Group('legacy')]    public function testCreateFromFlippedChoicesGroupedTraversable()
     {
         $list = $this->factory->createListFromFlippedChoices(
             new \ArrayIterator(array(
@@ -292,10 +273,7 @@ class DefaultChoiceListFactoryTest extends TestCase
         $this->assertScalarListWithChoiceValues($list);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testCreateFromFlippedChoicesGroupedValuesAsCallable()
+    #[Group('legacy')]    public function testCreateFromFlippedChoicesGroupedValuesAsCallable()
     {
         $list = $this->factory->createListFromFlippedChoices(
             array(
@@ -308,10 +286,7 @@ class DefaultChoiceListFactoryTest extends TestCase
         $this->assertScalarListWithCustomValues($list);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testCreateFromFlippedChoicesGroupedValuesAsClosure()
+    #[Group('legacy')]    public function testCreateFromFlippedChoicesGroupedValuesAsClosure()
     {
         $list = $this->factory->createListFromFlippedChoices(
             array(
@@ -763,10 +738,7 @@ class DefaultChoiceListFactoryTest extends TestCase
         $this->assertFlatViewWithAttr($view);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testCreateViewForFlatLegacyChoiceList()
+    #[Group('legacy')]    public function testCreateViewForFlatLegacyChoiceList()
     {
         // legacy ChoiceList instances provide legacy ChoiceView objects
         $preferred = array(new LegacyChoiceView('x', 'x', 'Preferred'));
@@ -776,21 +748,18 @@ class DefaultChoiceListFactoryTest extends TestCase
 
         $list->expects($this->once())
             ->method('getPreferredViews')
-            ->will($this->returnValue($preferred));
+            ->willReturn($preferred);
         $list->expects($this->once())
             ->method('getRemainingViews')
-            ->will($this->returnValue($other));
+            ->willReturn($other);
 
-        $view = $this->factory->createView(new LegacyChoiceListAdapter($list));
+$view = $this->factory->createView(new LegacyChoiceListAdapter($list));
 
         $this->assertEquals(array(new ChoiceView('y', 'y', 'Other')), $view->choices);
         $this->assertEquals(array(new ChoiceView('x', 'x', 'Preferred')), $view->preferredChoices);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testCreateViewForNestedLegacyChoiceList()
+    #[Group('legacy')]    public function testCreateViewForNestedLegacyChoiceList()
     {
         // legacy ChoiceList instances provide legacy ChoiceView objects
         $preferred = array('Section 1' => array(new LegacyChoiceView('x', 'x', 'Preferred')));
@@ -803,12 +772,12 @@ class DefaultChoiceListFactoryTest extends TestCase
 
         $list->expects($this->once())
             ->method('getPreferredViews')
-            ->will($this->returnValue($preferred));
+            ->willReturn($preferred);
         $list->expects($this->once())
             ->method('getRemainingViews')
-            ->will($this->returnValue($other));
+            ->willReturn($other);
 
-        $view = $this->factory->createView(new LegacyChoiceListAdapter($list));
+$view = $this->factory->createView(new LegacyChoiceListAdapter($list));
 
         $this->assertEquals(array(
             'Section 2' => array(new ChoiceView('y', 'y', 'Other')),

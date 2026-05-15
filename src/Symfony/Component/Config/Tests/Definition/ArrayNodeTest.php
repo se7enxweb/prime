@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Config\Tests\Definition;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -33,7 +35,7 @@ class ArrayNodeTest extends TestCase
     public function testExceptionThrownOnUnrecognizedChild()
     {
         $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
-        $this->expectExceptionMessage('Unrecognized option \"foo\" under \"root\"');
+        $this->expectExceptionMessage('Unrecognized option "foo" under "root"');
 
         $node = new ArrayNode('root');
         $node->normalize(array('foo' => 'bar'));
@@ -51,18 +53,12 @@ class ArrayNodeTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider ignoreAndRemoveMatrixProvider
-     */
+    #[DataProvider('ignoreAndRemoveMatrixProvider')]
     public function testIgnoreAndRemoveBehaviors($ignore, $remove, $expected, $message = '')
     {
         if ($expected instanceof \Exception) {
-            if (method_exists($this, 'expectException')) {
-                $this->expectException(\get_class($expected));
-                $this->expectExceptionMessage($expected->getMessage());
-            } else {
-                $this->setExpectedException(\get_class($expected), $expected->getMessage());
-            }
+            $this->expectException(\get_class($expected));
+            $this->expectExceptionMessage($expected->getMessage());
         }
         $node = new ArrayNode('root');
         $node->setIgnoreExtraKeys($ignore, $remove);
@@ -70,15 +66,11 @@ class ArrayNodeTest extends TestCase
         $this->assertSame($expected, $result, $message);
     }
 
-    /**
-     * @dataProvider getPreNormalizationTests
-     */
-    public function testPreNormalize($denormalized, $normalized)
+    #[DataProvider('getPreNormalizationTests')]    public function testPreNormalize($denormalized, $normalized)
     {
         $node = new ArrayNode('foo');
 
         $r = new \ReflectionMethod($node, 'preNormalize');
-        $r->setAccessible(true);
 
         $this->assertSame($normalized, $r->invoke($node, $denormalized));
     }
@@ -105,10 +97,7 @@ class ArrayNodeTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getZeroNamedNodeExamplesData
-     */
-    public function testNodeNameCanBeZero($denormalized, $normalized)
+    #[DataProvider('getZeroNamedNodeExamplesData')]    public function testNodeNameCanBeZero($denormalized, $normalized)
     {
         $zeroNode = new ArrayNode(0);
         $zeroNode->addChild(new ScalarNode('name'));
@@ -120,7 +109,6 @@ class ArrayNodeTest extends TestCase
         $rootNode->addChild($fiveNode);
         $rootNode->addChild(new ScalarNode('string_key'));
         $r = new \ReflectionMethod($rootNode, 'normalizeValue');
-        $r->setAccessible(true);
 
         $this->assertSame($normalized, $r->invoke($rootNode, $denormalized));
     }
@@ -153,10 +141,7 @@ class ArrayNodeTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getPreNormalizedNormalizedOrderedData
-     */
-    public function testChildrenOrderIsMaintainedOnNormalizeValue($prenormalized, $normalized)
+    #[DataProvider('getPreNormalizedNormalizedOrderedData')]    public function testChildrenOrderIsMaintainedOnNormalizeValue($prenormalized, $normalized)
     {
         $scalar1 = new ScalarNode('1');
         $scalar2 = new ScalarNode('2');
@@ -167,7 +152,6 @@ class ArrayNodeTest extends TestCase
         $node->addChild($scalar2);
 
         $r = new \ReflectionMethod($node, 'normalizeValue');
-        $r->setAccessible(true);
 
         $this->assertSame($normalized, $r->invoke($node, $prenormalized));
     }
@@ -200,7 +184,7 @@ class ArrayNodeTest extends TestCase
     public function testAddChildNameAlreadyExists()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('A child node named \"foo\" already exists.');
+        $this->expectExceptionMessage('A child node named "foo" already exists.');
 
         $node = new ArrayNode('root');
 
@@ -216,7 +200,7 @@ class ArrayNodeTest extends TestCase
     public function testGetDefaultValueWithoutDefaultValue()
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('The node at path \"foo\" has no default value.');
+        $this->expectExceptionMessage('The node at path "foo" has no default value.');
 
         $node = new ArrayNode('foo');
         $node->getDefaultValue();

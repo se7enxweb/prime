@@ -11,14 +11,7 @@
 
 namespace Symfony\Bundle\SecurityBundle\Tests\Functional;
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\SecurityBundle\Command\InitAclCommand;
 use Symfony\Bundle\SecurityBundle\Command\SetAclCommand;
@@ -29,11 +22,11 @@ use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Exception\NoAceFoundException;
 use Symfony\Component\Security\Acl\Permission\BasicPermissionMap;
 
+#[RequiresPhpExtension('pdo_sqlite')]
 /**
  * Tests SetAclCommand.
  *
  * @author Kévin Dunglas <kevin@les-tilleuls.coop>
- * @requires extension pdo_sqlite
  */
 class SetAclCommandTest extends WebTestCase
 {
@@ -68,9 +61,9 @@ class SetAclCommandTest extends WebTestCase
         $aclProvider = $application->getKernel()->getContainer()->get('security.acl.provider');
         $acl = $aclProvider->findAcl($objectIdentity, array($securityIdentity1));
 
-        $this->assertTrue($acl->isGranted($permissionMap->getMasks($grantedPermission1, null), array($securityIdentity1)));
-        $this->assertTrue($acl->isGranted($permissionMap->getMasks($grantedPermission1, null), array($securityIdentity2)));
-        $this->assertTrue($acl->isGranted($permissionMap->getMasks($grantedPermission2, null), array($securityIdentity2)));
+        $this->assertTrue($acl->isGranted($permissionMap->getMasks($grantedPermission1, ''), array($securityIdentity1)));
+        $this->assertTrue($acl->isGranted($permissionMap->getMasks($grantedPermission1, ''), array($securityIdentity2)));
+        $this->assertTrue($acl->isGranted($permissionMap->getMasks($grantedPermission2, ''), array($securityIdentity2)));
 
         try {
             $acl->isGranted($permissionMap->getMasks('OWNER', null), array($securityIdentity1));
@@ -112,8 +105,8 @@ class SetAclCommandTest extends WebTestCase
         $aclProvider = $application->getKernel()->getContainer()->get('security.acl.provider');
         $acl = $aclProvider->findAcl($objectIdentity, array($roleSecurityIdentity, $userSecurityIdentity));
 
-        $this->assertTrue($acl->isGranted($permissionMap->getMasks($grantedPermission, null), array($roleSecurityIdentity)));
-        $this->assertTrue($acl->isGranted($permissionMap->getMasks($grantedPermission, null), array($roleSecurityIdentity)));
+        $this->assertTrue($acl->isGranted($permissionMap->getMasks($grantedPermission, ''), array($roleSecurityIdentity)));
+        $this->assertTrue($acl->isGranted($permissionMap->getMasks($grantedPermission, ''), array($roleSecurityIdentity)));
 
         try {
             $acl->isGranted($permissionMap->getMasks('VIEW', null), array($userSecurityIdentity));
@@ -155,10 +148,10 @@ class SetAclCommandTest extends WebTestCase
         $aclProvider = $application->getKernel()->getContainer()->get('security.acl.provider');
 
         $acl1 = $aclProvider->findAcl($objectIdentity1, array($roleSecurityIdentity));
-        $this->assertTrue($acl1->isGranted($permissionMap->getMasks($grantedPermission, null), array($roleSecurityIdentity)));
+        $this->assertTrue($acl1->isGranted($permissionMap->getMasks($grantedPermission, ''), array($roleSecurityIdentity)));
 
         $acl2 = $aclProvider->createAcl($objectIdentity2);
-        $this->assertTrue($acl2->isGranted($permissionMap->getMasks($grantedPermission, null), array($roleSecurityIdentity)));
+        $this->assertTrue($acl2->isGranted($permissionMap->getMasks($grantedPermission, ''), array($roleSecurityIdentity)));
     }
 
     private function getApplication()

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints\Regex;
 
@@ -61,10 +63,7 @@ class RegexTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideHtmlPatterns
-     */
-    public function testGetHtmlPattern($pattern, $htmlPattern, $match = true)
+    #[DataProvider('provideHtmlPatterns')]    public function testGetHtmlPattern($pattern, $htmlPattern, $match = true)
     {
         $constraint = new Regex(array(
             'pattern' => $pattern,

@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\DomCrawler\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -83,10 +86,7 @@ class CrawlerTest extends TestCase
         $this->assertEquals('http://symfony.com/contact', $crawler->filterXPath('//a')->link()->getUri(), '->addHtmlContent() adds nodes from an HTML string');
     }
 
-    /**
-     * @requires extension mbstring
-     */
-    public function testAddHtmlContentCharset()
+    #[RequiresPhpExtension('mbstring')]    public function testAddHtmlContentCharset()
     {
         $crawler = new Crawler();
         $crawler->addHtmlContent('<html><div class="foo">Tiếng Việt</html>', 'UTF-8');
@@ -111,10 +111,7 @@ class CrawlerTest extends TestCase
         $this->assertEquals('Žťčýů', $crawler->filterXPath('//p')->text());
     }
 
-    /**
-     * @requires extension mbstring
-     */
-    public function testAddHtmlContentCharsetGbk()
+    #[RequiresPhpExtension('mbstring')]    public function testAddHtmlContentCharsetGbk()
     {
         $crawler = new Crawler();
         //gbk encode of <html><p>中文</p></html>
@@ -218,10 +215,7 @@ EOF
         $this->assertEquals('中文', $crawler->filterXPath('//span')->text(), '->addContent() guess wrong charset');
     }
 
-    /**
-     * @requires extension iconv
-     */
-    public function testAddContentNonUtf8()
+    #[RequiresPhpExtension('iconv')]    public function testAddContentNonUtf8()
     {
         $crawler = new Crawler();
         $crawler->addContent(iconv('UTF-8', 'SJIS', '<html><head><meta charset="Shift_JIS"></head><body>日本語</body></html>'));
@@ -492,9 +486,7 @@ EOF
         $this->assertCount(0, $crawler->filterXPath('.'), '->filterXPath() returns an empty result if the XPath references the fake root node');
         $this->assertCount(0, $crawler->filterXPath('self::*'), '->filterXPath() returns an empty result if the XPath references the fake root node');
         $this->assertCount(0, $crawler->filterXPath('self::_root'), '->filterXPath() returns an empty result if the XPath references the fake root node');
-    }
-
-    /** @group legacy */
+    }    #[Group('legacy')]
     public function testLegacyFilterXPathWithFakeRoot()
     {
         $crawler = $this->createTestCrawler();
@@ -978,10 +970,7 @@ HTML;
         }
     }
 
-    /**
-     * @dataProvider getBaseTagData
-     */
-    public function testBaseTag($baseValue, $linkValue, $expectedUri, $currentUri = null, $description = null)
+    #[DataProvider('getBaseTagData')]    public function testBaseTag($baseValue, $linkValue, $expectedUri, $currentUri = null, $description = '')
     {
         $crawler = new Crawler('<html><base href="'.$baseValue.'"><a href="'.$linkValue.'"></a></html>', $currentUri);
         $this->assertEquals($expectedUri, $crawler->filterXPath('//a')->link()->getUri(), $description);
@@ -998,10 +987,7 @@ HTML;
         );
     }
 
-    /**
-     * @dataProvider getBaseTagWithFormData
-     */
-    public function testBaseTagWithForm($baseValue, $actionValue, $expectedUri, $currentUri = null, $description = null)
+    #[DataProvider('getBaseTagWithFormData')]    public function testBaseTagWithForm($baseValue, $actionValue, $expectedUri, $currentUri = null, $description = '')
     {
         $crawler = new Crawler('<html><base href="'.$baseValue.'"><form method="post" action="'.$actionValue.'"><button type="submit" name="submit"/></form></html>', $currentUri);
         $this->assertEquals($expectedUri, $crawler->filterXPath('//button')->form()->getUri(), $description);

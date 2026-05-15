@@ -27,6 +27,7 @@ class TestHttpKernel extends HttpKernel implements ControllerResolverInterface
     protected $customizer;
     protected $catch = false;
     protected $backendRequest;
+    protected $trustedHeadersReflector;
 
     public function __construct($body, $status, $headers, ?\Closure $customizer = null)
     {
@@ -35,7 +36,6 @@ class TestHttpKernel extends HttpKernel implements ControllerResolverInterface
         $this->headers = $headers;
         $this->customizer = $customizer;
         $this->trustedHeadersReflector = new \ReflectionProperty('Symfony\Component\HttpFoundation\Request', 'trustedHeaders');
-        $this->trustedHeadersReflector->setAccessible(true);
 
         parent::__construct(new EventDispatcher(), $this);
     }

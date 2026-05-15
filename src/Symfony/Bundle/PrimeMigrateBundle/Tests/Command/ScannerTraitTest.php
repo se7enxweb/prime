@@ -10,6 +10,8 @@
 
 namespace Symfony\Bundle\PrimeMigrateBundle\Tests\Command;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\PrimeMigrateBundle\Command\ScannerTrait;
 
@@ -85,10 +87,10 @@ class ScannerTraitTest extends TestCase
     // scanNullable — positive (should be flagged)
     // ════════════════════════════════════════════════════════════════════════
 
+    #[DataProvider('provideNullablePositive')]
     /**
-     * @dataProvider provideNullablePositive
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('provideNullablePositive')]
+
     public function testScanNullableDetects(string $code, int $expectedCount): void
     {
         $issues = Scanner::scanNullable($code);
@@ -143,10 +145,10 @@ class ScannerTraitTest extends TestCase
     // scanNullable — negative (should NOT be flagged)
     // ════════════════════════════════════════════════════════════════════════
 
+    #[DataProvider('provideNullableNegative')]
     /**
-     * @dataProvider provideNullableNegative
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('provideNullableNegative')]
+
     public function testScanNullableIgnores(string $code): void
     {
         $issues = Scanner::scanNullable($code);
@@ -308,10 +310,10 @@ class ScannerTraitTest extends TestCase
     // scanForms
     // ════════════════════════════════════════════════════════════════════════
 
+    #[DataProvider('provideFormPositive')]
     /**
-     * @dataProvider provideFormPositive
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('provideFormPositive')]
+
     public function testScanFormsDetects(string $code, string $expectedAlias): void
     {
         $issues = Scanner::scanForms($code);
@@ -333,10 +335,10 @@ class ScannerTraitTest extends TestCase
         ];
     }
 
+    #[DataProvider('provideFormNegative')]
     /**
-     * @dataProvider provideFormNegative
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('provideFormNegative')]
+
     public function testScanFormsIgnores(string $code): void
     {
         $issues = Scanner::scanForms($code);
@@ -647,10 +649,10 @@ class ScannerTraitTest extends TestCase
     // scanConstraints
     // ════════════════════════════════════════════════════════════════════════
 
+    #[DataProvider('provideConstraintPositive')]
     /**
-     * @dataProvider provideConstraintPositive
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('provideConstraintPositive')]
+
     public function testScanConstraintsDetects(string $code, string $oldName, string $newName): void
     {
         $issues = Scanner::scanConstraints($code);
@@ -673,10 +675,10 @@ class ScannerTraitTest extends TestCase
         ];
     }
 
+    #[DataProvider('provideConstraintNegative')]
     /**
-     * @dataProvider provideConstraintNegative
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('provideConstraintNegative')]
+
     public function testScanConstraintsIgnores(string $code): void
     {
         $issues = Scanner::scanConstraints($code);
@@ -780,10 +782,10 @@ class ScannerTraitTest extends TestCase
     // scanTwig
     // ════════════════════════════════════════════════════════════════════════
 
+    #[DataProvider('provideTwigPositive')]
     /**
-     * @dataProvider provideTwigPositive
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('provideTwigPositive')]
+
     public function testScanTwigDetects(string $code, string $expectedClass): void
     {
         $issues = Scanner::scanTwig($code);
@@ -813,10 +815,10 @@ class ScannerTraitTest extends TestCase
         ];
     }
 
+    #[DataProvider('provideTwigNegative')]
     /**
-     * @dataProvider provideTwigNegative
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('provideTwigNegative')]
+
     public function testScanTwigIgnores(string $code): void
     {
         $issues = Scanner::scanTwig($code);

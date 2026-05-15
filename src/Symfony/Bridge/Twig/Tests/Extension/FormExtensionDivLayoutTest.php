@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\Twig\Tests\Extension;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
@@ -135,11 +137,7 @@ class FormExtensionDivLayoutTest extends AbstractDivLayoutTest
             array(false, 0, array(1, 'foo', 'foo10')),
         );
     }
-
-    /**
-     * @dataProvider isSelectedChoiceProvider
-     */
-    public function testIsChoiceSelected($expected, $choice, $value)
+    #[DataProvider('isSelectedChoiceProvider')]    public function testIsChoiceSelected($expected, $choice, $value)
     {
         $choice = new ChoiceView($choice, $choice, $choice.' label');
 
@@ -177,11 +175,7 @@ class FormExtensionDivLayoutTest extends AbstractDivLayoutTest
             array(false, new FormView(new FormView())),
         );
     }
-
-    /**
-     * @dataProvider isRootFormProvider
-     */
-    public function testIsRootForm($expected, FormView $formView)
+    #[DataProvider('isRootFormProvider')]    public function testIsRootForm($expected, FormView $formView)
     {
         $this->assertSame($expected, $this->extension->isRootForm($formView));
     }

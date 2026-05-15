@@ -11,11 +11,13 @@
 
 namespace Symfony\Component\Translation\Tests\Catalogue;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Translation\Catalogue\DiffOperation;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class DiffOperationTest extends TargetOperationTest
 {

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Routing\Tests\Matcher\Dumper;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
 use Symfony\Component\Routing\Matcher\RedirectableUrlMatcherInterface;
@@ -73,7 +75,7 @@ class PhpMatcherDumperTest extends TestCase
         $class = $this->generateDumpedMatcher($collection, true);
 
         $matcher = $this->getMockBuilder($class)
-                        ->setMethods(array('redirect'))
+                        ->onlyMethods(array('redirect'))
                         ->setConstructorArgs(array(new RequestContext()))
                         ->getMock();
 
@@ -82,10 +84,7 @@ class PhpMatcherDumperTest extends TestCase
         $matcher->match('/foo%3Abar');
     }
 
-    /**
-     * @dataProvider getRouteCollections
-     */
-    public function testDump(RouteCollection $collection, $fixture, $options = array())
+    #[DataProvider('getRouteCollections')]    public function testDump(RouteCollection $collection, $fixture, $options = array())
     {
         $basePath = __DIR__.'/../../Fixtures/dumper/';
 

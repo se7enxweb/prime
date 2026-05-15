@@ -11,20 +11,16 @@
 
 namespace Symfony\Component\Security\Core\Tests\Resources;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class TranslationFilesTest extends TestCase
 {
-    /**
-     * @dataProvider provideTranslationFiles
-     */
-    public function testTranslationFileIsValid($filePath)
+    #[DataProvider('provideTranslationFiles')]    public function testTranslationFileIsValid($filePath)
     {
-        if (class_exists('PHPUnit_Util_XML')) {
-            \PHPUnit_Util_XML::loadfile($filePath, false, false, true);
-        } else {
-            \PHPUnit\Util\XML::loadfile($filePath, false, false, true);
-        }
+        $doc = new \DOMDocument();
+            $this->assertTrue($doc->load($filePath), sprintf('"%s" is not a valid XML file.', $filePath));
 
         $this->addToAssertionCount(1);
     }

@@ -33,7 +33,7 @@ class FakeMetadataFactory implements MetadataFactoryInterface
         }
 
         if (!isset($this->metadatas[$class])) {
-            if (isset($this->metadatas[$hash])) {
+            if (null !== $hash && isset($this->metadatas[$hash])) {
                 return $this->metadatas[$hash];
             }
 
@@ -56,7 +56,7 @@ class FakeMetadataFactory implements MetadataFactoryInterface
             return false;
         }
 
-        return isset($this->metadatas[$class]) || isset($this->metadatas[$hash]);
+        return isset($this->metadatas[$class]) || (null !== $hash && isset($this->metadatas[$hash]));
     }
 
     public function addMetadata($metadata)

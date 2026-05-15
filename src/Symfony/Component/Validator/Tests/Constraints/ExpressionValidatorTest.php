@@ -264,11 +264,11 @@ class ExpressionValidatorTest extends AbstractConstraintValidatorTest
         $used = false;
 
         $expressionLanguage->method('evaluate')
-            ->will($this->returnCallback(function () use (&$used) {
+            ->willReturnCallback(function () use (&$used) {
                 $used = true;
 
                 return true;
-            }));
+            });
 
         $validator = new ExpressionValidator(null, $expressionLanguage);
         $validator->initialize($this->createContext());

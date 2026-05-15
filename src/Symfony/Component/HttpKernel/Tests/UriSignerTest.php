@@ -20,8 +20,8 @@ class UriSignerTest extends TestCase
     {
         $signer = new UriSigner('foobar');
 
-        $this->assertContains('?_hash=', $signer->sign('http://example.com/foo'));
-        $this->assertContains('&_hash=', $signer->sign('http://example.com/foo?foo=bar'));
+        $this->assertStringContainsString('?_hash=', $signer->sign('http://example.com/foo'));
+        $this->assertStringContainsString('&_hash=', $signer->sign('http://example.com/foo?foo=bar'));
     }
 
     public function testCheck()
@@ -41,7 +41,7 @@ class UriSignerTest extends TestCase
 
     public function testCheckWithDifferentArgSeparator()
     {
-        $this->iniSet('arg_separator.output', '&amp;');
+        ini_set('arg_separator.output', '&amp;');
         $signer = new UriSigner('foobar');
 
         $this->assertSame(
@@ -49,5 +49,6 @@ class UriSignerTest extends TestCase
             $signer->sign('http://example.com/foo?foo=bar&baz=bay')
         );
         $this->assertTrue($signer->check($signer->sign('http://example.com/foo?foo=bar&baz=bay')));
+        ini_restore('arg_separator.output');
     }
 }

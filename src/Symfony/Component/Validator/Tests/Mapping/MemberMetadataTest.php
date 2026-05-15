@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Mapping;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Mapping\MemberMetadata;
@@ -36,10 +38,7 @@ class MemberMetadataTest extends TestCase
         $this->metadata = null;
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyAddValidSetsMemberToCascaded()
+    #[Group('legacy')]    public function testLegacyAddValidSetsMemberToCascaded()
     {
         $result = $this->metadata->addConstraint(new Valid());
 
@@ -48,10 +47,7 @@ class MemberMetadataTest extends TestCase
         $this->assertTrue($this->metadata->isCascaded());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyAddOtherConstraintDoesNotSetMemberToCascaded()
+    #[Group('legacy')]    public function testLegacyAddOtherConstraintDoesNotSetMemberToCascaded()
     {
         $result = $this->metadata->addConstraint($constraint = new ConstraintA());
 
@@ -62,7 +58,7 @@ class MemberMetadataTest extends TestCase
 
     public function testAddConstraintRequiresClassConstraints()
     {
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('Symfony\Component\Validator\Exception\ConstraintDefinitionException');
+        $this->expectException('Symfony\Component\Validator\Exception\ConstraintDefinitionException');
 
         $this->metadata->addConstraint(new ClassConstraint());
     }
@@ -86,10 +82,7 @@ class MemberMetadataTest extends TestCase
         $this->assertEquals($this->metadata, $metadata);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacySerializeCollectionCascadedDeeply()
+    #[Group('legacy')]    public function testLegacySerializeCollectionCascadedDeeply()
     {
         $this->metadata->addConstraint(new Valid(array('traverse' => true)));
 

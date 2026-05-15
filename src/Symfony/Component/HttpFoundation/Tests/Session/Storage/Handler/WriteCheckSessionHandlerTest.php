@@ -28,10 +28,10 @@ class WriteCheckSessionHandlerTest extends TestCase
             ->expects($this->once())
             ->method('close')
             ->with()
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
-        $this->assertTrue($writeCheckSessionHandler->close());
+$this->assertTrue($writeCheckSessionHandler->close());
     }
 
     public function testWrite()
@@ -43,10 +43,10 @@ class WriteCheckSessionHandlerTest extends TestCase
             ->expects($this->once())
             ->method('write')
             ->with('foo', 'bar')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
-        $this->assertTrue($writeCheckSessionHandler->write('foo', 'bar'));
+$this->assertTrue($writeCheckSessionHandler->write('foo', 'bar'));
     }
 
     public function testSkippedWrite()
@@ -58,7 +58,7 @@ class WriteCheckSessionHandlerTest extends TestCase
             ->expects($this->once())
             ->method('read')
             ->with('foo')
-            ->will($this->returnValue('bar'))
+            ->willReturn('bar')
         ;
 
         $wrappedSessionHandlerMock
@@ -66,8 +66,8 @@ class WriteCheckSessionHandlerTest extends TestCase
             ->method('write')
         ;
 
-        $this->assertEquals('bar', $writeCheckSessionHandler->read('foo'));
-        $this->assertTrue($writeCheckSessionHandler->write('foo', 'bar'));
+$this->assertEquals('bar', $writeCheckSessionHandler->read('foo'));
+$this->assertTrue($writeCheckSessionHandler->write('foo', 'bar'));
     }
 
     public function testNonSkippedWrite()
@@ -79,17 +79,17 @@ class WriteCheckSessionHandlerTest extends TestCase
             ->expects($this->once())
             ->method('read')
             ->with('foo')
-            ->will($this->returnValue('bar'))
+            ->willReturn('bar')
         ;
 
         $wrappedSessionHandlerMock
             ->expects($this->once())
             ->method('write')
             ->with('foo', 'baZZZ')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
-        $this->assertEquals('bar', $writeCheckSessionHandler->read('foo'));
-        $this->assertTrue($writeCheckSessionHandler->write('foo', 'baZZZ'));
+$this->assertEquals('bar', $writeCheckSessionHandler->read('foo'));
+$this->assertTrue($writeCheckSessionHandler->write('foo', 'baZZZ'));
     }
 }

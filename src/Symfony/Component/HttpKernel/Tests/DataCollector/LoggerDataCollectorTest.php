@@ -11,28 +11,27 @@
 
 namespace Symfony\Component\HttpKernel\Tests\DataCollector;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\DataCollector\LoggerDataCollector;
 
 class LoggerDataCollectorTest extends TestCase
 {
-    /**
-     * @dataProvider getCollectTestData
-     */
-    public function testCollect($nb, $logs, $expectedLogs, $expectedDeprecationCount, $expectedScreamCount, $expectedPriorities = null)
+    #[DataProvider('getCollectTestData')]    public function testCollect($nb, $logs, $expectedLogs, $expectedDeprecationCount, $expectedScreamCount, $expectedPriorities = null)
     {
         $logger = $this->getMockBuilder('Symfony\Component\HttpKernel\Log\DebugLoggerInterface')->getMock();
-        $logger->expects($this->once())->method('countErrors')->will($this->returnValue($nb));
-        $logger->expects($this->exactly(2))->method('getLogs')->will($this->returnValue($logs));
+        $logger->expects($this->once())->method('countErrors')->willReturn($nb);
+        $logger->expects($this->exactly(2))->method('getLogs')->willReturn($logs);
 
         $c = new LoggerDataCollector($logger);
         $c->lateCollect();
 
-        $this->assertSame('logger', $c->getName());
-        $this->assertSame($nb, $c->countErrors());
-        $this->assertSame($expectedLogs ?: $logs, $c->getLogs());
-        $this->assertSame($expectedDeprecationCount, $c->countDeprecations());
-        $this->assertSame($expectedScreamCount, $c->countScreams());
+$this->assertSame('logger', $c->getName());
+$this->assertSame($nb, $c->countErrors());
+$this->assertSame($expectedLogs ?: $logs, $c->getLogs());
+$this->assertSame($expectedDeprecationCount, $c->countDeprecations());
+$this->assertSame($expectedScreamCount, $c->countScreams());
 
         if (isset($expectedPriorities)) {
             $this->assertSame($expectedPriorities, $c->getPriorities());

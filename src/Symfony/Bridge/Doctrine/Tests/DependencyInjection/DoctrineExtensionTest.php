@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\Doctrine\Tests\DependencyInjection;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -32,7 +34,7 @@ class DoctrineExtensionTest extends TestCase
 
         $this->extension = $this
             ->getMockBuilder('Symfony\Bridge\Doctrine\DependencyInjection\AbstractDoctrineExtension')
-            ->setMethods(array(
+            ->onlyMethods(array(
                 'getMappingResourceConfigDirectory',
                 'getObjectManagerElementName',
                 'getMappingObjectDefaultName',
@@ -44,9 +46,9 @@ class DoctrineExtensionTest extends TestCase
 
         $this->extension->expects($this->any())
             ->method('getObjectManagerElementName')
-            ->will($this->returnCallback(function ($name) {
+            ->willReturnCallback(function ($name) {
                 return 'doctrine.orm.'.$name;
-            }));
+            });
     }
 
     /**
@@ -71,7 +73,6 @@ class DoctrineExtensionTest extends TestCase
 
         $reflection = new \ReflectionClass(\get_class($this->extension));
         $method = $reflection->getMethod('fixManagersAutoMappings');
-        $method->setAccessible(true);
 
         $method->invoke($this->extension, $emConfigs, $bundles);
     }
@@ -142,11 +143,7 @@ class DoctrineExtensionTest extends TestCase
             ),
         );
     }
-
-    /**
-     * @dataProvider getAutomappingData
-     */
-    public function testFixManagersAutoMappings(array $originalEm1, array $originalEm2, array $expectedEm1, array $expectedEm2)
+    #[DataProvider('getAutomappingData')]    public function testFixManagersAutoMappings(array $originalEm1, array $originalEm2, array $expectedEm1, array $expectedEm2)
     {
         $emConfigs = array(
             'em1' => $originalEm1,
@@ -160,7 +157,6 @@ class DoctrineExtensionTest extends TestCase
 
         $reflection = new \ReflectionClass(\get_class($this->extension));
         $method = $reflection->getMethod('fixManagersAutoMappings');
-        $method->setAccessible(true);
 
         $newEmConfigs = $method->invoke($this->extension, $emConfigs, $bundles);
 
@@ -185,12 +181,11 @@ class DoctrineExtensionTest extends TestCase
             array('doctrine.orm.cache.memcached.class', array('type' => 'memcached'), array('setMemcached')),
         );
     }
-
+    #[DataProvider('providerBasicDrivers')]
     /**
      * @param string $class
      * @param array  $config
      *
-     * @dataProvider providerBasicDrivers
      */
     public function testLoadBasicCacheDriver($class, array $config, array $expectedCalls = array())
     {
@@ -245,7 +240,7 @@ class DoctrineExtensionTest extends TestCase
     public function testUnrecognizedCacheDriverException()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('\"unrecognized_type\" is an unrecognized Doctrine cache driver.');
+        $this->expectExceptionMessage('"unrecognized_type" is an unrecognized Doctrine cache driver.');
 
         $cacheName = 'metadata_cache';
         $container = $this->createContainer();
@@ -263,7 +258,6 @@ class DoctrineExtensionTest extends TestCase
     {
         $method = new \ReflectionMethod($this->extension, 'loadObjectManagerCacheDriver');
 
-        $method->setAccessible(true);
 
         $method->invokeArgs($this->extension, array($objectManager, $container, $cacheName));
     }

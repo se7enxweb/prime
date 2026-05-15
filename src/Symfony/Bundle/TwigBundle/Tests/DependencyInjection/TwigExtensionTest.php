@@ -11,6 +11,10 @@
 
 namespace Symfony\Bundle\TwigBundle\Tests\DependencyInjection;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
 use Symfony\Bundle\TwigBundle\Tests\TestCase;
 use Symfony\Component\Config\FileLocator;
@@ -23,9 +27,9 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class TwigExtensionTest extends TestCase
 {
+    #[DataProvider('getFormats')]
+    #[Group('legacy')]
     /**
-     * @dataProvider getFormats
-     * @group legacy
      */
     public function testLegacyFormResourcesConfigurationKey($format)
     {
@@ -41,9 +45,9 @@ class TwigExtensionTest extends TestCase
         $this->assertContains('MyBundle:Form:my_theme.html.twig', $container->getParameter('twig.form.resources'));
     }
 
+    #[DataProvider('getFormats')]
+    #[Group('legacy')]
     /**
-     * @dataProvider getFormats
-     * @group legacy
      */
     public function testLegacyMergeFormResourcesConfigurationKeyWithFormThemesConfigurationKey($format)
     {
@@ -77,10 +81,7 @@ class TwigExtensionTest extends TestCase
         $this->assertEquals('%kernel.debug%', $options['debug'], '->load() sets default value for debug option');
     }
 
-    /**
-     * @dataProvider getFormats
-     */
-    public function testLoadFullConfiguration($format)
+    #[DataProvider('getFormats')]    public function testLoadFullConfiguration($format)
     {
         $container = $this->createContainer();
         $container->registerExtension(new TwigExtension());
@@ -122,10 +123,7 @@ class TwigExtensionTest extends TestCase
         $this->assertTrue($options['strict_variables'], '->load() sets the strict_variables option');
     }
 
-    /**
-     * @dataProvider getFormats
-     */
-    public function testLoadCustomTemplateEscapingGuesserConfiguration($format)
+    #[DataProvider('getFormats')]    public function testLoadCustomTemplateEscapingGuesserConfiguration($format)
     {
         $container = $this->createContainer();
         $container->registerExtension(new TwigExtension());
@@ -136,10 +134,7 @@ class TwigExtensionTest extends TestCase
         $this->assertEquals(array(new Reference('my_project.some_bundle.template_escaping_guesser'), 'guess'), $options['autoescape']);
     }
 
-    /**
-     * @dataProvider getFormats
-     */
-    public function testLoadDefaultTemplateEscapingGuesserConfiguration($format)
+    #[DataProvider('getFormats')]    public function testLoadDefaultTemplateEscapingGuesserConfiguration($format)
     {
         $container = $this->createContainer();
         $container->registerExtension(new TwigExtension());
@@ -150,10 +145,7 @@ class TwigExtensionTest extends TestCase
         $this->assertEquals('name', $options['autoescape']);
     }
 
-    /**
-     * @dataProvider getFormats
-     */
-    public function testLoadCustomDateFormats($fileFormat)
+    #[DataProvider('getFormats')]    public function testLoadCustomDateFormats($fileFormat)
     {
         $container = $this->createContainer();
         $container->registerExtension(new TwigExtension());
@@ -197,10 +189,7 @@ class TwigExtensionTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider getFormats
-     */
-    public function testTwigLoaderPaths($format)
+    #[DataProvider('getFormats')]    public function testTwigLoaderPaths($format)
     {
         $container = $this->createContainer();
         $container->registerExtension(new TwigExtension());
@@ -251,10 +240,7 @@ class TwigExtensionTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider stopwatchExtensionAvailabilityProvider
-     */
-    public function testStopwatchExtensionAvailability($debug, $stopwatchEnabled, $expected)
+    #[DataProvider('stopwatchExtensionAvailabilityProvider')]    public function testStopwatchExtensionAvailability($debug, $stopwatchEnabled, $expected)
     {
         $container = $this->createContainer();
         $container->setParameter('kernel.debug', $debug);
@@ -267,7 +253,6 @@ class TwigExtensionTest extends TestCase
 
         $tokenParsers = $container->get('twig.extension.debug.stopwatch')->getTokenParsers();
         $stopwatchIsAvailable = new \ReflectionProperty($tokenParsers[0], 'stopwatchIsAvailable');
-        $stopwatchIsAvailable->setAccessible(true);
 
         $this->assertSame($expected, $stopwatchIsAvailable->getValue($tokenParsers[0]));
     }

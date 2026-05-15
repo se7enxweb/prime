@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints\GroupSequence;
 
@@ -33,30 +35,21 @@ class GroupSequenceTest extends TestCase
         $this->assertSame(array('Group 1', 'Group 2'), $sequence->groups);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyIterate()
+    #[Group('legacy')]    public function testLegacyIterate()
     {
         $sequence = new GroupSequence(array('Group 1', 'Group 2'));
 
         $this->assertSame(array('Group 1', 'Group 2'), iterator_to_array($sequence));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyCount()
+    #[Group('legacy')]    public function testLegacyCount()
     {
         $sequence = new GroupSequence(array('Group 1', 'Group 2'));
 
         $this->assertCount(2, $sequence);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyArrayAccess()
+    #[Group('legacy')]    public function testLegacyArrayAccess()
     {
         $sequence = new GroupSequence(array('Group 1', 'Group 2'));
 
@@ -74,10 +67,7 @@ class GroupSequenceTest extends TestCase
         $this->assertSame('Group 1', $sequence[0]);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyGetExpectsExistingKey()
+    #[Group('legacy')]    public function testLegacyGetExpectsExistingKey()
     {
         $this->expectException(\Symfony\Component\Validator\Exception\OutOfBoundsException::class);
 
@@ -86,10 +76,7 @@ class GroupSequenceTest extends TestCase
         $sequence[2];
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyUnsetIgnoresNonExistingKeys()
+    #[Group('legacy')]    public function testLegacyUnsetIgnoresNonExistingKeys()
     {
         $sequence = new GroupSequence(array('Group 1', 'Group 2'));
 

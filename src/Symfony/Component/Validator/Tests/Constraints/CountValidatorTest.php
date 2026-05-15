@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\CountValidator;
 use Symfony\Component\Validator\Validation;
@@ -30,7 +32,7 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
         return new CountValidator();
     }
 
-    abstract protected function createCollection(array $content);
+    abstract protected static function createCollection(array $content);
 
     public function testNullIsValid()
     {
@@ -51,34 +53,31 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
     public static function getThreeOrLessElements()
     {
         return array(
-            array($this->createCollection(array(1))),
-            array($this->createCollection(array(1, 2))),
-            array($this->createCollection(array(1, 2, 3))),
-            array($this->createCollection(array('a' => 1, 'b' => 2, 'c' => 3))),
+            array(static::createCollection(array(1))),
+            array(static::createCollection(array(1, 2))),
+            array(static::createCollection(array(1, 2, 3))),
+            array(static::createCollection(array('a' => 1, 'b' => 2, 'c' => 3))),
         );
     }
 
     public static function getFourElements()
     {
         return array(
-            array($this->createCollection(array(1, 2, 3, 4))),
-            array($this->createCollection(array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4))),
+            array(static::createCollection(array(1, 2, 3, 4))),
+            array(static::createCollection(array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4))),
         );
     }
 
     public static function getFiveOrMoreElements()
     {
         return array(
-            array($this->createCollection(array(1, 2, 3, 4, 5))),
-            array($this->createCollection(array(1, 2, 3, 4, 5, 6))),
-            array($this->createCollection(array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5))),
+            array(static::createCollection(array(1, 2, 3, 4, 5))),
+            array(static::createCollection(array(1, 2, 3, 4, 5, 6))),
+            array(static::createCollection(array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5))),
         );
     }
 
-    /**
-     * @dataProvider getThreeOrLessElements
-     */
-    public function testValidValuesMax($value)
+    #[DataProvider('getThreeOrLessElements')]    public function testValidValuesMax($value)
     {
         $constraint = new Count(array('max' => 3));
         $this->validator->validate($value, $constraint);
@@ -86,10 +85,7 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getFiveOrMoreElements
-     */
-    public function testValidValuesMin($value)
+    #[DataProvider('getFiveOrMoreElements')]    public function testValidValuesMin($value)
     {
         $constraint = new Count(array('min' => 5));
         $this->validator->validate($value, $constraint);
@@ -97,10 +93,7 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getFourElements
-     */
-    public function testValidValuesExact($value)
+    #[DataProvider('getFourElements')]    public function testValidValuesExact($value)
     {
         $constraint = new Count(4);
         $this->validator->validate($value, $constraint);
@@ -108,10 +101,7 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getFiveOrMoreElements
-     */
-    public function testTooManyValues($value)
+    #[DataProvider('getFiveOrMoreElements')]    public function testTooManyValues($value)
     {
         $constraint = new Count(array(
             'max' => 4,
@@ -129,10 +119,7 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    /**
-     * @dataProvider getThreeOrLessElements
-     */
-    public function testTooFewValues($value)
+    #[DataProvider('getThreeOrLessElements')]    public function testTooFewValues($value)
     {
         $constraint = new Count(array(
             'min' => 4,
@@ -150,10 +137,7 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    /**
-     * @dataProvider getFiveOrMoreElements
-     */
-    public function testTooManyValuesExact($value)
+    #[DataProvider('getFiveOrMoreElements')]    public function testTooManyValuesExact($value)
     {
         $constraint = new Count(array(
             'min' => 4,
@@ -172,10 +156,7 @@ abstract class CountValidatorTest extends AbstractConstraintValidatorTest
             ->assertRaised();
     }
 
-    /**
-     * @dataProvider getThreeOrLessElements
-     */
-    public function testTooFewValuesExact($value)
+    #[DataProvider('getThreeOrLessElements')]    public function testTooFewValuesExact($value)
     {
         $constraint = new Count(array(
             'min' => 4,

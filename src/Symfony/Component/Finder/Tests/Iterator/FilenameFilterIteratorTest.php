@@ -11,14 +11,13 @@
 
 namespace Symfony\Component\Finder\Tests\Iterator;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Finder\Iterator\FilenameFilterIterator;
 
 class FilenameFilterIteratorTest extends IteratorTestCase
 {
-    /**
-     * @dataProvider getAcceptData
-     */
-    public function testAccept($matchPatterns, $noMatchPatterns, $expected)
+    #[DataProvider('getAcceptData')]    public function testAccept($matchPatterns, $noMatchPatterns, $expected)
     {
         $inner = new InnerNameIterator(array('test.php', 'test.py', 'foo.php'));
 

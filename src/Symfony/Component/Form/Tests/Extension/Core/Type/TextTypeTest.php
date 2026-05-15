@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 class TextTypeTest extends BaseTypeTest
 {
     const TESTED_TYPE = 'Symfony\Component\Form\Extension\Core\Type\TextType';
@@ -20,10 +24,7 @@ class TextTypeTest extends BaseTypeTest
         parent::testSubmitNull($expected, $norm, '');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('text');
 
@@ -50,8 +51,8 @@ class TextTypeTest extends BaseTypeTest
         );
     }
 
+    #[DataProvider('provideZeros')]
     /**
-     * @dataProvider provideZeros
      *
      * @see https://github.com/symfony/symfony/issues/1986
      */

@@ -260,8 +260,8 @@ abstract class AbstractProfilerStorageTest extends TestCase
 
         $tokens = $this->getStorage()->find('', '', 10, '');
         $this->assertCount(2, $tokens);
-        $this->assertContains($tokens[0]['status_code'], array(200, 404));
-        $this->assertContains($tokens[1]['status_code'], array(200, 404));
+        $this->assertContains((int) $tokens[0]['status_code'], array(200, 404));
+        $this->assertContains((int) $tokens[1]['status_code'], array(200, 404));
     }
 
     /**

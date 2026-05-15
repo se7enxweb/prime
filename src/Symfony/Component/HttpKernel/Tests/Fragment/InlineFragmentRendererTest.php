@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class InlineFragmentRendererTest extends TestCase
 {
-    private $originalTrustedHeaderName;
+    private $originalTrustedHeaderNames;
 
     protected function setUp(): void
     {
@@ -40,16 +40,16 @@ class InlineFragmentRendererTest extends TestCase
 
     public function testRender()
     {
-        $strategy = new InlineFragmentRenderer($this->getKernel($this->returnValue(new Response('foo'))));
+        $strategy = new InlineFragmentRenderer($this->getKernel(fn() => new Response('foo')));
 
-        $this->assertEquals('foo', $strategy->render('/', Request::create('/'))->getContent());
+$this->assertEquals('foo', $strategy->render('/', Request::create('/'))->getContent());
     }
 
     public function testRenderWithControllerReference()
     {
-        $strategy = new InlineFragmentRenderer($this->getKernel($this->returnValue(new Response('foo'))));
+$strategy = new InlineFragmentRenderer($this->getKernel(fn() => new Response('foo')));
 
-        $this->assertEquals('foo', $strategy->render(new ControllerReference('main_controller', array(), array()), Request::create('/'))->getContent());
+$this->assertEquals('foo', $strategy->render(new ControllerReference('main_controller', array(), array()), Request::create('/'))->getContent());
     }
 
     public function testRenderWithObjectsAsAttributes()
@@ -57,7 +57,7 @@ class InlineFragmentRendererTest extends TestCase
         $object = new \stdClass();
 
         $subRequest = Request::create('/_fragment?_path=_format%3Dhtml%26_locale%3Den%26_controller%3Dmain_controller');
-        $subRequest->attributes->replace(array('object' => $object, '_format' => 'html', '_controller' => 'main_controller', '_locale' => 'en'));
+$subRequest->attributes->replace(array('object' => $object, '_format' => 'html', '_controller' => 'main_controller', '_locale' => 'en'));
         $subRequest->headers->set('x-forwarded-for', array('127.0.0.1'));
         $subRequest->headers->set('forwarded', array('for="127.0.0.1";host="localhost";proto=http'));
         $subRequest->server->set('HTTP_X_FORWARDED_FOR', '127.0.0.1');
@@ -70,20 +70,21 @@ class InlineFragmentRendererTest extends TestCase
 
     public function testRenderWithObjectsAsAttributesPassedAsObjectsInTheController()
     {
-        $resolver = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Controller\\ControllerResolver')->setMethods(array('getController'))->getMock();
+        $resolver = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Controller\\ControllerResolver')->onlyMethods(array('getController'))->getMock();
         $resolver
             ->expects($this->once())
             ->method('getController')
-            ->will($this->returnValue(function (\stdClass $object, Bar $object1) {
-                return new Response($object1->getBar());
-            }))
+            ->willReturn(function (\stdClass $object, Bar $object1) {
+return new Response($object1->getBar());
+            })
+
         ;
 
         $kernel = new HttpKernel(new EventDispatcher(), $resolver);
         $renderer = new InlineFragmentRenderer($kernel);
 
-        $response = $renderer->render(new ControllerReference('main_controller', array('object' => new \stdClass(), 'object1' => new Bar()), array()), Request::create('/'));
-        $this->assertEquals('bar', $response->getContent());
+$response = $renderer->render(new ControllerReference('main_controller', array('object' => new \stdClass(), 'object1' => new Bar()), array()), Request::create('/'));
+$this->assertEquals('bar', $response->getContent());
     }
 
     public function testRenderWithTrustedHeaderDisabled()
@@ -108,9 +109,9 @@ class InlineFragmentRendererTest extends TestCase
         $dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')->getMock();
         $dispatcher->expects($this->never())->method('dispatch');
 
-        $strategy = new InlineFragmentRenderer($this->getKernel($this->throwException(new \RuntimeException('foo'))), $dispatcher);
+        $strategy = new InlineFragmentRenderer($this->getKernel(fn() => throw new \RuntimeException('foo')), $dispatcher);
 
-        $this->assertEquals('foo', $strategy->render('/', Request::create('/'))->getContent());
+$this->assertEquals('foo', $strategy->render('/', Request::create('/'))->getContent());
     }
 
     public function testRenderExceptionIgnoreErrors()
@@ -118,28 +119,31 @@ class InlineFragmentRendererTest extends TestCase
         $dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')->getMock();
         $dispatcher->expects($this->once())->method('dispatch')->with(KernelEvents::EXCEPTION);
 
-        $strategy = new InlineFragmentRenderer($this->getKernel($this->throwException(new \RuntimeException('foo'))), $dispatcher);
+        $strategy = new InlineFragmentRenderer($this->getKernel(fn() => throw new \RuntimeException('foo')), $dispatcher);
 
-        $this->assertEmpty($strategy->render('/', Request::create('/'), array('ignore_errors' => true))->getContent());
+$this->assertEmpty($strategy->render('/', Request::create('/'), array('ignore_errors' => true))->getContent());
     }
 
     public function testRenderExceptionIgnoreErrorsWithAlt()
     {
-        $strategy = new InlineFragmentRenderer($this->getKernel($this->onConsecutiveCalls(
-            $this->throwException(new \RuntimeException('foo')),
-            $this->returnValue(new Response('bar'))
-        )));
+$callCount = 0;
+        $strategy = new InlineFragmentRenderer($this->getKernel(function () use (&$callCount) {
+            if ($callCount++ === 0) {
+                throw new \RuntimeException('foo');
+            }
+            return new Response('bar');
+        }));
 
-        $this->assertEquals('bar', $strategy->render('/', Request::create('/'), array('ignore_errors' => true, 'alt' => '/foo'))->getContent());
+$this->assertEquals('bar', $strategy->render('/', Request::create('/'), array('ignore_errors' => true, 'alt' => '/foo'))->getContent());
     }
 
-    private function getKernel($returnValue)
+    private function getKernel(callable $callback)
     {
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
         $kernel
             ->expects($this->any())
             ->method('handle')
-            ->will($returnValue)
+            ->willReturnCallback($callback)
         ;
 
         return $kernel;
@@ -151,16 +155,17 @@ class InlineFragmentRendererTest extends TestCase
         $resolver
             ->expects($this->once())
             ->method('getController')
-            ->will($this->returnValue(function () {
+            ->willReturn(function () {
                 ob_start();
                 echo 'bar';
                 throw new \RuntimeException();
-            }))
+            })
+
         ;
         $resolver
             ->expects($this->once())
             ->method('getArguments')
-            ->will($this->returnValue(array()))
+            ->willReturn(array())
         ;
 
         $kernel = new HttpKernel(new EventDispatcher(), $resolver);

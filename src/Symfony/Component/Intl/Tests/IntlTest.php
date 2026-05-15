@@ -11,15 +11,14 @@
 
 namespace Symfony\Component\Intl\Tests;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Intl\Intl;
 
 class IntlTest extends TestCase
 {
-    /**
-     * @requires extension intl
-     */
-    public function testIsExtensionLoadedChecksIfIntlExtensionIsLoaded()
+    #[RequiresPhpExtension('intl')]    public function testIsExtensionLoadedChecksIfIntlExtensionIsLoaded()
     {
         $this->assertTrue(Intl::isExtensionLoaded());
     }
@@ -64,10 +63,7 @@ class IntlTest extends TestCase
         $this->assertTrue(is_dir(Intl::getDataDirectory()));
     }
 
-    /**
-     * @requires extension intl
-     */
-    public function testLocaleAliasesAreLoaded()
+    #[RequiresPhpExtension('intl')]    public function testLocaleAliasesAreLoaded()
     {
         \Locale::setDefault('zh_TW');
         $countryNameZhTw = Intl::getRegionBundle()->getCountryName('AD');

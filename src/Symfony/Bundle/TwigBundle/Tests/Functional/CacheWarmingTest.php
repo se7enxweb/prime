@@ -20,6 +20,8 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class CacheWarmingTest extends TestCase
 {
+    private $previousExceptionHandler;
+
     public function testCacheIsProperlyWarmedWhenTemplatingIsAvailable()
     {
         $kernel = new CacheWarmingKernel(true);
@@ -47,11 +49,21 @@ class CacheWarmingTest extends TestCase
     protected function setUp(): void
     {
         $this->deleteTempDir();
+        $this->previousExceptionHandler = set_exception_handler(function () {});
+        restore_exception_handler();
     }
 
     protected function tearDown(): void
     {
         $this->deleteTempDir();
+        for ($i = 0; $i < 20; $i++) {
+            $current = set_exception_handler(null);
+            restore_exception_handler();
+            if ($current === $this->previousExceptionHandler) {
+                break;
+            }
+            restore_exception_handler();
+        }
     }
 
     private function deleteTempDir()

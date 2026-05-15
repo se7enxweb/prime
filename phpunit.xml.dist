@@ -43,6 +43,7 @@
       <exclude>./src/Symfony/Component/Form/Tests/Extension/Core/Type/BaseTypeTest.php</exclude>
       <exclude>./src/Symfony/Component/Form/Tests/Extension/Validator/Type/BaseValidatorExtensionTest.php</exclude>
       <exclude>./src/Symfony/Component/HttpKernel/Tests/Profiler/AbstractProfilerStorageTest.php</exclude>
+      <exclude>./src/Symfony/Component/HttpKernel/Tests/Fixtures/KernelForTest.php</exclude>
       <exclude>./src/Symfony/Component/Intl/Tests/Collator/AbstractCollatorTest.php</exclude>
       <exclude>./src/Symfony/Component/Intl/Tests/Data/Provider/AbstractCurrencyDataProviderTest.php</exclude>
       <exclude>./src/Symfony/Component/Intl/Tests/Data/Provider/AbstractDataProviderTest.php</exclude>
@@ -59,6 +60,7 @@
       <exclude>./src/Symfony/Component/Routing/Tests/Loader/AbstractAnnotationLoaderTest.php</exclude>
       <exclude>./src/Symfony/Component/Security/Core/Tests/Validator/Constraints/UserPasswordValidatorTest.php</exclude>
       <exclude>./src/Symfony/Component/Translation/Tests/Catalogue/AbstractOperationTest.php</exclude>
+      <exclude>./src/Symfony/Component/VarDumper/Tests/Test/VarDumperTestTraitTest.php</exclude>
       <exclude>./src/Symfony/Component/Validator/Tests/Constraints/AbstractConstraintValidatorTest.php</exclude>
       <exclude>./src/Symfony/Component/Validator/Tests/Constraints/CollectionValidatorTest.php</exclude>
       <exclude>./src/Symfony/Component/Validator/Tests/Constraints/CountValidatorTest.php</exclude>

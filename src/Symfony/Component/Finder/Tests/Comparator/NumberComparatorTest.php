@@ -11,15 +11,14 @@
 
 namespace Symfony\Component\Finder\Tests\Comparator;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Comparator\NumberComparator;
 
 class NumberComparatorTest extends TestCase
 {
-    /**
-     * @dataProvider getConstructorTestData
-     */
-    public function testConstructor($successes, $failures)
+    #[DataProvider('getConstructorTestData')]    public function testConstructor($successes, $failures)
     {
         foreach ($successes as $s) {
             new NumberComparator($s);
@@ -35,10 +34,7 @@ class NumberComparatorTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider getTestData
-     */
-    public function testTest($test, $match, $noMatch)
+    #[DataProvider('getTestData')]    public function testTest($test, $match, $noMatch)
     {
         $c = new NumberComparator($test);
 

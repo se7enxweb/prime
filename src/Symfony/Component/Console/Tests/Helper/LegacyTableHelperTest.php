@@ -11,12 +11,16 @@
 
 namespace Symfony\Component\Console\Tests\Helper;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Helper\TableHelper;
 use Symfony\Component\Console\Output\StreamOutput;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyTableHelperTest extends TestCase
 {
@@ -33,10 +37,7 @@ class LegacyTableHelperTest extends TestCase
         $this->stream = null;
     }
 
-    /**
-     * @dataProvider renderProvider
-     */
-    public function testRender($headers, $rows, $layout, $expected)
+    #[DataProvider('renderProvider')]    public function testRender($headers, $rows, $layout, $expected)
     {
         $table = new TableHelper();
         $table
@@ -49,10 +50,7 @@ class LegacyTableHelperTest extends TestCase
         $this->assertEquals($expected, $this->getOutputContent($output));
     }
 
-    /**
-     * @dataProvider renderProvider
-     */
-    public function testRenderAddRows($headers, $rows, $layout, $expected)
+    #[DataProvider('renderProvider')]    public function testRenderAddRows($headers, $rows, $layout, $expected)
     {
         $table = new TableHelper();
         $table
@@ -65,10 +63,7 @@ class LegacyTableHelperTest extends TestCase
         $this->assertEquals($expected, $this->getOutputContent($output));
     }
 
-    /**
-     * @dataProvider renderProvider
-     */
-    public function testRenderAddRowsOneByOne($headers, $rows, $layout, $expected)
+    #[DataProvider('renderProvider')]    public function testRenderAddRowsOneByOne($headers, $rows, $layout, $expected)
     {
         $table = new TableHelper();
         $table

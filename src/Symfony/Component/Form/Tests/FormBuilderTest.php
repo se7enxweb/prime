@@ -49,13 +49,13 @@ class FormBuilderTest extends TestCase
 
     public function testAddNameNoStringAndNoInteger()
     {
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('Symfony\Component\Form\Exception\UnexpectedTypeException');
+        $this->expectException('Symfony\Component\Form\Exception\UnexpectedTypeException');
         $this->builder->add(true);
     }
 
     public function testAddTypeNoString()
     {
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('Symfony\Component\Form\Exception\UnexpectedTypeException');
+        $this->expectException('Symfony\Component\Form\Exception\UnexpectedTypeException');
         $this->builder->add('foo', 1234);
     }
 
@@ -91,15 +91,15 @@ class FormBuilderTest extends TestCase
         $this->factory->expects($this->once())
             ->method('createNamedBuilder')
             ->with('foo', 'Symfony\Component\Form\Extension\Core\Type\TextType')
-            ->will($this->returnValue(new FormBuilder('foo', null, $this->dispatcher, $this->factory)));
+            ->willReturn(new FormBuilder('foo', null, $this->dispatcher, $this->factory));
 
-        $this->assertCount(0, $this->builder->all());
-        $this->assertFalse($this->builder->has('foo'));
+$this->assertCount(0, $this->builder->all());
+$this->assertFalse($this->builder->has('foo'));
 
         $this->builder->add('foo', 'Symfony\Component\Form\Extension\Core\Type\TextType');
         $children = $this->builder->all();
 
-        $this->assertTrue($this->builder->has('foo'));
+$this->assertTrue($this->builder->has('foo'));
         $this->assertCount(1, $children);
         $this->assertArrayHasKey('foo', $children);
     }
@@ -171,7 +171,8 @@ class FormBuilderTest extends TestCase
             $this->expectException('Symfony\Component\Form\Exception\InvalidArgumentException');
             $this->expectExceptionMessage('The child with the name "foo" does not exist.');
         } else {
-            $this->setExpectedException('Symfony\Component\Form\Exception\InvalidArgumentException', 'The child with the name "foo" does not exist.');
+            $this->expectException('Symfony\Component\Form\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The child with the name "foo" does not exist.');
         }
 
         $this->builder->get('foo');
@@ -186,7 +187,7 @@ class FormBuilderTest extends TestCase
         $this->factory->expects($this->once())
             ->method('createNamedBuilder')
             ->with($expectedName, $expectedType, null, $expectedOptions)
-            ->will($this->returnValue($this->getFormBuilder()));
+            ->willReturn($this->getFormBuilder());
 
         $this->builder->add($expectedName, $expectedType, $expectedOptions);
         $builder = $this->builder->get($expectedName);
@@ -202,7 +203,7 @@ class FormBuilderTest extends TestCase
         $this->factory->expects($this->once())
             ->method('createBuilderForProperty')
             ->with('stdClass', $expectedName, null, $expectedOptions)
-            ->will($this->returnValue($this->getFormBuilder()));
+            ->willReturn($this->getFormBuilder());
 
         $this->builder = new FormBuilder('name', 'stdClass', $this->dispatcher, $this->factory);
         $this->builder->add($expectedName, null, $expectedOptions);
@@ -221,8 +222,6 @@ class FormBuilderTest extends TestCase
         $children = $reflClass->getProperty('children');
         $unresolvedChildren = $reflClass->getProperty('unresolvedChildren');
 
-        $children->setAccessible(true);
-        $unresolvedChildren->setAccessible(true);
 
         $this->assertEmpty($children->getValue($config));
         $this->assertEmpty($unresolvedChildren->getValue($config));
@@ -236,7 +235,7 @@ class FormBuilderTest extends TestCase
 
         $mock->expects($this->any())
             ->method('getName')
-            ->will($this->returnValue($name));
+            ->willReturn($name);
 
         return $mock;
     }

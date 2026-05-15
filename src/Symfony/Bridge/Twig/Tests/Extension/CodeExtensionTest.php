@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\Twig\Tests\Extension;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Extension\CodeExtension;
 
@@ -23,19 +25,11 @@ class CodeExtensionTest extends TestCase
         $expected = sprintf('<a href="txmt://open?url=file://%s&amp;line=25" title="Click to open this file" class="file_link">%s at line 25</a>', __FILE__, __FILE__);
         $this->assertEquals($expected, $this->getExtension()->formatFile(__FILE__, 25));
     }
-
-    /**
-     * @dataProvider getClassNameProvider
-     */
-    public function testGettingClassAbbreviation($class, $abbr)
+    #[DataProvider('getClassNameProvider')]    public function testGettingClassAbbreviation($class, $abbr)
     {
         $this->assertEquals($this->getExtension()->abbrClass($class), $abbr);
     }
-
-    /**
-     * @dataProvider getMethodNameProvider
-     */
-    public function testGettingMethodAbbreviation($method, $abbr)
+    #[DataProvider('getMethodNameProvider')]    public function testGettingMethodAbbreviation($method, $abbr)
     {
         $this->assertEquals($this->getExtension()->abbrMethod($method), $abbr);
     }

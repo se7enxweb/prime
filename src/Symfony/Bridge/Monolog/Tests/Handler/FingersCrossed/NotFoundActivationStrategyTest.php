@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\Monolog\Tests\Handler\FingersCrossed;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Monolog\Handler\FingersCrossed\NotFoundActivationStrategy;
@@ -20,10 +22,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class NotFoundActivationStrategyTest extends TestCase
 {
-    /**
-     * @dataProvider isActivatedProvider
-     */
-    public function testIsActivated($url, $record, $expected)
+    #[DataProvider('isActivatedProvider')]    public function testIsActivated($url, $record, $expected)
     {
         $requestStack = new RequestStack();
         $requestStack->push(Request::create($url));
@@ -37,18 +36,18 @@ class NotFoundActivationStrategyTest extends TestCase
     {
         return array(
             array('/test',      array('level' => Logger::DEBUG), false),
-            array('/foo',       array('level' => Logger::DEBUG, 'context' => $this->getContextException(404)), false),
-            array('/baz/bar',   array('level' => Logger::ERROR, 'context' => $this->getContextException(404)), false),
-            array('/foo',       array('level' => Logger::ERROR, 'context' => $this->getContextException(404)), false),
-            array('/foo',       array('level' => Logger::ERROR, 'context' => $this->getContextException(500)), true),
+            array('/foo',       array('level' => Logger::DEBUG, 'context' => self::getContextException(404)), false),
+            array('/baz/bar',   array('level' => Logger::ERROR, 'context' => self::getContextException(404)), false),
+            array('/foo',       array('level' => Logger::ERROR, 'context' => self::getContextException(404)), false),
+            array('/foo',       array('level' => Logger::ERROR, 'context' => self::getContextException(500)), true),
 
             array('/test',      array('level' => Logger::ERROR), true),
-            array('/baz',       array('level' => Logger::ERROR, 'context' => $this->getContextException(404)), true),
-            array('/baz',       array('level' => Logger::ERROR, 'context' => $this->getContextException(500)), true),
+            array('/baz',       array('level' => Logger::ERROR, 'context' => self::getContextException(404)), true),
+            array('/baz',       array('level' => Logger::ERROR, 'context' => self::getContextException(500)), true),
         );
     }
 
-    protected function getContextException($code)
+    protected static function getContextException($code)
     {
         return array('exception' => new HttpException($code));
     }

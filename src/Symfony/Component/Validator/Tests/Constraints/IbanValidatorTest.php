@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\Constraints\Iban;
 use Symfony\Component\Validator\Constraints\IbanValidator;
 use Symfony\Component\Validator\Validation;
@@ -41,10 +43,7 @@ class IbanValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getValidIbans
-     */
-    public function testValidIbans($iban)
+    #[DataProvider('getValidIbans')]    public function testValidIbans($iban)
     {
         $this->validator->validate($iban, new Iban());
 
@@ -164,10 +163,7 @@ class IbanValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getIbansWithInvalidFormat
-     */
-    public function testIbansWithInvalidFormat($iban)
+    #[DataProvider('getIbansWithInvalidFormat')]    public function testIbansWithInvalidFormat($iban)
     {
         $this->assertViolationRaised($iban, Iban::INVALID_FORMAT_ERROR);
     }
@@ -282,10 +278,7 @@ class IbanValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getIbansWithValidFormatButIncorrectChecksum
-     */
-    public function testIbansWithValidFormatButIncorrectChecksum($iban)
+    #[DataProvider('getIbansWithValidFormatButIncorrectChecksum')]    public function testIbansWithValidFormatButIncorrectChecksum($iban)
     {
         $this->assertViolationRaised($iban, Iban::CHECKSUM_FAILED_ERROR);
     }
@@ -393,10 +386,7 @@ class IbanValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getUnsupportedCountryCodes
-     */
-    public function testIbansWithUnsupportedCountryCode($countryCode)
+    #[DataProvider('getUnsupportedCountryCodes')]    public function testIbansWithUnsupportedCountryCode($countryCode)
     {
         $this->assertViolationRaised($countryCode.'260211000000230064016', Iban::NOT_SUPPORTED_COUNTRY_CODE_ERROR);
     }
@@ -417,10 +407,7 @@ class IbanValidatorTest extends AbstractConstraintValidatorTest
         $this->assertViolationRaised('CH930076201162385295]', Iban::INVALID_CHARACTERS_ERROR);
     }
 
-    /**
-     * @dataProvider getIbansWithInvalidCountryCode
-     */
-    public function testIbansWithInvalidCountryCode($iban)
+    #[DataProvider('getIbansWithInvalidCountryCode')]    public function testIbansWithInvalidCountryCode($iban)
     {
         $this->assertViolationRaised($iban, Iban::INVALID_COUNTRY_CODE_ERROR);
     }

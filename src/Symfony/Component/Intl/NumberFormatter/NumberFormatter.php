@@ -354,9 +354,7 @@ class NumberFormatter
     {
         // The original NumberFormatter does not support this format type
         if (self::TYPE_CURRENCY == $type) {
-            trigger_error(__METHOD__.'(): Unsupported format type '.$type, \E_USER_WARNING);
-
-            return false;
+            throw new \ValueError(__METHOD__.'(): Argument #2 ($type) cannot be NumberFormatter::TYPE_CURRENCY constant, use NumberFormatter::formatCurrency() method instead');
         }
 
         if (self::CURRENCY == $this->style) {
@@ -508,9 +506,7 @@ class NumberFormatter
     public function parse($value, $type = self::TYPE_DOUBLE, &$position = 0)
     {
         if (self::TYPE_DEFAULT == $type || self::TYPE_CURRENCY == $type) {
-            trigger_error(__METHOD__.'(): Unsupported format type '.$type, \E_USER_WARNING);
-
-            return false;
+            throw new \ValueError(__METHOD__.'(): Argument #2 ($type) must be a NumberFormatter::TYPE_* constant');
         }
 
         $groupSep = $this->getAttribute(self::GROUPING_USED) ? ',' : '';

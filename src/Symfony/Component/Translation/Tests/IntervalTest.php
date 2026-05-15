@@ -11,15 +11,14 @@
 
 namespace Symfony\Component\Translation\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\Interval;
 
 class IntervalTest extends TestCase
 {
-    /**
-     * @dataProvider getTests
-     */
-    public function testTest($expected, $number, $interval)
+    #[DataProvider('getTests')]    public function testTest($expected, $number, $interval)
     {
         $this->assertEquals($expected, Interval::test($number, $interval));
     }

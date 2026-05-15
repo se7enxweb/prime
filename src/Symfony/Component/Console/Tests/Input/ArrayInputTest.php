@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Console\Tests\Input;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -55,10 +57,7 @@ class ArrayInputTest extends TestCase
         $this->assertEquals(array('name' => 'foo'), $input->getArguments(), '->parse() parses required arguments');
     }
 
-    /**
-     * @dataProvider provideOptions
-     */
-    public function testParseOptions($input, $options, $expectedOptions, $message)
+    #[DataProvider('provideOptions')]    public function testParseOptions($input, $options, $expectedOptions, $message)
     {
         $input = new ArrayInput($input, new InputDefinition($options));
 
@@ -95,16 +94,14 @@ class ArrayInputTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideInvalidInput
-     */
-    public function testParseInvalidInput($parameters, $definition, $expectedExceptionMessage)
+    #[DataProvider('provideInvalidInput')]    public function testParseInvalidInput($parameters, $definition, $expectedExceptionMessage)
     {
         if (method_exists($this, 'expectException')) {
             $this->expectException('InvalidArgumentException');
             $this->expectExceptionMessage($expectedExceptionMessage);
         } else {
-            $this->setExpectedException('InvalidArgumentException', $expectedExceptionMessage);
+            $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage($expectedExceptionMessage);
         }
 
         new ArrayInput($parameters, $definition);

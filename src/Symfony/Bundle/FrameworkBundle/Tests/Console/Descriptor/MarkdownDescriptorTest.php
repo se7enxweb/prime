@@ -20,7 +20,7 @@ class MarkdownDescriptorTest extends AbstractDescriptorTest
         return new MarkdownDescriptor();
     }
 
-    protected function getFormat()
+    protected static function getFormat()
     {
         return 'md';
     }

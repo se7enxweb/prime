@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\PropertyAccess\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PropertyAccess\PropertyPath;
 
@@ -54,10 +56,7 @@ class PropertyPathTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider providePathsContainingUnexpectedCharacters
-     */
-    public function testUnexpectedCharacters($path)
+    #[DataProvider('providePathsContainingUnexpectedCharacters')]    public function testUnexpectedCharacters($path)
     {
         $this->expectException(\Symfony\Component\PropertyAccess\Exception\InvalidPropertyPathException::class);
 

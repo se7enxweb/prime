@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\Doctrine\Tests\Form\ChoiceList;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityChoiceList;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\SingleAssociationToIntIdEntity;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdNoToStringEntity;
@@ -18,13 +20,12 @@ use Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdNoToStringEntity;
 if (!class_exists('Symfony\Component\Form\Tests\Extension\Core\ChoiceList\AbstractChoiceListTest')) {
     return;
 }
-
+    #[Group('legacy')]
 /**
  * Test choices generated from an entity with a primary foreign key.
  *
  * @author Premi Giorgio <giosh94mhz@gmail.com>
  * @author Bernhard Schussek <bschussek@gmail.com>
- * @group legacy
  */
 abstract class AbstractEntityChoiceListSingleAssociationToIntIdTest extends AbstractEntityChoiceListTest
 {

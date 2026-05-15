@@ -11,18 +11,19 @@
 
 namespace Symfony\Component\Finder\Tests\Expression;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Expression\Expression;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class GlobTest extends TestCase
 {
-    /**
-     * @dataProvider getToRegexData
-     */
-    public function testGlobToRegex($glob, $match, $noMatch)
+    #[DataProvider('getToRegexData')]    public function testGlobToRegex($glob, $match, $noMatch)
     {
         foreach ($match as $m) {
             $this->assertMatchesRegularExpression(Expression::create($glob)->getRegex()->render(), $m, '::toRegex() converts a glob to a regexp');

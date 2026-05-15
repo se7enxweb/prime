@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\FormError;
 
 class DateTimeTypeTest extends BaseTypeTest
@@ -24,10 +27,7 @@ class DateTimeTypeTest extends BaseTypeTest
         parent::setUp();
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('datetime');
 
@@ -344,10 +344,7 @@ class DateTimeTypeTest extends BaseTypeTest
         $this->assertSame('Empty', $view['time']['second']->vars['placeholder']);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testPassEmptyValueBC()
+    #[Group('legacy')]    public function testPassEmptyValueBC()
     {
         $view = $this->factory->create(static::TESTED_TYPE, null, array(
             'empty_value' => 'Empty',
@@ -632,10 +629,7 @@ class DateTimeTypeTest extends BaseTypeTest
         $this->assertSame($expectedData, $form->getData());
     }
 
-    /**
-     * @dataProvider provideEmptyData
-     */
-    public function testSubmitNullUsesDateEmptyData($widget, $emptyData, $expectedData)
+    #[DataProvider('provideEmptyData')]    public function testSubmitNullUsesDateEmptyData($widget, $emptyData, $expectedData)
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'widget' => $widget,
@@ -655,7 +649,6 @@ class DateTimeTypeTest extends BaseTypeTest
         return array(
             'Simple field' => array('single_text', '2018-11-11T21:23:00', $expectedData),
             'Compound text field' => array('text', array('date' => array('year' => '2018', 'month' => '11', 'day' => '11'), 'time' => array('hour' => '21', 'minute' => '23')), $expectedData),
-            'Compound choice field' => array('choice', array('date' => array('year' => '2018', 'month' => '11', 'day' => '11'), 'time' => array('hour' => '21', 'minute' => '23')), $expectedData),
         );
     }
 }

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Intl\Tests\NumberFormatter;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Intl\Globals\IntlGlobals;
 use Symfony\Component\Intl\NumberFormatter\NumberFormatter;
 
@@ -92,60 +94,42 @@ class NumberFormatterTest extends AbstractNumberFormatterTest
         parent::testFormatWithCurrencyStyle();
     }
 
-    /**
-     * @dataProvider formatTypeInt32Provider
-     */
-    public function testFormatTypeInt32($formatter, $value, $expected, $message = '')
+    #[DataProvider('formatTypeInt32Provider')]    public function testFormatTypeInt32($formatter, $value, $expected, $message = '')
     {
         $this->expectException(\Symfony\Component\Intl\Exception\MethodArgumentValueNotImplementedException::class);
 
         parent::testFormatTypeInt32($formatter, $value, $expected, $message);
     }
 
-    /**
-     * @dataProvider formatTypeInt32WithCurrencyStyleProvider
-     */
-    public function testFormatTypeInt32WithCurrencyStyle($formatter, $value, $expected, $message = '')
+    #[DataProvider('formatTypeInt32WithCurrencyStyleProvider')]    public function testFormatTypeInt32WithCurrencyStyle($formatter, $value, $expected, $message = '')
     {
         $this->expectException(\Symfony\Component\Intl\Exception\NotImplementedException::class);
 
         parent::testFormatTypeInt32WithCurrencyStyle($formatter, $value, $expected, $message);
     }
 
-    /**
-     * @dataProvider formatTypeInt64Provider
-     */
-    public function testFormatTypeInt64($formatter, $value, $expected)
+    #[DataProvider('formatTypeInt64Provider')]    public function testFormatTypeInt64($formatter, $value, $expected)
     {
         $this->expectException(\Symfony\Component\Intl\Exception\MethodArgumentValueNotImplementedException::class);
 
         parent::testFormatTypeInt64($formatter, $value, $expected);
     }
 
-    /**
-     * @dataProvider formatTypeInt64WithCurrencyStyleProvider
-     */
-    public function testFormatTypeInt64WithCurrencyStyle($formatter, $value, $expected)
+    #[DataProvider('formatTypeInt64WithCurrencyStyleProvider')]    public function testFormatTypeInt64WithCurrencyStyle($formatter, $value, $expected)
     {
         $this->expectException(\Symfony\Component\Intl\Exception\NotImplementedException::class);
 
         parent::testFormatTypeInt64WithCurrencyStyle($formatter, $value, $expected);
     }
 
-    /**
-     * @dataProvider formatTypeDoubleProvider
-     */
-    public function testFormatTypeDouble($formatter, $value, $expected)
+    #[DataProvider('formatTypeDoubleProvider')]    public function testFormatTypeDouble($formatter, $value, $expected)
     {
         $this->expectException(\Symfony\Component\Intl\Exception\MethodArgumentValueNotImplementedException::class);
 
         parent::testFormatTypeDouble($formatter, $value, $expected);
     }
 
-    /**
-     * @dataProvider formatTypeDoubleWithCurrencyStyleProvider
-     */
-    public function testFormatTypeDoubleWithCurrencyStyle($formatter, $value, $expected)
+    #[DataProvider('formatTypeDoubleWithCurrencyStyleProvider')]    public function testFormatTypeDoubleWithCurrencyStyle($formatter, $value, $expected)
     {
         $this->expectException(\Symfony\Component\Intl\Exception\NotImplementedException::class);
 
@@ -208,7 +192,7 @@ class NumberFormatterTest extends AbstractNumberFormatterTest
         $formatter->setTextAttribute(null, null);
     }
 
-    protected function getNumberFormatter($locale = 'en', $style = null, $pattern = null)
+    protected static function getNumberFormatter($locale = 'en', $style = null, $pattern = null)
     {
         return new NumberFormatter($locale, $style, $pattern);
     }

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Util;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Util\StringUtil;
 
@@ -23,10 +25,7 @@ class StringUtilTest extends TestCase
         $this->assertEquals('Foo!', StringUtil::trim($data));
     }
 
-    /**
-     * @dataProvider spaceProvider
-     */
-    public function testTrimUtf8Separators($hex)
+    #[DataProvider('spaceProvider')]    public function testTrimUtf8Separators($hex)
     {
         // Convert hexadecimal representation into binary
         // H: hex string, high nibble first (UCS-2BE)
@@ -76,10 +75,7 @@ class StringUtilTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider fqcnToBlockPrefixProvider
-     */
-    public function testFqcnToBlockPrefix($fqcn, $expectedBlockPrefix)
+    #[DataProvider('fqcnToBlockPrefixProvider')]    public function testFqcnToBlockPrefix($fqcn, $expectedBlockPrefix)
     {
         $blockPrefix = StringUtil::fqcnToBlockPrefix($fqcn);
 

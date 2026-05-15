@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Intl\Util\IntlTestHelper;
 use Symfony\Component\Validator\Constraints\Currency;
 use Symfony\Component\Validator\Constraints\CurrencyValidator;
@@ -51,18 +53,15 @@ class CurrencyValidatorTest extends AbstractConstraintValidatorTest
         $this->validator->validate(new \stdClass(), new Currency());
     }
 
-    /**
-     * @dataProvider getValidCurrencies
-     */
-    public function testValidCurrencies($currency)
+    #[DataProvider('getValidCurrencies')]    public function testValidCurrencies($currency)
     {
         $this->validator->validate($currency, new Currency());
 
         $this->assertNoViolation();
     }
 
+    #[DataProvider('getValidCurrencies')]
     /**
-     * @dataProvider getValidCurrencies
      **/
     public function testValidCurrenciesWithCountrySpecificLocale($currency)
     {
@@ -86,10 +85,7 @@ class CurrencyValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidCurrencies
-     */
-    public function testInvalidCurrencies($currency)
+    #[DataProvider('getInvalidCurrencies')]    public function testInvalidCurrencies($currency)
     {
         $constraint = new Currency(array(
             'message' => 'myMessage',

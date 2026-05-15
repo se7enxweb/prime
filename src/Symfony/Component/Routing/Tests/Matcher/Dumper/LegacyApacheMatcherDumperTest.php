@@ -11,13 +11,17 @@
 
 namespace Symfony\Component\Routing\Tests\Matcher\Dumper;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Matcher\Dumper\ApacheMatcherDumper;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyApacheMatcherDumperTest extends TestCase
 {
@@ -35,13 +39,9 @@ class LegacyApacheMatcherDumperTest extends TestCase
         $this->assertStringEqualsFile(self::$fixturesPath.'/dumper/url_matcher1.apache', $dumper->dump(), '->dump() dumps basic routes to the correct apache format.');
     }
 
-    /**
-     * @dataProvider provideEscapeFixtures
-     */
-    public function testEscapePattern($src, $dest, $char, $with, $message)
+    #[DataProvider('provideEscapeFixtures')]    public function testEscapePattern($src, $dest, $char, $with, $message)
     {
         $r = new \ReflectionMethod(new ApacheMatcherDumper($this->getRouteCollection()), 'escape');
-        $r->setAccessible(true);
         $this->assertEquals($dest, $r->invoke(null, $src, $char, $with), $message);
     }
 

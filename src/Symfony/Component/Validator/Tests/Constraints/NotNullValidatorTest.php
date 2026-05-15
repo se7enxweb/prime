@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\NotNullValidator;
 use Symfony\Component\Validator\Validation;
@@ -27,10 +29,7 @@ class NotNullValidatorTest extends AbstractConstraintValidatorTest
         return new NotNullValidator();
     }
 
-    /**
-     * @dataProvider getValidValues
-     */
-    public function testValidValues($value)
+    #[DataProvider('getValidValues')]    public function testValidValues($value)
     {
         $this->validator->validate($value, new NotNull());
 

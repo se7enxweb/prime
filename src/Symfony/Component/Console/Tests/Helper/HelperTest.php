@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Console\Tests\Helper;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Helper\Helper;
 
@@ -42,8 +44,8 @@ class HelperTest extends TestCase
         );
     }
 
+    #[DataProvider('formatTimeProvider')]
     /**
-     * @dataProvider formatTimeProvider
      *
      * @param int    $secs
      * @param string $expectedFormat

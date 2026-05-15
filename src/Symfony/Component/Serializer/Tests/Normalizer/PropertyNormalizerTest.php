@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Serializer\Tests\Normalizer;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
@@ -64,10 +67,7 @@ class PropertyNormalizerTest extends TestCase
         $this->assertEquals('bar', $obj->getBar());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyDenormalizeOnCamelCaseFormat()
+    #[Group('legacy')]    public function testLegacyDenormalizeOnCamelCaseFormat()
     {
         $this->normalizer->setCamelizedAttributes(array('camel_case'));
         $obj = $this->normalizer->denormalize(
@@ -77,10 +77,7 @@ class PropertyNormalizerTest extends TestCase
         $this->assertEquals('value', $obj->getCamelCase());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyCamelizedAttributesNormalize()
+    #[Group('legacy')]    public function testLegacyCamelizedAttributesNormalize()
     {
         $obj = new PropertyCamelizedDummy('dunglas.fr');
         $obj->fooBar = 'les-tilleuls.coop';
@@ -101,10 +98,7 @@ class PropertyNormalizerTest extends TestCase
         ));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyCamelizedAttributesDenormalize()
+    #[Group('legacy')]    public function testLegacyCamelizedAttributesDenormalize()
     {
         $obj = new PropertyCamelizedDummy('dunglas.fr');
         $obj->fooBar = 'les-tilleuls.coop';
@@ -157,10 +151,7 @@ class PropertyNormalizerTest extends TestCase
         $this->assertEquals('bar', $obj->getBar());
     }
 
-    /**
-     * @dataProvider provideCallbacks
-     */
-    public function testCallbacks($callbacks, $value, $result, $message)
+    #[DataProvider('provideCallbacks')]    public function testCallbacks($callbacks, $value, $result, $message)
     {
         $this->normalizer->setCallbacks($callbacks);
 
@@ -425,7 +416,7 @@ class PropertyNormalizerTest extends TestCase
     public function testUnableToNormalizeObjectAttribute()
     {
         $this->expectException(\Symfony\Component\Serializer\Exception\LogicException::class);
-        $this->expectExceptionMessage('Cannot normalize attribute \"bar\" because injected serializer is not a normalizer');
+        $this->expectExceptionMessage('Cannot normalize attribute "bar" because injected serializer is not a normalizer');
 
         $serializer = $this->getMockBuilder('Symfony\Component\Serializer\SerializerInterface')->getMock();
         $this->normalizer->setSerializer($serializer);

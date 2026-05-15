@@ -62,7 +62,7 @@ class FileProfilerStorage implements ProfilerStorageInterface
 
         $result = array();
         while (\count($result) < $limit && $line = $this->readLineFromFile($file)) {
-            $values = str_getcsv($line);
+            $values = str_getcsv($line, ',', '"', '\\');
             list($csvToken, $csvIp, $csvMethod, $csvUrl, $csvTime, $csvParent) = $values;
             $csvStatusCode = isset($values[6]) ? $values[6] : null;
 
@@ -182,7 +182,7 @@ class FileProfilerStorage implements ProfilerStorageInterface
                 $profile->getTime(),
                 $profile->getParentToken(),
                 $profile->getStatusCode(),
-            ));
+            ), ',', '"', '\\');
             fclose($file);
         }
 

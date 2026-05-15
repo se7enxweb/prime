@@ -45,7 +45,8 @@ class HelperSet implements \IteratorAggregate
      */
     public function set(HelperInterface $helper, $alias = null)
     {
-        $this->helpers[$helper->getName()] = $helper;
+        $name = $helper->getName();
+        $this->helpers[null === $name ? '' : $name] = $helper;
         if (null !== $alias) {
             $this->helpers[$alias] = $helper;
         }

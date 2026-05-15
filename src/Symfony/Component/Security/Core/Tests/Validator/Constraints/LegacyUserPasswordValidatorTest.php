@@ -11,11 +11,13 @@
 
 namespace Symfony\Component\Security\Core\Tests\Validator\Constraints;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\Validation;
 
+#[Group('legacy')]
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
- * @group  legacy
  */
 class LegacyUserPasswordValidatorTest extends UserPasswordValidatorTest
 {

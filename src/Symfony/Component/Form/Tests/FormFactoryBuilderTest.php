@@ -25,7 +25,6 @@ class FormFactoryBuilderTest extends TestCase
     {
         $factory = new \ReflectionClass('Symfony\Component\Form\FormFactory');
         $this->registry = $factory->getProperty('registry');
-        $this->registry->setAccessible(true);
 
         $this->guesser = $this->getMockBuilder('Symfony\Component\Form\FormTypeGuesserInterface')->getMock();
         $this->type = new LegacyFooType();

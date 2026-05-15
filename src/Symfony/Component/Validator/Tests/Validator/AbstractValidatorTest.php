@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Validator;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\GroupSequence;
@@ -838,10 +840,10 @@ abstract class AbstractValidatorTest extends TestCase
         $this->assertNull($violations[0]->getCode());
     }
 
+    #[Group('legacy')]
     /**
      * Cannot be UnsupportedMetadataException for BC with Symfony < 2.5.
      *
-     * @group legacy
      */
     public function testLegacyValidatePropertyFailsIfPropertiesNotSupported()
     {
@@ -970,10 +972,10 @@ abstract class AbstractValidatorTest extends TestCase
         $this->assertNull($violations[0]->getCode());
     }
 
+    #[Group('legacy')]
     /**
      * Cannot be UnsupportedMetadataException for BC with Symfony < 2.5.
      *
-     * @group legacy
      */
     public function testLegacyValidatePropertyValueFailsIfPropertiesNotSupported()
     {

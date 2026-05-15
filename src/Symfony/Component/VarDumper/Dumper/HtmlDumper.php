@@ -436,7 +436,7 @@ EOHTML;
         }
         $this->lastDepth = $depth;
 
-        $this->line = mb_convert_encoding($this->line, 'HTML-ENTITIES', 'UTF-8');
+        $this->line = mb_encode_numericentity($this->line, array(0x80, 0x10FFFF, 0, 0x10FFFF), 'UTF-8');
 
         if (-1 === $depth) {
             AbstractDumper::dumpLine(0);

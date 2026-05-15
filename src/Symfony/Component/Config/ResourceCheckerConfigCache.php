@@ -106,6 +106,9 @@ class ResourceCheckerConfigCache implements ConfigCacheInterface
 
         foreach ($meta as $resource) {
             /* @var ResourceInterface $resource */
+            if (!($resource instanceof ResourceInterface)) {
+                return false; // incomplete class from unserialize, treat cache as stale
+            }
             foreach ($this->resourceCheckers as $checker) {
                 if (!$checker->supports($resource)) {
                     continue; // next checker

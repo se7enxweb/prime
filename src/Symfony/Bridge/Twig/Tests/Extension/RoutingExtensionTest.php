@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\Twig\Tests\Extension;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Twig\Environment;
@@ -19,10 +21,7 @@ use Twig\Source;
 
 class RoutingExtensionTest extends TestCase
 {
-    /**
-     * @dataProvider getEscapingTemplates
-     */
-    public function testEscaping($template, $mustBeEscaped)
+    #[DataProvider('getEscapingTemplates')]    public function testEscaping($template, $mustBeEscaped)
     {
         $twig = new Environment($this->getMockBuilder('Twig\Loader\LoaderInterface')->getMock(), array('debug' => true, 'cache' => false, 'autoescape' => 'html', 'optimizations' => 0));
         $twig->addExtension(new RoutingExtension($this->getMockBuilder('Symfony\Component\Routing\Generator\UrlGeneratorInterface')->getMock()));

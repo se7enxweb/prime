@@ -12,6 +12,7 @@
 namespace Symfony\Bridge\Twig\Tests\NodeVisitor;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bridge\Twig\NodeVisitor\TranslationDefaultDomainNodeVisitor;
 use Symfony\Bridge\Twig\NodeVisitor\TranslationNodeVisitor;
 use Twig\Environment;
@@ -22,8 +23,7 @@ class TranslationDefaultDomainNodeVisitorTest extends TestCase
 {
     private static $message = 'message';
     private static $domain = 'domain';
-
-    /** @dataProvider getDefaultDomainAssignmentTestData */
+    #[DataProvider('getDefaultDomainAssignmentTestData')]
     public function testDefaultDomainAssignment(Node $node)
     {
         $env = new Environment($this->getMockBuilder('Twig\Loader\LoaderInterface')->getMock(), array('cache' => false, 'autoescape' => false, 'optimizations' => 0));
@@ -48,8 +48,7 @@ class TranslationDefaultDomainNodeVisitorTest extends TestCase
 
         $this->assertEquals(array(array(self::$message, self::$domain)), $visitor->getMessages());
     }
-
-    /** @dataProvider getDefaultDomainAssignmentTestData */
+    #[DataProvider('getDefaultDomainAssignmentTestData')]
     public function testNewModuleWithoutDefaultDomainTag(Node $node)
     {
         $env = new Environment($this->getMockBuilder('Twig\Loader\LoaderInterface')->getMock(), array('cache' => false, 'autoescape' => false, 'optimizations' => 0));
@@ -72,7 +71,7 @@ class TranslationDefaultDomainNodeVisitorTest extends TestCase
         $visitor->enterNode($node, $env);
         $visitor->leaveNode($node, $env);
 
-        $this->assertEquals(array(array(self::$message, null)), $visitor->getMessages());
+        $this->assertEquals(array(array(self::$message, '')), $visitor->getMessages());
     }
 
     public static function getDefaultDomainAssignmentTestData()

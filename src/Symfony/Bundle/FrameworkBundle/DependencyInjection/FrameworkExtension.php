@@ -418,6 +418,7 @@ class FrameworkExtension extends Extension
                 'emacs' => 'emacs://open?url=file://%%f&line=%%l',
                 'sublime' => 'subl://open?url=file://%%f&line=%%l',
             );
+            $ide = (string) $ide;
 
             $container->setParameter('templating.helper.code.file_link_format', str_replace('%', '%%', ini_get('xdebug.file_link_format') ?: get_cfg_var('xdebug.file_link_format')) ?: (isset($links[$ide]) ? $links[$ide] : $ide));
         }

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\Constraints\Ip;
 use Symfony\Component\Validator\Constraints\IpValidator;
 use Symfony\Component\Validator\Validation;
@@ -61,10 +63,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
         ));
     }
 
-    /**
-     * @dataProvider getValidIpsV4
-     */
-    public function testValidIpsV4($ip)
+    #[DataProvider('getValidIpsV4')]    public function testValidIpsV4($ip)
     {
         $this->validator->validate($ip, new Ip(array(
             'version' => Ip::V4,
@@ -87,10 +86,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getValidIpsV6
-     */
-    public function testValidIpsV6($ip)
+    #[DataProvider('getValidIpsV6')]    public function testValidIpsV6($ip)
     {
         $this->validator->validate($ip, new Ip(array(
             'version' => Ip::V6,
@@ -124,10 +120,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getValidIpsAll
-     */
-    public function testValidIpsAll($ip)
+    #[DataProvider('getValidIpsAll')]    public function testValidIpsAll($ip)
     {
         $this->validator->validate($ip, new Ip(array(
             'version' => Ip::ALL,
@@ -138,13 +131,10 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
 
     public static function getValidIpsAll()
     {
-        return array_merge($this->getValidIpsV4(), $this->getValidIpsV6());
+        return array_merge(self::getValidIpsV4(), self::getValidIpsV6());
     }
 
-    /**
-     * @dataProvider getInvalidIpsV4
-     */
-    public function testInvalidIpsV4($ip)
+    #[DataProvider('getInvalidIpsV4')]    public function testInvalidIpsV4($ip)
     {
         $constraint = new Ip(array(
             'version' => Ip::V4,
@@ -174,10 +164,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidPrivateIpsV4
-     */
-    public function testInvalidPrivateIpsV4($ip)
+    #[DataProvider('getInvalidPrivateIpsV4')]    public function testInvalidPrivateIpsV4($ip)
     {
         $constraint = new Ip(array(
             'version' => Ip::V4_NO_PRIV,
@@ -201,10 +188,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidReservedIpsV4
-     */
-    public function testInvalidReservedIpsV4($ip)
+    #[DataProvider('getInvalidReservedIpsV4')]    public function testInvalidReservedIpsV4($ip)
     {
         $constraint = new Ip(array(
             'version' => Ip::V4_NO_RES,
@@ -228,10 +212,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidPublicIpsV4
-     */
-    public function testInvalidPublicIpsV4($ip)
+    #[DataProvider('getInvalidPublicIpsV4')]    public function testInvalidPublicIpsV4($ip)
     {
         $constraint = new Ip(array(
             'version' => Ip::V4_ONLY_PUBLIC,
@@ -248,13 +229,10 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
 
     public static function getInvalidPublicIpsV4()
     {
-        return array_merge($this->getInvalidPrivateIpsV4(), $this->getInvalidReservedIpsV4());
+        return array_merge(self::getInvalidPrivateIpsV4(), self::getInvalidReservedIpsV4());
     }
 
-    /**
-     * @dataProvider getInvalidIpsV6
-     */
-    public function testInvalidIpsV6($ip)
+    #[DataProvider('getInvalidIpsV6')]    public function testInvalidIpsV6($ip)
     {
         $constraint = new Ip(array(
             'version' => Ip::V6,
@@ -288,10 +266,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidPrivateIpsV6
-     */
-    public function testInvalidPrivateIpsV6($ip)
+    #[DataProvider('getInvalidPrivateIpsV6')]    public function testInvalidPrivateIpsV6($ip)
     {
         $constraint = new Ip(array(
             'version' => Ip::V6_NO_PRIV,
@@ -315,10 +290,7 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidReservedIpsV6
-     */
-    public function testInvalidReservedIpsV6($ip)
+    #[DataProvider('getInvalidReservedIpsV6')]    public function testInvalidReservedIpsV6($ip)
     {
         $constraint = new Ip(array(
             'version' => Ip::V6_NO_RES,
@@ -338,13 +310,10 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
         // Quoting after official filter documentation:
         // "FILTER_FLAG_NO_RES_RANGE = This flag does not apply to IPv6 addresses."
         // Full description: http://php.net/manual/en/filter.filters.flags.php
-        return $this->getInvalidIpsV6();
+        return self::getInvalidIpsV6();
     }
 
-    /**
-     * @dataProvider getInvalidPublicIpsV6
-     */
-    public function testInvalidPublicIpsV6($ip)
+    #[DataProvider('getInvalidPublicIpsV6')]    public function testInvalidPublicIpsV6($ip)
     {
         $constraint = new Ip(array(
             'version' => Ip::V6_ONLY_PUBLIC,
@@ -361,13 +330,10 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
 
     public static function getInvalidPublicIpsV6()
     {
-        return array_merge($this->getInvalidPrivateIpsV6(), $this->getInvalidReservedIpsV6());
+        return array_merge(self::getInvalidPrivateIpsV6(), self::getInvalidReservedIpsV6());
     }
 
-    /**
-     * @dataProvider getInvalidIpsAll
-     */
-    public function testInvalidIpsAll($ip)
+    #[DataProvider('getInvalidIpsAll')]    public function testInvalidIpsAll($ip)
     {
         $constraint = new Ip(array(
             'version' => Ip::ALL,
@@ -384,13 +350,10 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
 
     public static function getInvalidIpsAll()
     {
-        return array_merge($this->getInvalidIpsV4(), $this->getInvalidIpsV6());
+        return array_merge(self::getInvalidIpsV4(), self::getInvalidIpsV6());
     }
 
-    /**
-     * @dataProvider getInvalidPrivateIpsAll
-     */
-    public function testInvalidPrivateIpsAll($ip)
+    #[DataProvider('getInvalidPrivateIpsAll')]    public function testInvalidPrivateIpsAll($ip)
     {
         $constraint = new Ip(array(
             'version' => Ip::ALL_NO_PRIV,
@@ -407,13 +370,10 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
 
     public static function getInvalidPrivateIpsAll()
     {
-        return array_merge($this->getInvalidPrivateIpsV4(), $this->getInvalidPrivateIpsV6());
+        return array_merge(self::getInvalidPrivateIpsV4(), self::getInvalidPrivateIpsV6());
     }
 
-    /**
-     * @dataProvider getInvalidReservedIpsAll
-     */
-    public function testInvalidReservedIpsAll($ip)
+    #[DataProvider('getInvalidReservedIpsAll')]    public function testInvalidReservedIpsAll($ip)
     {
         $constraint = new Ip(array(
             'version' => Ip::ALL_NO_RES,
@@ -430,13 +390,10 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
 
     public static function getInvalidReservedIpsAll()
     {
-        return array_merge($this->getInvalidReservedIpsV4(), $this->getInvalidReservedIpsV6());
+        return array_merge(self::getInvalidReservedIpsV4(), self::getInvalidReservedIpsV6());
     }
 
-    /**
-     * @dataProvider getInvalidPublicIpsAll
-     */
-    public function testInvalidPublicIpsAll($ip)
+    #[DataProvider('getInvalidPublicIpsAll')]    public function testInvalidPublicIpsAll($ip)
     {
         $constraint = new Ip(array(
             'version' => Ip::ALL_ONLY_PUBLIC,
@@ -453,6 +410,6 @@ class IpValidatorTest extends AbstractConstraintValidatorTest
 
     public static function getInvalidPublicIpsAll()
     {
-        return array_merge($this->getInvalidPublicIpsV4(), $this->getInvalidPublicIpsV6());
+        return array_merge(self::getInvalidPublicIpsV4(), self::getInvalidPublicIpsV6());
     }
 }

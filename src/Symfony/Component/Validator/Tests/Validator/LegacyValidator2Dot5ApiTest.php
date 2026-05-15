@@ -11,14 +11,16 @@
 
 namespace Symfony\Component\Validator\Tests\Validator;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Validator\ConstraintValidatorFactory;
 use Symfony\Component\Validator\Context\LegacyExecutionContextFactory;
 use Symfony\Component\Validator\MetadataFactoryInterface;
 use Symfony\Component\Validator\Validator\LegacyValidator;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyValidator2Dot5ApiTest extends Abstract2Dot5ApiTest
 {

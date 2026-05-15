@@ -11,12 +11,16 @@
 
 namespace Symfony\Component\Form\Tests\ChoiceList;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Form\ChoiceList\ArrayKeyChoiceList;
 
+#[Group('legacy')]
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
  *
- * @group legacy
  */
 class ArrayKeyChoiceListTest extends AbstractChoiceListTest
 {
@@ -93,10 +97,7 @@ class ArrayKeyChoiceListTest extends AbstractChoiceListTest
         $this->assertSame(array('1'), $this->list->getValuesForChoices(array(true)));
     }
 
-    /**
-     * @dataProvider provideConvertibleChoices
-     */
-    public function testConvertChoicesIfNecessary(array $choices, array $converted)
+    #[DataProvider('provideConvertibleChoices')]    public function testConvertChoicesIfNecessary(array $choices, array $converted)
     {
         $list = new ArrayKeyChoiceList($choices);
 
@@ -112,7 +113,7 @@ class ArrayKeyChoiceListTest extends AbstractChoiceListTest
             array(array('foobar' => 'Label'), array('foobar' => 'foobar')),
             // The default value of choice fields is NULL. It should be treated
             // like the empty value for this choice list type
-            array(array(null => 'Label'), array('' => '')),
+            array(array('' => 'Label'), array('' => '')),
             array(array('1.23' => 'Label'), array('1.23' => '1.23')),
             // Always cast booleans to 0 and 1, because:
             // array(true => 'Yes', false => 'No') === array(1 => 'Yes', 0 => 'No')
@@ -122,10 +123,7 @@ class ArrayKeyChoiceListTest extends AbstractChoiceListTest
         );
     }
 
-    /**
-     * @dataProvider provideInvalidChoices
-     */
-    public function testGetValuesForChoicesFailsIfInvalidChoices(array $choices)
+    #[DataProvider('provideInvalidChoices')]    public function testGetValuesForChoicesFailsIfInvalidChoices(array $choices)
     {
         $this->expectException(\Symfony\Component\Form\Exception\InvalidArgumentException::class);
 
@@ -140,10 +138,7 @@ class ArrayKeyChoiceListTest extends AbstractChoiceListTest
         );
     }
 
-    /**
-     * @dataProvider provideConvertibleValues
-     */
-    public function testConvertValuesToStrings($value, $converted)
+    #[DataProvider('provideConvertibleValues')]    public function testConvertValuesToStrings($value, $converted)
     {
         $callback = function () use ($value) {
             return $value;

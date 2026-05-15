@@ -23,7 +23,7 @@ class ChannelListenerTest extends TestCase
         $request
             ->expects($this->any())
             ->method('isSecure')
-            ->will($this->returnValue(false))
+            ->willReturn(false)
         ;
 
         $accessMap = $this->getMockBuilder('Symfony\Component\Security\Http\AccessMapInterface')->getMock();
@@ -31,7 +31,8 @@ class ChannelListenerTest extends TestCase
             ->expects($this->any())
             ->method('getPatterns')
             ->with($this->equalTo($request))
-            ->will($this->returnValue(array(array(), 'http')))
+            ->willReturn(array(array(), 'http'))
+
         ;
 
         $entryPoint = $this->getMockBuilder('Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface')->getMock();
@@ -44,7 +45,7 @@ class ChannelListenerTest extends TestCase
         $event
             ->expects($this->any())
             ->method('getRequest')
-            ->will($this->returnValue($request))
+            ->willReturn($request)
         ;
         $event
             ->expects($this->never())
@@ -61,7 +62,7 @@ class ChannelListenerTest extends TestCase
         $request
             ->expects($this->any())
             ->method('isSecure')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $accessMap = $this->getMockBuilder('Symfony\Component\Security\Http\AccessMapInterface')->getMock();
@@ -69,7 +70,8 @@ class ChannelListenerTest extends TestCase
             ->expects($this->any())
             ->method('getPatterns')
             ->with($this->equalTo($request))
-            ->will($this->returnValue(array(array(), 'https')))
+            ->willReturn(array(array(), 'https'))
+
         ;
 
         $entryPoint = $this->getMockBuilder('Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface')->getMock();
@@ -82,7 +84,7 @@ class ChannelListenerTest extends TestCase
         $event
             ->expects($this->any())
             ->method('getRequest')
-            ->will($this->returnValue($request))
+            ->willReturn($request)
         ;
         $event
             ->expects($this->never())
@@ -99,7 +101,7 @@ class ChannelListenerTest extends TestCase
         $request
             ->expects($this->any())
             ->method('isSecure')
-            ->will($this->returnValue(false))
+            ->willReturn(false)
         ;
 
         $response = new Response();
@@ -109,7 +111,8 @@ class ChannelListenerTest extends TestCase
             ->expects($this->any())
             ->method('getPatterns')
             ->with($this->equalTo($request))
-            ->will($this->returnValue(array(array(), 'https')))
+            ->willReturn(array(array(), 'https'))
+
         ;
 
         $entryPoint = $this->getMockBuilder('Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface')->getMock();
@@ -117,14 +120,14 @@ class ChannelListenerTest extends TestCase
             ->expects($this->once())
             ->method('start')
             ->with($this->equalTo($request))
-            ->will($this->returnValue($response))
+            ->willReturn($response)
         ;
 
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')->disableOriginalConstructor()->getMock();
         $event
             ->expects($this->any())
             ->method('getRequest')
-            ->will($this->returnValue($request))
+            ->willReturn($request)
         ;
         $event
             ->expects($this->once())
@@ -142,7 +145,7 @@ class ChannelListenerTest extends TestCase
         $request
             ->expects($this->any())
             ->method('isSecure')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $response = new Response();
@@ -152,7 +155,8 @@ class ChannelListenerTest extends TestCase
             ->expects($this->any())
             ->method('getPatterns')
             ->with($this->equalTo($request))
-            ->will($this->returnValue(array(array(), 'http')))
+            ->willReturn(array(array(), 'http'))
+
         ;
 
         $entryPoint = $this->getMockBuilder('Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface')->getMock();
@@ -160,14 +164,14 @@ class ChannelListenerTest extends TestCase
             ->expects($this->once())
             ->method('start')
             ->with($this->equalTo($request))
-            ->will($this->returnValue($response))
+            ->willReturn($response)
         ;
 
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')->disableOriginalConstructor()->getMock();
         $event
             ->expects($this->any())
             ->method('getRequest')
-            ->will($this->returnValue($request))
+            ->willReturn($request)
         ;
         $event
             ->expects($this->once())

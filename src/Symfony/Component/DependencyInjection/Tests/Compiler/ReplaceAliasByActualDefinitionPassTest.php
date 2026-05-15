@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\DependencyInjection\Tests\Compiler;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Compiler\ReplaceAliasByActualDefinitionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -56,10 +58,7 @@ class ReplaceAliasByActualDefinitionPassTest extends TestCase
         $this->assertSame('b_alias', (string) $resolvedFactory[0]);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testPrivateAliasesInFactory()
+    #[Group('legacy')]    public function testPrivateAliasesInFactory()
     {
         $container = new ContainerBuilder();
 

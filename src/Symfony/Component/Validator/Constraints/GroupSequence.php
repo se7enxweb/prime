@@ -102,6 +102,7 @@ class GroupSequence implements \ArrayAccess, \IteratorAggregate, \Countable
      * @see \IteratorAggregate::getIterator()
      * @deprecated since version 2.5, to be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.5 and will be removed in 3.0.', E_USER_DEPRECATED);
@@ -120,6 +121,7 @@ class GroupSequence implements \ArrayAccess, \IteratorAggregate, \Countable
      *
      * @deprecated since version 2.5, to be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.5 and will be removed in 3.0.', E_USER_DEPRECATED);
@@ -140,6 +142,7 @@ class GroupSequence implements \ArrayAccess, \IteratorAggregate, \Countable
      *
      * @deprecated since version 2.5, to be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.5 and will be removed in 3.0.', E_USER_DEPRECATED);
@@ -161,6 +164,7 @@ class GroupSequence implements \ArrayAccess, \IteratorAggregate, \Countable
      *
      * @deprecated since version 2.5, to be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.5 and will be removed in 3.0.', E_USER_DEPRECATED);
@@ -183,6 +187,7 @@ class GroupSequence implements \ArrayAccess, \IteratorAggregate, \Countable
      *
      * @deprecated since version 2.5, to be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.5 and will be removed in 3.0.', E_USER_DEPRECATED);
@@ -199,6 +204,7 @@ class GroupSequence implements \ArrayAccess, \IteratorAggregate, \Countable
      *
      * @deprecated since version 2.5, to be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.5 and will be removed in 3.0.', E_USER_DEPRECATED);

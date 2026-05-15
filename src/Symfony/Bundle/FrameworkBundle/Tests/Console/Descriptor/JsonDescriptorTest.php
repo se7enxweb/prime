@@ -11,10 +11,11 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Console\Descriptor;
 
-use Symfony\Bundle\FrameworkBundle\Console\Descriptor\JsonDescriptor;
 
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use Symfony\Bundle\FrameworkBundle\Console\Descriptor\JsonDescriptor;
+    #[RequiresPhp('5.4')]
 /**
- * @requires PHP 5.4
  */
 class JsonDescriptorTest extends AbstractDescriptorTest
 {
@@ -23,7 +24,7 @@ class JsonDescriptorTest extends AbstractDescriptorTest
         return new JsonDescriptor();
     }
 
-    protected function getFormat()
+    protected static function getFormat()
     {
         return 'json';
     }

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Process\Tests;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\ExecutableFinder;
 
@@ -35,8 +37,8 @@ class ExecutableFinderTest extends TestCase
         putenv('PATH='.$path);
     }
 
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function testFind()
     {
@@ -68,8 +70,8 @@ class ExecutableFinderTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function testFindWithExtraDirs()
     {
@@ -87,8 +89,8 @@ class ExecutableFinderTest extends TestCase
         $this->assertSamePath(PHP_BINARY, $result);
     }
 
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function testFindWithOpenBaseDir()
     {
@@ -108,8 +110,8 @@ class ExecutableFinderTest extends TestCase
         $this->assertSamePath(PHP_BINARY, $result);
     }
 
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function testFindProcessInOpenBasedir()
     {
@@ -129,8 +131,8 @@ class ExecutableFinderTest extends TestCase
         $this->assertSamePath(PHP_BINARY, $result);
     }
 
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function testFindBatchExecutableOnWindows()
     {

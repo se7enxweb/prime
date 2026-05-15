@@ -85,7 +85,7 @@ class ResolvedFormType implements ResolvedFormTypeInterface
 
         // As of Symfony 2.8, getName() returns the FQCN by default
         // Otherwise check that the name matches the old naming restrictions
-        if ($hasCustomName && !preg_match('/^[a-z0-9_]*$/i', $name)) {
+        if ($hasCustomName && !preg_match('/^[a-z0-9_]*$/i', (string) $name)) {
             throw new InvalidArgumentException(sprintf('The "%s" form type name ("%s") is not valid. Names must only contain letters, numbers, and "_".', \get_class($innerType), $name));
         }
 

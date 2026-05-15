@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\DomCrawler\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\DomCrawler\FormFieldRegistry;
@@ -182,10 +184,7 @@ class FormTest extends TestCase
         $this->assertEquals($form->get('bar[foo][foobar]')->getValue(), 'foobar');
     }
 
-    /**
-     * @dataProvider provideInitializeValues
-     */
-    public function testConstructor($message, $form, $values)
+    #[DataProvider('provideInitializeValues')]    public function testConstructor($message, $form, $values)
     {
         $form = $this->createForm('<form>'.$form.'</form>');
         $this->assertEquals(
@@ -476,10 +475,7 @@ class FormTest extends TestCase
         $this->assertEquals(array('size' => array('error' => array('name' => '', 'type' => '', 'tmp_name' => '', 'error' => 4, 'size' => 0))), $form->getPhpFiles(), '->getPhpFiles() int conversion does not collide with file names');
     }
 
-    /**
-     * @dataProvider provideGetUriValues
-     */
-    public function testGetUri($message, $form, $values, $uri, $method = null)
+    #[DataProvider('provideGetUriValues')]    public function testGetUri($message, $form, $values, $uri, $method = null)
     {
         $form = $this->createForm($form, $method);
         $form->setValues($values);
@@ -800,7 +796,7 @@ class FormTest extends TestCase
     public function testFormRegistrySetValueOnCompoundField()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Cannot set value on a compound field \"foo[bar]\".');
+        $this->expectExceptionMessage('Cannot set value on a compound field "foo[bar]".');
 
         $registry = new FormFieldRegistry();
         $registry->add($this->getFormFieldMock('foo[bar][baz]'));
@@ -813,7 +809,7 @@ class FormTest extends TestCase
     public function testFormRegistrySetArrayOnNotCompoundField()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Unreachable field \"0\"');
+        $this->expectExceptionMessage('Unreachable field "0"');
 
         $registry = new FormFieldRegistry();
         $registry->add($this->getFormFieldMock('bar'));
@@ -847,7 +843,7 @@ class FormTest extends TestCase
     {
         $field = $this
             ->getMockBuilder('Symfony\\Component\\DomCrawler\\Field\\FormField')
-            ->setMethods(array('getName', 'getValue', 'setValue', 'initialize'))
+            ->onlyMethods(array('getName', 'getValue', 'setValue', 'initialize'))
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -855,13 +851,13 @@ class FormTest extends TestCase
         $field
             ->expects($this->any())
             ->method('getName')
-            ->will($this->returnValue($name))
+            ->willReturn($name)
         ;
 
         $field
             ->expects($this->any())
             ->method('getValue')
-            ->will($this->returnValue($value))
+            ->willReturn($value)
         ;
 
         return $field;

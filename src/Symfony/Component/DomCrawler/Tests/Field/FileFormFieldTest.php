@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\DomCrawler\Tests\Field;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DomCrawler\Field\FileFormField;
 
 class FileFormFieldTest extends FormFieldTestCase
@@ -39,10 +41,7 @@ class FileFormFieldTest extends FormFieldTestCase
         }
     }
 
-    /**
-     * @dataProvider getSetValueMethods
-     */
-    public function testSetValue($method)
+    #[DataProvider('getSetValueMethods')]    public function testSetValue($method)
     {
         $node = $this->createNode('input', '', array('type' => 'file'));
         $field = new FileFormField($node);

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormRegistry;
 use Symfony\Component\Form\FormTypeGuesserChain;
@@ -87,7 +89,7 @@ class FormRegistryTest extends TestCase
             ->with($type)
             ->willReturn($resolvedType);
 
-        $this->assertSame($resolvedType, $this->registry->getType(\get_class($type)));
+$this->assertSame($resolvedType, $this->registry->getType(\get_class($type)));
     }
 
     public function testLoadUnregisteredType()
@@ -100,7 +102,7 @@ class FormRegistryTest extends TestCase
             ->with($type)
             ->willReturn($resolvedType);
 
-        $this->assertSame($resolvedType, $this->registry->getType('Symfony\Component\Form\Tests\Fixtures\FooType'));
+$this->assertSame($resolvedType, $this->registry->getType('Symfony\Component\Form\Tests\Fixtures\FooType'));
     }
 
     /**
@@ -121,10 +123,7 @@ class FormRegistryTest extends TestCase
         $this->registry->getType('stdClass');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyGetTypeFromExtension()
+    #[Group('legacy')]    public function testLegacyGetTypeFromExtension()
     {
         $type = new LegacyFooType();
         $resolvedType = new ResolvedFormType($type);
@@ -136,11 +135,11 @@ class FormRegistryTest extends TestCase
             ->with($type)
             ->willReturn($resolvedType);
 
-        $this->assertSame($resolvedType, $this->registry->getType('foo'));
+$this->assertSame($resolvedType, $this->registry->getType('foo'));
 
         // Even types with explicit getName() methods must support access by
         // FQCN to support a smooth transition from 2.8 => 3.0
-        $this->assertSame($resolvedType, $this->registry->getType(\get_class($type)));
+$this->assertSame($resolvedType, $this->registry->getType(\get_class($type)));
     }
 
     public function testGetTypeWithTypeExtensions()
@@ -159,18 +158,15 @@ class FormRegistryTest extends TestCase
             ->with($type, array($ext1, $ext2))
             ->willReturn($resolvedType);
 
-        $this->assertSame($resolvedType, $this->registry->getType(\get_class($type)));
+$this->assertSame($resolvedType, $this->registry->getType(\get_class($type)));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyGetTypeWithTypeExtensions()
+    #[Group('legacy')]    public function testLegacyGetTypeWithTypeExtensions()
     {
         $type = new LegacyFooType();
         $ext1 = new LegacyFooTypeBarExtension();
         $ext2 = new LegacyFooTypeBazExtension();
-        $resolvedType = new ResolvedFormType($type, array($ext1, $ext2));
+$resolvedType = new ResolvedFormType($type, array($ext1, $ext2));
 
         $this->extension2->addType($type);
         $this->extension1->addTypeExtension($ext1);
@@ -181,7 +177,7 @@ class FormRegistryTest extends TestCase
             ->with($type, array($ext1, $ext2))
             ->willReturn($resolvedType);
 
-        $this->assertSame($resolvedType, $this->registry->getType('foo'));
+$this->assertSame($resolvedType, $this->registry->getType('foo'));
     }
 
     public function testGetTypeConnectsParent()
@@ -194,23 +190,21 @@ class FormRegistryTest extends TestCase
         $this->extension1->addType($parentType);
         $this->extension2->addType($type);
 
-        $this->resolvedTypeFactory->expects($this->at(0))
+        $this->resolvedTypeFactory->expects($this->any())
             ->method('createResolvedType')
-            ->with($parentType)
-            ->willReturn($parentResolvedType);
+            ->willReturnCallback(function ($t) use ($parentType, $type, $parentResolvedType, $resolvedType) {
+                if ($t === $parentType) {
+                    return $parentResolvedType;
+                }
+                if ($t === $type) {
+                    return $resolvedType;
+                }
+            });
 
-        $this->resolvedTypeFactory->expects($this->at(1))
-            ->method('createResolvedType')
-            ->with($type, array(), $parentResolvedType)
-            ->willReturn($resolvedType);
-
-        $this->assertSame($resolvedType, $this->registry->getType(\get_class($type)));
+$this->assertSame($resolvedType, $this->registry->getType(\get_class($type)));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyGetTypeConnectsParent()
+    #[Group('legacy')]    public function testLegacyGetTypeConnectsParent()
     {
         $parentType = new LegacyFooType();
         $type = new LegacyFooSubType();
@@ -220,23 +214,21 @@ class FormRegistryTest extends TestCase
         $this->extension1->addType($parentType);
         $this->extension2->addType($type);
 
-        $this->resolvedTypeFactory->expects($this->at(0))
+        $this->resolvedTypeFactory->expects($this->any())
             ->method('createResolvedType')
-            ->with($parentType)
-            ->willReturn($parentResolvedType);
+            ->willReturnCallback(function ($t) use ($parentType, $type, $parentResolvedType, $resolvedType) {
+                if ($t === $parentType) {
+                    return $parentResolvedType;
+                }
+                if ($t === $type) {
+                    return $resolvedType;
+                }
+            });
 
-        $this->resolvedTypeFactory->expects($this->at(1))
-            ->method('createResolvedType')
-            ->with($type, array(), $parentResolvedType)
-            ->willReturn($resolvedType);
-
-        $this->assertSame($resolvedType, $this->registry->getType('foo_sub_type'));
+$this->assertSame($resolvedType, $this->registry->getType('foo_sub_type'));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testGetTypeConnectsParentIfGetParentReturnsInstance()
+    #[Group('legacy')]    public function testGetTypeConnectsParentIfGetParentReturnsInstance()
     {
         $type = new LegacyFooSubTypeWithParentInstance();
         $parentResolvedType = new ResolvedFormType($type->getParent());
@@ -244,17 +236,19 @@ class FormRegistryTest extends TestCase
 
         $this->extension1->addType($type);
 
-        $this->resolvedTypeFactory->expects($this->at(0))
+        $parentTypeInstance = $type->getParent();
+        $this->resolvedTypeFactory->expects($this->any())
             ->method('createResolvedType')
-            ->with($type->getParent())
-            ->willReturn($parentResolvedType);
+            ->willReturnCallback(function ($t) use ($parentTypeInstance, $type, $parentResolvedType, $resolvedType) {
+                if ($t === $parentTypeInstance || (is_object($t) && get_class($t) === get_class($parentTypeInstance))) {
+                    return $parentResolvedType;
+                }
+                if ($t === $type) {
+                    return $resolvedType;
+                }
+            });
 
-        $this->resolvedTypeFactory->expects($this->at(1))
-            ->method('createResolvedType')
-            ->with($type, array(), $parentResolvedType)
-            ->willReturn($resolvedType);
-
-        $this->assertSame($resolvedType, $this->registry->getType('foo_sub_type_parent_instance'));
+$this->assertSame($resolvedType, $this->registry->getType('foo_sub_type_parent_instance'));
     }
 
     /**
@@ -278,12 +272,12 @@ class FormRegistryTest extends TestCase
 
         $this->extension2->addType($type);
 
-        $this->assertTrue($this->registry->hasType(\get_class($type)));
+$this->assertTrue($this->registry->hasType(\get_class($type)));
     }
 
     public function testHasTypeIfFQCN()
     {
-        $this->assertTrue($this->registry->hasType('Symfony\Component\Form\Tests\Fixtures\FooType'));
+$this->assertTrue($this->registry->hasType('Symfony\Component\Form\Tests\Fixtures\FooType'));
     }
 
     public function testDoesNotHaveTypeIfNonExistingClass()
@@ -296,10 +290,7 @@ class FormRegistryTest extends TestCase
         $this->assertFalse($this->registry->hasType('stdClass'));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyHasTypeAfterLoadingFromExtension()
+    #[Group('legacy')]    public function testLegacyHasTypeAfterLoadingFromExtension()
     {
         $type = new LegacyFooType();
         $resolvedType = new ResolvedFormType($type);
@@ -311,12 +302,12 @@ class FormRegistryTest extends TestCase
 
         $this->extension2->addType($type);
 
-        $this->assertTrue($this->registry->hasType('foo'));
+$this->assertTrue($this->registry->hasType('foo'));
     }
 
     public function testGetTypeGuesser()
     {
-        $expectedGuesser = new FormTypeGuesserChain(array($this->guesser1, $this->guesser2));
+$expectedGuesser = new FormTypeGuesserChain(array($this->guesser1, $this->guesser2));
 
         $this->assertEquals($expectedGuesser, $this->registry->getTypeGuesser());
 

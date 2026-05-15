@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Config\Tests\Util;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Util\XmlUtils;
 
@@ -49,17 +51,17 @@ class XmlUtilsTest extends TestCase
         }
 
         $mock = $this->getMockBuilder(__NAMESPACE__.'\Validator')->getMock();
-        $mock->expects($this->exactly(2))->method('validate')->will($this->onConsecutiveCalls(false, true));
+        $mock->expects($this->exactly(2))->method('validate')->willReturnOnConsecutiveCalls(false, true);
 
         try {
-            XmlUtils::loadFile($fixtures.'valid.xml', array($mock, 'validate'));
+XmlUtils::loadFile($fixtures.'valid.xml', array($mock, 'validate'));
             $this->fail();
         } catch (\InvalidArgumentException $e) {
-            $this->assertStringContainsString('is not valid', $e->getMessage());
+$this->assertStringContainsString('is not valid', $e->getMessage());
         }
 
-        $this->assertInstanceOf('DOMDocument', XmlUtils::loadFile($fixtures.'valid.xml', array($mock, 'validate')));
-        $this->assertSame(array(), libxml_get_errors());
+$this->assertInstanceOf('DOMDocument', XmlUtils::loadFile($fixtures.'valid.xml', array($mock, 'validate')));
+$this->assertSame(array(), libxml_get_errors());
     }
 
     public function testLoadFileWithInternalErrorsEnabled()
@@ -74,10 +76,7 @@ class XmlUtilsTest extends TestCase
         libxml_use_internal_errors($internalErrors);
     }
 
-    /**
-     * @dataProvider getDataForConvertDomToArray
-     */
-    public function testConvertDomToArray($expected, $xml, $root = false, $checkPrefix = true)
+    #[DataProvider('getDataForConvertDomToArray')]    public function testConvertDomToArray($expected, $xml, $root = false, $checkPrefix = true)
     {
         $dom = new \DOMDocument();
         $dom->loadXML($root ? $xml : '<root>'.$xml.'</root>');
@@ -108,10 +107,7 @@ class XmlUtilsTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getDataForPhpize
-     */
-    public function testPhpize($expected, $value)
+    #[DataProvider('getDataForPhpize')]    public function testPhpize($expected, $value)
     {
         $this->assertSame($expected, XmlUtils::phpize($value));
     }
@@ -152,12 +148,8 @@ class XmlUtilsTest extends TestCase
     {
         $file = __DIR__.'/../Fixtures/foo.xml';
 
-        if (method_exists($this, 'expectException')) {
-            $this->expectException('InvalidArgumentException');
-            $this->expectExceptionMessage(sprintf('File %s does not contain valid XML, it is empty.', $file));
-        } else {
-            $this->setExpectedException('InvalidArgumentException', sprintf('File %s does not contain valid XML, it is empty.', $file));
-        }
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage(sprintf('File %s does not contain valid XML, it is empty.', $file));
 
         XmlUtils::loadFile($file);
     }
@@ -165,7 +157,6 @@ class XmlUtilsTest extends TestCase
     // test for issue https://github.com/symfony/symfony/issues/9731
     public function testLoadWrongEmptyXMLWithErrorHandler()
     {
-        $originalDisableEntities = libxml_disable_entity_loader(false);
         $errorReporting = error_reporting(-1);
 
         set_error_handler(function ($errno, $errstr) {
@@ -189,13 +180,6 @@ class XmlUtilsTest extends TestCase
 
         restore_error_handler();
         error_reporting($errorReporting);
-
-        $disableEntities = libxml_disable_entity_loader(true);
-        libxml_disable_entity_loader($disableEntities);
-
-        libxml_disable_entity_loader($originalDisableEntities);
-
-        $this->assertFalse($disableEntities);
 
         // should not throw an exception
         XmlUtils::loadFile(__DIR__.'/../Fixtures/Util/valid.xml', __DIR__.'/../Fixtures/Util/schema.xsd');

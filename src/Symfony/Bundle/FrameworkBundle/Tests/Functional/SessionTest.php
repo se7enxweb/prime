@@ -11,12 +11,14 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Functional;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 class SessionTest extends WebTestCase
 {
+    #[DataProvider('getConfigs')]
     /**
      * Tests session attributes persist.
      *
-     * @dataProvider getConfigs
      */
     public function testWelcome($config, $insulate)
     {
@@ -45,11 +47,10 @@ class SessionTest extends WebTestCase
         $crawler = $client->request('GET', '/session');
         $this->assertStringContainsString('You are new here and gave no name.', $crawler->text());
     }
-
+    #[DataProvider('getConfigs')]
     /**
      * Tests flash messages work in practice.
      *
-     * @dataProvider getConfigs
      */
     public function testFlash($config, $insulate)
     {
@@ -62,18 +63,17 @@ class SessionTest extends WebTestCase
         $crawler = $client->request('GET', '/session_setflash/Hello%20world.');
 
         // check flash displays on redirect
-        $this->assertContains('Hello world.', $client->followRedirect()->text());
+        $this->assertStringContainsString('Hello world.', $client->followRedirect()->text());
 
         // check flash is gone
         $crawler = $client->request('GET', '/session_showflash');
         $this->assertStringContainsString('No flash was set.', $crawler->text());
     }
-
+    #[DataProvider('getConfigs')]
     /**
      * See if two separate insulated clients can run without
      * polluting eachother's session data.
      *
-     * @dataProvider getConfigs
      */
     public function testTwoClients($config, $insulate)
     {

@@ -11,12 +11,11 @@
 
 namespace Symfony\Bundle\SecurityBundle\Tests\Functional;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 class CsrfFormLoginTest extends WebTestCase
 {
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testFormLoginAndLogoutWithCsrfTokens($config)
+    #[DataProvider('getConfigs')]    public function testFormLoginAndLogoutWithCsrfTokens($config)
     {
         $client = $this->createClient(array('test_case' => 'CsrfFormLogin', 'root_config' => $config));
 
@@ -35,7 +34,7 @@ class CsrfFormLoginTest extends WebTestCase
 
         $logoutLinks = $crawler->selectLink('Log out')->links();
         $this->assertCount(2, $logoutLinks);
-        $this->assertContains('_csrf_token=', $logoutLinks[0]->getUri());
+        $this->assertStringContainsString('_csrf_token=', $logoutLinks[0]->getUri());
         $this->assertSame($logoutLinks[0]->getUri(), $logoutLinks[1]->getUri());
 
         $client->click($logoutLinks[0]);
@@ -43,10 +42,7 @@ class CsrfFormLoginTest extends WebTestCase
         $this->assertRedirect($client->getResponse(), '/');
     }
 
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testFormLoginWithInvalidCsrfToken($config)
+    #[DataProvider('getConfigs')]    public function testFormLoginWithInvalidCsrfToken($config)
     {
         $client = $this->createClient(array('test_case' => 'CsrfFormLogin', 'root_config' => $config));
 
@@ -60,10 +56,7 @@ class CsrfFormLoginTest extends WebTestCase
         $this->assertStringContainsString('Invalid CSRF token.', $text);
     }
 
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testFormLoginWithCustomTargetPath($config)
+    #[DataProvider('getConfigs')]    public function testFormLoginWithCustomTargetPath($config)
     {
         $client = $this->createClient(array('test_case' => 'CsrfFormLogin', 'root_config' => $config));
 
@@ -80,10 +73,7 @@ class CsrfFormLoginTest extends WebTestCase
         $this->assertStringContainsString('You\'re browsing to path "/foo".', $text);
     }
 
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testFormLoginRedirectsToProtectedResourceAfterLogin($config)
+    #[DataProvider('getConfigs')]    public function testFormLoginRedirectsToProtectedResourceAfterLogin($config)
     {
         $client = $this->createClient(array('test_case' => 'CsrfFormLogin', 'root_config' => $config));
 

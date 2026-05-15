@@ -11,11 +11,15 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\ChoiceList;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Form\Extension\Core\ChoiceList\SimpleChoiceList;
 use Symfony\Component\Form\Extension\Core\View\ChoiceView;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class SimpleChoiceListTest extends AbstractChoiceListTest
 {
@@ -44,10 +48,7 @@ class SimpleChoiceListTest extends AbstractChoiceListTest
         ), $this->list->getRemainingViews());
     }
 
-    /**
-     * @dataProvider dirtyValuesProvider
-     */
-    public function testGetValuesForChoicesDealsWithDirtyValues($choice, $value)
+    #[DataProvider('dirtyValuesProvider')]    public function testGetValuesForChoicesDealsWithDirtyValues($choice, $value)
     {
         $choices = array(
             '0' => 'Zero',

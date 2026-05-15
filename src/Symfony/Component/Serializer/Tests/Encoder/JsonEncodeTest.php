@@ -11,13 +11,16 @@
 
 namespace Symfony\Component\Serializer\Tests\Encoder;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresFunction;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class JsonEncodeTest extends TestCase
 {
-    private $encoder;
+    private $encode;
 
     protected function setUp(): void
     {
@@ -30,10 +33,7 @@ class JsonEncodeTest extends TestCase
         $this->assertFalse($this->encode->supportsEncoding('foobar'));
     }
 
-    /**
-     * @dataProvider encodeProvider
-     */
-    public function testEncode($toEncode, $expected, $context)
+    #[DataProvider('encodeProvider')]    public function testEncode($toEncode, $expected, $context)
     {
         $this->assertEquals(
             $expected,
@@ -49,10 +49,7 @@ class JsonEncodeTest extends TestCase
         );
     }
 
-    /**
-     * @requires function json_last_error_msg
-     */
-    public function testEncodeWithError()
+    #[RequiresFunction('json_last_error_msg')]    public function testEncodeWithError()
     {
         $this->expectException(\Symfony\Component\Serializer\Exception\UnexpectedValueException::class);
 

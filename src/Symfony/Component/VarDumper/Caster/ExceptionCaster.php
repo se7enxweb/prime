@@ -38,7 +38,7 @@ class ExceptionCaster
         E_USER_ERROR => 'E_USER_ERROR',
         E_USER_WARNING => 'E_USER_WARNING',
         E_USER_NOTICE => 'E_USER_NOTICE',
-        E_STRICT => 'E_STRICT',
+        0 => '0',
     );
 
     public static function castError(\Error $e, array $a, Stub $stub, $isNested, $filter = 0)

@@ -11,13 +11,15 @@
 
 namespace Symfony\Component\Locale\Tests\Stub;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Locale\Stub\StubLocale;
 
+#[Group('legacy')]
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
  *
- * @group legacy
  */
 class StubLocaleTest extends TestCase
 {
@@ -43,6 +45,6 @@ class StubLocaleTest extends TestCase
     public function testGetCurrencies()
     {
         $currencies = StubLocale::getCurrencies();
-        $this->assertStringContainsString('BRL', $currencies);
+        $this->assertContains('BRL', $currencies);
     }
 }

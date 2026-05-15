@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\Constraints\Locale;
 use Symfony\Component\Validator\Constraints\LocaleValidator;
 use Symfony\Component\Validator\Validation;
@@ -50,10 +52,7 @@ class LocaleValidatorTest extends AbstractConstraintValidatorTest
         $this->validator->validate(new \stdClass(), new Locale());
     }
 
-    /**
-     * @dataProvider getValidLocales
-     */
-    public function testValidLocales($locale)
+    #[DataProvider('getValidLocales')]    public function testValidLocales($locale)
     {
         $this->validator->validate($locale, new Locale());
 
@@ -72,10 +71,7 @@ class LocaleValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidLocales
-     */
-    public function testInvalidLocales($locale)
+    #[DataProvider('getInvalidLocales')]    public function testInvalidLocales($locale)
     {
         $constraint = new Locale(array(
             'message' => 'myMessage',

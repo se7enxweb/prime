@@ -11,14 +11,16 @@
 
 namespace Symfony\Bundle\WebProfilerBundle\Tests\Command;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\WebProfilerBundle\Command\ExportCommand;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class ExportCommandTest extends TestCase
 {
@@ -55,7 +57,7 @@ class ExportCommandTest extends TestCase
         ;
 
         $profile = new Profile('TOKEN');
-        $profiler->expects($this->once())->method('loadProfile')->with('TOKEN')->will($this->returnValue($profile));
+        $profiler->expects($this->once())->method('loadProfile')->with('TOKEN')->willReturn($profile);
 
         $helperSet = new HelperSet();
         $helper = $this->getMockBuilder('Symfony\Component\Console\Helper\FormatterHelper')->getMock();

@@ -80,6 +80,10 @@ class Stopwatch
             throw new \LogicException('There is no started section to stop.');
         }
 
+        if (null === $id) {
+            $id = '';
+        }
+
         $this->sections[$id] = array_pop($this->activeSections)->setId($id);
         $this->stop('__section__.child');
     }
@@ -154,6 +158,10 @@ class Stopwatch
      */
     public function getSectionEvents($id)
     {
+        if (null === $id) {
+            $id = '';
+        }
+
         return isset($this->sections[$id]) ? $this->sections[$id]->getEvents() : array();
     }
 }

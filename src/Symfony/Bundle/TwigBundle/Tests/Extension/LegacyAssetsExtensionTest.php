@@ -11,11 +11,15 @@
 
 namespace Symfony\Bundle\TwigBundle\Tests\Extension;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\TwigBundle\Extension\AssetsExtension;
 use Symfony\Bundle\TwigBundle\Tests\TestCase;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyAssetsExtensionTest extends TestCase
 {
@@ -26,10 +30,7 @@ class LegacyAssetsExtensionTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider provideGetAssetUrlArguments
-     */
-    public function testGetAssetUrl($path, $packageName, $absolute, $relativeUrl, $expectedUrl, $scheme, $host, $httpPort, $httpsPort)
+    #[DataProvider('provideGetAssetUrlArguments')]    public function testGetAssetUrl($path, $packageName, $absolute, $relativeUrl, $expectedUrl, $scheme, $host, $httpPort, $httpsPort)
     {
         $helper = $this->createHelperMock($path, $packageName, $relativeUrl);
         $container = $this->createContainerMock($helper);
@@ -75,16 +76,16 @@ class LegacyAssetsExtensionTest extends TestCase
             ->getMock();
         $context->expects($this->any())
             ->method('getScheme')
-            ->will($this->returnValue($scheme));
+            ->willReturn($scheme);
         $context->expects($this->any())
             ->method('getHost')
-            ->will($this->returnValue($host));
+            ->willReturn($host);
         $context->expects($this->any())
             ->method('getHttpPort')
-            ->will($this->returnValue($httpPort));
+            ->willReturn($httpPort);
         $context->expects($this->any())
             ->method('getHttpsPort')
-            ->will($this->returnValue($httpsPort));
+            ->willReturn($httpsPort);
 
         return $context;
     }
@@ -95,7 +96,7 @@ class LegacyAssetsExtensionTest extends TestCase
         $container->expects($this->any())
             ->method('get')
             ->with('templating.helper.assets')
-            ->will($this->returnValue($helper));
+            ->willReturn($helper);
 
         return $container;
     }
@@ -108,7 +109,7 @@ class LegacyAssetsExtensionTest extends TestCase
         $helper->expects($this->any())
             ->method('getUrl')
             ->with($path, $packageName)
-            ->will($this->returnValue($returnValue));
+            ->willReturn($returnValue);
 
         return $helper;
     }

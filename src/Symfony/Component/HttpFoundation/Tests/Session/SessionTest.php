@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\HttpFoundation\Tests\Session;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
@@ -106,19 +108,13 @@ class SessionTest extends TestCase
         $this->assertEquals(1, $this->session->get('foo', 1));
     }
 
-    /**
-     * @dataProvider setProvider
-     */
-    public function testSet($key, $value)
+    #[DataProvider('setProvider')]    public function testSet($key, $value)
     {
         $this->session->set($key, $value);
         $this->assertEquals($value, $this->session->get($key));
     }
 
-    /**
-     * @dataProvider setProvider
-     */
-    public function testHas($key, $value)
+    #[DataProvider('setProvider')]    public function testHas($key, $value)
     {
         $this->session->set($key, $value);
         $this->assertTrue($this->session->has($key));
@@ -133,19 +129,13 @@ class SessionTest extends TestCase
         $this->assertEquals(array(), $this->session->all());
     }
 
-    /**
-     * @dataProvider setProvider
-     */
-    public function testAll($key, $value, $result)
+    #[DataProvider('setProvider')]    public function testAll($key, $value, $result)
     {
         $this->session->set($key, $value);
         $this->assertEquals($result, $this->session->all());
     }
 
-    /**
-     * @dataProvider setProvider
-     */
-    public function testClear($key, $value)
+    #[DataProvider('setProvider')]    public function testClear($key, $value)
     {
         $this->session->set('hi', 'fabien');
         $this->session->set($key, $value);
@@ -162,10 +152,7 @@ class SessionTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider setProvider
-     */
-    public function testRemove($key, $value)
+    #[DataProvider('setProvider')]    public function testRemove($key, $value)
     {
         $this->session->set('hi.world', 'have a nice day');
         $this->session->set($key, $value);

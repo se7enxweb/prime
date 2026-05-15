@@ -33,6 +33,6 @@ class __TwigTemplate_VarDumperFixture_u75a09 extends Twig\Template
 
     public function getSourceContext()
     {
-        return new Twig\Source("   foo bar\n     twig source\n\n", 'foo.twig', false === $this->filename ? null : ($this->filename ?: 'bar.twig'));
+        return new Twig\Source("   foo bar\n     twig source\n\n", 'foo.twig', false === $this->filename ? '' : ($this->filename ?: 'bar.twig'));
     }
 }

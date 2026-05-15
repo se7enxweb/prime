@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\VarDumper\Tests\Caster;
 
+
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\VarDumper\Caster\Caster;
 use Symfony\Component\VarDumper\Test\VarDumperTestCase;
 
@@ -29,10 +33,7 @@ class CasterTest extends VarDumperTestCase
         "\0Foo\0private" => 'priv',
     );
 
-    /**
-     * @dataProvider provideFilter
-     */
-    public function testFilter($filter, $expectedDiff, $listedProperties = null)
+    #[DataProvider('provideFilter')]    public function testFilter($filter, $expectedDiff, $listedProperties = null)
     {
         if (null === $listedProperties) {
             $filteredArray = Caster::filter($this->referenceArray, $filter);
@@ -123,7 +124,15 @@ class CasterTest extends VarDumperTestCase
             ),
             array(
                 Caster::EXCLUDE_NOT_IMPORTANT | Caster::EXCLUDE_VERBOSE,
-                $this->referenceArray,
+                array(
+                    'null' => null,
+                    'empty' => false,
+                    'public' => 'pub',
+                    "\0~\0virtual" => 'virt',
+                    "\0+\0dynamic" => 'dyn',
+                    "\0*\0protected" => 'prot',
+                    "\0Foo\0private" => 'priv',
+                ),
                 array('public', "\0*\0protected"),
             ),
             array(
@@ -148,8 +157,8 @@ class CasterTest extends VarDumperTestCase
         );
     }
 
+    #[RequiresPhp('7.0')]
     /**
-     * @requires PHP 7.0
      */
     public function testAnonymousClass()
     {
@@ -157,8 +166,8 @@ class CasterTest extends VarDumperTestCase
 
         $this->assertDumpMatchesFormat(
             <<<'EOTXT'
-stdClass@anonymous {
-  -foo: "foo"
+stdClass@anonymous%A{
+%Afoo: "foo"
 }
 EOTXT
             , $c
@@ -168,8 +177,8 @@ EOTXT
 
         $this->assertDumpMatchesFormat(
             <<<'EOTXT'
-@anonymous {
-  -foo: "foo"
+@anonymous%A{
+%Afoo: "foo"
 }
 EOTXT
             , $c

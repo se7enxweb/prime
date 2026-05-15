@@ -53,7 +53,7 @@ class {$options['class']} extends {$options['base_class']}
 {
     private static \$declaredRoutes;
 
-    public function __construct(RequestContext \$context, LoggerInterface \$logger = null)
+    public function __construct(RequestContext \$context, ?LoggerInterface \$logger = null)
     {
         \$this->context = \$context;
         \$this->logger = \$logger;

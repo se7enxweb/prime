@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\DataMapper;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Core\DataMapper\PropertyPathMapper;
 use Symfony\Component\Form\FormConfigBuilder;
@@ -47,7 +49,6 @@ class PropertyPathMapperTest extends TestCase
     {
         return $this->getMockBuilder('Symfony\Component\PropertyAccess\PropertyPath')
             ->setConstructorArgs(array($path))
-            ->setMethods(array('getValue', 'setValue'))
             ->getMock();
     }
 
@@ -62,16 +63,16 @@ class PropertyPathMapperTest extends TestCase
     {
         $form = $this->getMockBuilder('Symfony\Component\Form\Form')
             ->setConstructorArgs(array($config))
-            ->setMethods(array('isSynchronized', 'isSubmitted'))
+            ->onlyMethods(array('isSynchronized', 'isSubmitted'))
             ->getMock();
 
         $form->expects($this->any())
             ->method('isSynchronized')
-            ->will($this->returnValue($synchronized));
+            ->willReturn($synchronized);
 
         $form->expects($this->any())
             ->method('isSubmitted')
-            ->will($this->returnValue($submitted));
+            ->willReturn($submitted);
 
         return $form;
     }
@@ -85,14 +86,14 @@ class PropertyPathMapperTest extends TestCase
         $this->propertyAccessor->expects($this->once())
             ->method('getValue')
             ->with($car, $propertyPath)
-            ->will($this->returnValue($engine));
+            ->willReturn($engine);
 
         $config = new FormConfigBuilder('name', '\stdClass', $this->dispatcher);
         $config->setByReference(true);
         $config->setPropertyPath($propertyPath);
         $form = $this->getForm($config);
 
-        $this->mapper->mapDataToForms($car, array($form));
+$this->mapper->mapDataToForms($car, array($form));
 
         // Can't use isIdentical() above because mocks always clone their
         // arguments which can't be disabled in PHPUnit 3.6
@@ -108,17 +109,17 @@ class PropertyPathMapperTest extends TestCase
         $this->propertyAccessor->expects($this->once())
             ->method('getValue')
             ->with($car, $propertyPath)
-            ->will($this->returnValue($engine));
+            ->willReturn($engine);
 
         $config = new FormConfigBuilder('name', '\stdClass', $this->dispatcher);
         $config->setByReference(false);
         $config->setPropertyPath($propertyPath);
         $form = $this->getForm($config);
 
-        $this->mapper->mapDataToForms($car, array($form));
+$this->mapper->mapDataToForms($car, array($form));
 
-        $this->assertNotSame($engine, $form->getData());
-        $this->assertEquals($engine, $form->getData());
+$this->assertNotSame($engine, $form->getData());
+$this->assertEquals($engine, $form->getData());
     }
 
     public function testMapDataToFormsIgnoresEmptyPropertyPath()
@@ -170,7 +171,7 @@ class PropertyPathMapperTest extends TestCase
 
         $form = $this->getMockBuilder('Symfony\Component\Form\Form')
             ->setConstructorArgs(array($config))
-            ->setMethods(array('setData'))
+            ->onlyMethods(array('setData'))
             ->getMock();
 
         $form->expects($this->once())
@@ -195,7 +196,7 @@ class PropertyPathMapperTest extends TestCase
 
         $form = $this->getMockBuilder('Symfony\Component\Form\Form')
             ->setConstructorArgs(array($config))
-            ->setMethods(array('setData'))
+            ->onlyMethods(array('setData'))
             ->getMock();
 
         $form->expects($this->once())
@@ -253,7 +254,7 @@ class PropertyPathMapperTest extends TestCase
         $this->propertyAccessor->expects($this->once())
             ->method('getValue')
             ->with($car, $propertyPath)
-            ->will($this->returnValue($engine));
+            ->willReturn($engine);
 
         $this->propertyAccessor->expects($this->never())
             ->method('setValue');
@@ -358,10 +359,7 @@ class PropertyPathMapperTest extends TestCase
         $this->mapper->mapFormsToData(array($form), $car);
     }
 
-    /**
-     * @dataProvider provideDate
-     */
-    public function testMapFormsToDataDoesNotChangeEqualDateTimeInstance($date)
+    #[DataProvider('provideDate')]    public function testMapFormsToDataDoesNotChangeEqualDateTimeInstance($date)
     {
         $article = array();
         $publishedAt = $date;

@@ -11,13 +11,16 @@
 
 namespace Symfony\Component\HttpFoundation\Tests\Session\Storage\Handler;
 
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\LegacyPdoSessionHandler;
 
+#[Group('legacy')]
+#[RequiresPhpExtension('pdo_sqlite')]
 /**
- * @group legacy
- * @group time-sensitive
- * @requires extension pdo_sqlite
  */
 class LegacyPdoSessionHandlerTest extends TestCase
 {
@@ -34,7 +37,7 @@ class LegacyPdoSessionHandlerTest extends TestCase
 
     public function testIncompleteOptions()
     {
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $storage = new LegacyPdoSessionHandler($this->pdo, array());
     }
 
@@ -44,21 +47,21 @@ class LegacyPdoSessionHandlerTest extends TestCase
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
         $pdo->exec('CREATE TABLE sessions (sess_id VARCHAR(128) PRIMARY KEY, sess_data TEXT, sess_time INTEGER)');
 
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $storage = new LegacyPdoSessionHandler($pdo, array('db_table' => 'sessions'));
     }
 
     public function testWrongTableOptionsWrite()
     {
         $storage = new LegacyPdoSessionHandler($this->pdo, array('db_table' => 'bad_name'));
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('RuntimeException');
+        $this->expectException('RuntimeException');
         $storage->write('foo', 'bar');
     }
 
     public function testWrongTableOptionsRead()
     {
         $storage = new LegacyPdoSessionHandler($this->pdo, array('db_table' => 'bad_name'));
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('RuntimeException');
+        $this->expectException('RuntimeException');
         $storage->read('foo');
     }
 
@@ -107,7 +110,6 @@ class LegacyPdoSessionHandlerTest extends TestCase
         $storage = new LegacyPdoSessionHandler($this->pdo, array('db_table' => 'sessions'), array());
 
         $method = new \ReflectionMethod($storage, 'getConnection');
-        $method->setAccessible(true);
 
         $this->assertInstanceOf('\PDO', $method->invoke($storage));
     }

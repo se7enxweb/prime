@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\Form\Tests\Extension\HttpFoundation\EventListener;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\HttpFoundation\EventListener\BindRequestListener;
 use Symfony\Component\Form\Form;
@@ -19,9 +23,9 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
+#[Group('legacy')]
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
- * @group legacy
  */
 class LegacyBindRequestListenerTest extends TestCase
 {
@@ -82,10 +86,7 @@ class LegacyBindRequestListenerTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider requestMethodProvider
-     */
-    public function testSubmitRequest($method)
+    #[DataProvider('requestMethodProvider')]    public function testSubmitRequest($method)
     {
         $values = array('author' => $this->values);
         $files = array('author' => $this->filesNested);
@@ -107,10 +108,7 @@ class LegacyBindRequestListenerTest extends TestCase
         ), $event->getData());
     }
 
-    /**
-     * @dataProvider requestMethodProvider
-     */
-    public function testSubmitRequestWithEmptyName($method)
+    #[DataProvider('requestMethodProvider')]    public function testSubmitRequestWithEmptyName($method)
     {
         $request = new Request(array(), $this->values, array(), array(), $this->filesPlain, array(
             'REQUEST_METHOD' => $method,
@@ -130,10 +128,7 @@ class LegacyBindRequestListenerTest extends TestCase
         ), $event->getData());
     }
 
-    /**
-     * @dataProvider requestMethodProvider
-     */
-    public function testSubmitEmptyRequestToCompoundForm($method)
+    #[DataProvider('requestMethodProvider')]    public function testSubmitEmptyRequestToCompoundForm($method)
     {
         $request = new Request(array(), array(), array(), array(), array(), array(
             'REQUEST_METHOD' => $method,
@@ -153,10 +148,7 @@ class LegacyBindRequestListenerTest extends TestCase
         $this->assertEquals(array(), $event->getData());
     }
 
-    /**
-     * @dataProvider requestMethodProvider
-     */
-    public function testSubmitEmptyRequestToSimpleForm($method)
+    #[DataProvider('requestMethodProvider')]    public function testSubmitEmptyRequestToSimpleForm($method)
     {
         $request = new Request(array(), array(), array(), array(), array(), array(
             'REQUEST_METHOD' => $method,

@@ -11,14 +11,16 @@
 
 namespace Symfony\Component\Console\Tests\Helper;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\StreamOutput;
 
-/**
- * @group time-sensitive
- */
+#[Group('time-sensitive')]
 class ProgressBarTest extends TestCase
 {
     public function testMultipleStart()
@@ -296,7 +298,7 @@ class ProgressBarTest extends TestCase
 
     public function testRedrawFrequency()
     {
-        $bar = $this->getMockBuilder('Symfony\Component\Console\Helper\ProgressBar')->setMethods(array('display'))->setConstructorArgs(array($this->getOutputStream(), 6))->getMock();
+        $bar = $this->getMockBuilder('Symfony\Component\Console\Helper\ProgressBar')->onlyMethods(array('display'))->setConstructorArgs(array($this->getOutputStream(), 6))->getMock();
         $bar->expects($this->exactly(4))->method('display');
 
         $bar->setRedrawFrequency(2);
@@ -309,7 +311,7 @@ class ProgressBarTest extends TestCase
 
     public function testRedrawFrequencyIsAtLeastOneIfZeroGiven()
     {
-        $bar = $this->getMockBuilder('Symfony\Component\Console\Helper\ProgressBar')->setMethods(array('display'))->setConstructorArgs(array($this->getOutputStream()))->getMock();
+        $bar = $this->getMockBuilder('Symfony\Component\Console\Helper\ProgressBar')->onlyMethods(array('display'))->setConstructorArgs(array($this->getOutputStream()))->getMock();
 
         $bar->expects($this->exactly(2))->method('display');
         $bar->setRedrawFrequency(0);
@@ -319,7 +321,7 @@ class ProgressBarTest extends TestCase
 
     public function testRedrawFrequencyIsAtLeastOneIfSmallerOneGiven()
     {
-        $bar = $this->getMockBuilder('Symfony\Component\Console\Helper\ProgressBar')->setMethods(array('display'))->setConstructorArgs(array($this->getOutputStream()))->getMock();
+        $bar = $this->getMockBuilder('Symfony\Component\Console\Helper\ProgressBar')->onlyMethods(array('display'))->setConstructorArgs(array($this->getOutputStream()))->getMock();
 
         $bar->expects($this->exactly(2))->method('display');
         $bar->setRedrawFrequency(0.9);
@@ -621,10 +623,7 @@ class ProgressBarTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideFormat
-     */
-    public function testFormatsWithoutMax($format)
+    #[DataProvider('provideFormat')]    public function testFormatsWithoutMax($format)
     {
         $bar = new ProgressBar($output = $this->getOutputStream());
         $bar->setFormat($format);

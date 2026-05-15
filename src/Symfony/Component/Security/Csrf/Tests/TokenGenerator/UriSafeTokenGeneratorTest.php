@@ -59,8 +59,8 @@ class UriSafeTokenGeneratorTest extends TestCase
         $token = $this->generator->generateToken();
 
         $this->assertTrue(ctype_print($token), 'is printable');
-        $this->assertStringNotMatchesFormat('%S+%S', $token, 'is URI safe');
-        $this->assertStringNotMatchesFormat('%S/%S', $token, 'is URI safe');
-        $this->assertStringNotMatchesFormat('%S=%S', $token, 'is URI safe');
+        $this->assertDoesNotMatchRegularExpression('/\+/', $token, 'is URI safe');
+        $this->assertDoesNotMatchRegularExpression('/\//', $token, 'is URI safe');
+        $this->assertDoesNotMatchRegularExpression('/=/', $token, 'is URI safe');
     }
 }

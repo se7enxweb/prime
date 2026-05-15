@@ -79,7 +79,7 @@ abstract class Composite extends Constraint
             }
         }
 
-        if (!property_exists($this, 'groups')) {
+        if (!$this->isGroupsOptionSet()) {
             $mergedGroups = array();
 
             foreach ($nestedConstraints as $constraint) {
@@ -95,7 +95,7 @@ abstract class Composite extends Constraint
         }
 
         foreach ($nestedConstraints as $constraint) {
-            if (property_exists($constraint, 'groups')) {
+            if ($constraint->isGroupsOptionSet()) {
                 $excessGroups = array_diff($constraint->groups, $this->groups);
 
                 if (\count($excessGroups) > 0) {

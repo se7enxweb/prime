@@ -11,12 +11,14 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\ChoiceList;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
+#[Group('legacy')]
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
  *
- * @group legacy
  */
 abstract class AbstractChoiceListTest extends TestCase
 {

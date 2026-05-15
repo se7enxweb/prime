@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\HttpFoundation\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -73,17 +75,14 @@ class BinaryFileResponseTest extends ResponseTestCase
     {
         $response = new BinaryFileResponse(__FILE__);
 
-        $iso88591EncodedFilename = utf8_decode('föö.html');
+        $iso88591EncodedFilename = mb_convert_encoding('föö.html', 'ISO-8859-1', 'UTF-8');
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $iso88591EncodedFilename);
 
         // the parameter filename* is invalid in this case (rawurldecode('f%F6%F6') does not provide a UTF-8 string but an ISO-8859-1 encoded one)
         $this->assertSame('attachment; filename="f__.html"; filename*=utf-8\'\'f%F6%F6.html', $response->headers->get('Content-Disposition'));
     }
 
-    /**
-     * @dataProvider provideRanges
-     */
-    public function testRequests($requestRange, $offset, $length, $responseRange)
+    #[DataProvider('provideRanges')]    public function testRequests($requestRange, $offset, $length, $responseRange)
     {
         $response = BinaryFileResponse::create(__DIR__.'/File/Fixtures/test.gif', 200, array('Content-Type' => 'application/octet-stream'))->setAutoEtag();
 
@@ -111,10 +110,7 @@ class BinaryFileResponseTest extends ResponseTestCase
         $this->assertEquals($responseRange, $response->headers->get('Content-Range'));
     }
 
-    /**
-     * @dataProvider provideRanges
-     */
-    public function testRequestsWithoutEtag($requestRange, $offset, $length, $responseRange)
+    #[DataProvider('provideRanges')]    public function testRequestsWithoutEtag($requestRange, $offset, $length, $responseRange)
     {
         $response = BinaryFileResponse::create(__DIR__.'/File/Fixtures/test.gif', 200, array('Content-Type' => 'application/octet-stream'));
 
@@ -172,10 +168,7 @@ class BinaryFileResponseTest extends ResponseTestCase
         $this->assertNull($response->headers->get('Content-Range'));
     }
 
-    /**
-     * @dataProvider provideFullFileRanges
-     */
-    public function testFullFileRequests($requestRange)
+    #[DataProvider('provideFullFileRanges')]    public function testFullFileRequests($requestRange)
     {
         $response = BinaryFileResponse::create(__DIR__.'/File/Fixtures/test.gif', 200, array('Content-Type' => 'application/octet-stream'))->setAutoEtag();
 
@@ -220,10 +213,7 @@ class BinaryFileResponseTest extends ResponseTestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @dataProvider provideInvalidRanges
-     */
-    public function testInvalidRequests($requestRange)
+    #[DataProvider('provideInvalidRanges')]    public function testInvalidRequests($requestRange)
     {
         $response = BinaryFileResponse::create(__DIR__.'/File/Fixtures/test.gif', 200, array('Content-Type' => 'application/octet-stream'))->setAutoEtag();
 
@@ -247,10 +237,7 @@ class BinaryFileResponseTest extends ResponseTestCase
         );
     }
 
-    /**
-     * @dataProvider provideXSendfileFiles
-     */
-    public function testXSendfile($file)
+    #[DataProvider('provideXSendfileFiles')]    public function testXSendfile($file)
     {
         $request = Request::create('/');
         $request->headers->set('X-Sendfile-Type', 'X-Sendfile');
@@ -262,7 +249,7 @@ class BinaryFileResponseTest extends ResponseTestCase
         $this->expectOutputString('');
         $response->sendContent();
 
-        $this->assertContains('README.md', $response->headers->get('X-Sendfile'));
+        $this->assertStringContainsString('README.md', $response->headers->get('X-Sendfile'));
     }
 
     public static function provideXSendfileFiles()
@@ -273,10 +260,7 @@ class BinaryFileResponseTest extends ResponseTestCase
         );
     }
 
-    /**
-     * @dataProvider getSampleXAccelMappings
-     */
-    public function testXAccelMapping($realpath, $mapping, $virtual)
+    #[DataProvider('getSampleXAccelMappings')]    public function testXAccelMapping($realpath, $mapping, $virtual)
     {
         $request = Request::create('/');
         $request->headers->set('X-Sendfile-Type', 'X-Accel-Redirect');
@@ -288,7 +272,6 @@ class BinaryFileResponseTest extends ResponseTestCase
         $response = new BinaryFileResponse($file, 200, array('Content-Type' => 'application/octet-stream'));
         $reflection = new \ReflectionObject($response);
         $property = $reflection->getProperty('file');
-        $property->setAccessible(true);
         $property->setValue($response, $file);
 
         $response->prepare($request);
@@ -310,7 +293,7 @@ class BinaryFileResponseTest extends ResponseTestCase
         $response->prepare($request);
         $response->sendContent();
 
-        $this->assertFileNotExists($path);
+        $this->assertFileDoesNotExist($path);
     }
 
     public function testAcceptRangeOnUnsafeMethods()

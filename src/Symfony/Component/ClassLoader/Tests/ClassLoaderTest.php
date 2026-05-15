@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\ClassLoader\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\ClassLoader\ClassLoader;
 
@@ -38,10 +40,7 @@ class ClassLoaderTest extends TestCase
         $this->assertCount(2, $fallback_dirs);
     }
 
-    /**
-     * @dataProvider getLoadClassTests
-     */
-    public function testLoadClass($className, $testClassName, $message)
+    #[DataProvider('getLoadClassTests')]    public function testLoadClass($className, $testClassName, $message)
     {
         $loader = new ClassLoader();
         $loader->addPrefix('Namespaced2\\', __DIR__.\DIRECTORY_SEPARATOR.'Fixtures');
@@ -58,10 +57,7 @@ class ClassLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getLoadNonexistentClassTests
-     */
-    public function testLoadNonexistentClass($className, $testClassName, $message)
+    #[DataProvider('getLoadNonexistentClassTests')]    public function testLoadNonexistentClass($className, $testClassName, $message)
     {
         $loader = new ClassLoader();
         $loader->addPrefix('Namespaced2\\', __DIR__.\DIRECTORY_SEPARATOR.'Fixtures');
@@ -128,10 +124,7 @@ class ClassLoaderTest extends TestCase
         set_include_path($includePath);
     }
 
-    /**
-     * @dataProvider getLoadClassFromFallbackTests
-     */
-    public function testLoadClassFromFallback($className, $testClassName, $message)
+    #[DataProvider('getLoadClassFromFallbackTests')]    public function testLoadClassFromFallback($className, $testClassName, $message)
     {
         $loader = new ClassLoader();
         $loader->addPrefix('Namespaced2\\', __DIR__.\DIRECTORY_SEPARATOR.'Fixtures');
@@ -151,10 +144,7 @@ class ClassLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getLoadClassNamespaceCollisionTests
-     */
-    public function testLoadClassNamespaceCollision($namespaces, $className, $message)
+    #[DataProvider('getLoadClassNamespaceCollisionTests')]    public function testLoadClassNamespaceCollision($namespaces, $className, $message)
     {
         $loader = new ClassLoader();
         $loader->addPrefixes($namespaces);

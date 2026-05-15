@@ -101,7 +101,7 @@ class ExceptionHandlerTest extends TestCase
     {
         $exception = new \Exception('foo');
 
-        $handler = $this->getMockBuilder('Symfony\Component\Debug\ExceptionHandler')->setMethods(array('sendPhpResponse'))->getMock();
+        $handler = $this->getMockBuilder('Symfony\Component\Debug\ExceptionHandler')->onlyMethods(array('sendPhpResponse'))->getMock();
         $handler
             ->expects($this->exactly(2))
             ->method('sendPhpResponse');
@@ -120,7 +120,7 @@ class ExceptionHandlerTest extends TestCase
     {
         $exception = new OutOfMemoryException('foo', 0, E_ERROR, __FILE__, __LINE__);
 
-        $handler = $this->getMockBuilder('Symfony\Component\Debug\ExceptionHandler')->setMethods(array('sendPhpResponse'))->getMock();
+        $handler = $this->getMockBuilder('Symfony\Component\Debug\ExceptionHandler')->onlyMethods(array('sendPhpResponse'))->getMock();
         $handler
             ->expects($this->once())
             ->method('sendPhpResponse');

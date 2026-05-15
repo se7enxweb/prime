@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\Filesystem\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\Group;
 /**
  * Test class for Filesystem.
  */
@@ -167,10 +171,7 @@ class FilesystemTest extends FilesystemTestCase
         $this->assertStringEqualsFile($targetFilePath, 'SOURCE FILE');
     }
 
-    /**
-     * @group network
-     */
-    public function testCopyForOriginUrlsAndExistingLocalFileDefaultsToCopy()
+    #[Group('network')]    public function testCopyForOriginUrlsAndExistingLocalFileDefaultsToCopy()
     {
         if (!\in_array('https', stream_get_wrappers())) {
             $this->markTestSkipped('"https" stream wrapper is not enabled.');
@@ -297,7 +298,7 @@ class FilesystemTest extends FilesystemTestCase
 
         $this->filesystem->remove($basePath);
 
-        $this->assertFileNotExists($basePath);
+        $this->assertFileDoesNotExist($basePath);
     }
 
     public function testRemoveCleansArrayOfFilesAndDirectories()
@@ -313,8 +314,8 @@ class FilesystemTest extends FilesystemTestCase
 
         $this->filesystem->remove($files);
 
-        $this->assertFileNotExists($basePath.'dir');
-        $this->assertFileNotExists($basePath.'file');
+        $this->assertFileDoesNotExist($basePath.'dir');
+        $this->assertFileDoesNotExist($basePath.'file');
     }
 
     public function testRemoveCleansTraversableObjectOfFilesAndDirectories()
@@ -330,8 +331,8 @@ class FilesystemTest extends FilesystemTestCase
 
         $this->filesystem->remove($files);
 
-        $this->assertFileNotExists($basePath.'dir');
-        $this->assertFileNotExists($basePath.'file');
+        $this->assertFileDoesNotExist($basePath.'dir');
+        $this->assertFileDoesNotExist($basePath.'file');
     }
 
     public function testRemoveIgnoresNonExistingFiles()
@@ -346,7 +347,7 @@ class FilesystemTest extends FilesystemTestCase
 
         $this->filesystem->remove($files);
 
-        $this->assertFileNotExists($basePath.'dir');
+        $this->assertFileDoesNotExist($basePath.'dir');
     }
 
     public function testRemoveCleansInvalidLinks()
@@ -370,7 +371,7 @@ class FilesystemTest extends FilesystemTestCase
 
         $this->filesystem->remove($basePath);
 
-        $this->assertFileNotExists($basePath);
+        $this->assertFileDoesNotExist($basePath);
     }
 
     public function testFilesExists()
@@ -475,7 +476,11 @@ class FilesystemTest extends FilesystemTestCase
 
         $permissions = fileperms($dir);
 
-        $this->filesystem->chmod($dir, 'Wrongmode');
+        try {
+            $this->filesystem->chmod($dir, 'Wrongmode');
+        } catch (\TypeError $e) {
+            // PHP 8+ throws TypeError for bitwise operation between string and int
+        }
 
         $this->assertSame($permissions, fileperms($dir));
     }
@@ -719,7 +724,7 @@ class FilesystemTest extends FilesystemTestCase
 
         $this->filesystem->rename($file, $newPath);
 
-        $this->assertFileNotExists($file);
+        $this->assertFileDoesNotExist($file);
         $this->assertFileExists($newPath);
     }
 
@@ -748,7 +753,7 @@ class FilesystemTest extends FilesystemTestCase
 
         $this->filesystem->rename($file, $newPath, true);
 
-        $this->assertFileNotExists($file);
+        $this->assertFileDoesNotExist($file);
         $this->assertFileExists($newPath);
     }
 
@@ -784,10 +789,7 @@ class FilesystemTest extends FilesystemTestCase
         $this->assertEquals($file, readlink($link));
     }
 
-    /**
-     * @depends testSymlink
-     */
-    public function testRemoveSymlink()
+    #[Depends('testSymlink')]    public function testRemoveSymlink()
     {
         $this->markAsSkippedIfSymlinkIsMissing();
 
@@ -851,10 +853,7 @@ class FilesystemTest extends FilesystemTestCase
         $this->assertEquals($file, readlink($link2));
     }
 
-    /**
-     * @dataProvider providePathsForMakePathRelative
-     */
-    public function testMakePathRelative($endPath, $startPath, $expectedPath)
+    #[DataProvider('providePathsForMakePathRelative')]    public function testMakePathRelative($endPath, $startPath, $expectedPath)
     {
         $path = $this->filesystem->makePathRelative($endPath, $startPath);
 
@@ -1085,13 +1084,10 @@ class FilesystemTest extends FilesystemTestCase
 
         $this->assertTrue(is_dir($targetPath));
         $this->assertFileExists($targetPath.'source');
-        $this->assertFileNotExists($targetPath.'target');
+        $this->assertFileDoesNotExist($targetPath.'target');
     }
 
-    /**
-     * @dataProvider providePathsForIsAbsolutePath
-     */
-    public function testIsAbsolutePath($path, $expectedResult)
+    #[DataProvider('providePathsForIsAbsolutePath')]    public function testIsAbsolutePath($path, $expectedResult)
     {
         $result = $this->filesystem->isAbsolutePath($path);
 
@@ -1167,7 +1163,7 @@ class FilesystemTest extends FilesystemTestCase
         $this->assertStringStartsWith($scheme, $filename);
 
         // The php://temp stream deletes the file after close
-        $this->assertFileNotExists($filename);
+        $this->assertFileDoesNotExist($filename);
     }
 
     /**
@@ -1252,10 +1248,7 @@ class FilesystemTest extends FilesystemTestCase
         $this->assertStringEqualsFile($filename, 'bar');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testDumpFileAndSetPermissions()
+    #[Group('legacy')]    public function testDumpFileAndSetPermissions()
     {
         $filename = $this->workspace.\DIRECTORY_SEPARATOR.'foo'.\DIRECTORY_SEPARATOR.'baz.txt';
 

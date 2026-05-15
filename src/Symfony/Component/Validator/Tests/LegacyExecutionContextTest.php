@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Collection;
@@ -21,8 +23,8 @@ use Symfony\Component\Validator\ExecutionContext;
 use Symfony\Component\Validator\Tests\Fixtures\ConstraintA;
 use Symfony\Component\Validator\ValidationVisitor;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyExecutionContextTest extends TestCase
 {
@@ -51,16 +53,16 @@ class LegacyExecutionContextTest extends TestCase
         $this->globalContext = $this->getMockBuilder('Symfony\Component\Validator\GlobalExecutionContextInterface')->getMock();
         $this->globalContext->expects($this->any())
             ->method('getRoot')
-            ->will($this->returnValue('Root'));
+            ->willReturn('Root');
         $this->globalContext->expects($this->any())
             ->method('getViolations')
-            ->will($this->returnValue($this->violations));
+            ->willReturn($this->violations);
         $this->globalContext->expects($this->any())
             ->method('getVisitor')
-            ->will($this->returnValue($this->visitor));
+            ->willReturn($this->visitor);
         $this->globalContext->expects($this->any())
             ->method('getMetadataFactory')
-            ->will($this->returnValue($this->metadataFactory));
+            ->willReturn($this->metadataFactory);
         $this->translator = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')->getMock();
         $this->context = new ExecutionContext($this->globalContext, $this->translator, self::TRANS_DOMAIN, $this->metadata, 'currentValue', 'Group', 'foo.bar');
     }
@@ -95,7 +97,7 @@ class LegacyExecutionContextTest extends TestCase
         $this->translator->expects($this->once())
             ->method('trans')
             ->with('Error', array('foo' => 'bar'))
-            ->will($this->returnValue('Translated error'));
+            ->willReturn('Translated error');
 
         $this->context->addViolation('Error', array('foo' => 'bar'), 'invalid');
 
@@ -116,7 +118,7 @@ class LegacyExecutionContextTest extends TestCase
         $this->translator->expects($this->once())
             ->method('trans')
             ->with('Error', array())
-            ->will($this->returnValue('Translated error'));
+            ->willReturn('Translated error');
 
         $this->context->addViolation('Error');
 
@@ -137,11 +139,11 @@ class LegacyExecutionContextTest extends TestCase
         $this->translator->expects($this->once())
             ->method('trans')
             ->with('Error', array('foo1' => 'bar1'))
-            ->will($this->returnValue('Translated error'));
+            ->willReturn('Translated error');
         $this->translator->expects($this->once())
             ->method('transChoice')
             ->with('Choice error', 1, array('foo2' => 'bar2'))
-            ->will($this->returnValue('Translated choice error'));
+            ->willReturn('Translated choice error');
 
         // passed null value should override preconfigured value "invalid"
         $this->context->addViolation('Error', array('foo1' => 'bar1'), null);
@@ -173,7 +175,7 @@ class LegacyExecutionContextTest extends TestCase
         $this->translator->expects($this->once())
             ->method('trans')
             ->with('Error', array('foo' => 'bar'))
-            ->will($this->returnValue('Translated error'));
+            ->willReturn('Translated error');
 
         // override preconfigured property path
         $this->context->addViolationAt('bam.baz', 'Error', array('foo' => 'bar'), 'invalid');
@@ -195,7 +197,7 @@ class LegacyExecutionContextTest extends TestCase
         $this->translator->expects($this->once())
             ->method('trans')
             ->with('Error', array())
-            ->will($this->returnValue('Translated error'));
+            ->willReturn('Translated error');
 
         $this->context->addViolationAt('bam.baz', 'Error');
 
@@ -216,11 +218,11 @@ class LegacyExecutionContextTest extends TestCase
         $this->translator->expects($this->once())
             ->method('trans')
             ->with('Error', array('foo' => 'bar'))
-            ->will($this->returnValue('Translated error'));
+            ->willReturn('Translated error');
         $this->translator->expects($this->once())
             ->method('transChoice')
             ->with('Choice error', 2, array('foo' => 'bar'))
-            ->will($this->returnValue('Translated choice error'));
+            ->willReturn('Translated choice error');
 
         // passed null value should override preconfigured value "invalid"
         $this->context->addViolationAt('bam.baz', 'Error', array('foo' => 'bar'), null);
@@ -252,7 +254,7 @@ class LegacyExecutionContextTest extends TestCase
         $this->translator->expects($this->once())
             ->method('transChoice')
             ->with('foo')
-            ->will($this->throwException(new \InvalidArgumentException()));
+            ->willThrowException(new \InvalidArgumentException());
         $this->translator->expects($this->once())
             ->method('trans')
             ->with('foo');

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Intl\Util\IntlTestHelper;
 use Symfony\Component\Validator\Constraints\Language;
 use Symfony\Component\Validator\Constraints\LanguageValidator;
@@ -51,10 +53,7 @@ class LanguageValidatorTest extends AbstractConstraintValidatorTest
         $this->validator->validate(new \stdClass(), new Language());
     }
 
-    /**
-     * @dataProvider getValidLanguages
-     */
-    public function testValidLanguages($language)
+    #[DataProvider('getValidLanguages')]    public function testValidLanguages($language)
     {
         $this->validator->validate($language, new Language());
 
@@ -70,10 +69,7 @@ class LanguageValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidLanguages
-     */
-    public function testInvalidLanguages($language)
+    #[DataProvider('getInvalidLanguages')]    public function testInvalidLanguages($language)
     {
         $constraint = new Language(array(
             'message' => 'myMessage',

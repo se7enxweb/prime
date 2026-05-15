@@ -11,16 +11,15 @@
 
 namespace Symfony\Component\HttpFoundation\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 
 class RequestMatcherTest extends TestCase
 {
-    /**
-     * @dataProvider getMethodData
-     */
-    public function testMethod($requestMethod, $matcherMethod, $isMatch)
+    #[DataProvider('getMethodData')]    public function testMethod($requestMethod, $matcherMethod, $isMatch)
     {
         $matcher = new RequestMatcher();
         $matcher->matchMethod($matcherMethod);
@@ -63,10 +62,7 @@ class RequestMatcherTest extends TestCase
         $this->assertTrue($matcher->matches($httpRequest));
     }
 
-    /**
-     * @dataProvider getHostData
-     */
-    public function testHost($pattern, $isMatch)
+    #[DataProvider('getHostData')]    public function testHost($pattern, $isMatch)
     {
         $matcher = new RequestMatcher();
         $request = Request::create('', 'get', array(), array(), array(), array('HTTP_HOST' => 'foo.example.com'));

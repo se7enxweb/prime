@@ -23,7 +23,7 @@ class YamlReferenceDumperTest extends TestCase
 
         $dumper = new YamlReferenceDumper();
 
-        $this->assertContains($this->getConfigurationAsString(), $dumper->dump($configuration));
+        $this->assertStringContainsString($this->getConfigurationAsString(), $dumper->dump($configuration));
         $this->markTestIncomplete('The Yaml Dumper currently does not support prototyped arrays');
     }
 

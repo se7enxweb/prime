@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\Doctrine\Tests\PropertyInfo;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Doctrine\DBAL\Types\Type as DBALType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
@@ -79,11 +81,7 @@ class DoctrineExtractorTest extends TestCase
             $this->extractor->getProperties('Symfony\Bridge\Doctrine\Tests\PropertyInfo\Fixtures\DoctrineWithEmbedded')
         );
     }
-
-    /**
-     * @dataProvider typesProvider
-     */
-    public function testExtract($property, ?array $type = null)
+    #[DataProvider('typesProvider')]    public function testExtract($property, ?array $type = null)
     {
         $this->assertEquals($type, $this->extractor->getTypes('Symfony\Bridge\Doctrine\Tests\PropertyInfo\Fixtures\DoctrineDummy', $property, array()));
     }

@@ -50,9 +50,9 @@ class DependencyInjectionExtensionTest extends TestCase
                 throw new ServiceNotFoundException($id);
             });
 
-        $extension = new DependencyInjectionExtension($container, array(), array('test' => array('extension1', 'extension2'), 'other' => array('extension3')), array());
+$extension = new DependencyInjectionExtension($container, array(), array('test' => array('extension1', 'extension2'), 'other' => array('extension3')), array());
 
-        $this->assertTrue($extension->hasTypeExtensions('test'));
+$this->assertTrue($extension->hasTypeExtensions('test'));
         $this->assertFalse($extension->hasTypeExtensions('unknown'));
         $this->assertSame(array($typeExtension1, $typeExtension2), $extension->getTypeExtensions('test'));
     }
@@ -72,7 +72,7 @@ class DependencyInjectionExtensionTest extends TestCase
             ->with('extension')
             ->willReturn($formTypeExtension);
 
-        $extension = new DependencyInjectionExtension($container, array(), array('test' => array('extension')), array());
+$extension = new DependencyInjectionExtension($container, array(), array('test' => array('extension')), array());
 
         $extensions = $extension->getTypeExtensions('test');
 
@@ -88,15 +88,15 @@ class DependencyInjectionExtensionTest extends TestCase
             ->method('get')
             ->with('foo')
             ->willReturn($this->getMockBuilder('Symfony\Component\Form\FormTypeGuesserInterface')->getMock());
-        $extension = new DependencyInjectionExtension($container, array(), array(), array('foo'));
+$extension = new DependencyInjectionExtension($container, array(), array(), array('foo'));
 
-        $this->assertInstanceOf('Symfony\Component\Form\FormTypeGuesserChain', $extension->getTypeGuesser());
+$this->assertInstanceOf('Symfony\Component\Form\FormTypeGuesserChain', $extension->getTypeGuesser());
     }
 
     public function testGetTypeGuesserReturnsNullWhenNoTypeGuessersHaveBeenConfigured()
     {
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $extension = new DependencyInjectionExtension($container, array(), array(), array());
+$extension = new DependencyInjectionExtension($container, array(), array(), array());
 
         $this->assertNull($extension->getTypeGuesser());
     }

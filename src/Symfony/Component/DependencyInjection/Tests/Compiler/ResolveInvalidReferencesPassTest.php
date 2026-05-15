@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\DependencyInjection\Tests\Compiler;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Compiler\ResolveInvalidReferencesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -62,10 +64,7 @@ class ResolveInvalidReferencesPassTest extends TestCase
         $this->assertEquals(array(), $def->getProperties());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testStrictFlagIsPreserved()
+    #[Group('legacy')]    public function testStrictFlagIsPreserved()
     {
         $container = new ContainerBuilder();
         $container->register('bar');

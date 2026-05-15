@@ -392,6 +392,10 @@ class Process
      */
     public function signal($signal)
     {
+        if (!\is_int($signal) || $signal < 1) {
+            throw new RuntimeException(sprintf('Invalid signal `%s`.', $signal));
+        }
+
         $this->doSignal($signal, true);
 
         return $this;

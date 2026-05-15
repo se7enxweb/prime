@@ -11,14 +11,17 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresFunction;
 use Symfony\Bridge\PhpUnit\DnsMock;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\EmailValidator;
 use Symfony\Component\Validator\Validation;
 
-/**
- * @group dns-sensitive
- */
+#[Group('dns-sensitive')]
 class EmailValidatorTest extends AbstractConstraintValidatorTest
 {
     protected function getApiVersion()
@@ -54,10 +57,7 @@ class EmailValidatorTest extends AbstractConstraintValidatorTest
         $this->validator->validate(new \stdClass(), new Email());
     }
 
-    /**
-     * @dataProvider getValidEmails
-     */
-    public function testValidEmails($email)
+    #[DataProvider('getValidEmails')]    public function testValidEmails($email)
     {
         $this->validator->validate($email, new Email());
 
@@ -73,10 +73,7 @@ class EmailValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidEmails
-     */
-    public function testInvalidEmails($email)
+    #[DataProvider('getInvalidEmails')]    public function testInvalidEmails($email)
     {
         $constraint = new Email(array(
             'message' => 'myMessage',
@@ -109,9 +106,9 @@ class EmailValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
+    #[DataProvider('getDnsChecks')]
+    #[RequiresFunction('Symfony\Bridge\PhpUnit\DnsMock::withMockedHosts')]
     /**
-     * @dataProvider getDnsChecks
-     * @requires function Symfony\Bridge\PhpUnit\DnsMock::withMockedHosts
      */
     public function testDnsChecks($type, $violation)
     {
@@ -146,10 +143,7 @@ class EmailValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @requires function Symfony\Bridge\PhpUnit\DnsMock::withMockedHosts
-     */
-    public function testHostnameIsProperlyParsed()
+    #[RequiresFunction('Symfony\Bridge\PhpUnit\DnsMock::withMockedHosts')]    public function testHostnameIsProperlyParsed()
     {
         DnsMock::withMockedHosts(array('baz.com' => array(array('type' => 'MX'))));
 
@@ -161,10 +155,7 @@ class EmailValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider provideCheckTypes
-     */
-    public function testEmptyHostIsNotValid($checkType, $violation)
+    #[DataProvider('provideCheckTypes')]    public function testEmptyHostIsNotValid($checkType, $violation)
     {
         $this->validator->validate(
             'foo@bar.fr@',

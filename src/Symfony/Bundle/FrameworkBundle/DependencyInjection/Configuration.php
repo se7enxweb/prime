@@ -383,7 +383,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('name')
                             ->validate()
                                 ->ifTrue(function ($v) {
-                                    parse_str($v, $parsed);
+                                    parse_str((string) $v, $parsed);
 
                                     return implode('&', array_keys($parsed)) !== (string) $v;
                                 })

@@ -61,14 +61,14 @@ class GenericEventTest extends TestCase
     public function testSetArguments()
     {
         $result = $this->event->setArguments(array('foo' => 'bar'));
-        $this->assertAttributeSame(array('foo' => 'bar'), 'arguments', $this->event);
+        $this->assertSame(array('foo' => 'bar'), (new \ReflectionProperty($this->event, 'arguments'))->getValue($this->event));
         $this->assertSame($this->event, $result);
     }
 
     public function testSetArgument()
     {
         $result = $this->event->setArgument('foo2', 'bar2');
-        $this->assertAttributeSame(array('name' => 'Event', 'foo2' => 'bar2'), 'arguments', $this->event);
+        $this->assertSame(array('name' => 'Event', 'foo2' => 'bar2'), (new \ReflectionProperty($this->event, 'arguments'))->getValue($this->event));
         $this->assertEquals($this->event, $result);
     }
 
@@ -93,20 +93,20 @@ class GenericEventTest extends TestCase
         $this->assertEquals('Event', $this->event['name']);
 
         // test getting invalid arg
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $this->assertFalse($this->event['nameNotExist']);
     }
 
     public function testOffsetSet()
     {
         $this->event['foo2'] = 'bar2';
-        $this->assertAttributeSame(array('name' => 'Event', 'foo2' => 'bar2'), 'arguments', $this->event);
+        $this->assertSame(array('name' => 'Event', 'foo2' => 'bar2'), (new \ReflectionProperty($this->event, 'arguments'))->getValue($this->event));
     }
 
     public function testOffsetUnset()
     {
         unset($this->event['name']);
-        $this->assertAttributeSame(array(), 'arguments', $this->event);
+        $this->assertSame(array(), (new \ReflectionProperty($this->event, 'arguments'))->getValue($this->event));
     }
 
     public function testOffsetIsset()

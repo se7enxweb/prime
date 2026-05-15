@@ -11,13 +11,17 @@
 
 namespace Symfony\Component\Intl\Tests\Data\Provider;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Intl\Data\Provider\ScriptDataProvider;
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Intl\Locale;
 
+#[Group('intl-data')]
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
- * @group intl-data
  */
 abstract class AbstractScriptDataProviderTest extends AbstractDataProviderTest
 {
@@ -281,10 +285,7 @@ abstract class AbstractScriptDataProviderTest extends AbstractDataProviderTest
         $this->assertSame(static::$scripts, $this->dataProvider->getScripts());
     }
 
-    /**
-     * @dataProvider provideLocales
-     */
-    public function testGetNames($displayLocale)
+    #[DataProvider('provideLocales')]    public function testGetNames($displayLocale)
     {
         $scripts = array_keys($this->dataProvider->getNames($displayLocale));
 
@@ -306,10 +307,7 @@ abstract class AbstractScriptDataProviderTest extends AbstractDataProviderTest
         );
     }
 
-    /**
-     * @dataProvider provideLocaleAliases
-     */
-    public function testGetNamesSupportsAliases($alias, $ofLocale)
+    #[DataProvider('provideLocaleAliases')]    public function testGetNamesSupportsAliases($alias, $ofLocale)
     {
         // Can't use assertSame(), because some aliases contain scripts with
         // different collation (=order of output) than their aliased locale
@@ -320,10 +318,7 @@ abstract class AbstractScriptDataProviderTest extends AbstractDataProviderTest
         );
     }
 
-    /**
-     * @dataProvider provideLocales
-     */
-    public function testGetName($displayLocale)
+    #[DataProvider('provideLocales')]    public function testGetName($displayLocale)
     {
         $names = $this->dataProvider->getNames($displayLocale);
 

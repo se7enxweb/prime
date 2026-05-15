@@ -11,13 +11,14 @@
 
 namespace Symfony\Bridge\Doctrine\Tests\Form\ChoiceList;
 
+
+use PHPUnit\Framework\Attributes\Group;
 if (!class_exists('Symfony\Component\Form\Tests\Extension\Core\ChoiceList\AbstractChoiceListTest')) {
     return;
 }
-
+    #[Group('legacy')]
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
- * @group legacy
  */
 class LoadedEntityChoiceListCompositeIdTest extends AbstractEntityChoiceListCompositeIdTest
 {

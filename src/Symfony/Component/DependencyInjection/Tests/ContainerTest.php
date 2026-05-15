@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\DependencyInjection\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -29,10 +32,7 @@ class ContainerTest extends TestCase
         $this->assertEquals(array('foo' => 'bar'), $sc->getParameterBag()->all(), '__construct() takes an array of parameters as its first argument');
     }
 
-    /**
-     * @dataProvider dataForTestCamelize
-     */
-    public function testCamelize($id, $expected)
+    #[DataProvider('dataForTestCamelize')]    public function testCamelize($id, $expected)
     {
         $this->assertEquals($expected, Container::camelize($id), sprintf('Container::camelize("%s")', $id));
     }
@@ -53,10 +53,7 @@ class ContainerTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider dataForTestUnderscore
-     */
-    public function testUnderscore($id, $expected)
+    #[DataProvider('dataForTestUnderscore')]    public function testUnderscore($id, $expected)
     {
         $this->assertEquals($expected, Container::underscore($id), sprintf('Container::underscore("%s")', $id));
     }
@@ -145,10 +142,7 @@ class ContainerTest extends TestCase
         $this->assertFalse($sc->has('foo'), '->set() with null service resets the service');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testSetDoesNotAllowPrototypeScope()
+    #[Group('legacy')]    public function testSetDoesNotAllowPrototypeScope()
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -156,10 +150,7 @@ class ContainerTest extends TestCase
         $c->set('foo', new \stdClass(), Container::SCOPE_PROTOTYPE);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testSetDoesNotAllowInactiveScope()
+    #[Group('legacy')]    public function testSetDoesNotAllowInactiveScope()
     {
         $this->expectException(\RuntimeException::class);
 
@@ -168,10 +159,7 @@ class ContainerTest extends TestCase
         $c->set('foo', new \stdClass(), 'foo');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testSetAlsoSetsScopedService()
+    #[Group('legacy')]    public function testSetAlsoSetsScopedService()
     {
         $c = new Container();
         $c->addScope(new Scope('foo'));
@@ -183,10 +171,7 @@ class ContainerTest extends TestCase
         $this->assertSame($foo, $scoped['foo']['foo'], '->set() sets a scoped service');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testSetAlsoCallsSynchronizeService()
+    #[Group('legacy')]    public function testSetAlsoCallsSynchronizeService()
     {
         $c = new ProjectServiceContainer();
         $c->addScope(new Scope('foo'));
@@ -261,10 +246,7 @@ class ContainerTest extends TestCase
         }
     }
 
-    /**
-     * @group legacy
-     */
-    public function testGetReturnsNullOnInactiveScope()
+    #[Group('legacy')]    public function testGetReturnsNullOnInactiveScope()
     {
         $sc = new ProjectServiceContainer();
         $this->assertNull($sc->get('inactive', ContainerInterface::NULL_ON_INVALID_REFERENCE));
@@ -275,7 +257,7 @@ class ContainerTest extends TestCase
     public function testGetSyntheticServiceAlwaysThrows()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
-        $this->expectExceptionMessage('You have requested a synthetic service (\"request\"). The DIC does not know how to construct this service.');
+        $this->expectExceptionMessage('You have requested a synthetic service ("request"). The DIC does not know how to construct this service.');
 
         require_once __DIR__.'/Fixtures/php/services9.php';
 
@@ -318,10 +300,7 @@ class ContainerTest extends TestCase
         $this->assertNull($c->get('bar', ContainerInterface::NULL_ON_INVALID_REFERENCE));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testCannotResetInActiveScope()
+    #[Group('legacy')]    public function testCannotResetInActiveScope()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\LogicException::class);
         $this->expectExceptionMessage('Resetting the container is not allowed when a scope is active.');
@@ -335,10 +314,7 @@ class ContainerTest extends TestCase
         $c->reset();
     }
 
-    /**
-     * @group legacy
-     */
-    public function testResetAfterLeavingScope()
+    #[Group('legacy')]    public function testResetAfterLeavingScope()
     {
         $c = new Container();
         $c->addScope(new Scope('foo'));
@@ -352,10 +328,7 @@ class ContainerTest extends TestCase
         $this->assertNull($c->get('bar', ContainerInterface::NULL_ON_INVALID_REFERENCE));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testEnterLeaveCurrentScope()
+    #[Group('legacy')]    public function testEnterLeaveCurrentScope()
     {
         $container = new ProjectServiceContainer();
         $container->addScope(new Scope('foo'));
@@ -383,10 +356,7 @@ class ContainerTest extends TestCase
         $this->assertSame($scopedFoo1, $scopedFoo3);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testEnterLeaveScopeWithChildScopes()
+    #[Group('legacy')]    public function testEnterLeaveScopeWithChildScopes()
     {
         $container = new Container();
         $container->addScope(new Scope('foo'));
@@ -416,10 +386,7 @@ class ContainerTest extends TestCase
         $this->assertFalse($container->has('a'));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testEnterScopeRecursivelyWithInactiveChildScopes()
+    #[Group('legacy')]    public function testEnterScopeRecursivelyWithInactiveChildScopes()
     {
         $container = new Container();
         $container->addScope(new Scope('foo'));
@@ -460,10 +427,7 @@ class ContainerTest extends TestCase
         $this->assertTrue($container->has('a'));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testEnterChildScopeRecursively()
+    #[Group('legacy')]    public function testEnterChildScopeRecursively()
     {
         $container = new Container();
         $container->addScope(new Scope('foo'));
@@ -498,10 +462,7 @@ class ContainerTest extends TestCase
         $this->assertTrue($container->has('a'));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testEnterScopeNotAdded()
+    #[Group('legacy')]    public function testEnterScopeNotAdded()
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -509,10 +470,7 @@ class ContainerTest extends TestCase
         $container->enterScope('foo');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testEnterScopeDoesNotAllowInactiveParentScope()
+    #[Group('legacy')]    public function testEnterScopeDoesNotAllowInactiveParentScope()
     {
         $this->expectException(\RuntimeException::class);
 
@@ -522,10 +480,7 @@ class ContainerTest extends TestCase
         $container->enterScope('bar');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLeaveScopeNotActive()
+    #[Group('legacy')]    public function testLeaveScopeNotActive()
     {
         $container = new Container();
         $container->addScope(new Scope('foo'));
@@ -547,9 +502,9 @@ class ContainerTest extends TestCase
         }
     }
 
+    #[DataProvider('getLegacyBuiltInScopes')]
+    #[Group('legacy')]
     /**
-     * @dataProvider getLegacyBuiltInScopes
-     * @group legacy
      */
     public function testAddScopeDoesNotAllowBuiltInScopes($scope)
     {
@@ -559,10 +514,7 @@ class ContainerTest extends TestCase
         $container->addScope(new Scope($scope));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testAddScopeDoesNotAllowExistingScope()
+    #[Group('legacy')]    public function testAddScopeDoesNotAllowExistingScope()
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -571,9 +523,9 @@ class ContainerTest extends TestCase
         $container->addScope(new Scope('foo'));
     }
 
+    #[DataProvider('getLegacyInvalidParentScopes')]
+    #[Group('legacy')]
     /**
-     * @dataProvider getLegacyInvalidParentScopes
-     * @group legacy
      */
     public function testAddScopeDoesNotAllowInvalidParentScope($scope)
     {
@@ -583,10 +535,7 @@ class ContainerTest extends TestCase
         $c->addScope(new Scope('foo', $scope));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testAddScope()
+    #[Group('legacy')]    public function testAddScope()
     {
         $c = new Container();
         $c->addScope(new Scope('foo'));
@@ -601,10 +550,7 @@ class ContainerTest extends TestCase
         $this->assertSame(array('foo' => array('bar', 'baz'), 'bar' => array('baz'), 'baz' => array()), $this->getField($c, 'scopeChildren'));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testHasScope()
+    #[Group('legacy')]    public function testHasScope()
     {
         $c = new Container();
 
@@ -653,10 +599,7 @@ class ContainerTest extends TestCase
         $this->assertFalse($c->initialized('throws_exception_on_service_configuration'));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testIsScopeActive()
+    #[Group('legacy')]    public function testIsScopeActive()
     {
         $c = new Container();
 
@@ -691,7 +634,6 @@ class ContainerTest extends TestCase
     protected function getField($obj, $field)
     {
         $reflection = new \ReflectionProperty($obj, $field);
-        $reflection->setAccessible(true);
 
         return $reflection->getValue($obj);
     }

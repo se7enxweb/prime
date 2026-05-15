@@ -11,6 +11,8 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Routing;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\Route;
@@ -158,7 +160,7 @@ class RouterTest extends TestCase
     public function testExceptionOnNonExistentParameter()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException::class);
-        $this->expectExceptionMessage('You have requested a non-existent parameter \"nope\".');
+        $this->expectExceptionMessage('You have requested a non-existent parameter "nope".');
 
         $routes = new RouteCollection();
 
@@ -175,7 +177,7 @@ class RouterTest extends TestCase
     public function testExceptionOnNonStringParameter()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
-        $this->expectExceptionMessage('The container parameter \"object\", used in the route configuration value \"/%object%\", must be a string or numeric, but it is of type object.');
+        $this->expectExceptionMessage('The container parameter "object", used in the route configuration value "/%object%", must be a string or numeric, but it is of type object.');
 
         $routes = new RouteCollection();
 
@@ -188,10 +190,7 @@ class RouterTest extends TestCase
         $router->getRouteCollection()->get('foo');
     }
 
-    /**
-     * @dataProvider getNonStringValues
-     */
-    public function testDefaultValuesAsNonStrings($value)
+    #[DataProvider('getNonStringValues')]    public function testDefaultValuesAsNonStrings($value)
     {
         $routes = new RouteCollection();
         $routes->add('foo', new Route('foo', array('foo' => $value), array('foo' => '\d+')));
@@ -220,15 +219,15 @@ class RouterTest extends TestCase
         $loader
             ->expects($this->any())
             ->method('load')
-            ->will($this->returnValue($routes))
+            ->willReturn($routes)
         ;
 
-        $sc = $this->getMockBuilder('Symfony\\Component\\DependencyInjection\\Container')->setMethods(array('get'))->getMock();
+        $sc = $this->getMockBuilder('Symfony\\Component\\DependencyInjection\\Container')->onlyMethods(array('get'))->getMock();
 
         $sc
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue($loader))
+            ->willReturn($loader)
         ;
 
         return $sc;

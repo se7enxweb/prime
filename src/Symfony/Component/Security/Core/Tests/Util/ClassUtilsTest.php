@@ -12,10 +12,14 @@
 namespace Symfony\Component\Security\Core\Tests\Util
 {
     use PHPUnit\Framework\TestCase;
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
     use Symfony\Component\Security\Core\Util\ClassUtils;
 
+    #[Group('legacy')]
     /**
-     * @group legacy
      */
     class ClassUtilsTest extends TestCase
     {
@@ -32,10 +36,7 @@ namespace Symfony\Component\Security\Core\Tests\Util
             );
         }
 
-        /**
-         * @dataProvider dataGetClass
-         */
-        public function testGetRealClass($object, $expectedClassName)
+        #[DataProvider('dataGetClass')]        public function testGetRealClass($object, $expectedClassName)
         {
             $this->assertEquals($expectedClassName, ClassUtils::getRealClass($object));
         }

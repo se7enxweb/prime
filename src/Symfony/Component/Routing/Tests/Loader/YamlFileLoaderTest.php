@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Routing\Tests\Loader;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Resource\FileResource;
@@ -40,10 +43,7 @@ class YamlFileLoaderTest extends TestCase
         $this->assertEquals(array(new FileResource(realpath(__DIR__.'/../Fixtures/empty.yml'))), $collection->getResources());
     }
 
-    /**
-     * @dataProvider getPathsToInvalidFiles
-     */
-    public function testLoadThrowsExceptionWithInvalidFile($filePath)
+    #[DataProvider('getPathsToInvalidFiles')]    public function testLoadThrowsExceptionWithInvalidFile($filePath)
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -91,10 +91,7 @@ class YamlFileLoaderTest extends TestCase
         $this->assertEquals('context.getMethod() == "GET"', $route->getCondition());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyRouteDefinitionLoading()
+    #[Group('legacy')]    public function testLegacyRouteDefinitionLoading()
     {
         $loader = new YamlFileLoader(new FileLocator(array(__DIR__.'/../Fixtures')));
         $routeCollection = $loader->load('legacy_validpattern.yml');

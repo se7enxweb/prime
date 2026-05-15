@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\DependencyInjection\Tests\Dumper;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\GraphvizDumper;
@@ -24,10 +26,7 @@ class GraphvizDumperTest extends TestCase
         self::$fixturesPath = __DIR__.'/../Fixtures/';
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyDump()
+    #[Group('legacy')]    public function testLegacyDump()
     {
         $container = include self::$fixturesPath.'/containers/legacy-container9.php';
         $dumper = new GraphvizDumper($container);
@@ -82,10 +81,7 @@ class GraphvizDumperTest extends TestCase
         $this->assertEquals(str_replace('%path%', __DIR__, file_get_contents(self::$fixturesPath.'/graphviz/services17.dot')), $dumper->dump(), '->dump() dumps services');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testDumpWithScopes()
+    #[Group('legacy')]    public function testDumpWithScopes()
     {
         $container = include self::$fixturesPath.'/containers/legacy-container18.php';
         $dumper = new GraphvizDumper($container);

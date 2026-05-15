@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\DataTransformer;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\ChoiceList\ArrayChoiceList;
 use Symfony\Component\Form\Extension\Core\DataTransformer\ChoiceToValueTransformer;
@@ -46,10 +48,7 @@ class ChoiceToValueTransformerTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider transformProvider
-     */
-    public function testTransform($in, $out, $inWithNull, $outWithNull)
+    #[DataProvider('transformProvider')]    public function testTransform($in, $out, $inWithNull, $outWithNull)
     {
         $this->assertSame($out, $this->transformer->transform($in));
         $this->assertSame($outWithNull, $this->transformerWithNull->transform($inWithNull));
@@ -67,10 +66,7 @@ class ChoiceToValueTransformerTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider reverseTransformProvider
-     */
-    public function testReverseTransform($in, $out, $inWithNull, $outWithNull)
+    #[DataProvider('reverseTransformProvider')]    public function testReverseTransform($in, $out, $inWithNull, $outWithNull)
     {
         $this->assertSame($out, $this->transformer->reverseTransform($in));
         $this->assertSame($outWithNull, $this->transformerWithNull->reverseTransform($inWithNull));
@@ -86,10 +82,7 @@ class ChoiceToValueTransformerTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider reverseTransformExpectsStringOrNullProvider
-     */
-    public function testReverseTransformExpectsStringOrNull($value)
+    #[DataProvider('reverseTransformExpectsStringOrNullProvider')]    public function testReverseTransformExpectsStringOrNull($value)
     {
         $this->expectException(\Symfony\Component\Form\Exception\TransformationFailedException::class);
 

@@ -88,10 +88,10 @@ class CsrfValidationListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $event = new FormEvent($this->form, array('csrf' => 'token'));
+$event = new FormEvent($this->form, array('csrf' => 'token'));
         $validation = new CsrfValidationListener('csrf', $this->tokenManager, 'unknown', 'Error message', null, null, $serverParams);
 
         $validation->preSubmit($event);
-        $this->assertEmpty($this->form->getErrors());
+$this->assertEmpty($this->form->getErrors());
     }
 }

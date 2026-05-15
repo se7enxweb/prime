@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
@@ -38,7 +40,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->serverParams = $this->getMockBuilder('Symfony\Component\Form\Util\ServerParams')->setMethods(array('getNormalizedIniPostMaxSize', 'getContentLength'))->getMock();
+        $this->serverParams = $this->getMockBuilder('Symfony\Component\Form\Util\ServerParams')->onlyMethods(array('getNormalizedIniPostMaxSize', 'getContentLength'))->getMock();
         $this->requestHandler = $this->getRequestHandler();
         $this->factory = Forms::createFormFactoryBuilder()->getFormFactory();
         $this->request = null;
@@ -58,13 +60,10 @@ abstract class AbstractRequestHandlerTest extends TestCase
     {
         return array_merge(array(
             array('GET'),
-        ), $this->methodExceptGetProvider());
+        ), self::methodExceptGetProvider());
     }
 
-    /**
-     * @dataProvider methodProvider
-     */
-    public function testSubmitIfNameInRequest($method)
+    #[DataProvider('methodProvider')]    public function testSubmitIfNameInRequest($method)
     {
         $form = $this->getMockForm('param1', $method);
 
@@ -79,10 +78,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $this->requestHandler->handleRequest($form, $this->request);
     }
 
-    /**
-     * @dataProvider methodProvider
-     */
-    public function testDoNotSubmitIfWrongRequestMethod($method)
+    #[DataProvider('methodProvider')]    public function testDoNotSubmitIfWrongRequestMethod($method)
     {
         $form = $this->getMockForm('param1', $method);
 
@@ -98,10 +94,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $this->requestHandler->handleRequest($form, $this->request);
     }
 
-    /**
-     * @dataProvider methodExceptGetProvider
-     */
-    public function testDoNoSubmitSimpleFormIfNameNotInRequestAndNotGetRequest($method)
+    #[DataProvider('methodExceptGetProvider')]    public function testDoNoSubmitSimpleFormIfNameNotInRequestAndNotGetRequest($method)
     {
         $form = $this->getMockForm('param1', $method, false);
 
@@ -115,10 +108,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $this->requestHandler->handleRequest($form, $this->request);
     }
 
-    /**
-     * @dataProvider methodExceptGetProvider
-     */
-    public function testDoNotSubmitCompoundFormIfNameNotInRequestAndNotGetRequest($method)
+    #[DataProvider('methodExceptGetProvider')]    public function testDoNotSubmitCompoundFormIfNameNotInRequestAndNotGetRequest($method)
     {
         $form = $this->getMockForm('param1', $method, true);
 
@@ -146,18 +136,16 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $this->requestHandler->handleRequest($form, $this->request);
     }
 
-    /**
-     * @dataProvider methodProvider
-     */
+    #[DataProvider('methodProvider')]
     public function testSubmitFormWithEmptyNameIfAtLeastOneFieldInRequest($method)
     {
         $form = $this->getMockForm('', $method);
         $form->expects($this->any())
             ->method('all')
-            ->will($this->returnValue(array(
+            ->willReturn(array(
                 'param1' => $this->getMockForm('param1'),
                 'param2' => $this->getMockForm('param2'),
-            )));
+            ));
 
         $this->setRequestData($method, $requestData = array(
             'param1' => 'submitted value',
@@ -171,22 +159,20 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $this->requestHandler->handleRequest($form, $this->request);
     }
 
-    /**
-     * @dataProvider methodProvider
-     */
+    #[DataProvider('methodProvider')]
     public function testDoNotSubmitFormWithEmptyNameIfNoFieldInRequest($method)
     {
         $form = $this->getMockForm('', $method);
         $form->expects($this->any())
             ->method('all')
-            ->will($this->returnValue(array(
+            ->willReturn(array(
                 'param1' => $this->getMockForm('param1'),
                 'param2' => $this->getMockForm('param2'),
-            )));
+));
 
         $this->setRequestData($method, array(
             'paramx' => 'submitted value',
-        ));
+));
 
         $form->expects($this->never())
             ->method('submit');
@@ -194,10 +180,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $this->requestHandler->handleRequest($form, $this->request);
     }
 
-    /**
-     * @dataProvider methodExceptGetProvider
-     */
-    public function testMergeParamsAndFiles($method)
+    #[DataProvider('methodExceptGetProvider')]    public function testMergeParamsAndFiles($method)
     {
         $form = $this->getMockForm('param1', $method);
         $file = $this->getMockFile();
@@ -222,10 +205,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $this->requestHandler->handleRequest($form, $this->request);
     }
 
-    /**
-     * @dataProvider methodExceptGetProvider
-     */
-    public function testParamTakesPrecedenceOverFile($method)
+    #[DataProvider('methodExceptGetProvider')]    public function testParamTakesPrecedenceOverFile($method)
     {
         $form = $this->getMockForm('param1', $method);
         $file = $this->getMockFile();
@@ -243,10 +223,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $this->requestHandler->handleRequest($form, $this->request);
     }
 
-    /**
-     * @dataProvider methodExceptGetProvider
-     */
-    public function testSubmitFileIfNoParam($method)
+    #[DataProvider('methodExceptGetProvider')]    public function testSubmitFileIfNoParam($method)
     {
         $form = $this->getMockForm('param1', $method);
         $file = $this->getMockFile();
@@ -264,10 +241,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $this->requestHandler->handleRequest($form, $this->request);
     }
 
-    /**
-     * @dataProvider methodExceptGetProvider
-     */
-    public function testSubmitMultipleFiles($method)
+    #[DataProvider('methodExceptGetProvider')]    public function testSubmitMultipleFiles($method)
     {
         $form = $this->getMockForm('param1', $method);
         $file = $this->getMockFile();
@@ -287,10 +261,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $this->requestHandler->handleRequest($form, $this->request);
     }
 
-    /**
-     * @dataProvider methodExceptGetProvider
-     */
-    public function testSubmitFileWithNamelessForm($method)
+    #[DataProvider('methodExceptGetProvider')]    public function testSubmitFileWithNamelessForm($method)
     {
         $form = $this->getMockForm(null, $method);
         $file = $this->getMockFile();
@@ -308,21 +279,18 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $this->requestHandler->handleRequest($form, $this->request);
     }
 
-    /**
-     * @dataProvider getPostMaxSizeFixtures
-     */
-    public function testAddFormErrorIfPostMaxSizeExceeded($contentLength, $iniMax, $shouldFail, array $errorParams = array())
+    #[DataProvider('getPostMaxSizeFixtures')]    public function testAddFormErrorIfPostMaxSizeExceeded($contentLength, $iniMax, $shouldFail, array $errorParams = array())
     {
         $this->serverParams->expects($this->once())
             ->method('getContentLength')
-            ->will($this->returnValue($contentLength));
+            ->willReturn($contentLength);
         $this->serverParams->expects($this->any())
             ->method('getNormalizedIniPostMaxSize')
-            ->will($this->returnValue($iniMax));
+            ->willReturn($iniMax);
 
         $options = array('post_max_size_message' => 'Max {{ max }}!');
         $form = $this->factory->createNamed('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', null, $options);
-        $this->setRequestData('POST', array(), array());
+$this->setRequestData('POST', array(), array());
 
         $this->requestHandler->handleRequest($form, $this->request);
 
@@ -376,18 +344,18 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $config = $this->getMockBuilder('Symfony\Component\Form\FormConfigInterface')->getMock();
         $config->expects($this->any())
             ->method('getMethod')
-            ->will($this->returnValue($method));
+            ->willReturn($method);
         $config->expects($this->any())
             ->method('getCompound')
-            ->will($this->returnValue($compound));
+            ->willReturn($compound);
 
         $form = $this->getMockBuilder('Symfony\Component\Form\Test\FormInterface')->getMock();
         $form->expects($this->any())
             ->method('getName')
-            ->will($this->returnValue($name));
+            ->willReturn($name);
         $form->expects($this->any())
             ->method('getConfig')
-            ->will($this->returnValue($config));
+            ->willReturn($config);
 
         return $form;
     }

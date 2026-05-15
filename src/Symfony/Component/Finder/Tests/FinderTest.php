@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Finder\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Finder\Adapter\AdapterInterface;
 use Symfony\Component\Finder\Adapter\PhpAdapter;
 use Symfony\Component\Finder\Finder;
@@ -155,10 +158,7 @@ class FinderTest extends Iterator\RealIteratorTestCase
         $this->assertIterator(array(), $finder->in(self::$tmpDir)->getIterator());
     }
 
-    /**
-     * @dataProvider getRegexNameTestData
-     */
-    public function testRegexName($regex)
+    #[DataProvider('getRegexNameTestData')]    public function testRegexName($regex)
     {
         $finder = $this->buildFinder();
         $finder->name($regex);
@@ -472,10 +472,7 @@ class FinderTest extends Iterator\RealIteratorTestCase
         \count($finder);
     }
 
-    /**
-     * @dataProvider getContainsTestData
-     */
-    public function testContains($matchPatterns, $noMatchPatterns, $expected)
+    #[DataProvider('getContainsTestData')]    public function testContains($matchPatterns, $noMatchPatterns, $expected)
     {
         $finder = $this->buildFinder();
         $finder->in(__DIR__.\DIRECTORY_SEPARATOR.'Fixtures')
@@ -577,10 +574,7 @@ class FinderTest extends Iterator\RealIteratorTestCase
         $this->assertIterator($this->toAbsoluteFixtures($expected), $finder);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testAdaptersOrdering()
+    #[Group('legacy')]    public function testAdaptersOrdering()
     {
         $finder = Finder::create()
             ->removeAdapters()
@@ -598,10 +592,7 @@ class FinderTest extends Iterator\RealIteratorTestCase
         );
     }
 
-    /**
-     * @group legacy
-     */
-    public function testAdaptersChaining()
+    #[Group('legacy')]    public function testAdaptersChaining()
     {
         $iterator = new \ArrayIterator(array());
         $filenames = $this->toAbsolute(array('foo', 'foo/bar.tmp', 'test.php', 'test.py', 'toto'));
@@ -642,10 +633,7 @@ class FinderTest extends Iterator\RealIteratorTestCase
         );
     }
 
-    /**
-     * @dataProvider getTestPathData
-     */
-    public function testPath($matchPatterns, $noMatchPatterns, array $expected)
+    #[DataProvider('getTestPathData')]    public function testPath($matchPatterns, $noMatchPatterns, array $expected)
     {
         $finder = $this->buildFinder();
         $finder->in(__DIR__.\DIRECTORY_SEPARATOR.'Fixtures')
@@ -655,10 +643,7 @@ class FinderTest extends Iterator\RealIteratorTestCase
         $this->assertIterator($this->toAbsoluteFixtures($expected), $finder);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testAdapterSelection()
+    #[Group('legacy')]    public function testAdapterSelection()
     {
         // test that by default, PhpAdapter is selected
         $adapters = Finder::create()->getAdapters();

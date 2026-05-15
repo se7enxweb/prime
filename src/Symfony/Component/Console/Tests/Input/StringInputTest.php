@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Console\Tests\Input;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
@@ -18,15 +21,11 @@ use Symfony\Component\Console\Input\StringInput;
 
 class StringInputTest extends TestCase
 {
-    /**
-     * @dataProvider getTokenizeData
-     */
-    public function testTokenize($input, $tokens, $message)
+    #[DataProvider('getTokenizeData')]    public function testTokenize($input, $tokens, $message)
     {
         $input = new StringInput($input);
         $r = new \ReflectionClass('Symfony\Component\Console\Input\ArgvInput');
         $p = $r->getProperty('tokens');
-        $p->setAccessible(true);
         $this->assertEquals($tokens, $p->getValue($input), $message);
     }
 
@@ -42,10 +41,7 @@ class StringInputTest extends TestCase
         $this->assertEquals('bar', $input->getOption('foo'));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyInputOptionDefinitionInConstructor()
+    #[Group('legacy')]    public function testLegacyInputOptionDefinitionInConstructor()
     {
         $definition = new InputDefinition(
             array(new InputOption('foo', null, InputOption::VALUE_REQUIRED))

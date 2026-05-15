@@ -529,7 +529,9 @@ XML;
             $this->expectException('Symfony\Component\Serializer\Exception\UnexpectedValueException');
             $this->expectExceptionMessage('Invalid XML data, it can not be empty.');
         } else {
-            $this->setExpectedException('Symfony\Component\Serializer\Exception\UnexpectedValueException', 'Invalid XML data, it can not be empty.');
+            $this->expectException('Symfony\Component\Serializer\Exception\UnexpectedValueException');
+        $this->expectExceptionMessage('Invalid XML data)))))));
+        $this->expectExceptionCode(it can not be empty.');
         }
         $this->encoder->decode(' ', 'xml');
     }

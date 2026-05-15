@@ -96,6 +96,7 @@ class FormErrorIterator implements \RecursiveIterator, \SeekableIterator, \Array
      * @return FormError|FormErrorIterator an error or an iterator containing
      *                                     nested errors
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return current($this->errors);
@@ -104,6 +105,7 @@ class FormErrorIterator implements \RecursiveIterator, \SeekableIterator, \Array
     /**
      * Advances the iterator to the next position.
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         next($this->errors);
@@ -114,6 +116,7 @@ class FormErrorIterator implements \RecursiveIterator, \SeekableIterator, \Array
      *
      * @return int The 0-indexed position
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return key($this->errors);
@@ -124,6 +127,7 @@ class FormErrorIterator implements \RecursiveIterator, \SeekableIterator, \Array
      *
      * @return bool Whether the iterator is valid
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return null !== key($this->errors);
@@ -135,6 +139,7 @@ class FormErrorIterator implements \RecursiveIterator, \SeekableIterator, \Array
      * This method detects if errors have been added to the form since the
      * construction of the iterator.
      */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         reset($this->errors);
@@ -196,6 +201,7 @@ class FormErrorIterator implements \RecursiveIterator, \SeekableIterator, \Array
      *
      * @return bool Whether the current element is an instance of this class
      */
+    #[\ReturnTypeWillChange]
     public function hasChildren()
     {
         return current($this->errors) instanceof self;
@@ -204,6 +210,7 @@ class FormErrorIterator implements \RecursiveIterator, \SeekableIterator, \Array
     /**
      * Alias of {@link current()}.
      */
+    #[\ReturnTypeWillChange]
     public function getChildren()
     {
         return current($this->errors);
@@ -238,6 +245,7 @@ class FormErrorIterator implements \RecursiveIterator, \SeekableIterator, \Array
      *
      * @throws OutOfBoundsException If the position is invalid
      */
+    #[\ReturnTypeWillChange]
     public function seek($position)
     {
         if (!isset($this->errors[$position])) {

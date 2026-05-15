@@ -138,6 +138,10 @@ class RouteCollection implements \IteratorAggregate, \Countable
      */
     public function addPrefix($prefix, array $defaults = array(), array $requirements = array())
     {
+        if (null === $prefix) {
+            $prefix = '';
+        }
+
         $prefix = trim(trim($prefix), '/');
 
         if ('' === $prefix) {
@@ -249,8 +253,18 @@ class RouteCollection implements \IteratorAggregate, \Countable
     public function setMethods($methods)
     {
         foreach ($this->routes as $route) {
-            $route->setMethods($methods);
+            $route->onlyMethods($methods);
         }
+    }
+
+    /**
+     * @deprecated Use setMethods() instead.
+     * @param string|string[] $methods
+     * @return void
+     */
+    public function onlyMethods($methods): void
+    {
+        $this->setMethods($methods);
     }
 
     /**

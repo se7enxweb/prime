@@ -99,7 +99,12 @@ class AutowirePass implements CompilerPassInterface
             }
 
             try {
-                if (!$typeHint = $parameter->getClass()) {
+                $typeHint = null;
+                if ($parameter->hasType() && $parameter->getType() instanceof \ReflectionNamedType && !$parameter->getType()->isBuiltin()) {
+                    $typeHint = new \ReflectionClass($parameter->getType()->getName());
+                }
+
+                if (null === $typeHint) {
                     if (isset($arguments[$index])) {
                         continue;
                     }

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\PropertyAccess\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PropertyAccess\StringUtil;
 
@@ -155,10 +157,7 @@ class StringUtilTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider singularifyProvider
-     */
-    public function testSingularify($plural, $singular)
+    #[DataProvider('singularifyProvider')]    public function testSingularify($plural, $singular)
     {
         $single = StringUtil::singularify($plural);
         if (\is_string($singular) && \is_array($single)) {

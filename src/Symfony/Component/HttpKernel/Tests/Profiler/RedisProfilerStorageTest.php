@@ -11,11 +11,13 @@
 
 namespace Symfony\Component\HttpKernel\Tests\Profiler;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpKernel\Profiler\RedisProfilerStorage;
 use Symfony\Component\HttpKernel\Tests\Profiler\Mock\RedisMock;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class RedisProfilerStorageTest extends AbstractProfilerStorageTest
 {

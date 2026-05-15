@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\DependencyInjection\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
@@ -72,7 +75,8 @@ class DefinitionTest extends TestCase
             $this->expectException('InvalidArgumentException');
             $this->expectExceptionMessage('The decorated service inner name for "foo" must be different than the service name itself.');
         } else {
-            $this->setExpectedException('InvalidArgumentException', 'The decorated service inner name for "foo" must be different than the service name itself.');
+            $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('The decorated service inner name for "foo" must be different than the service name itself.');
         }
 
         $def->setDecoratedService('foo', 'foo');
@@ -126,10 +130,7 @@ class DefinitionTest extends TestCase
         $this->assertFalse($def->isShared(), '->isShared() returns false if the instance must not be shared');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testPrototypeScopedDefinitionAreNotShared()
+    #[Group('legacy')]    public function testPrototypeScopedDefinitionAreNotShared()
     {
         $def = new Definition('stdClass');
         $def->setScope(ContainerInterface::SCOPE_PROTOTYPE);
@@ -138,10 +139,7 @@ class DefinitionTest extends TestCase
         $this->assertEquals(ContainerInterface::SCOPE_PROTOTYPE, $def->getScope());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testSetGetScope()
+    #[Group('legacy')]    public function testSetGetScope()
     {
         $def = new Definition('stdClass');
         $this->assertEquals('container', $def->getScope());
@@ -165,10 +163,7 @@ class DefinitionTest extends TestCase
         $this->assertTrue($def->isSynthetic(), '->isSynthetic() returns true if the service is synthetic.');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacySetIsSynchronized()
+    #[Group('legacy')]    public function testLegacySetIsSynchronized()
     {
         $def = new Definition('stdClass');
         $this->assertFalse($def->isSynchronized(), '->isSynchronized() returns false by default');
@@ -201,10 +196,7 @@ class DefinitionTest extends TestCase
         $this->assertSame('The "deprecated_service" service is deprecated. You should stop using it, as it will soon be removed.', $def->getDeprecationMessage('deprecated_service'), '->getDeprecationMessage() should return a formatted message template');
     }
 
-    /**
-     * @dataProvider invalidDeprecationMessageProvider
-     */
-    public function testSetDeprecatedWithInvalidDeprecationTemplate($message)
+    #[DataProvider('invalidDeprecationMessageProvider')]    public function testSetDeprecatedWithInvalidDeprecationTemplate($message)
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException::class);
 
@@ -306,7 +298,7 @@ class DefinitionTest extends TestCase
     public function testReplaceArgumentShouldCheckBounds()
     {
         $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('The index \"1\" is not in the range [0, 0].');
+        $this->expectExceptionMessage('The index "1" is not in the range [0, 0].');
 
         $def = new Definition('stdClass');
 

@@ -12,6 +12,7 @@
 namespace Symfony\Component\Security\Http\Tests\RememberMe;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -49,7 +50,8 @@ class TokenBasedRememberMeServicesTest extends TestCase
         $userProvider
             ->expects($this->once())
             ->method('loadUserByUsername')
-            ->will($this->throwException(new UsernameNotFoundException('user not found')))
+            ->willThrowException(new UsernameNotFoundException('user not found'))
+
         ;
 
         $this->assertNull($service->autoLogin($request));
@@ -67,14 +69,16 @@ class TokenBasedRememberMeServicesTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getPassword')
-            ->will($this->returnValue('foopass'))
+            ->willReturn('foopass')
+
         ;
 
         $userProvider
             ->expects($this->once())
             ->method('loadUserByUsername')
             ->with($this->equalTo('foouser'))
-            ->will($this->returnValue($user))
+            ->willReturn($user)
+
         ;
 
         $this->assertNull($service->autoLogin($request));
@@ -92,23 +96,24 @@ class TokenBasedRememberMeServicesTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getPassword')
-            ->will($this->returnValue('foopass'))
+            ->willReturn('foopass')
+
         ;
 
         $userProvider
             ->expects($this->once())
             ->method('loadUserByUsername')
             ->with($this->equalTo('foouser'))
-            ->will($this->returnValue($user))
+            ->willReturn($user)
+
         ;
 
         $this->assertNull($service->autoLogin($request));
         $this->assertTrue($request->attributes->get(RememberMeServicesInterface::COOKIE_ATTR_NAME)->isCleared());
     }
 
+    #[DataProvider('provideUsernamesForAutoLogin')]
     /**
-     * @dataProvider provideUsernamesForAutoLogin
-     *
      * @param string $username
      */
     public function testAutoLogin($username)
@@ -117,12 +122,14 @@ class TokenBasedRememberMeServicesTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getRoles')
-            ->will($this->returnValue(array('ROLE_FOO')))
+            ->willReturn(array('ROLE_FOO'))
+
         ;
         $user
             ->expects($this->once())
             ->method('getPassword')
-            ->will($this->returnValue('foopass'))
+            ->willReturn('foopass')
+
         ;
 
         $userProvider = $this->getProvider();
@@ -130,7 +137,8 @@ class TokenBasedRememberMeServicesTest extends TestCase
             ->expects($this->once())
             ->method('loadUserByUsername')
             ->with($this->equalTo($username))
-            ->will($this->returnValue($user))
+            ->willReturn($user)
+
         ;
 
         $service = $this->getService($userProvider, array('name' => 'foo', 'always_remember_me' => true, 'lifetime' => 3600));
@@ -191,7 +199,8 @@ class TokenBasedRememberMeServicesTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->will($this->returnValue('foo'))
+            ->willReturn('foo')
+
         ;
 
         $cookies = $response->headers->getCookies();
@@ -214,17 +223,20 @@ class TokenBasedRememberMeServicesTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getPassword')
-            ->will($this->returnValue('foopass'))
+            ->willReturn('foopass')
+
         ;
         $user
             ->expects($this->once())
             ->method('getUsername')
-            ->will($this->returnValue('foouser'))
+            ->willReturn('foouser')
+
         ;
         $token
             ->expects($this->atLeastOnce())
             ->method('getUser')
-            ->will($this->returnValue($user))
+            ->willReturn($user)
+
         ;
 
         $cookies = $response->headers->getCookies();
@@ -246,7 +258,6 @@ class TokenBasedRememberMeServicesTest extends TestCase
     {
         $service = $this->getService();
         $r = new \ReflectionMethod($service, 'generateCookieValue');
-        $r->setAccessible(true);
 
         return $r->invoke($service, $class, $username, $expires, $password);
     }
@@ -255,7 +266,6 @@ class TokenBasedRememberMeServicesTest extends TestCase
     {
         $service = $this->getService();
         $r = new \ReflectionMethod($service, 'encodeCookie');
-        $r->setAccessible(true);
 
         return $r->invoke($service, $parts);
     }
@@ -277,7 +287,8 @@ class TokenBasedRememberMeServicesTest extends TestCase
         $provider
             ->expects($this->any())
             ->method('supportsClass')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
+
         ;
 
         return $provider;

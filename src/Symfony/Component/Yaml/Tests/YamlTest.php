@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Yaml\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 
@@ -24,10 +26,7 @@ class YamlTest extends TestCase
         $this->assertEquals($data, $parsed);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyParseFromFile()
+    #[Group('legacy')]    public function testLegacyParseFromFile()
     {
         $filename = __DIR__.'/Fixtures/index.yml';
         $contents = file_get_contents($filename);

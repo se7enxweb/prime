@@ -11,10 +11,16 @@
 
 namespace Symfony\Component\HttpFoundation\Tests\Session\Storage;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
+#[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
 /**
  * Test class for PhpSessionStorage.
  *
@@ -22,8 +28,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
  *
  * These tests require separate processes.
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
 class PhpBridgeSessionStorageTest extends TestCase
 {
@@ -31,8 +35,8 @@ class PhpBridgeSessionStorageTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->iniSet('session.save_handler', 'files');
-        $this->iniSet('session.save_path', $this->savePath = sys_get_temp_dir().'/sf2test');
+        ini_set('session.save_handler', 'files');
+        ini_set('session.save_path', $this->savePath = sys_get_temp_dir().'/sf2test');
         if (!is_dir($this->savePath)) {
             mkdir($this->savePath);
         }
@@ -41,6 +45,8 @@ class PhpBridgeSessionStorageTest extends TestCase
     protected function tearDown(): void
     {
         session_write_close();
+        ini_restore('session.save_handler');
+        ini_restore('session.save_path');
         array_map('unlink', glob($this->savePath.'/*'));
         if (is_dir($this->savePath)) {
             rmdir($this->savePath);
@@ -84,8 +90,8 @@ class PhpBridgeSessionStorageTest extends TestCase
         $this->assertArrayHasKey($key, $_SESSION);
     }
 
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function testPhpSession54()
     {

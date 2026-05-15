@@ -11,15 +11,14 @@
 
 namespace Symfony\Component\Translation\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\MessageSelector;
 
 class MessageSelectorTest extends TestCase
 {
-    /**
-     * @dataProvider getChooseTests
-     */
-    public function testChoose($expected, $id, $number)
+    #[DataProvider('getChooseTests')]    public function testChoose($expected, $id, $number)
     {
         $selector = new MessageSelector();
 
@@ -33,10 +32,7 @@ class MessageSelectorTest extends TestCase
         $this->assertEquals('There are two apples', $selector->choose('There are two apples', 2, 'en'));
     }
 
-    /**
-     * @dataProvider getNonMatchingMessages
-     */
-    public function testThrowExceptionIfMatchingMessageCannotBeFound($id, $number)
+    #[DataProvider('getNonMatchingMessages')]    public function testThrowExceptionIfMatchingMessageCannotBeFound($id, $number)
     {
         $this->expectException(\InvalidArgumentException::class);
 

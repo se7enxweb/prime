@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Routing\Tests\Generator;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -366,7 +369,7 @@ class UrlGeneratorTest extends TestCase
 
         // The default requirement for 'x' should not allow the separator '.' in this case because it would otherwise match everything
         // and following optional variables like _format could never match.
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('Symfony\Component\Routing\Exception\InvalidParameterException');
+        $this->expectException('Symfony\Component\Routing\Exception\InvalidParameterException');
         $generator->generate('test', array('x' => 'do.t', 'y' => '123', 'z' => 'bar', '_format' => 'xml'));
     }
 
@@ -513,10 +516,7 @@ class UrlGeneratorTest extends TestCase
         $this->assertSame('/app.php/route', $generator->generate('test', array(), UrlGeneratorInterface::ABSOLUTE_URL));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyGenerateNetworkPath()
+    #[Group('legacy')]    public function testLegacyGenerateNetworkPath()
     {
         $routes = $this->getRoutes('test', new Route('/{name}', array(), array('_scheme' => 'http'), array(), '{locale}.example.com'));
 
@@ -586,10 +586,7 @@ class UrlGeneratorTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideRelativePaths
-     */
-    public function testGetRelativePath($sourcePath, $targetPath, $expectedPath)
+    #[DataProvider('provideRelativePaths')]    public function testGetRelativePath($sourcePath, $targetPath, $expectedPath)
     {
         $this->assertSame($expectedPath, UrlGenerator::getRelativePath($sourcePath, $targetPath));
     }

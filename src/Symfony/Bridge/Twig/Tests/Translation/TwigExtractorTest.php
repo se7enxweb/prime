@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\Twig\Tests\Translation;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Translation\TwigExtractor;
@@ -21,10 +23,7 @@ use Twig\Loader\ArrayLoader;
 
 class TwigExtractorTest extends TestCase
 {
-    /**
-     * @dataProvider getExtractData
-     */
-    public function testExtract($template, $messages)
+    #[DataProvider('getExtractData')]    public function testExtract($template, $messages)
     {
         $loader = $this->getMockBuilder('Twig\Loader\LoaderInterface')->getMock();
         $twig = new Environment($loader, array(
@@ -40,7 +39,6 @@ class TwigExtractorTest extends TestCase
         $catalogue = new MessageCatalogue('en');
 
         $m = new \ReflectionMethod($extractor, 'extractTemplate');
-        $m->setAccessible(true);
         $m->invoke($extractor, $template, $catalogue);
 
         foreach ($messages as $key => $domain) {
@@ -74,11 +72,7 @@ class TwigExtractorTest extends TestCase
             array('{{ "new key" | transchoice(domain="domain", count=1) }}', array('new key' => 'domain')),
         );
     }
-
-    /**
-     * @dataProvider resourcesWithSyntaxErrorsProvider
-     */
-    public function testExtractSyntaxError($resources)
+    #[DataProvider('resourcesWithSyntaxErrorsProvider')]    public function testExtractSyntaxError($resources)
     {
         $this->expectException(\Twig\Error\Error::class);
 
@@ -112,11 +106,7 @@ class TwigExtractorTest extends TestCase
             array(new \SplFileInfo(__DIR__.'/../Fixtures/extractor/syntax_error.twig')),
         );
     }
-
-    /**
-     * @dataProvider resourceProvider
-     */
-    public function testExtractWithFiles($resource)
+    #[DataProvider('resourceProvider')]    public function testExtractWithFiles($resource)
     {
         $loader = new ArrayLoader(array());
         $twig = new Environment($loader, array(

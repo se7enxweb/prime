@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotBlankValidator;
 use Symfony\Component\Validator\Validation;
@@ -27,10 +29,7 @@ class NotBlankValidatorTest extends AbstractConstraintValidatorTest
         return new NotBlankValidator();
     }
 
-    /**
-     * @dataProvider getValidValues
-     */
-    public function testValidValues($value)
+    #[DataProvider('getValidValues')]    public function testValidValues($value)
     {
         $this->validator->validate($value, new NotBlank());
 

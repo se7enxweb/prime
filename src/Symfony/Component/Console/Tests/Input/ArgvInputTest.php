@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Console\Tests\Input;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -25,7 +27,6 @@ class ArgvInputTest extends TestCase
         $input = new ArgvInput();
         $r = new \ReflectionObject($input);
         $p = $r->getProperty('tokens');
-        $p->setAccessible(true);
 
         $this->assertEquals(array('foo'), $p->getValue($input), '__construct() automatically get its input from the argv server variable');
     }
@@ -40,10 +41,7 @@ class ArgvInputTest extends TestCase
         $this->assertEquals(array('name' => 'foo'), $input->getArguments(), '->parse() is stateless');
     }
 
-    /**
-     * @dataProvider provideOptions
-     */
-    public function testParseOptions($input, $options, $expectedOptions, $message)
+    #[DataProvider('provideOptions')]    public function testParseOptions($input, $options, $expectedOptions, $message)
     {
         $input = new ArgvInput($input);
         $input->bind(new InputDefinition($options));
@@ -159,16 +157,14 @@ class ArgvInputTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideInvalidInput
-     */
-    public function testInvalidInput($argv, $definition, $expectedExceptionMessage)
+    #[DataProvider('provideInvalidInput')]    public function testInvalidInput($argv, $definition, $expectedExceptionMessage)
     {
         if (method_exists($this, 'expectException')) {
             $this->expectException('RuntimeException');
             $this->expectExceptionMessage($expectedExceptionMessage);
         } else {
-            $this->setExpectedException('RuntimeException', $expectedExceptionMessage);
+            $this->expectException('RuntimeException');
+        $this->expectExceptionMessage($expectedExceptionMessage);
         }
 
         $input = new ArgvInput($argv);
@@ -364,10 +360,7 @@ class ArgvInputTest extends TestCase
         $this->assertEquals('-f --bar=foo '.escapeshellarg('a b c d').' '.escapeshellarg("A\nB'C"), (string) $input);
     }
 
-    /**
-     * @dataProvider provideGetParameterOptionValues
-     */
-    public function testGetParameterOptionEqualSign($argv, $key, $expected)
+    #[DataProvider('provideGetParameterOptionValues')]    public function testGetParameterOptionEqualSign($argv, $key, $expected)
     {
         $input = new ArgvInput($argv);
         $this->assertEquals($expected, $input->getParameterOption($key), '->getParameterOption() returns the expected value');

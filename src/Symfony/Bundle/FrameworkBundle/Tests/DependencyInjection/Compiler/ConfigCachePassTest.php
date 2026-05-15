@@ -26,15 +26,15 @@ class ConfigCachePassTest extends TestCase
         );
 
         $definition = $this->getMockBuilder('Symfony\Component\DependencyInjection\Definition')->getMock();
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')->setMethods(array('findTaggedServiceIds', 'getDefinition', 'hasDefinition'))->getMock();
+        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')->onlyMethods(array('findTaggedServiceIds', 'getDefinition', 'hasDefinition'))->getMock();
 
         $container->expects($this->atLeastOnce())
             ->method('findTaggedServiceIds')
-            ->will($this->returnValue($services));
+            ->willReturn($services);
         $container->expects($this->atLeastOnce())
             ->method('getDefinition')
             ->with('config_cache_factory')
-            ->will($this->returnValue($definition));
+            ->willReturn($definition);
 
         $definition->expects($this->once())
             ->method('replaceArgument')
@@ -42,7 +42,7 @@ class ConfigCachePassTest extends TestCase
                     new Reference('checker_1'),
                     new Reference('checker_2'),
                     new Reference('checker_3'),
-                ));
+));
 
         $pass = new ConfigCachePass();
         $pass->process($container);
@@ -51,11 +51,11 @@ class ConfigCachePassTest extends TestCase
     public function testThatCheckersCanBeMissing()
     {
         $definition = $this->getMockBuilder('Symfony\Component\DependencyInjection\Definition')->getMock();
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')->setMethods(array('findTaggedServiceIds'))->getMock();
+        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')->onlyMethods(array('findTaggedServiceIds'))->getMock();
 
         $container->expects($this->atLeastOnce())
             ->method('findTaggedServiceIds')
-            ->will($this->returnValue(array()));
+            ->willReturn(array());
 
         $pass = new ConfigCachePass();
         $pass->process($container);

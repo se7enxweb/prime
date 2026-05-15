@@ -58,7 +58,7 @@ class SearchAndRenderBlockNodeTest extends TestCase
 
         $this->assertEquals(
             sprintf(
-                '$this->env->getExtension(\'Symfony\Bridge\Twig\Extension\FormExtension\')->renderer->searchAndRenderBlock(%s, \'widget\', array("foo" => "bar"))',
+                '$this->env->getExtension(\'Symfony\Bridge\Twig\Extension\FormExtension\')->renderer->searchAndRenderBlock(%s, \'widget\', ["foo" => "bar"])',
                 $this->getVariableGetter('form')
             ),
             trim($compiler->compile($node)->getSource())
@@ -78,7 +78,7 @@ class SearchAndRenderBlockNodeTest extends TestCase
 
         $this->assertEquals(
             sprintf(
-                '$this->env->getExtension(\'Symfony\Bridge\Twig\Extension\FormExtension\')->renderer->searchAndRenderBlock(%s, \'label\', array("label" => "my label"))',
+                '$this->env->getExtension(\'Symfony\\Bridge\\Twig\\Extension\\FormExtension\')->renderer->searchAndRenderBlock(%s, \'label\', ["label" => "my label"])',
                 $this->getVariableGetter('form')
             ),
             trim($compiler->compile($node)->getSource())
@@ -168,7 +168,7 @@ class SearchAndRenderBlockNodeTest extends TestCase
         // https://github.com/symfony/symfony/issues/5029
         $this->assertEquals(
             sprintf(
-                '$this->env->getExtension(\'Symfony\Bridge\Twig\Extension\FormExtension\')->renderer->searchAndRenderBlock(%s, \'label\', array("foo" => "bar"))',
+                '$this->env->getExtension(\'Symfony\Bridge\Twig\Extension\FormExtension\')->renderer->searchAndRenderBlock(%s, \'label\', ["foo" => "bar"])',
                 $this->getVariableGetter('form')
             ),
             trim($compiler->compile($node)->getSource())
@@ -194,7 +194,7 @@ class SearchAndRenderBlockNodeTest extends TestCase
 
         $this->assertEquals(
             sprintf(
-                '$this->env->getExtension(\'Symfony\Bridge\Twig\Extension\FormExtension\')->renderer->searchAndRenderBlock(%s, \'label\', array("foo" => "bar", "label" => "value in argument"))',
+                '$this->env->getExtension(\'Symfony\\Bridge\\Twig\\Extension\\FormExtension\')->renderer->searchAndRenderBlock(%s, \'label\', ["foo" => "bar", "label" => "value in argument"])',
                 $this->getVariableGetter('form')
             ),
             trim($compiler->compile($node)->getSource())
@@ -262,7 +262,7 @@ class SearchAndRenderBlockNodeTest extends TestCase
         // https://github.com/symfony/symfony/issues/5029
         $this->assertEquals(
             sprintf(
-                '$this->env->getExtension(\'Symfony\Bridge\Twig\Extension\FormExtension\')->renderer->searchAndRenderBlock(%s, \'label\', array("foo" => "bar", "label" => "value in attributes") + (twig_test_empty($_label_ = ((true) ? (null) : (null))) ? array() : array("label" => $_label_)))',
+                '$this->env->getExtension(\'Symfony\Bridge\Twig\Extension\FormExtension\')->renderer->searchAndRenderBlock(%s, \'label\', ["foo" => "bar", "label" => "value in attributes"] + (twig_test_empty($_label_ = ((true) ? (null) : (null))) ? array() : array("label" => $_label_)))',
                 $this->getVariableGetter('form')
             ),
             trim($compiler->compile($node)->getSource())
@@ -271,14 +271,6 @@ class SearchAndRenderBlockNodeTest extends TestCase
 
     protected function getVariableGetter($name)
     {
-        if (\PHP_VERSION_ID >= 70000) {
-            return sprintf('($context["%s"] ?? null)', $name);
-        }
-
-        if (\PHP_VERSION_ID >= 50400) {
-            return sprintf('(isset($context["%s"]) ? $context["%1$s"] : null)', $name);
-        }
-
-        return sprintf('$this->getContext($context, "%s")', $name);
+        return sprintf('((isset($context) && array_key_exists("%s", $context)) ? $context["%1$s"] : null)', $name);
     }
 }

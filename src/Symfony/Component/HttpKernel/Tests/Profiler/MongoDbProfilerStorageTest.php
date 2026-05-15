@@ -11,6 +11,12 @@
 
 namespace Symfony\Component\HttpKernel\Tests\Profiler;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -39,9 +45,9 @@ class MongoDbProfilerStorageTestDataCollector extends DataCollector
     }
 }
 
+#[Group('legacy')]
+#[RequiresPhpExtension('mongo')]
 /**
- * @group legacy
- * @requires extension mongo
  */
 class MongoDbProfilerStorageTest extends AbstractProfilerStorageTest
 {
@@ -89,13 +95,9 @@ class MongoDbProfilerStorageTest extends AbstractProfilerStorageTest
         $this->storage->purge();
     }
 
-    /**
-     * @dataProvider getDsns
-     */
-    public function testDsnParser($dsn, $expected)
+    #[DataProvider('getDsns')]    public function testDsnParser($dsn, $expected)
     {
         $m = new \ReflectionMethod($this->storage, 'parseDsn');
-        $m->setAccessible(true);
 
         $this->assertEquals($expected, $m->invoke($this->storage, $dsn));
     }
@@ -134,7 +136,6 @@ class MongoDbProfilerStorageTest extends AbstractProfilerStorageTest
     {
         $this->storage = new MongoDbProfilerStorage('mongodb://localhost/symfony_tests/profiler_data', '', '', 86400);
         $m = new \ReflectionMethod($this->storage, 'getMongo');
-        $m->setAccessible(true);
         try {
             $m->invoke($this->storage);
         } catch (\MongoConnectionException $e) {

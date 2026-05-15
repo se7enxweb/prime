@@ -205,8 +205,12 @@ class NumberToLocalizedStringTransformer implements DataTransformerInterface
             throw new TransformationFailedException('I don\'t have a clear idea what infinity looks like');
         }
 
-        if (\is_int($result) && $result === (int) $float = (float) $result) {
-            $result = $float;
+        if (\is_int($result)) {
+            $float = (float) $result;
+            // Suppress warning from PHP 8.5.6+ when casting float that isn't representable as int
+            if ($result === @(int) $float) {
+                $result = $float;
+            }
         }
 
         if (false !== $encoding = mb_detect_encoding($value, null, true)) {

@@ -39,7 +39,9 @@ class TestSessionListenerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->listener = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\EventListener\TestSessionListener');
+        $this->listener = $this->getMockBuilder('Symfony\Component\HttpKernel\EventListener\TestSessionListener')
+            ->onlyMethods(array('getSession'))
+            ->getMock();
         $this->session = $this->getSession();
     }
 
@@ -108,14 +110,14 @@ class TestSessionListenerTest extends TestCase
     {
         $this->session->expects($this->once())
             ->method('isStarted')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
     }
 
     private function sessionHasNotBeenStarted()
     {
         $this->session->expects($this->once())
             ->method('isStarted')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
     }
 
     private function getSession()
@@ -125,7 +127,7 @@ class TestSessionListenerTest extends TestCase
             ->getMock();
 
         // set return value for getName()
-        $mock->expects($this->any())->method('getName')->will($this->returnValue('MOCKSESSID'));
+        $mock->expects($this->any())->method('getName')->willReturn('MOCKSESSID');
 
         return $mock;
     }

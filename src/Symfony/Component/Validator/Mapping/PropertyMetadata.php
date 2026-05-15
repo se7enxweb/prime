@@ -67,7 +67,6 @@ class PropertyMetadata extends MemberMetadata
         }
 
         $member = new \ReflectionProperty($objectOrClassName, $this->getName());
-        $member->setAccessible(true);
 
         return $member;
     }

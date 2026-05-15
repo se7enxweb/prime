@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\DataTransformer;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToArrayTransformer;
 
@@ -117,8 +119,8 @@ class DateTimeToArrayTransformerTest extends TestCase
         $this->assertSame($output, $transformer->transform($input));
     }
 
+    #[RequiresPhp('5.5')]
     /**
-     * @requires PHP 5.5
      */
     public function testTransformDateTimeImmutable()
     {

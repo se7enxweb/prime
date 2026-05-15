@@ -11,16 +11,15 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\Tests\Fixtures\Author;
 
 class CollectionTypeTest extends BaseTypeTest
 {
     const TESTED_TYPE = 'Symfony\Component\Form\Extension\Core\Type\CollectionType';
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('collection', array(
             'entry_type' => TextTypeTest::TESTED_TYPE,
@@ -72,7 +71,7 @@ class CollectionTypeTest extends BaseTypeTest
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'entry_type' => TextTypeTest::TESTED_TYPE,
         ));
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('Symfony\Component\Form\Exception\UnexpectedTypeException');
+        $this->expectException('Symfony\Component\Form\Exception\UnexpectedTypeException');
         $form->setData(new \stdClass());
     }
 
@@ -275,10 +274,7 @@ class CollectionTypeTest extends BaseTypeTest
         $this->assertSame('__test__', $form->getConfig()->getAttribute('prototype')->getName());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyEntryOptions()
+    #[Group('legacy')]    public function testLegacyEntryOptions()
     {
         $form = $this->factory->create(static::TESTED_TYPE, array(), array(
             'type' => NumberTypeTest::TESTED_TYPE,
@@ -320,10 +316,7 @@ class CollectionTypeTest extends BaseTypeTest
         $this->assertFalse($form->createView()->vars['prototype']->vars['label']);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyPrototypeData()
+    #[Group('legacy')]    public function testLegacyPrototypeData()
     {
         $form = $this->factory->create(static::TESTED_TYPE, array(), array(
             'allow_add' => true,

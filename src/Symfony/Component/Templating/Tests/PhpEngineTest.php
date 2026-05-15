@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Templating\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Templating\Helper\SlotsHelper;
 use Symfony\Component\Templating\Loader\Loader;
@@ -86,7 +88,7 @@ class PhpEngineTest extends TestCase
         $foo = new \Symfony\Component\Templating\Tests\Fixtures\SimpleHelper('foo');
         $engine->set($foo);
 
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('\LogicException');
+        $this->expectException('\LogicException');
 
         unset($engine['foo']);
     }
@@ -123,10 +125,7 @@ class PhpEngineTest extends TestCase
         $this->assertEquals('foobar', $engine->render('foo.php', array('template' => 'foo', 'parameters' => 'bar')), '->render() extract variables');
     }
 
-    /**
-     * @dataProvider forbiddenParameterNames
-     */
-    public function testRenderForbiddenParameter($name)
+    #[DataProvider('forbiddenParameterNames')]    public function testRenderForbiddenParameter($name)
     {
         $this->expectException(\InvalidArgumentException::class);
 

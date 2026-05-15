@@ -234,6 +234,11 @@ class RouteCollectionBuilder
      *
      * @return $this
      */
+    public function onlyMethods($methods)
+    {
+        return $this->setMethods($methods);
+    }
+
     public function setMethods($methods)
     {
         $this->methods = $methods;
@@ -293,7 +298,7 @@ class RouteCollectionBuilder
                 }
 
                 if (!$route->getMethods()) {
-                    $route->setMethods($this->methods);
+                    $route->onlyMethods($this->methods);
                 }
 
                 // auto-generate the route name if it's been marked

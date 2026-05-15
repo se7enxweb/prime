@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\DependencyInjection\Tests\Compiler;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Compiler\CheckDefinitionValidityPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -30,10 +32,7 @@ class CheckDefinitionValidityPassTest extends TestCase
         $this->process($container);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testProcessDetectsSyntheticPrototypeDefinitions()
+    #[Group('legacy')]    public function testProcessDetectsSyntheticPrototypeDefinitions()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
 
@@ -43,10 +42,7 @@ class CheckDefinitionValidityPassTest extends TestCase
         $this->process($container);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testProcessDetectsSharedPrototypeDefinitions()
+    #[Group('legacy')]    public function testProcessDetectsSharedPrototypeDefinitions()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
 
@@ -68,10 +64,7 @@ class CheckDefinitionValidityPassTest extends TestCase
         $this->process($container);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyProcessDetectsBothFactorySyntaxesUsed()
+    #[Group('legacy')]    public function testLegacyProcessDetectsBothFactorySyntaxesUsed()
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
 

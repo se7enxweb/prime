@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\Doctrine\Tests\Form\Type;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
@@ -112,11 +114,7 @@ class EntityTypeTest extends BaseTypeTest
         // no clear, because entities managed by the choice field must
         // be managed!
     }
-
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $field = $this->factory->createNamed('name', static::TESTED_TYPE, null, array(
             'em' => 'default',
@@ -1102,13 +1100,13 @@ class EntityTypeTest extends BaseTypeTest
         $this->emRegistry->expects($this->once())
             ->method('getManagerForClass')
             ->with(self::SINGLE_IDENT_CLASS)
-            ->will($this->returnValue($this->em));
+            ->willReturn($this->em);
 
         $this->factory->createNamed('name', static::TESTED_TYPE, null, array(
             'class' => self::SINGLE_IDENT_CLASS,
             'required' => false,
             'choice_label' => 'name',
-        ));
+));
     }
 
     public function testExplicitEm()
@@ -1245,11 +1243,7 @@ class EntityTypeTest extends BaseTypeTest
         $this->assertSame($choiceLoader1, $choiceLoader2);
         $this->assertSame($choiceLoader1, $choiceLoader3);
     }
-
-    /**
-     * @group legacy
-     */
-    public function testCacheChoiceLists()
+    #[Group('legacy')]    public function testCacheChoiceLists()
     {
         $entity1 = new SingleIntIdEntity(1, 'Foo');
 
@@ -1272,11 +1266,7 @@ class EntityTypeTest extends BaseTypeTest
         $this->assertInstanceOf('Symfony\Component\Form\ChoiceList\Loader\ChoiceLoaderInterface', $field1->getConfig()->getOption('choice_loader'));
         $this->assertSame($field1->getConfig()->getOption('choice_loader'), $field2->getConfig()->getOption('choice_loader'));
     }
-
-    /**
-     * @group legacy
-     */
-    public function testPropertyOption()
+    #[Group('legacy')]    public function testPropertyOption()
     {
         $entity1 = new SingleIntIdEntity(1, 'Foo');
         $entity2 = new SingleIntIdEntity(2, 'Bar');
@@ -1300,7 +1290,7 @@ class EntityTypeTest extends BaseTypeTest
         $registry->expects($this->any())
             ->method('getManager')
             ->with($this->equalTo($name))
-            ->will($this->returnValue($em));
+            ->willReturn($em);
 
         return $registry;
     }

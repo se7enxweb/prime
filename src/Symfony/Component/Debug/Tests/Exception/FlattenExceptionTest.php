@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\Debug\Tests\Exception;
 
+
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -102,10 +106,7 @@ class FlattenExceptionTest extends TestCase
         $this->assertEquals(array('Retry-After' => 120), $flattened->getHeaders());
     }
 
-    /**
-     * @dataProvider flattenDataProvider
-     */
-    public function testFlattenHttpException(\Exception $exception)
+    #[DataProvider('flattenDataProvider')]    public function testFlattenHttpException(\Exception $exception)
     {
         $flattened = FlattenException::create($exception);
         $flattened2 = FlattenException::create($exception);
@@ -117,10 +118,7 @@ class FlattenExceptionTest extends TestCase
         $this->assertInstanceOf($flattened->getClass(), $exception, 'The class is set to the class of the original exception');
     }
 
-    /**
-     * @dataProvider flattenDataProvider
-     */
-    public function testPrevious(\Exception $exception)
+    #[DataProvider('flattenDataProvider')]    public function testPrevious(\Exception $exception)
     {
         $flattened = FlattenException::create($exception);
         $flattened2 = FlattenException::create($exception);
@@ -132,8 +130,8 @@ class FlattenExceptionTest extends TestCase
         $this->assertSame(array($flattened2), $flattened->getAllPrevious());
     }
 
+    #[RequiresPhp('7.0')]
     /**
-     * @requires PHP 7.0
      */
     public function testPreviousError()
     {
@@ -146,28 +144,19 @@ class FlattenExceptionTest extends TestCase
         $this->assertEquals($flattened->getClass(), 'Symfony\Component\Debug\Exception\FatalThrowableError', 'The class is set to the class of the original exception');
     }
 
-    /**
-     * @dataProvider flattenDataProvider
-     */
-    public function testLine(\Exception $exception)
+    #[DataProvider('flattenDataProvider')]    public function testLine(\Exception $exception)
     {
         $flattened = FlattenException::create($exception);
         $this->assertSame($exception->getLine(), $flattened->getLine());
     }
 
-    /**
-     * @dataProvider flattenDataProvider
-     */
-    public function testFile(\Exception $exception)
+    #[DataProvider('flattenDataProvider')]    public function testFile(\Exception $exception)
     {
         $flattened = FlattenException::create($exception);
         $this->assertSame($exception->getFile(), $flattened->getFile());
     }
 
-    /**
-     * @dataProvider flattenDataProvider
-     */
-    public function testToArray(\Exception $exception)
+    #[DataProvider('flattenDataProvider')]    public function testToArray(\Exception $exception)
     {
         $flattened = FlattenException::create($exception);
         $flattened->setTrace(array(), 'foo.php', 123);
@@ -199,7 +188,7 @@ class FlattenExceptionTest extends TestCase
 
         $flattened = FlattenException::create($exception);
         $trace = $flattened->getTrace();
-        $this->assertContains('*DEEP NESTED ARRAY*', serialize($trace));
+        $this->assertStringContainsString('*DEEP NESTED ARRAY*', serialize($trace));
     }
 
     public function testTooBigArray()

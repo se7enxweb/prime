@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\ProxyManager\Tests\LazyProxy\PhpDumper;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
 use Symfony\Component\DependencyInjection\Definition;
@@ -34,9 +36,8 @@ class ProxyDumperTest extends TestCase
     {
         $this->dumper = new ProxyDumper();
     }
-
+    #[DataProvider('getProxyCandidates')]
     /**
-     * @dataProvider getProxyCandidates
      *
      * @param Definition $definition
      * @param bool       $expected

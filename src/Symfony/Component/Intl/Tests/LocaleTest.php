@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Intl\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Intl\Locale;
 
@@ -39,10 +41,7 @@ class LocaleTest extends TestCase
         return $tests;
     }
 
-    /**
-     * @dataProvider provideGetFallbackTests
-     */
-    public function testGetFallback($expected, $locale)
+    #[DataProvider('provideGetFallbackTests')]    public function testGetFallback($expected, $locale)
     {
         $this->assertSame($expected, Locale::getFallback($locale));
     }

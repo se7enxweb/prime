@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Finder\Tests\Iterator;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Finder\Iterator\CustomFilterIterator;
 
 class CustomFilterIteratorTest extends IteratorTestCase
@@ -24,10 +26,7 @@ class CustomFilterIteratorTest extends IteratorTestCase
         new CustomFilterIterator(new Iterator(), array('foo'));
     }
 
-    /**
-     * @dataProvider getAcceptData
-     */
-    public function testAccept($filters, $expected)
+    #[DataProvider('getAcceptData')]    public function testAccept($filters, $expected)
     {
         $inner = new Iterator(array('test.php', 'test.py', 'foo.php'));
 

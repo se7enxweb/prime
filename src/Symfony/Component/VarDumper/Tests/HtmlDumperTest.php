@@ -30,7 +30,7 @@ class HtmlDumperTest extends TestCase
         $cloner = new VarCloner();
         $cloner->addCasters(array(
             ':stream' => function ($res, $a) {
-                unset($a['uri'], $a['wrapper_data']);
+                unset($a['uri'], $a['wrapper_data'], $a['timed_out'], $a['blocked'], $a['eof']);
 
                 return $a;
             },
@@ -82,7 +82,7 @@ EOTXT;
   </samp>}
   "<span class=sf-dump-key>obj</span>" => <abbr title="Symfony\Component\VarDumper\Tests\Fixture\DumbFoo" class=sf-dump-note>DumbFoo</abbr> {<a class=sf-dump-ref href=#{$dumpId}-ref2%d title="2 occurrences">#%d</a><samp id={$dumpId}-ref2%d>
     +<span class=sf-dump-public title="Public property">foo</span>: "<span class=sf-dump-str title="3 characters">foo</span>"
-    +"<span class=sf-dump-public title="Runtime added dynamic property">bar</span>": "<span class=sf-dump-str title="3 characters">bar</span>"
+    +<span class=sf-dump-public title="Public property">bar</span>: "<span class=sf-dump-str title="3 characters">bar</span>"
   </samp>}
   "<span class=sf-dump-key>closure</span>" => <span class=sf-dump-note>Closure</span> {{$r}<samp>{$closure54}
     <span class=sf-dump-meta>parameters</span>: {<samp>

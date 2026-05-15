@@ -108,7 +108,7 @@ class Router extends BaseRouter implements WarmableInterface
             foreach ($route->getMethods() as $method) {
                 $methods = array_merge($methods, explode('|', $this->resolve($method)));
             }
-            $route->setMethods($methods);
+            $route->onlyMethods($methods);
             $route->setCondition($this->resolve($route->getCondition()));
         }
     }

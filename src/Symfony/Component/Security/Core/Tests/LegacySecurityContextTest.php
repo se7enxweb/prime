@@ -11,13 +11,17 @@
 
 namespace Symfony\Component\Security\Core\Tests;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacySecurityContextTest extends TestCase
 {
@@ -39,7 +43,7 @@ class LegacySecurityContextTest extends TestCase
         $this->tokenStorage
             ->expects($this->once())
             ->method('getToken')
-            ->will($this->returnValue($token));
+            ->willReturn($token);
 
         $this->assertSame($token, $this->securityContext->getToken());
     }
@@ -56,16 +60,13 @@ class LegacySecurityContextTest extends TestCase
         $this->securityContext->setToken($token);
     }
 
-    /**
-     * @dataProvider isGrantedDelegationProvider
-     */
-    public function testIsGrantedDelegation($attributes, $object, $return)
+    #[DataProvider('isGrantedDelegationProvider')]    public function testIsGrantedDelegation($attributes, $object, $return)
     {
         $this->authorizationChecker
             ->expects($this->once())
             ->method('isGranted')
             ->with($attributes, $object)
-            ->will($this->returnValue($return));
+            ->willReturn($return);
 
         $this->assertEquals($return, $this->securityContext->isGranted($attributes, $object));
     }
@@ -92,10 +93,7 @@ class LegacySecurityContextTest extends TestCase
         $this->assertInstanceOf('Symfony\Component\Security\Core\SecurityContext', new SecurityContext($authenticationManager, $accessDecisionManager));
     }
 
-    /**
-     * @dataProvider oldConstructorSignatureFailuresProvider
-     */
-    public function testOldConstructorSignatureFailures($first, $second)
+    #[DataProvider('oldConstructorSignatureFailuresProvider')]    public function testOldConstructorSignatureFailures($first, $second)
     {
         $this->expectException(\BadMethodCallException::class);
 
@@ -104,10 +102,10 @@ class LegacySecurityContextTest extends TestCase
 
     public static function oldConstructorSignatureFailuresProvider()
     {
-        $tokenStorage = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')->getMock();
-        $authorizationChecker = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface')->getMock();
-        $authenticationManager = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface')->getMock();
-        $accessDecisionManager = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface')->getMock();
+        $tokenStorage = new \stdClass();
+        $authorizationChecker = new \stdClass();
+        $authenticationManager = new \stdClass();
+        $accessDecisionManager = new \stdClass();
 
         return array(
             array(new \stdClass(), new \stdClass()),

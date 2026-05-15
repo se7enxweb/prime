@@ -93,7 +93,7 @@ class DoctrineChoiceLoaderTest extends TestCase
         $this->om->expects($this->any())
             ->method('getClassMetadata')
             ->with($this->class)
-            ->willReturn(new ClassMetadata($this->class));
+->willReturn(new ClassMetadata($this->class));
     }
 
     public function testLoadChoiceList()
@@ -118,11 +118,11 @@ class DoctrineChoiceLoaderTest extends TestCase
             ->with($choices, $value)
             ->willReturn($choiceList);
 
-        $this->assertSame($choiceList, $loader->loadChoiceList($value));
+$this->assertSame($choiceList, $loader->loadChoiceList($value));
 
         // no further loads on subsequent calls
 
-        $this->assertSame($choiceList, $loader->loadChoiceList($value));
+$this->assertSame($choiceList, $loader->loadChoiceList($value));
     }
 
     public function testLoadChoiceListUsesObjectLoaderIfAvailable()
@@ -150,11 +150,11 @@ class DoctrineChoiceLoaderTest extends TestCase
             ->with($choices)
             ->willReturn($choiceList);
 
-        $this->assertSame($choiceList, $loader->loadChoiceList());
+$this->assertSame($choiceList, $loader->loadChoiceList());
 
         // no further loads on subsequent calls
 
-        $this->assertSame($choiceList, $loader->loadChoiceList());
+$this->assertSame($choiceList, $loader->loadChoiceList());
     }
 
     public function testLoadValuesForChoices()
@@ -178,11 +178,11 @@ class DoctrineChoiceLoaderTest extends TestCase
             ->with($choices)
             ->willReturn($choiceList);
 
-        $this->assertSame(array('1', '2'), $loader->loadValuesForChoices(array($this->obj2, $this->obj3)));
+$this->assertSame(array('1', '2'), $loader->loadValuesForChoices(array($this->obj2, $this->obj3)));
 
         // no further loads on subsequent calls
 
-        $this->assertSame(array('1', '2'), $loader->loadValuesForChoices(array($this->obj2, $this->obj3)));
+$this->assertSame(array('1', '2'), $loader->loadValuesForChoices(array($this->obj2, $this->obj3)));
     }
 
     public function testLoadValuesForChoicesDoesNotLoadIfEmptyChoices()
@@ -227,7 +227,7 @@ class DoctrineChoiceLoaderTest extends TestCase
             ->with($this->obj2)
             ->willReturn('2');
 
-        $this->assertSame(array('2'), $loader->loadValuesForChoices(array($this->obj2)));
+$this->assertSame(array('2'), $loader->loadValuesForChoices(array($this->obj2)));
     }
 
     public function testLoadValuesForChoicesLoadsIfSingleIntIdAndValueGiven()
@@ -259,7 +259,7 @@ class DoctrineChoiceLoaderTest extends TestCase
         $this->assertSame(array('B'), $loader->loadValuesForChoices(
             array($this->obj2),
             $value
-        ));
+));
     }
 
     public function testLoadValuesForChoicesDoesNotLoadIfValueIsIdReader()
@@ -291,7 +291,7 @@ class DoctrineChoiceLoaderTest extends TestCase
         $this->assertSame(array('2'), $loader->loadValuesForChoices(
             array($this->obj2),
             $value
-        ));
+));
     }
 
     public function testLoadChoicesForValues()
@@ -315,11 +315,11 @@ class DoctrineChoiceLoaderTest extends TestCase
             ->with($choices)
             ->willReturn($choiceList);
 
-        $this->assertSame(array($this->obj2, $this->obj3), $loader->loadChoicesForValues(array('1', '2')));
+$this->assertSame(array($this->obj2, $this->obj3), $loader->loadChoicesForValues(array('1', '2')));
 
         // no further loads on subsequent calls
 
-        $this->assertSame(array($this->obj2, $this->obj3), $loader->loadChoicesForValues(array('1', '2')));
+$this->assertSame(array($this->obj2, $this->obj3), $loader->loadChoicesForValues(array('1', '2')));
     }
 
     public function testLoadChoicesForValuesDoesNotLoadIfEmptyValues()
@@ -376,12 +376,12 @@ class DoctrineChoiceLoaderTest extends TestCase
             ->willReturnMap(array(
                 array($this->obj2, '2'),
                 array($this->obj3, '3'),
-            ));
+));
 
         $this->assertSame(
             array(4 => $this->obj3, 7 => $this->obj2),
             $loader->loadChoicesForValues(array(4 => '3', 7 => '2')
-        ));
+));
     }
 
     public function testLoadChoicesForValuesLoadsAllIfSingleIntIdAndValueGiven()
@@ -413,7 +413,7 @@ class DoctrineChoiceLoaderTest extends TestCase
         $this->assertSame(array($this->obj2), $loader->loadChoicesForValues(
             array('B'),
             $value
-        ));
+));
     }
 
     public function testLoadChoicesForValuesLoadsOnlyChoicesIfValueIsIdReader()
@@ -453,8 +453,8 @@ class DoctrineChoiceLoaderTest extends TestCase
             ->willReturnMap(array(
                 array($this->obj2, '2'),
                 array($this->obj3, '3'),
-            ));
+));
 
-        $this->assertSame(array($this->obj2), $loader->loadChoicesForValues(array('2'), $value));
+$this->assertSame(array($this->obj2), $loader->loadChoicesForValues(array('2'), $value));
     }
 }

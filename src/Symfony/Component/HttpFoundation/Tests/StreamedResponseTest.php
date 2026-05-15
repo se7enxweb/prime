@@ -140,12 +140,12 @@ class StreamedResponseTest extends TestCase
     {
         $response = new StreamedResponse(function () { echo 'foo'; });
         $modified = $response->setNotModified();
-        $this->assertObjectHasAttribute('headers', $modified);
-        $this->assertObjectHasAttribute('content', $modified);
-        $this->assertObjectHasAttribute('version', $modified);
-        $this->assertObjectHasAttribute('statusCode', $modified);
-        $this->assertObjectHasAttribute('statusText', $modified);
-        $this->assertObjectHasAttribute('charset', $modified);
+        $this->assertTrue(property_exists($modified, 'headers'));
+        $this->assertTrue(property_exists($modified, 'content'));
+        $this->assertTrue(property_exists($modified, 'version'));
+        $this->assertTrue(property_exists($modified, 'statusCode'));
+        $this->assertTrue(property_exists($modified, 'statusText'));
+        $this->assertTrue(property_exists($modified, 'charset'));
         $this->assertEquals(304, $modified->getStatusCode());
 
         ob_start();

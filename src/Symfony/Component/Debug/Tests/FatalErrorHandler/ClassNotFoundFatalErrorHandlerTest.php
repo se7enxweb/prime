@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Debug\Tests\FatalErrorHandler;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Composer\Autoload\ClassLoader as ComposerClassLoader;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\ClassLoader\ClassLoader as SymfonyClassLoader;
@@ -40,10 +43,7 @@ class ClassNotFoundFatalErrorHandlerTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider provideClassNotFoundData
-     */
-    public function testHandleClassNotFound($error, $translatedMessage, $autoloader = null)
+    #[DataProvider('provideClassNotFoundData')]    public function testHandleClassNotFound($error, $translatedMessage, $autoloader = null)
     {
         if ($autoloader) {
             // Unregister all autoloaders to ensure the custom provided
@@ -69,10 +69,7 @@ class ClassNotFoundFatalErrorHandlerTest extends TestCase
         $this->assertSame($error['line'], $exception->getLine());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyHandleClassNotFound()
+    #[Group('legacy')]    public function testLegacyHandleClassNotFound()
     {
         $prefixes = array('Symfony\Component\Debug\Exception\\' => realpath(__DIR__.'/../../Exception'));
         $symfonyUniversalClassLoader = new SymfonyUniversalClassLoader();

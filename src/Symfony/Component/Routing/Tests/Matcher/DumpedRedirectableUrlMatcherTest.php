@@ -29,7 +29,7 @@ class DumpedRedirectableUrlMatcherTest extends RedirectableUrlMatcherTest
 
         return $this->getMockBuilder($class)
             ->setConstructorArgs(array($context ?: new RequestContext()))
-            ->setMethods(array('redirect'))
+            ->onlyMethods(array('redirect'))
             ->getMock();
     }
 }

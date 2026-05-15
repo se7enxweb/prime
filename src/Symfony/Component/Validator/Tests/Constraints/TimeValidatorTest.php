@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\Constraints\Time;
 use Symfony\Component\Validator\Constraints\TimeValidator;
 use Symfony\Component\Validator\Validation;
@@ -57,10 +59,7 @@ class TimeValidatorTest extends AbstractConstraintValidatorTest
         $this->validator->validate(new \stdClass(), new Time());
     }
 
-    /**
-     * @dataProvider getValidTimes
-     */
-    public function testValidTimes($time)
+    #[DataProvider('getValidTimes')]    public function testValidTimes($time)
     {
         $this->validator->validate($time, new Time());
 
@@ -76,10 +75,7 @@ class TimeValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidTimes
-     */
-    public function testInvalidTimes($time, $code)
+    #[DataProvider('getInvalidTimes')]    public function testInvalidTimes($time, $code)
     {
         $constraint = new Time(array(
             'message' => 'myMessage',

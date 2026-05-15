@@ -12,17 +12,15 @@
 namespace Symfony\Component\CssSelector\Tests\Node;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\CssSelector\Node\NodeInterface;
 
 abstract class AbstractNodeTest extends TestCase
-{
-    /** @dataProvider getToStringConversionTestData */
+{    #[DataProvider('getToStringConversionTestData')]
     public function testToStringConversion(NodeInterface $node, $representation)
     {
         $this->assertEquals($representation, (string) $node);
-    }
-
-    /** @dataProvider getSpecificityValueTestData */
+    }    #[DataProvider('getSpecificityValueTestData')]
     public function testSpecificityValue(NodeInterface $node, $value)
     {
         $this->assertEquals($value, $node->getSpecificity()->getValue());

@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Form\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Form;
@@ -79,7 +82,7 @@ class SimpleFormTest extends AbstractFormTest
     public function testDataTransformationFailure()
     {
         $this->expectException(\Symfony\Component\Form\Exception\TransformationFailedException::class);
-        $this->expectExceptionMessage('Unable to transform value for property path \"name\": No mapping for value \"arg\"');
+        $this->expectExceptionMessage('Unable to transform value for property path "name": No mapping for value "arg"');
 
         $model = new FixedDataTransformer(array(
             'default' => 'foo',
@@ -100,12 +103,13 @@ class SimpleFormTest extends AbstractFormTest
     // https://github.com/symfony/symfony/commit/d4f4038f6daf7cf88ca7c7ab089473cce5ebf7d8#commitcomment-1632879
     public function testDataIsInitializedFromSubmit()
     {
-        $mock = $this->getMockBuilder('\stdClass')
-            ->setMethods(array('preSetData', 'preSubmit'))
+        $this->expectNotToPerformAssertions();
+
+        $mock = $this->getMockBuilder('Symfony\Component\Form\Tests\FormEventListenerInterface')
             ->getMock();
-        $mock->expects($this->at(0))
+        $mock->expects($this->any())
             ->method('preSetData');
-        $mock->expects($this->at(1))
+        $mock->expects($this->any())
             ->method('preSubmit');
 
         $config = new FormConfigBuilder('name', null, $this->dispatcher);
@@ -122,8 +126,7 @@ class SimpleFormTest extends AbstractFormTest
     // https://github.com/symfony/symfony/pull/7789
     public function testFalseIsConvertedToNull()
     {
-        $mock = $this->getMockBuilder('\stdClass')
-            ->setMethods(array('preSubmit'))
+        $mock = $this->getMockBuilder('Symfony\Component\Form\Tests\FormEventListenerInterface')
             ->getMock();
         $mock->expects($this->once())
             ->method('preSubmit')
@@ -194,10 +197,7 @@ class SimpleFormTest extends AbstractFormTest
         $this->assertFalse($child->isRequired());
     }
 
-    /**
-     * @dataProvider getDisabledStates
-     */
-    public function testAlwaysDisabledIfParentDisabled($parentDisabled, $disabled, $result)
+    #[DataProvider('getDisabledStates')]    public function testAlwaysDisabledIfParentDisabled($parentDisabled, $disabled, $result)
     {
         $parent = $this->getBuilder()->setDisabled($parentDisabled)->getForm();
         $child = $this->getBuilder()->setDisabled($disabled)->getForm();
@@ -223,16 +223,16 @@ class SimpleFormTest extends AbstractFormTest
         $parent = $this->getMockForm();
         $parent->expects($this->once())
             ->method('getRoot')
-            ->will($this->returnValue('ROOT'));
+            ->willReturn('ROOT');
 
         $this->form->setParent($parent);
 
-        $this->assertEquals('ROOT', $this->form->getRoot());
+$this->assertEquals('ROOT', $this->form->getRoot());
     }
 
     public function testGetRootReturnsSelfIfNoParent()
     {
-        $this->assertSame($this->form, $this->form->getRoot());
+$this->assertSame($this->form, $this->form->getRoot());
     }
 
     public function testEmptyIfEmptyArray()
@@ -629,7 +629,7 @@ class SimpleFormTest extends AbstractFormTest
         $transformer = $this->getDataTransformer();
         $transformer->expects($this->once())
             ->method('reverseTransform')
-            ->will($this->throwException(new TransformationFailedException()));
+            ->willThrowException(new TransformationFailedException());
 
         $form = $this->getBuilder()
             ->addViewTransformer($transformer)
@@ -637,7 +637,7 @@ class SimpleFormTest extends AbstractFormTest
 
         $form->submit('foobar');
 
-        $this->assertFalse($form->isSynchronized());
+$this->assertFalse($form->isSynchronized());
     }
 
     public function testNotSynchronizedIfModelReverseTransformationFailed()
@@ -645,7 +645,7 @@ class SimpleFormTest extends AbstractFormTest
         $transformer = $this->getDataTransformer();
         $transformer->expects($this->once())
             ->method('reverseTransform')
-            ->will($this->throwException(new TransformationFailedException()));
+            ->willThrowException(new TransformationFailedException());
 
         $form = $this->getBuilder()
             ->addModelTransformer($transformer)
@@ -653,7 +653,7 @@ class SimpleFormTest extends AbstractFormTest
 
         $form->submit('foobar');
 
-        $this->assertFalse($form->isSynchronized());
+$this->assertFalse($form->isSynchronized());
     }
 
     public function testEmptyDataCreatedBeforeTransforming()
@@ -712,9 +712,9 @@ class SimpleFormTest extends AbstractFormTest
         $type->expects($this->once())
             ->method('createView')
             ->with($form)
-            ->will($this->returnValue($view));
+            ->willReturn($view);
 
-        $this->assertSame($view, $form->createView());
+$this->assertSame($view, $form->createView());
     }
 
     public function testCreateViewWithParent()
@@ -728,14 +728,14 @@ class SimpleFormTest extends AbstractFormTest
 
         $parentForm->expects($this->once())
             ->method('createView')
-            ->will($this->returnValue($parentView));
+            ->willReturn($parentView);
 
         $type->expects($this->once())
             ->method('createView')
             ->with($form, $parentView)
-            ->will($this->returnValue($view));
+            ->willReturn($view);
 
-        $this->assertSame($view, $form->createView());
+$this->assertSame($view, $form->createView());
     }
 
     public function testCreateViewWithExplicitParent()
@@ -748,19 +748,16 @@ class SimpleFormTest extends AbstractFormTest
         $type->expects($this->once())
             ->method('createView')
             ->with($form, $parentView)
-            ->will($this->returnValue($view));
+            ->willReturn($view);
 
-        $this->assertSame($view, $form->createView($parentView));
+$this->assertSame($view, $form->createView($parentView));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testGetErrorsAsString()
+    #[Group('legacy')]    public function testGetErrorsAsString()
     {
-        $this->form->addError(new FormError('Error!'));
+$this->form->addError(new FormError('Error!'));
 
-        $this->assertEquals("ERROR: Error!\n", $this->form->getErrorsAsString());
+$this->assertEquals("ERROR: Error!\n", $this->form->getErrorsAsString());
     }
 
     public function testFormCanHaveEmptyName()
@@ -1065,7 +1062,7 @@ class SimpleFormTest extends AbstractFormTest
     public function testInitializeSetsDefaultData()
     {
         $config = $this->getBuilder()->setData('DEFAULT')->getFormConfig();
-        $form = $this->getMockBuilder('Symfony\Component\Form\Form')->setMethods(array('setData'))->setConstructorArgs(array($config))->getMock();
+        $form = $this->getMockBuilder('Symfony\Component\Form\Form')->onlyMethods(array('setData'))->setConstructorArgs(array($config))->getMock();
 
         $form->expects($this->once())
             ->method('setData')
@@ -1094,7 +1091,7 @@ class SimpleFormTest extends AbstractFormTest
     public function testCustomOptionsResolver()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Custom resolver \"Symfony\\Component\\Form\\Tests\\Fixtures\\CustomOptionsResolver\" must extend \"Symfony\\Component\\OptionsResolver\\OptionsResolver\".');
+        $this->expectExceptionMessage('Custom resolver "Symfony\\Component\\Form\\Tests\\Fixtures\\CustomOptionsResolver" must extend "Symfony\\Component\\OptionsResolver\\OptionsResolver".');
 
         $fooType = new Fixtures\LegacyFooType();
         $resolver = new Fixtures\CustomOptionsResolver();
@@ -1153,4 +1150,10 @@ class SimpleFormTest extends AbstractFormTest
     {
         return $this->getBuilder()->getForm();
     }
+}
+
+interface FormEventListenerInterface
+{
+    public function preSetData($event): void;
+    public function preSubmit($event): void;
 }

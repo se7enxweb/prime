@@ -302,6 +302,9 @@ class ProgressIndicator
 
             'very_verbose' => ' %indicator% %message% (%elapsed:6s%, %memory:6s%)',
             'very_verbose_no_ansi' => ' %message% (%elapsed:6s%, %memory:6s%)',
+
+            'debug' => ' %indicator% %message% (%elapsed:6s%, %memory:6s%)',
+            'debug_no_ansi' => ' %message% (%elapsed:6s%, %memory:6s%)',
         );
     }
 }

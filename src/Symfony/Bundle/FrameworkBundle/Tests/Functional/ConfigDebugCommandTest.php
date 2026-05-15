@@ -11,13 +11,14 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Functional;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Tester\CommandTester;
-
+    #[Group('functional')]
 /**
- * @group functional
  */
 class ConfigDebugCommandTest extends WebTestCase
 {
@@ -25,9 +26,16 @@ class ConfigDebugCommandTest extends WebTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $kernel = static::createKernel(array('test_case' => 'ConfigDump', 'root_config' => 'config.yml'));
         $this->application = new Application($kernel);
         $this->application->doRun(new ArrayInput(array()), new NullOutput());
+    }
+
+    protected function tearDown(): void
+    {
+        $this->application = null;
+        parent::tearDown();
     }
 
     public function testDumpBundleName()

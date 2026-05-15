@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\Tests\Fixtures\Author;
@@ -53,10 +55,7 @@ class FormTypeTest extends BaseTypeTest
 {
     const TESTED_TYPE = 'Symfony\Component\Form\Extension\Core\Type\FormType';
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('form');
 
@@ -111,10 +110,7 @@ class FormTypeTest extends BaseTypeTest
         $this->assertEquals('reverse[ a ]', $form->getData());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyNonReadOnlyFormWithReadOnlyParentIsReadOnly()
+    #[Group('legacy')]    public function testLegacyNonReadOnlyFormWithReadOnlyParentIsReadOnly()
     {
         $view = $this->factory->createNamedBuilder('parent', static::TESTED_TYPE, null, array('read_only' => true))
             ->add('child', static::TESTED_TYPE)
@@ -134,10 +130,7 @@ class FormTypeTest extends BaseTypeTest
         $this->assertTrue($view['child']->vars['attr']['readonly']);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyReadOnlyFormWithNonReadOnlyParentIsReadOnly()
+    #[Group('legacy')]    public function testLegacyReadOnlyFormWithNonReadOnlyParentIsReadOnly()
     {
         $view = $this->factory->createNamedBuilder('parent', static::TESTED_TYPE)
             ->add('child', static::TESTED_TYPE, array('read_only' => true))
@@ -157,10 +150,7 @@ class FormTypeTest extends BaseTypeTest
         $this->assertTrue($view['child']->vars['attr']['readonly']);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyNonReadOnlyFormWithNonReadOnlyParentIsNotReadOnly()
+    #[Group('legacy')]    public function testLegacyNonReadOnlyFormWithNonReadOnlyParentIsNotReadOnly()
     {
         $view = $this->factory->createNamedBuilder('parent', static::TESTED_TYPE)
             ->add('child', static::TESTED_TYPE)
@@ -694,10 +684,7 @@ class FormTypeTest extends BaseTypeTest
         $this->assertSame('0', $view->vars['label']);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testCanGetErrorsWhenButtonInForm()
+    #[Group('legacy')]    public function testCanGetErrorsWhenButtonInForm()
     {
         $builder = $this->factory->createBuilder(static::TESTED_TYPE, null, array(
             'data_class' => 'Symfony\Component\Form\Tests\Fixtures\Author',

@@ -114,7 +114,10 @@ class ClassMapGenerator
                     $namespace = '';
                     // If there is a namespace, extract it
                     while (isset($tokens[++$i][1])) {
-                        if (\in_array($tokens[$i][0], array(T_STRING, T_NS_SEPARATOR))) {
+                        if (\in_array($tokens[$i][0], array(T_STRING, T_NS_SEPARATOR))
+                            || (\defined('T_NAME_QUALIFIED') && T_NAME_QUALIFIED === $tokens[$i][0])
+                            || (\defined('T_NAME_FULLY_QUALIFIED') && T_NAME_FULLY_QUALIFIED === $tokens[$i][0])
+                        ) {
                             $namespace .= $tokens[$i][1];
                         }
                     }

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Intl\Tests\Data\Bundle\Writer;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Intl\Data\Bundle\Writer\PhpBundleWriter;
@@ -64,10 +66,7 @@ class PhpBundleWriterTest extends TestCase
         $this->assertFileEquals(__DIR__.'/Fixtures/en.php', $this->directory.'/en.php');
     }
 
-    /**
-     * @requires extension intl
-     */
-    public function testWriteResourceBundle()
+    #[RequiresPhpExtension('intl')]    public function testWriteResourceBundle()
     {
         if (\PHP_VERSION_ID < 50315 || (\PHP_VERSION_ID >= 50400 && \PHP_VERSION_ID < 50404)) {
             $this->markTestSkipped('ResourceBundle implements Traversable only as of PHP 5.3.15 and 5.4.4');

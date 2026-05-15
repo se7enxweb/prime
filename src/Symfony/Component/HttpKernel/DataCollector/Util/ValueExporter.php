@@ -82,7 +82,7 @@ class ValueExporter
 
     private function getClassNameFromIncomplete(\__PHP_Incomplete_Class $value)
     {
-        $array = new \ArrayObject($value);
+        $array = (array) $value;
 
         return $array['__PHP_Incomplete_Class_Name'];
     }

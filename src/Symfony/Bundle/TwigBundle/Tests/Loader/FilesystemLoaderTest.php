@@ -24,16 +24,17 @@ class FilesystemLoaderTest extends TestCase
         $locator
             ->expects($this->once())
             ->method('locate')
-            ->will($this->returnValue(__DIR__.'/../DependencyInjection/Fixtures/Resources/views/layout.html.twig'))
+            ->willReturn(__DIR__.'/../DependencyInjection/Fixtures/Resources/views/layout.html.twig')
+
         ;
         $loader = new FilesystemLoader($locator, $parser);
         $loader->addPath(__DIR__.'/../DependencyInjection/Fixtures/Resources/views', 'namespace');
 
         // Twig-style
-        $this->assertEquals("This is a layout\n", $loader->getSourceContext('@namespace/layout.html.twig')->getCode());
+$this->assertEquals("This is a layout\n", $loader->getSourceContext('@namespace/layout.html.twig')->getCode());
 
         // Symfony-style
-        $this->assertEquals("This is a layout\n", $loader->getSourceContext('TwigBundle::layout.html.twig')->getCode());
+$this->assertEquals("This is a layout\n", $loader->getSourceContext('TwigBundle::layout.html.twig')->getCode());
     }
 
     public function testExists()
@@ -44,11 +45,12 @@ class FilesystemLoaderTest extends TestCase
         $locator
             ->expects($this->once())
             ->method('locate')
-            ->will($this->returnValue($template = __DIR__.'/../DependencyInjection/Fixtures/Resources/views/layout.html.twig'))
+            ->willReturn($template = __DIR__.'/../DependencyInjection/Fixtures/Resources/views/layout.html.twig')
+
         ;
         $loader = new FilesystemLoader($locator, $parser);
 
-        $this->assertTrue($loader->exists($template));
+$this->assertTrue($loader->exists($template));
     }
 
     /**
@@ -62,14 +64,16 @@ class FilesystemLoaderTest extends TestCase
             ->expects($this->once())
             ->method('parse')
             ->with('name.format.engine')
-            ->will($this->returnValue(new TemplateReference('', '', 'name', 'format', 'engine')))
+            ->willReturn(new TemplateReference('', '', 'name', 'format', 'engine'))
+
         ;
 
         $locator = $this->getMockBuilder('Symfony\Component\Config\FileLocatorInterface')->getMock();
         $locator
             ->expects($this->once())
             ->method('locate')
-            ->will($this->throwException(new \InvalidArgumentException('Unable to find template "NonExistent".')))
+            ->willThrowException(new \InvalidArgumentException('Unable to find template "NonExistent".'))
+
         ;
 
         $loader = new FilesystemLoader($locator, $parser);
@@ -87,14 +91,16 @@ class FilesystemLoaderTest extends TestCase
             ->expects($this->once())
             ->method('parse')
             ->with('name.format.engine')
-            ->will($this->returnValue(new TemplateReference('', '', 'name', 'format', 'engine')))
+            ->willReturn(new TemplateReference('', '', 'name', 'format', 'engine'))
+
         ;
 
         $locator = $this->getMockBuilder('Symfony\Component\Config\FileLocatorInterface')->getMock();
         $locator
             ->expects($this->once())
             ->method('locate')
-            ->will($this->returnValue(false))
+            ->willReturn(false)
+
         ;
 
         $loader = new FilesystemLoader($locator, $parser);
@@ -115,7 +121,6 @@ class FilesystemLoaderTest extends TestCase
         $loader->addPath(__DIR__.'/../DependencyInjection/Fixtures/Resources/views');
 
         $method = new \ReflectionMethod('Symfony\Bundle\TwigBundle\Loader\FilesystemLoader', 'findTemplate');
-        $method->setAccessible(true);
         $method->invoke($loader, 'name.format.engine');
     }
 
@@ -128,7 +133,6 @@ class FilesystemLoaderTest extends TestCase
         $loader->addPath(__DIR__.'/../DependencyInjection/Fixtures/Resources/views');
 
         $method = new \ReflectionMethod('Symfony\Bundle\TwigBundle\Loader\FilesystemLoader', 'findTemplate');
-        $method->setAccessible(true);
         $this->assertFalse($method->invoke($loader, 'name.format.engine', false));
     }
 }

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Security\Tests\Http\Firewall;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,10 +28,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
 class UsernamePasswordFormAuthenticationListenerTest extends TestCase
 {
-    /**
-     * @dataProvider getUsernameForLength
-     */
-    public function testHandleWhenUsernameLength($username, $ok)
+    #[DataProvider('getUsernameForLength')]    public function testHandleWhenUsernameLength($username, $ok)
     {
         $request = Request::create('/login_check', 'POST', array('_username' => $username));
         $request->setSession($this->getMockBuilder('Symfony\Component\HttpFoundation\Session\SessionInterface')->getMock());
@@ -38,21 +37,21 @@ class UsernamePasswordFormAuthenticationListenerTest extends TestCase
         $httpUtils
             ->expects($this->any())
             ->method('checkRequestPath')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $failureHandler = $this->getMockBuilder('Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface')->getMock();
         $failureHandler
             ->expects($ok ? $this->never() : $this->once())
             ->method('onAuthenticationFailure')
-            ->will($this->returnValue(new Response()))
+            ->willReturn(new Response())
         ;
 
         $authenticationManager = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager')->disableOriginalConstructor()->getMock();
         $authenticationManager
             ->expects($ok ? $this->once() : $this->never())
             ->method('authenticate')
-            ->will($this->returnValue(new Response()))
+            ->willReturn(new Response())
         ;
 
         $listener = new UsernamePasswordFormAuthenticationListener(
@@ -70,19 +69,16 @@ class UsernamePasswordFormAuthenticationListenerTest extends TestCase
         $event
             ->expects($this->any())
             ->method('getRequest')
-            ->will($this->returnValue($request))
+            ->willReturn($request)
         ;
 
         $listener->handle($event);
     }
 
-    /**
-     * @dataProvider postOnlyDataProvider
-     */
-    public function testHandleNonStringUsername($postOnly)
+    #[DataProvider('postOnlyDataProvider')]    public function testHandleNonStringUsername($postOnly)
     {
         $this->expectException(\Symfony\Component\HttpKernel\Exception\BadRequestHttpException::class);
-        $this->expectExceptionMessage('The key \"_username\" must be a string, \"array\" given.');
+        $this->expectExceptionMessage('The key "_username" must be a string, "array" given.');
 
         $request = Request::create('/login_check', 'POST', array('_username' => array()));
         $request->setSession($this->getMockBuilder('Symfony\Component\HttpFoundation\Session\SessionInterface')->getMock());

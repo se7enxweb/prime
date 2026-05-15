@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\HttpKernel\Tests\DataCollector\Util;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\DataCollector\Util\ValueExporter;
 
@@ -32,8 +34,8 @@ class ValueExporterTest extends TestCase
         $this->assertSame('Object(DateTime) - 2014-06-10T07:35:40+00:00', $this->valueExporter->exportValue($dateTime));
     }
 
+    #[RequiresPhp('5.5')]
     /**
-     * @requires PHP 5.5
      */
     public function testDateTimeImmutable()
     {
@@ -43,9 +45,8 @@ class ValueExporterTest extends TestCase
 
     public function testIncompleteClass()
     {
-        $foo = new \__PHP_Incomplete_Class();
-        $array = new \ArrayObject($foo);
-        $array['__PHP_Incomplete_Class_Name'] = 'AppBundle/Foo';
-        $this->assertSame('__PHP_Incomplete_Class(AppBundle/Foo)', $this->valueExporter->exportValue($foo));
+        $foo = unserialize('O:13:"AppBundle\\Foo":0:{}');
+
+        $this->assertSame('__PHP_Incomplete_Class(AppBundle\\Foo)', $this->valueExporter->exportValue($foo));
     }
 }

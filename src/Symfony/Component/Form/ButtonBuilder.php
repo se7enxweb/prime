@@ -824,6 +824,7 @@ class ButtonBuilder implements \IteratorAggregate, FormBuilderInterface
      *
      * @return int Always returns 0
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return 0;

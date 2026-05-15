@@ -12,6 +12,7 @@
 namespace Symfony\Component\CssSelector\Tests;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 class CssSelectorConverterTest extends TestCase
@@ -44,9 +45,7 @@ class CssSelectorConverterTest extends TestCase
 
         $converter = new CssSelectorConverter();
         $converter->toXPath('h1:');
-    }
-
-    /** @dataProvider getCssToXPathWithoutPrefixTestData */
+    }    #[DataProvider('getCssToXPathWithoutPrefixTestData')]
     public function testCssToXPathWithoutPrefix($css, $xpath)
     {
         $converter = new CssSelectorConverter();

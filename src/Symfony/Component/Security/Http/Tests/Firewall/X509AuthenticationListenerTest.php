@@ -11,16 +11,15 @@
 
 namespace Symfony\Component\Security\Http\Tests\Firewall;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Firewall\X509AuthenticationListener;
 
 class X509AuthenticationListenerTest extends TestCase
 {
-    /**
-     * @dataProvider dataProviderGetPreAuthenticatedData
-     */
-    public function testGetPreAuthenticatedData($user, $credentials)
+    #[DataProvider('dataProviderGetPreAuthenticatedData')]    public function testGetPreAuthenticatedData($user, $credentials)
     {
         $serverVars = array();
         if ('' !== $user) {
@@ -39,7 +38,6 @@ class X509AuthenticationListenerTest extends TestCase
         $listener = new X509AuthenticationListener($tokenStorage, $authenticationManager, 'TheProviderKey');
 
         $method = new \ReflectionMethod($listener, 'getPreAuthenticatedData');
-        $method->setAccessible(true);
 
         $result = $method->invokeArgs($listener, array($request));
         $this->assertSame($result, array($user, $credentials));
@@ -53,10 +51,7 @@ class X509AuthenticationListenerTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider dataProviderGetPreAuthenticatedDataNoUser
-     */
-    public function testGetPreAuthenticatedDataNoUser($emailAddress)
+    #[DataProvider('dataProviderGetPreAuthenticatedDataNoUser')]    public function testGetPreAuthenticatedDataNoUser($emailAddress)
     {
         $credentials = 'CN=Sample certificate DN/emailAddress='.$emailAddress;
         $request = new Request(array(), array(), array(), array(), array(), array('SSL_CLIENT_S_DN' => $credentials));
@@ -68,7 +63,6 @@ class X509AuthenticationListenerTest extends TestCase
         $listener = new X509AuthenticationListener($tokenStorage, $authenticationManager, 'TheProviderKey');
 
         $method = new \ReflectionMethod($listener, 'getPreAuthenticatedData');
-        $method->setAccessible(true);
 
         $result = $method->invokeArgs($listener, array($request));
         $this->assertSame($result, array($emailAddress, $credentials));
@@ -97,7 +91,6 @@ class X509AuthenticationListenerTest extends TestCase
         $listener = new X509AuthenticationListener($tokenStorage, $authenticationManager, 'TheProviderKey');
 
         $method = new \ReflectionMethod($listener, 'getPreAuthenticatedData');
-        $method->setAccessible(true);
 
         $result = $method->invokeArgs($listener, array($request));
     }
@@ -117,7 +110,6 @@ class X509AuthenticationListenerTest extends TestCase
         $listener = new X509AuthenticationListener($tokenStorage, $authenticationManager, 'TheProviderKey', 'TheUserKey', 'TheCredentialsKey');
 
         $method = new \ReflectionMethod($listener, 'getPreAuthenticatedData');
-        $method->setAccessible(true);
 
         $result = $method->invokeArgs($listener, array($request));
         $this->assertSame($result, $userCredentials);

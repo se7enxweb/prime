@@ -121,7 +121,7 @@ class ArrayInput extends Input
         foreach ($this->parameters as $key => $value) {
             if (0 === strpos($key, '--')) {
                 $this->addLongOption(substr($key, 2), $value);
-            } elseif ('-' === $key[0]) {
+            } elseif (is_string($key) && '-' === $key[0]) {
                 $this->addShortOption(substr($key, 1), $value);
             } else {
                 $this->addArgument($key, $value);

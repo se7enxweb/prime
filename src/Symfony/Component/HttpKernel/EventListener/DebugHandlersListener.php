@@ -80,7 +80,7 @@ class DebugHandlersListener implements EventSubscriberInterface
                             $scream |= $type;
                         }
                     } else {
-                        $scream = null === $this->levels ? E_ALL | E_STRICT : $this->levels;
+                        $scream = null === $this->levels ? E_ALL | 0 : $this->levels;
                     }
                     if ($this->scream) {
                         $handler->screamAt($scream);

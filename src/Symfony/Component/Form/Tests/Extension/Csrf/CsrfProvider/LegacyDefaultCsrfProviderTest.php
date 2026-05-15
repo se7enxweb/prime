@@ -11,13 +11,18 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Csrf\CsrfProvider;
 
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\DefaultCsrfProvider;
 
+#[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
+#[Group('legacy')]
 /**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @group legacy
  */
 class LegacyDefaultCsrfProviderTest extends TestCase
 {
@@ -42,8 +47,8 @@ class LegacyDefaultCsrfProviderTest extends TestCase
         $this->assertEquals(sha1('SECRET'.'foo'.session_id()), $token);
     }
 
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function testGenerateCsrfTokenOnUnstartedSession()
     {

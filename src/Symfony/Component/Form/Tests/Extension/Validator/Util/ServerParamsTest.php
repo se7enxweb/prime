@@ -12,6 +12,7 @@
 namespace Symfony\Component\Form\Tests\Extension\Validator\Util;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Form\Extension\Validator\Util\ServerParams;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -32,23 +33,21 @@ class ServerParamsTest extends TestCase
     public function testGetContentLengthFromRequest()
     {
         $request = Request::create('http://foo', 'GET', array(), array(), array(), array('CONTENT_LENGTH' => 1024));
-        $requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->setMethods(array('getCurrentRequest'))->getMock();
-        $requestStack->expects($this->once())->method('getCurrentRequest')->will($this->returnValue($request));
+        $requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->onlyMethods(array('getCurrentRequest'))->getMock();
+        $requestStack->expects($this->once())->method('getCurrentRequest')->willReturn($request);
         $serverParams = new ServerParams($requestStack);
 
-        $this->assertEquals(1024, $serverParams->getContentLength());
-    }
-
-    /** @dataProvider getGetPostMaxSizeTestData */
+$this->assertEquals(1024, $serverParams->getContentLength());
+    }    #[DataProvider('getGetPostMaxSizeTestData')]
     public function testGetPostMaxSize($size, $bytes)
     {
-        $serverParams = $this->getMockBuilder('Symfony\Component\Form\Extension\Validator\Util\ServerParams')->setMethods(array('getNormalizedIniPostMaxSize'))->getMock();
+        $serverParams = $this->getMockBuilder('Symfony\Component\Form\Extension\Validator\Util\ServerParams')->onlyMethods(array('getNormalizedIniPostMaxSize'))->getMock();
         $serverParams
             ->expects($this->any())
             ->method('getNormalizedIniPostMaxSize')
-            ->will($this->returnValue(strtoupper($size)));
+            ->willReturn(strtoupper($size));
 
-        $this->assertEquals($bytes, $serverParams->getPostMaxSize());
+$this->assertEquals($bytes, $serverParams->getPostMaxSize());
     }
 
     public static function getGetPostMaxSizeTestData()

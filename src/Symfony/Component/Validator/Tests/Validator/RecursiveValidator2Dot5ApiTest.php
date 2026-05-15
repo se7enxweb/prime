@@ -45,7 +45,7 @@ class RecursiveValidator2Dot5ApiTest extends Abstract2Dot5ApiTest
         $validator = $this
             ->getMockBuilder('Symfony\Component\Validator\Validator\RecursiveValidator')
             ->disableOriginalConstructor()
-            ->setMethods(array('startContext'))
+            ->onlyMethods(array('startContext'))
             ->getMock();
         $validator
             ->expects($this->once())

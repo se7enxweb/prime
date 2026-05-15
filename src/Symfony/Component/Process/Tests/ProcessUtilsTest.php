@@ -11,15 +11,14 @@
 
 namespace Symfony\Component\Process\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\ProcessUtils;
 
 class ProcessUtilsTest extends TestCase
 {
-    /**
-     * @dataProvider dataArguments
-     */
-    public function testEscapeArgument($result, $argument)
+    #[DataProvider('dataArguments')]    public function testEscapeArgument($result, $argument)
     {
         $this->assertSame($result, ProcessUtils::escapeArgument($argument));
     }

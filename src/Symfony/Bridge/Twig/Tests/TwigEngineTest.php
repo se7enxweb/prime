@@ -23,7 +23,7 @@ class TwigEngineTest extends TestCase
     {
         $engine = $this->getTwig();
 
-        $this->assertTrue($engine->exists($this->getMockForAbstractClass('Twig\Template', array(), '', false)));
+        $this->assertTrue($engine->exists($this->getMockBuilder('Twig\Template')->disableOriginalConstructor()->getMock()));
     }
 
     public function testExistsWithNonExistentTemplates()

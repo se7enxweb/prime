@@ -11,12 +11,11 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Functional;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 class AnnotatedControllerTest extends WebTestCase
 {
-    /**
-     * @dataProvider getRoutes
-     */
-    public function testAnnotatedController($path, $expectedValue)
+    #[DataProvider('getRoutes')]    public function testAnnotatedController($path, $expectedValue)
     {
         $client = $this->createClient(array('test_case' => 'AnnotatedController', 'root_config' => 'config.yml'));
         $client->request('GET', '/annotated'.$path);

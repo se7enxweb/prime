@@ -109,37 +109,42 @@ class ReflectionCaster
     {
         $prefix = Caster::PREFIX_VIRTUAL;
 
-        if ($c->getThis()) {
-            $a[$prefix.'this'] = new CutStub($c->getThis());
-        }
-        $function = $c->getFunction();
-        $frame = array(
-            'class' => isset($function->class) ? $function->class : null,
-            'type' => isset($function->class) ? ($function->isStatic() ? '::' : '->') : null,
-            'function' => $function->name,
-            'file' => $c->getExecutingFile(),
-            'line' => $c->getExecutingLine(),
-        );
-        if ($trace = $c->getTrace(DEBUG_BACKTRACE_IGNORE_ARGS)) {
-            $function = new \ReflectionGenerator($c->getExecutingGenerator());
-            array_unshift($trace, array(
-                'function' => 'yield',
-                'file' => $function->getExecutingFile(),
-                'line' => $function->getExecutingLine() - 1,
-            ));
-            $trace[] = $frame;
-            $a[$prefix.'trace'] = new TraceStub($trace, false, 0, -1, -1);
-        } else {
-            $function = new FrameStub($frame, false, true);
-            $function = ExceptionCaster::castFrameStub($function, array(), $function, true);
-            $a[$prefix.'executing'] = new EnumStub(array(
-                $frame['class'].$frame['type'].$frame['function'].'()' => $function[$prefix.'src'],
-            ));
-        }
+        try {
+            if ($c->getThis()) {
+                $a[$prefix.'this'] = new CutStub($c->getThis());
+            }
+            $function = $c->getFunction();
+            $frame = array(
+                'class' => isset($function->class) ? $function->class : null,
+                'type' => isset($function->class) ? ($function->isStatic() ? '::' : '->') : null,
+                'function' => $function->name,
+                'file' => $c->getExecutingFile(),
+                'line' => $c->getExecutingLine(),
+            );
+            if ($trace = $c->getTrace(DEBUG_BACKTRACE_IGNORE_ARGS)) {
+                $function = new \ReflectionGenerator($c->getExecutingGenerator());
+                array_unshift($trace, array(
+                    'function' => 'yield',
+                    'file' => $function->getExecutingFile(),
+                    'line' => $function->getExecutingLine() - 1,
+                ));
+                $trace[] = $frame;
+                $a[$prefix.'trace'] = new TraceStub($trace, false, 0, -1, -1);
+            } else {
+                $function = new FrameStub($frame, false, true);
+                $function = ExceptionCaster::castFrameStub($function, array(), $function, true);
+                $a[$prefix.'executing'] = new EnumStub(array(
+                    $frame['class'].$frame['type'].$frame['function'].'()' => $function[$prefix.'src'],
+                ));
+            }
+            $a[Caster::PREFIX_VIRTUAL.'closed'] = false;
 
-        $a[Caster::PREFIX_VIRTUAL.'closed'] = false;
+            return $a;
+        } catch (\ReflectionException $e) {
+            $a[Caster::PREFIX_VIRTUAL.'closed'] = true;
 
-        return $a;
+            return $a;
+        }
     }
 
     public static function castClass(\ReflectionClass $c, array $a, Stub $stub, $isNested, $filter = 0)
@@ -328,6 +333,9 @@ class ReflectionCaster
     private static function addMap(&$a, \Reflector $c, $map, $prefix = Caster::PREFIX_VIRTUAL)
     {
         foreach ($map as $k => $m) {
+            if ('isDisabled' === $m && \PHP_VERSION_ID >= 80000) {
+                continue;
+            }
             if (method_exists($c, $m) && false !== ($m = $c->$m()) && null !== $m) {
                 $a[$prefix.$k] = $m instanceof \Reflector ? $m->name : $m;
             }

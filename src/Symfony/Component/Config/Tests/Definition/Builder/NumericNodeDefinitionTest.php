@@ -45,7 +45,7 @@ class NumericNodeDefinitionTest extends TestCase
     public function testIntegerMinAssertion()
     {
         $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
-        $this->expectExceptionMessage('The value 4 is too small for path \"foo\". Should be greater than or equal to 5');
+        $this->expectExceptionMessage('The value 4 is too small for path "foo". Should be greater than or equal to 5');
 
         $def = new IntegerNodeDefinition('foo');
         $def->min(5)->getNode()->finalize(4);
@@ -56,7 +56,7 @@ class NumericNodeDefinitionTest extends TestCase
     public function testIntegerMaxAssertion()
     {
         $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
-        $this->expectExceptionMessage('The value 4 is too big for path \"foo\". Should be less than or equal to 3');
+        $this->expectExceptionMessage('The value 4 is too big for path "foo". Should be less than or equal to 3');
 
         $def = new IntegerNodeDefinition('foo');
         $def->max(3)->getNode()->finalize(4);
@@ -74,7 +74,7 @@ class NumericNodeDefinitionTest extends TestCase
     public function testFloatMinAssertion()
     {
         $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
-        $this->expectExceptionMessage('The value 400 is too small for path \"foo\". Should be greater than or equal to 500');
+        $this->expectExceptionMessage('The value 400 is too small for path "foo". Should be greater than or equal to 500');
 
         $def = new FloatNodeDefinition('foo');
         $def->min(5E2)->getNode()->finalize(4e2);
@@ -85,7 +85,7 @@ class NumericNodeDefinitionTest extends TestCase
     public function testFloatMaxAssertion()
     {
         $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
-        $this->expectExceptionMessage('The value 4.3 is too big for path \"foo\". Should be less than or equal to 0.3');
+        $this->expectExceptionMessage('The value 4.3 is too big for path "foo". Should be less than or equal to 0.3');
 
         $def = new FloatNodeDefinition('foo');
         $def->max(0.3)->getNode()->finalize(4.3);

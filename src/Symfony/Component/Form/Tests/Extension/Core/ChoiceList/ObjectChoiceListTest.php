@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\ChoiceList;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ObjectChoiceList;
 use Symfony\Component\Form\Extension\Core\View\ChoiceView;
 
@@ -29,8 +31,8 @@ class ObjectChoiceListTest_EntityWithToString
     }
 }
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class ObjectChoiceListTest extends AbstractChoiceListTest
 {

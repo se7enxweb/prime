@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Finder\Tests\Iterator;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Finder\Iterator\FilecontentFilterIterator;
 
 class FilecontentFilterIteratorTest extends IteratorTestCase
@@ -36,10 +38,7 @@ class FilecontentFilterIteratorTest extends IteratorTestCase
         $this->assertIterator(array(), $iterator);
     }
 
-    /**
-     * @dataProvider getTestFilterData
-     */
-    public function testFilter(\Iterator $inner, array $matchPatterns, array $noMatchPatterns, array $resultArray)
+    #[DataProvider('getTestFilterData')]    public function testFilter(\Iterator $inner, array $matchPatterns, array $noMatchPatterns, array $resultArray)
     {
         $iterator = new FilecontentFilterIterator($inner, $matchPatterns, $noMatchPatterns);
         $this->assertIterator($resultArray, $iterator);

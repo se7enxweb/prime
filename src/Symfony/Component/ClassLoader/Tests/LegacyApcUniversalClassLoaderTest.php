@@ -11,11 +11,15 @@
 
 namespace Symfony\Component\ClassLoader\Tests;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\ClassLoader\ApcUniversalClassLoader;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyApcUniversalClassLoaderTest extends TestCase
 {
@@ -43,10 +47,7 @@ class LegacyApcUniversalClassLoaderTest extends TestCase
         $this->assertEquals($loader->findFile('\LegacyApc\Namespaced\FooBar'), apcu_fetch('test.prefix.\LegacyApc\Namespaced\FooBar'), '__construct() takes a prefix as its first argument');
     }
 
-    /**
-     * @dataProvider getLoadClassTests
-     */
-    public function testLoadClass($className, $testClassName, $message)
+    #[DataProvider('getLoadClassTests')]    public function testLoadClass($className, $testClassName, $message)
     {
         $loader = new ApcUniversalClassLoader('test.prefix.');
         $loader->registerNamespace('LegacyApc\Namespaced', __DIR__.\DIRECTORY_SEPARATOR.'Fixtures');
@@ -63,10 +64,7 @@ class LegacyApcUniversalClassLoaderTest extends TestCase
        );
     }
 
-    /**
-     * @dataProvider getLoadClassFromFallbackTests
-     */
-    public function testLoadClassFromFallback($className, $testClassName, $message)
+    #[DataProvider('getLoadClassFromFallbackTests')]    public function testLoadClassFromFallback($className, $testClassName, $message)
     {
         $loader = new ApcUniversalClassLoader('test.prefix.fallback');
         $loader->registerNamespace('LegacyApc\Namespaced', __DIR__.\DIRECTORY_SEPARATOR.'Fixtures');
@@ -87,10 +85,7 @@ class LegacyApcUniversalClassLoaderTest extends TestCase
        );
     }
 
-    /**
-     * @dataProvider getLoadClassNamespaceCollisionTests
-     */
-    public function testLoadClassNamespaceCollision($namespaces, $className, $message)
+    #[DataProvider('getLoadClassNamespaceCollisionTests')]    public function testLoadClassNamespaceCollision($namespaces, $className, $message)
     {
         $loader = new ApcUniversalClassLoader('test.prefix.collision.');
         $loader->registerNamespaces($namespaces);
@@ -138,10 +133,7 @@ class LegacyApcUniversalClassLoaderTest extends TestCase
        );
     }
 
-    /**
-     * @dataProvider getLoadClassPrefixCollisionTests
-     */
-    public function testLoadClassPrefixCollision($prefixes, $className, $message)
+    #[DataProvider('getLoadClassPrefixCollisionTests')]    public function testLoadClassPrefixCollision($prefixes, $className, $message)
     {
         $loader = new ApcUniversalClassLoader('test.prefix.collision.');
         $loader->registerPrefixes($prefixes);

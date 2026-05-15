@@ -11,16 +11,19 @@
 
 namespace Symfony\Component\HttpFoundation\Tests\Session\Storage\Handler;
 
+
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandler;
 
+#[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
 /**
  * Test class for NativeSessionHandler.
  *
  * @author Drak <drak@zikula.org>
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
 class NativeSessionHandlerTest extends TestCase
 {

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\HttpFoundation\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\AcceptHeaderItem;
@@ -23,10 +25,7 @@ class AcceptHeaderTest extends TestCase
         $this->assertSame('text/html', $header->first()->getValue());
     }
 
-    /**
-     * @dataProvider provideFromStringData
-     */
-    public function testFromString($string, array $items)
+    #[DataProvider('provideFromStringData')]    public function testFromString($string, array $items)
     {
         $header = AcceptHeader::fromString($string);
         $parsed = array_values($header->all());
@@ -48,10 +47,7 @@ class AcceptHeaderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideToStringData
-     */
-    public function testToString(array $items, $string)
+    #[DataProvider('provideToStringData')]    public function testToString(array $items, $string)
     {
         $header = new AcceptHeader($items);
         $this->assertEquals($string, (string) $header);
@@ -67,10 +63,7 @@ class AcceptHeaderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideFilterData
-     */
-    public function testFilter($string, $filter, array $values)
+    #[DataProvider('provideFilterData')]    public function testFilter($string, $filter, array $values)
     {
         $header = AcceptHeader::fromString($string)->filter($filter);
         $this->assertEquals($values, array_keys($header->all()));
@@ -83,10 +76,7 @@ class AcceptHeaderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideSortingData
-     */
-    public function testSorting($string, array $values)
+    #[DataProvider('provideSortingData')]    public function testSorting($string, array $values)
     {
         $header = AcceptHeader::fromString($string);
         $this->assertEquals($values, array_keys($header->all()));

@@ -153,7 +153,15 @@ class OptionsResolver implements Options, OptionsResolverInterface
             $reflClosure = new \ReflectionFunction($value);
             $params = $reflClosure->getParameters();
 
-            if (isset($params[0]) && null !== ($class = $params[0]->getClass()) && self::OPTIONS_INTERFACE === $class->name) {
+            $className = null;
+            if (isset($params[0])) {
+                $type = $params[0]->getType();
+                if ($type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
+                    $className = ltrim($type->getName(), '\\');
+                }
+            }
+
+            if (self::OPTIONS_INTERFACE === $className) {
                 // Initialize the option if no previous value exists
                 if (!isset($this->defaults[$option])) {
                     $this->defaults[$option] = null;
@@ -762,6 +770,7 @@ class OptionsResolver implements Options, OptionsResolverInterface
      * @throws OptionDefinitionException If there is a cyclic dependency between
      *                                   lazy options and/or normalizers
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($option)
     {
         if (!$this->locked) {
@@ -924,6 +933,7 @@ class OptionsResolver implements Options, OptionsResolverInterface
      *
      * @see \ArrayAccess::offsetExists()
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($option)
     {
         if (!$this->locked) {
@@ -938,6 +948,7 @@ class OptionsResolver implements Options, OptionsResolverInterface
      *
      * @throws AccessException
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($option, $value)
     {
         throw new AccessException('Setting options via array access is not supported. Use setDefault() instead.');
@@ -948,6 +959,7 @@ class OptionsResolver implements Options, OptionsResolverInterface
      *
      * @throws AccessException
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($option)
     {
         throw new AccessException('Removing options via array access is not supported. Use remove() instead.');
@@ -964,6 +976,7 @@ class OptionsResolver implements Options, OptionsResolverInterface
      *
      * @see \Countable::count()
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         if (!$this->locked) {

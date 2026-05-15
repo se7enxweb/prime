@@ -72,7 +72,7 @@ abstract class Descriptor implements DescriptorInterface
             case $object instanceof EventDispatcherInterface:
                 $this->describeEventDispatcherListeners($object, $options);
                 break;
-            case \is_callable($object):
+            case $this->isDescribableCallable($object):
                 $this->describeCallable($object, $options);
                 break;
             default:
@@ -300,5 +300,17 @@ abstract class Descriptor implements DescriptorInterface
         asort($serviceIds);
 
         return $serviceIds;
+    }
+
+    /**
+     * Avoid deprecated callable checks for [ClassName, 'parent::method'] style entries.
+     */
+    private function isDescribableCallable($callable)
+    {
+        if (\is_array($callable) && isset($callable[0], $callable[1]) && \is_string($callable[1]) && 0 === strpos($callable[1], 'parent::')) {
+            return true;
+        }
+
+        return \is_callable($callable);
     }
 }

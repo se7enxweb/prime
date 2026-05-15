@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\ClassLoader\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
 
@@ -45,10 +47,7 @@ class ClassMapGeneratorTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider getTestCreateMapTests
-     */
-    public function testDump($directory)
+    #[DataProvider('getTestCreateMapTests')]    public function testDump($directory)
     {
         $this->prepare_workspace();
 
@@ -61,10 +60,7 @@ class ClassMapGeneratorTest extends TestCase
         $this->clean($this->workspace);
     }
 
-    /**
-     * @dataProvider getTestCreateMapTests
-     */
-    public function testCreateMap($directory, $expected)
+    #[DataProvider('getTestCreateMapTests')]    public function testCreateMap($directory, $expected)
     {
         $this->assertEqualsNormalized($expected, ClassMapGenerator::createMap($directory));
     }
@@ -141,7 +137,7 @@ class ClassMapGeneratorTest extends TestCase
         ), ClassMapGenerator::createMap($finder));
     }
 
-    protected function assertEqualsNormalized($expected, $actual, $message = null)
+    protected function assertEqualsNormalized($expected, $actual, $message = '')
     {
         foreach ($expected as $ns => $path) {
             $expected[$ns] = str_replace('\\', '/', $path);

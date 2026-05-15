@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\HttpFoundation\Tests\Session\Attribute;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag;
 
@@ -74,18 +76,12 @@ class NamespacedAttributeBagTest extends TestCase
         $this->assertEquals('test', $attributeBag->getStorageKey());
     }
 
-    /**
-     * @dataProvider attributesProvider
-     */
-    public function testHas($key, $value, $exists)
+    #[DataProvider('attributesProvider')]    public function testHas($key, $value, $exists)
     {
         $this->assertEquals($exists, $this->bag->has($key));
     }
 
-    /**
-     * @dataProvider attributesProvider
-     */
-    public function testHasNoSideEffect($key, $value, $expected)
+    #[DataProvider('attributesProvider')]    public function testHasNoSideEffect($key, $value, $expected)
     {
         $expected = json_encode($this->bag->all());
         $this->bag->has($key);
@@ -93,10 +89,7 @@ class NamespacedAttributeBagTest extends TestCase
         $this->assertEquals($expected, json_encode($this->bag->all()));
     }
 
-    /**
-     * @dataProvider attributesProvider
-     */
-    public function testGet($key, $value, $expected)
+    #[DataProvider('attributesProvider')]    public function testGet($key, $value, $expected)
     {
         $this->assertEquals($value, $this->bag->get($key));
     }
@@ -107,10 +100,7 @@ class NamespacedAttributeBagTest extends TestCase
         $this->assertEquals('default', $this->bag->get('user2.login', 'default'));
     }
 
-    /**
-     * @dataProvider attributesProvider
-     */
-    public function testGetNoSideEffect($key, $value, $expected)
+    #[DataProvider('attributesProvider')]    public function testGetNoSideEffect($key, $value, $expected)
     {
         $expected = json_encode($this->bag->all());
         $this->bag->get($key);
@@ -118,10 +108,7 @@ class NamespacedAttributeBagTest extends TestCase
         $this->assertEquals($expected, json_encode($this->bag->all()));
     }
 
-    /**
-     * @dataProvider attributesProvider
-     */
-    public function testSet($key, $value, $expected)
+    #[DataProvider('attributesProvider')]    public function testSet($key, $value, $expected)
     {
         $this->bag->set($key, $value);
         $this->assertEquals($value, $this->bag->get($key));

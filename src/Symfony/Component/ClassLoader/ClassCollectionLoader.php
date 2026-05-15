@@ -200,7 +200,14 @@ REGEX;
                 $rawChunk .= $token[1];
 
                 // namespace name and whitespaces
-                while (isset($tokens[++$i][1]) && \in_array($tokens[$i][0], array(T_WHITESPACE, T_NS_SEPARATOR, T_STRING))) {
+                $allowedTokens = array(T_WHITESPACE, T_NS_SEPARATOR, T_STRING);
+                if (defined('T_NAME_QUALIFIED')) {
+                    $allowedTokens[] = T_NAME_QUALIFIED;
+                }
+                if (defined('T_NAME_FULLY_QUALIFIED')) {
+                    $allowedTokens[] = T_NAME_FULLY_QUALIFIED;
+                }
+                while (isset($tokens[++$i][1]) && \in_array($tokens[$i][0], $allowedTokens)) {
                     $rawChunk .= $tokens[$i][1];
                 }
                 if ('{' === $tokens[$i]) {

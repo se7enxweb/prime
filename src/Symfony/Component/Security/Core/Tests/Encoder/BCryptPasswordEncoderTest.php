@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Security\Core\Tests\Encoder;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 
@@ -40,10 +42,7 @@ class BCryptPasswordEncoderTest extends TestCase
         new BCryptPasswordEncoder(32);
     }
 
-    /**
-     * @dataProvider validRangeData
-     */
-    public function testCostInRange($cost)
+    #[DataProvider('validRangeData')]    public function testCostInRange($cost)
     {
         $this->assertInstanceOf('Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder', new BCryptPasswordEncoder($cost));
     }
@@ -67,8 +66,8 @@ class BCryptPasswordEncoderTest extends TestCase
     {
         $encoder = new BCryptPasswordEncoder(self::VALID_COST);
         $result = $encoder->encodePassword(self::PASSWORD, null);
-        $this->assertTrue($encoder->isPasswordValid($result, self::PASSWORD, null));
-        $this->assertFalse($encoder->isPasswordValid($result, 'anotherPassword', null));
+        $this->assertTrue($encoder->isPasswordValid($result, self::PASSWORD, ''));
+        $this->assertFalse($encoder->isPasswordValid($result, 'anotherPassword', ''));
     }
 
     /**

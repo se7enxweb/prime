@@ -11,16 +11,15 @@
 
 namespace Symfony\Component\Config\Tests\Definition;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\NodeInterface;
 
 class NormalizationTest extends TestCase
 {
-    /**
-     * @dataProvider getEncoderTests
-     */
-    public function testNormalizeEncoders($denormalized)
+    #[DataProvider('getEncoderTests')]    public function testNormalizeEncoders($denormalized)
     {
         $tb = new TreeBuilder();
         $tree = $tb
@@ -92,10 +91,7 @@ class NormalizationTest extends TestCase
         }, $configs);
     }
 
-    /**
-     * @dataProvider getAnonymousKeysTests
-     */
-    public function testAnonymousKeysArray($denormalized)
+    #[DataProvider('getAnonymousKeysTests')]    public function testAnonymousKeysArray($denormalized)
     {
         $tb = new TreeBuilder();
         $tree = $tb
@@ -138,10 +134,7 @@ class NormalizationTest extends TestCase
         return array_map(function ($v) { return array($v); }, $configs);
     }
 
-    /**
-     * @dataProvider getNumericKeysTests
-     */
-    public function testNumericKeysAsAttributes($denormalized)
+    #[DataProvider('getNumericKeysTests')]    public function testNumericKeysAsAttributes($denormalized)
     {
         $normalized = array(
             'thing' => array(42 => array('foo', 'bar'), 1337 => array('baz', 'qux')),
@@ -174,7 +167,7 @@ class NormalizationTest extends TestCase
     public function testNonAssociativeArrayThrowsExceptionIfAttributeNotSet()
     {
         $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
-        $this->expectExceptionMessage('The attribute \"id\" must be set for path \"root.thing\".');
+        $this->expectExceptionMessage('The attribute "id" must be set for path "root.thing".');
 
         $denormalized = array(
             'thing' => array(

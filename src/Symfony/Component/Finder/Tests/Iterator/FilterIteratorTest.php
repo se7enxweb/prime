@@ -21,13 +21,13 @@ class FilterIteratorTest extends RealIteratorTestCase
         $i = new \FilesystemIterator($this->toAbsolute());
 
         // it is expected that there are test.py test.php in the tmpDir
-        $i = $this->getMockForAbstractClass('Symfony\Component\Finder\Iterator\FilterIterator', array($i));
+        $i = $this->getMockBuilder('Symfony\Component\Finder\Iterator\FilterIterator')->setConstructorArgs(array($i))->onlyMethods(array('accept'))->getMock();
         $i->expects($this->any())
             ->method('accept')
-            ->will($this->returnCallback(function () use ($i) {
-                return (bool) preg_match('/\.php/', (string) $i->current());
+            ->willReturnCallback(function () use ($i) {
+return (bool) preg_match('/\.php/', (string) $i->current());
             })
-        );
+        ;
 
         $c = 0;
         foreach ($i as $item) {

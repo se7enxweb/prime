@@ -31,7 +31,8 @@ class PreAuthenticatedAuthenticationProviderTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getProviderKey')
-            ->will($this->returnValue('foo'))
+            ->willReturn('foo')
+
         ;
         $this->assertFalse($provider->supports($token));
     }
@@ -64,7 +65,8 @@ class PreAuthenticatedAuthenticationProviderTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getRoles')
-            ->will($this->returnValue(array()))
+            ->willReturn(array())
+
         ;
         $provider = $this->getProvider($user);
 
@@ -88,7 +90,8 @@ class PreAuthenticatedAuthenticationProviderTest extends TestCase
         $userChecker = $this->getMockBuilder('Symfony\Component\Security\Core\User\UserCheckerInterface')->getMock();
         $userChecker->expects($this->once())
                     ->method('checkPostAuth')
-                    ->will($this->throwException(new LockedException()))
+                    ->willThrowException(new LockedException())
+
         ;
 
         $provider = $this->getProvider($user, $userChecker);
@@ -98,24 +101,27 @@ class PreAuthenticatedAuthenticationProviderTest extends TestCase
 
     protected function getSupportedToken($user = false, $credentials = false)
     {
-        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken')->setMethods(array('getUser', 'getCredentials', 'getProviderKey'))->disableOriginalConstructor()->getMock();
+        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken')->onlyMethods(array('getUser', 'getCredentials', 'getProviderKey'))->disableOriginalConstructor()->getMock();
         if (false !== $user) {
             $token->expects($this->once())
                   ->method('getUser')
-                  ->will($this->returnValue($user))
+                  ->willReturn($user)
+
             ;
         }
         if (false !== $credentials) {
             $token->expects($this->once())
                   ->method('getCredentials')
-                  ->will($this->returnValue($credentials))
+                  ->willReturn($credentials)
+
             ;
         }
 
         $token
             ->expects($this->any())
             ->method('getProviderKey')
-            ->will($this->returnValue('key'))
+            ->willReturn('key')
+
         ;
 
         $token->setAttributes(array('foo' => 'bar'));
@@ -129,7 +135,8 @@ class PreAuthenticatedAuthenticationProviderTest extends TestCase
         if (null !== $user) {
             $userProvider->expects($this->once())
                          ->method('loadUserByUsername')
-                         ->will($this->returnValue($user))
+                         ->willReturn($user)
+
             ;
         }
 

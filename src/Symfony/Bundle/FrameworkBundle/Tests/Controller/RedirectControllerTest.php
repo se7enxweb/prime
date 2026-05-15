@@ -11,6 +11,8 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Controller;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -42,11 +44,7 @@ class RedirectControllerTest extends TestCase
             $this->assertSame(404, $e->getStatusCode());
         }
     }
-
-    /**
-     * @dataProvider provider
-     */
-    public function testRoute($permanent, $ignoreAttributes, $expectedCode, $expectedAttributes)
+    #[DataProvider('provider')]    public function testRoute($permanent, $ignoreAttributes, $expectedCode, $expectedAttributes)
     {
         $request = new Request();
 
@@ -71,7 +69,7 @@ class RedirectControllerTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->with($this->equalTo($route), $this->equalTo($expectedAttributes))
-            ->will($this->returnValue($url));
+            ->willReturn($url);
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
 
@@ -79,7 +77,7 @@ class RedirectControllerTest extends TestCase
             ->expects($this->once())
             ->method('get')
             ->with($this->equalTo('router'))
-            ->will($this->returnValue($router));
+            ->willReturn($router);
 
         $controller = new RedirectController();
         $controller->setContainer($container);
@@ -87,7 +85,7 @@ class RedirectControllerTest extends TestCase
         $returnResponse = $controller->redirectAction($request, $route, $permanent, $ignoreAttributes);
 
         $this->assertRedirectUrl($returnResponse, $url);
-        $this->assertEquals($expectedCode, $returnResponse->getStatusCode());
+$this->assertEquals($expectedCode, $returnResponse->getStatusCode());
     }
 
     public static function provider()
@@ -181,11 +179,7 @@ class RedirectControllerTest extends TestCase
             array('http',  80,    4443, 'https', 8443, ''),
         );
     }
-
-    /**
-     * @dataProvider urlRedirectProvider
-     */
-    public function testUrlRedirect($scheme, $httpPort, $httpsPort, $requestScheme, $requestPort, $expectedPort)
+    #[DataProvider('urlRedirectProvider')]    public function testUrlRedirect($scheme, $httpPort, $httpsPort, $requestScheme, $requestPort, $expectedPort)
     {
         $host = 'www.example.com';
         $baseUrl = '/base';
@@ -209,11 +203,7 @@ class RedirectControllerTest extends TestCase
             array('http://www.example.com/base/redirect-path?foo=bar&abc=example&baz=def', '/redirect-path?foo=bar', 'abc=example&baz=def'),
         );
     }
-
-    /**
-     * @dataProvider pathQueryParamsProvider
-     */
-    public function testPathQueryParams($expectedUrl, $path, $queryString)
+    #[DataProvider('pathQueryParamsProvider')]    public function testPathQueryParams($expectedUrl, $path, $queryString)
     {
         $scheme = 'http';
         $host = 'www.example.com';
@@ -234,23 +224,23 @@ class RedirectControllerTest extends TestCase
         $request
             ->expects($this->any())
             ->method('getScheme')
-            ->will($this->returnValue($scheme));
+            ->willReturn($scheme);
         $request
             ->expects($this->any())
             ->method('getHost')
-            ->will($this->returnValue($host));
+            ->willReturn($host);
         $request
             ->expects($this->any())
             ->method('getPort')
-            ->will($this->returnValue($port));
+            ->willReturn($port);
         $request
             ->expects($this->any())
             ->method('getBaseUrl')
-            ->will($this->returnValue($baseUrl));
+            ->willReturn($baseUrl);
         $request
             ->expects($this->any())
             ->method('getQueryString')
-            ->will($this->returnValue($queryString));
+            ->willReturn($queryString);
 
         return $request;
     }
@@ -264,24 +254,24 @@ class RedirectControllerTest extends TestCase
                 ->expects($this->once())
                 ->method('hasParameter')
                 ->with($this->equalTo('request_listener.http_port'))
-                ->will($this->returnValue(true));
+                ->willReturn(true);
             $container
                 ->expects($this->once())
                 ->method('getParameter')
                 ->with($this->equalTo('request_listener.http_port'))
-                ->will($this->returnValue($httpPort));
+                ->willReturn($httpPort);
         }
         if (null !== $httpsPort) {
             $container
                 ->expects($this->once())
                 ->method('hasParameter')
                 ->with($this->equalTo('request_listener.https_port'))
-                ->will($this->returnValue(true));
+                ->willReturn(true);
             $container
                 ->expects($this->once())
                 ->method('getParameter')
                 ->with($this->equalTo('request_listener.https_port'))
-                ->will($this->returnValue($httpsPort));
+                ->willReturn($httpsPort);
         }
 
         $controller = new RedirectController();

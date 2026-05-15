@@ -12,6 +12,7 @@
 namespace Symfony\Component\Console\Tests\Descriptor;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -20,32 +21,23 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 abstract class AbstractDescriptorTest extends TestCase
-{
-    /** @dataProvider getDescribeInputArgumentTestData */
+{    #[DataProvider('getDescribeInputArgumentTestData')]
     public function testDescribeInputArgument(InputArgument $argument, $expectedDescription)
     {
         $this->assertDescription($expectedDescription, $argument);
-    }
-
-    /** @dataProvider getDescribeInputOptionTestData */
+    }    #[DataProvider('getDescribeInputOptionTestData')]
     public function testDescribeInputOption(InputOption $option, $expectedDescription)
     {
         $this->assertDescription($expectedDescription, $option);
-    }
-
-    /** @dataProvider getDescribeInputDefinitionTestData */
+    }    #[DataProvider('getDescribeInputDefinitionTestData')]
     public function testDescribeInputDefinition(InputDefinition $definition, $expectedDescription)
     {
         $this->assertDescription($expectedDescription, $definition);
-    }
-
-    /** @dataProvider getDescribeCommandTestData */
+    }    #[DataProvider('getDescribeCommandTestData')]
     public function testDescribeCommand(Command $command, $expectedDescription)
     {
         $this->assertDescription($expectedDescription, $command);
-    }
-
-    /** @dataProvider getDescribeApplicationTestData */
+    }    #[DataProvider('getDescribeApplicationTestData')]
     public function testDescribeApplication(Application $application, $expectedDescription)
     {
         // Replaces the dynamic placeholders of the command help text with a static version.
@@ -60,38 +52,38 @@ abstract class AbstractDescriptorTest extends TestCase
 
     public static function getDescribeInputArgumentTestData()
     {
-        return $this->getDescriptionTestData(ObjectsProvider::getInputArguments());
+        return self::getDescriptionTestData(ObjectsProvider::getInputArguments());
     }
 
     public static function getDescribeInputOptionTestData()
     {
-        return $this->getDescriptionTestData(ObjectsProvider::getInputOptions());
+        return self::getDescriptionTestData(ObjectsProvider::getInputOptions());
     }
 
     public static function getDescribeInputDefinitionTestData()
     {
-        return $this->getDescriptionTestData(ObjectsProvider::getInputDefinitions());
+        return self::getDescriptionTestData(ObjectsProvider::getInputDefinitions());
     }
 
     public static function getDescribeCommandTestData()
     {
-        return $this->getDescriptionTestData(ObjectsProvider::getCommands());
+        return self::getDescriptionTestData(ObjectsProvider::getCommands());
     }
 
     public static function getDescribeApplicationTestData()
     {
-        return $this->getDescriptionTestData(ObjectsProvider::getApplications());
+        return self::getDescriptionTestData(ObjectsProvider::getApplications());
     }
 
     abstract protected function getDescriptor();
 
-    abstract protected function getFormat();
+    abstract protected static function getFormat();
 
-    protected function getDescriptionTestData(array $objects)
+    protected static function getDescriptionTestData(array $objects)
     {
         $data = array();
         foreach ($objects as $name => $object) {
-            $description = file_get_contents(sprintf('%s/../Fixtures/%s.%s', __DIR__, $name, $this->getFormat()));
+            $description = file_get_contents(sprintf('%s/../Fixtures/%s.%s', __DIR__, $name, static::getFormat()));
             $data[] = array($object, $description);
         }
 

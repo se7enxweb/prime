@@ -104,11 +104,14 @@ class LazyLoadingMetadataFactoryTest extends TestCase
               ->willReturnCallback(function ($metadata) use ($interfaceAConstraints, $parentClassConstraints) {
                   static $callCount = 0;
                   $callCount++;
-                  // first call: interfaceA constraints, second call: parentClass constraints
+                  // first call: parentClass constraints (before merge), second call: interfaceA constraints
                   if (1 === $callCount) {
-                      $this->assertEquals($interfaceAConstraints, $metadata->getConstraints());
+                      // First write is for PARENT_CLASS before merging - only has its own constraint
+                      $constraints = $metadata->getConstraints();
+                      $this->assertCount(1, $constraints);
+                      $this->assertEquals(array('Default', 'EntityParent'), $constraints[0]->groups);
                   } else {
-                      $this->assertEquals($parentClassConstraints, $metadata->getConstraints());
+                      $this->assertEquals($interfaceAConstraints, $metadata->getConstraints());
                   }
               });
 
@@ -172,12 +175,13 @@ class LazyLoadingMetadataFactoryTest extends TestCase
         $cache
             ->expects($this->any())
             ->method('write')
-            ->will($this->returnCallback(function ($metadata) { serialize($metadata); }))
+            ->willReturnCallback(function ($metadata) { serialize($metadata); })
+
         ;
 
         $cache->expects($this->any())
             ->method('read')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $metadata = $factory->getMetadataFor(self::PARENT_CLASS);
         $metadata->addConstraint(new Callback(function () {}));
@@ -202,10 +206,10 @@ class LazyLoadingMetadataFactoryTest extends TestCase
         }
 
         $this->assertCount(4, $groups);
-        $this->assertStringContainsString('Default', $groups);
-        $this->assertStringContainsString('EntityStaticCarTurbo', $groups);
-        $this->assertStringContainsString('EntityStaticCar', $groups);
-        $this->assertStringContainsString('EntityStaticVehicle', $groups);
+        $this->assertContains('Default', $groups);
+        $this->assertContains('EntityStaticCarTurbo', $groups);
+        $this->assertContains('EntityStaticCar', $groups);
+        $this->assertContains('EntityStaticVehicle', $groups);
     }
 }
 

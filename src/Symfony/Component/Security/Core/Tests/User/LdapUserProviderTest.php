@@ -11,13 +11,12 @@
 
 namespace Symfony\Component\Security\Core\Tests\User;
 
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Ldap\Exception\ConnectionException;
 use Symfony\Component\Security\Core\User\LdapUserProvider;
 
-/**
- * @requires extension ldap
- */
+#[RequiresPhpExtension('ldap')]
 class LdapUserProviderTest extends TestCase
 {
     /**
@@ -30,7 +29,8 @@ class LdapUserProviderTest extends TestCase
         $ldap
             ->expects($this->once())
             ->method('bind')
-            ->will($this->throwException(new ConnectionException()))
+            ->willThrowException(new ConnectionException())
+
         ;
 
         $provider = new LdapUserProvider($ldap, 'ou=MyBusiness,dc=symfony,dc=com');
@@ -47,7 +47,8 @@ class LdapUserProviderTest extends TestCase
         $ldap
             ->expects($this->once())
             ->method('escape')
-            ->will($this->returnValue('foo'))
+            ->willReturn('foo')
+
         ;
 
         $provider = new LdapUserProvider($ldap, 'ou=MyBusiness,dc=symfony,dc=com');
@@ -64,16 +65,18 @@ class LdapUserProviderTest extends TestCase
         $ldap
             ->expects($this->once())
             ->method('escape')
-            ->will($this->returnValue('foo'))
+            ->willReturn('foo')
+
         ;
         $ldap
             ->expects($this->once())
             ->method('find')
-            ->will($this->returnValue(array(
+            ->willReturn(array(
                 array(),
                 array(),
                 'count' => 2,
-            )))
+            ))
+
         ;
 
         $provider = new LdapUserProvider($ldap, 'ou=MyBusiness,dc=symfony,dc=com');
@@ -86,18 +89,20 @@ class LdapUserProviderTest extends TestCase
         $ldap
             ->expects($this->once())
             ->method('escape')
-            ->will($this->returnValue('foo'))
+            ->willReturn('foo')
+
         ;
         $ldap
             ->expects($this->once())
             ->method('find')
-            ->will($this->returnValue(array(
+            ->willReturn(array(
                 array(
                     'sAMAccountName' => 'foo',
                     'userpassword' => 'bar',
                 ),
                 'count' => 1,
-            )))
+            ))
+
         ;
 
         $provider = new LdapUserProvider($ldap, 'ou=MyBusiness,dc=symfony,dc=com');

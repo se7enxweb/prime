@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Intl\Tests\Data\Provider;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Intl\Data\Provider\CurrencyDataProvider;
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Intl\Locale;
@@ -604,10 +606,7 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
         $this->assertSame(static::$currencies, $this->dataProvider->getCurrencies());
     }
 
-    /**
-     * @dataProvider provideLocales
-     */
-    public function testGetNames($displayLocale)
+    #[DataProvider('provideLocales')]    public function testGetNames($displayLocale)
     {
         $names = $this->dataProvider->getNames($displayLocale);
 
@@ -635,10 +634,7 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
         );
     }
 
-    /**
-     * @dataProvider provideLocaleAliases
-     */
-    public function testGetNamesSupportsAliases($alias, $ofLocale)
+    #[DataProvider('provideLocaleAliases')]    public function testGetNamesSupportsAliases($alias, $ofLocale)
     {
         // Can't use assertSame(), because some aliases contain scripts with
         // different collation (=order of output) than their aliased locale
@@ -649,10 +645,7 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
         );
     }
 
-    /**
-     * @dataProvider provideLocales
-     */
-    public function testGetName($displayLocale)
+    #[DataProvider('provideLocales')]    public function testGetName($displayLocale)
     {
         $expected = $this->dataProvider->getNames($displayLocale);
         $actual = array();
@@ -678,10 +671,7 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
         $this->assertSame($expected, $actual);
     }
 
-    /**
-     * @dataProvider provideLocales
-     */
-    public function testGetSymbol($displayLocale)
+    #[DataProvider('provideLocales')]    public function testGetSymbol($displayLocale)
     {
         $currencies = $this->dataProvider->getCurrencies();
 
@@ -698,18 +688,12 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
         );
     }
 
-    /**
-     * @dataProvider provideCurrencies
-     */
-    public function testGetFractionDigits($currency)
+    #[DataProvider('provideCurrencies')]    public function testGetFractionDigits($currency)
     {
         $this->assertIsNumeric($this->dataProvider->getFractionDigits($currency));
     }
 
-    /**
-     * @dataProvider provideCurrencies
-     */
-    public function testGetRoundingIncrement($currency)
+    #[DataProvider('provideCurrencies')]    public function testGetRoundingIncrement($currency)
     {
         $this->assertIsNumeric($this->dataProvider->getRoundingIncrement($currency));
     }
@@ -722,10 +706,7 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
         );
     }
 
-    /**
-     * @dataProvider provideCurrenciesWithNumericEquivalent
-     */
-    public function testGetNumericCode($currency)
+    #[DataProvider('provideCurrenciesWithNumericEquivalent')]    public function testGetNumericCode($currency)
     {
         $this->assertSame(static::$alpha3ToNumeric[$currency], $this->dataProvider->getNumericCode($currency));
     }
@@ -738,10 +719,7 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
         );
     }
 
-    /**
-     * @dataProvider provideCurrenciesWithoutNumericEquivalent
-     */
-    public function testGetNumericCodeFailsIfNoNumericEquivalent($currency)
+    #[DataProvider('provideCurrenciesWithoutNumericEquivalent')]    public function testGetNumericCodeFailsIfNoNumericEquivalent($currency)
     {
         $this->expectException(\Symfony\Component\Intl\Exception\MissingResourceException::class);
 
@@ -750,7 +728,7 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
 
     public static function provideValidNumericCodes()
     {
-        $numericToAlpha3 = $this->getNumericToAlpha3Mapping();
+        $numericToAlpha3 = self::getNumericToAlpha3Mapping();
 
         return array_map(
             function ($numeric, $alpha3) { return array($numeric, $alpha3); },
@@ -759,10 +737,7 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
         );
     }
 
-    /**
-     * @dataProvider provideValidNumericCodes
-     */
-    public function testForNumericCode($numeric, $expected)
+    #[DataProvider('provideValidNumericCodes')]    public function testForNumericCode($numeric, $expected)
     {
         $actual = $this->dataProvider->forNumericCode($numeric);
 
@@ -775,7 +750,7 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
 
     public static function provideInvalidNumericCodes()
     {
-        $validNumericCodes = array_keys($this->getNumericToAlpha3Mapping());
+        $validNumericCodes = array_keys(self::getNumericToAlpha3Mapping());
         $invalidNumericCodes = array_diff(range(0, 1000), $validNumericCodes);
 
         return array_map(
@@ -784,17 +759,14 @@ abstract class AbstractCurrencyDataProviderTest extends AbstractDataProviderTest
         );
     }
 
-    /**
-     * @dataProvider provideInvalidNumericCodes
-     */
-    public function testForNumericCodeFailsIfInvalidNumericCode($currency)
+    #[DataProvider('provideInvalidNumericCodes')]    public function testForNumericCodeFailsIfInvalidNumericCode($currency)
     {
         $this->expectException(\Symfony\Component\Intl\Exception\MissingResourceException::class);
 
         $this->dataProvider->forNumericCode($currency);
     }
 
-    private function getNumericToAlpha3Mapping()
+    private static function getNumericToAlpha3Mapping()
     {
         $numericToAlpha3 = array();
 

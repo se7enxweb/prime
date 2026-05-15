@@ -11,18 +11,19 @@
 
 namespace Symfony\Component\ClassLoader\Tests;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyUniversalClassLoaderTest extends TestCase
 {
-    /**
-     * @dataProvider getLoadClassTests
-     */
-    public function testLoadClass($className, $testClassName, $message)
+    #[DataProvider('getLoadClassTests')]    public function testLoadClass($className, $testClassName, $message)
     {
         $loader = new UniversalClassLoader();
         $loader->registerNamespace('Namespaced', __DIR__.\DIRECTORY_SEPARATOR.'Fixtures');
@@ -84,10 +85,7 @@ class LegacyUniversalClassLoaderTest extends TestCase
         $this->assertArrayHasKey('Bas', $prefixes);
     }
 
-    /**
-     * @dataProvider getLoadClassFromFallbackTests
-     */
-    public function testLoadClassFromFallback($className, $testClassName, $message)
+    #[DataProvider('getLoadClassFromFallbackTests')]    public function testLoadClassFromFallback($className, $testClassName, $message)
     {
         $loader = new UniversalClassLoader();
         $loader->registerNamespace('Namespaced', __DIR__.\DIRECTORY_SEPARATOR.'Fixtures');
@@ -122,10 +120,7 @@ class LegacyUniversalClassLoaderTest extends TestCase
         $this->assertEquals(array(__DIR__.\DIRECTORY_SEPARATOR.'Fixtures/Namespaced/fallback'), $loader->getNamespaceFallbacks());
     }
 
-    /**
-     * @dataProvider getLoadClassNamespaceCollisionTests
-     */
-    public function testLoadClassNamespaceCollision($namespaces, $className, $message)
+    #[DataProvider('getLoadClassNamespaceCollisionTests')]    public function testLoadClassNamespaceCollision($namespaces, $className, $message)
     {
         $loader = new UniversalClassLoader();
         $loader->registerNamespaces($namespaces);
@@ -172,10 +167,7 @@ class LegacyUniversalClassLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getLoadClassPrefixCollisionTests
-     */
-    public function testLoadClassPrefixCollision($prefixes, $className, $message)
+    #[DataProvider('getLoadClassPrefixCollisionTests')]    public function testLoadClassPrefixCollision($prefixes, $className, $message)
     {
         $loader = new UniversalClassLoader();
         $loader->registerPrefixes($prefixes);

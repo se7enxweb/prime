@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\DependencyInjection\Tests\Compiler;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Compiler\CheckReferenceValidityPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -20,10 +22,7 @@ use Symfony\Component\DependencyInjection\Scope;
 
 class CheckReferenceValidityPassTest extends TestCase
 {
-    /**
-     * @group legacy
-     */
-    public function testProcessIgnoresScopeWideningIfNonStrictReference()
+    #[Group('legacy')]    public function testProcessIgnoresScopeWideningIfNonStrictReference()
     {
         $container = new ContainerBuilder();
         $container->register('a')->addArgument(new Reference('b', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false));
@@ -34,10 +33,7 @@ class CheckReferenceValidityPassTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testProcessDetectsScopeWidening()
+    #[Group('legacy')]    public function testProcessDetectsScopeWidening()
     {
         $this->expectException(\RuntimeException::class);
 
@@ -50,10 +46,7 @@ class CheckReferenceValidityPassTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testProcessIgnoresCrossScopeHierarchyReferenceIfNotStrict()
+    #[Group('legacy')]    public function testProcessIgnoresCrossScopeHierarchyReferenceIfNotStrict()
     {
         $container = new ContainerBuilder();
         $container->addScope(new Scope('a'));
@@ -67,10 +60,7 @@ class CheckReferenceValidityPassTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testProcessDetectsCrossScopeHierarchyReference()
+    #[Group('legacy')]    public function testProcessDetectsCrossScopeHierarchyReference()
     {
         $this->expectException(\RuntimeException::class);
 

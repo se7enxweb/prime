@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Routing\Tests\Loader;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing\Loader\XmlFileLoader;
@@ -46,10 +49,7 @@ class XmlFileLoaderTest extends TestCase
         $this->assertEquals('context.getMethod() == "GET"', $route->getCondition());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyRouteDefinitionLoading()
+    #[Group('legacy')]    public function testLegacyRouteDefinitionLoading()
     {
         $loader = new XmlFileLoader(new FileLocator(array(__DIR__.'/../Fixtures')));
         $routeCollection = $loader->load('legacy_validpattern.xml');
@@ -102,10 +102,7 @@ class XmlFileLoaderTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider getPathsToInvalidFiles
-     */
-    public function testLoadThrowsExceptionWithInvalidFile($filePath)
+    #[DataProvider('getPathsToInvalidFiles')]    public function testLoadThrowsExceptionWithInvalidFile($filePath)
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -113,10 +110,7 @@ class XmlFileLoaderTest extends TestCase
         $loader->load($filePath);
     }
 
-    /**
-     * @dataProvider getPathsToInvalidFiles
-     */
-    public function testLoadThrowsExceptionWithInvalidFileEvenWithoutSchemaValidation($filePath)
+    #[DataProvider('getPathsToInvalidFiles')]    public function testLoadThrowsExceptionWithInvalidFileEvenWithoutSchemaValidation($filePath)
     {
         $this->expectException(\InvalidArgumentException::class);
 

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\EventDispatcher\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Scope;
 use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
@@ -104,10 +106,7 @@ class ContainerAwareEventDispatcherTest extends AbstractEventDispatcherTest
         $dispatcher->dispatch('onEvent', $event);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testTriggerAListenerServiceOutOfScope()
+    #[Group('legacy')]    public function testTriggerAListenerServiceOutOfScope()
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -127,10 +126,7 @@ class ContainerAwareEventDispatcherTest extends AbstractEventDispatcherTest
         $dispatcher->dispatch('onEvent');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testReEnteringAScope()
+    #[Group('legacy')]    public function testReEnteringAScope()
     {
         $event = new Event();
 

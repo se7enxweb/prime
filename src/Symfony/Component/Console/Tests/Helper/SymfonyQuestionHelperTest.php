@@ -2,6 +2,8 @@
 
 namespace Symfony\Component\Console\Tests\Helper;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -10,8 +12,8 @@ use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 
+#[Group('tty')]
 /**
- * @group tty
  */
 class SymfonyQuestionHelperTest extends TestCase
 {
@@ -159,15 +161,15 @@ class SymfonyQuestionHelperTest extends TestCase
         $mock = $this->getMockBuilder('Symfony\Component\Console\Input\InputInterface')->getMock();
         $mock->expects($this->any())
             ->method('isInteractive')
-            ->will($this->returnValue($interactive));
+            ->willReturn($interactive);
 
         return $mock;
     }
 
     private function assertOutputContains($expected, StreamOutput $output)
     {
-        rewind($output->getStream());
-        $stream = stream_get_contents($output->getStream());
-        $this->assertContains($expected, $stream);
+rewind($output->getStream());
+$stream = stream_get_contents($output->getStream());
+        $this->assertStringContainsString($expected, $stream);
     }
 }

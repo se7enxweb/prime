@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\Constraints\Luhn;
 use Symfony\Component\Validator\Constraints\LuhnValidator;
 use Symfony\Component\Validator\Validation;
@@ -41,10 +43,7 @@ class LuhnValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getValidNumbers
-     */
-    public function testValidNumbers($number)
+    #[DataProvider('getValidNumbers')]    public function testValidNumbers($number)
     {
         $this->validator->validate($number, new Luhn());
 
@@ -75,10 +74,7 @@ class LuhnValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidNumbers
-     */
-    public function testInvalidNumbers($number, $code)
+    #[DataProvider('getInvalidNumbers')]    public function testInvalidNumbers($number, $code)
     {
         $constraint = new Luhn(array(
             'message' => 'myMessage',
@@ -103,10 +99,7 @@ class LuhnValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidTypes
-     */
-    public function testInvalidTypes($number)
+    #[DataProvider('getInvalidTypes')]    public function testInvalidTypes($number)
     {
         $this->expectException(\Symfony\Component\Validator\Exception\UnexpectedTypeException::class);
 

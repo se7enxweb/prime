@@ -23,7 +23,7 @@ class RedirectableUrlMatcherTest extends UrlMatcherTest
         $coll->add('foo', new Route('/foo/'));
 
         $matcher = $this->getUrlMatcher($coll);
-        $matcher->expects($this->once())->method('redirect')->will($this->returnValue(array()));
+        $matcher->expects($this->once())->method('redirect')->willReturn(array());
         $matcher->match('/foo');
     }
 
@@ -52,7 +52,7 @@ class RedirectableUrlMatcherTest extends UrlMatcherTest
             ->expects($this->once())
             ->method('redirect')
             ->with('/foo', 'foo', 'ftp')
-            ->will($this->returnValue(array('_route' => 'foo')))
+            ->willReturn(array('_route' => 'foo'))
         ;
         $matcher->match('/foo');
     }
@@ -90,6 +90,6 @@ class RedirectableUrlMatcherTest extends UrlMatcherTest
 
     protected function getUrlMatcher(RouteCollection $routes, ?RequestContext $context = null)
     {
-        return $this->getMockForAbstractClass('Symfony\Component\Routing\Matcher\RedirectableUrlMatcher', array($routes, $context ?: new RequestContext()));
+        return $this->getMockBuilder('Symfony\Component\Routing\Matcher\RedirectableUrlMatcher')->setConstructorArgs(array($routes, $context ?: new RequestContext()))->onlyMethods(array('redirect'))->getMock();
     }
 }

@@ -12,6 +12,7 @@
 namespace Symfony\Bundle\WebProfilerBundle\Tests\EventListener;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,14 +22,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class WebDebugToolbarListenerTest extends TestCase
 {
-    /**
-     * @dataProvider getInjectToolbarTests
-     */
+    #[DataProvider('getInjectToolbarTests')]
     public function testInjectToolbar($content, $expected)
     {
         $listener = new WebDebugToolbarListener($this->getTwigMock());
         $m = new \ReflectionMethod($listener, 'injectToolbar');
-        $m->setAccessible(true);
 
         $response = new Response($content);
 
@@ -54,9 +52,7 @@ class WebDebugToolbarListenerTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideRedirects
-     */
+    #[DataProvider('provideRedirects')]
     public function testRedirectionIsIntercepted($statusCode, $hasSession)
     {
         $response = new Response('Some content', $statusCode);
@@ -83,8 +79,7 @@ class WebDebugToolbarListenerTest extends TestCase
         $this->assertEquals("<html><head></head><body>\nWDT\n</body></html>", $response->getContent());
     }
 
-    /**
-     * @depends testToolbarIsInjected
+    /**    #[Depends('testToolbarIsInjected')]
      */
     public function testToolbarIsNotInjectedOnNonHtmlContentType()
     {
@@ -99,8 +94,7 @@ class WebDebugToolbarListenerTest extends TestCase
         $this->assertEquals('<html><head></head><body></body></html>', $response->getContent());
     }
 
-    /**
-     * @depends testToolbarIsInjected
+    /**    #[Depends('testToolbarIsInjected')]
      */
     public function testToolbarIsNotInjectedOnContentDispositionAttachment()
     {
@@ -115,10 +109,8 @@ class WebDebugToolbarListenerTest extends TestCase
         $this->assertEquals('<html><head></head><body></body></html>', $response->getContent());
     }
 
-    /**
-     * @depends testToolbarIsInjected
-     * @dataProvider provideRedirects
-     */
+    #[Depends('testToolbarIsInjected')]
+    #[DataProvider('provideRedirects')]
     public function testToolbarIsNotInjectedOnRedirection($statusCode, $hasSession)
     {
         $response = new Response('<html><head></head><body></body></html>', $statusCode);
@@ -141,8 +133,7 @@ class WebDebugToolbarListenerTest extends TestCase
         );
     }
 
-    /**
-     * @depends testToolbarIsInjected
+    /**    #[Depends('testToolbarIsInjected')]
      */
     public function testToolbarIsNotInjectedWhenThereIsNoNoXDebugTokenResponseHeader()
     {
@@ -156,8 +147,7 @@ class WebDebugToolbarListenerTest extends TestCase
         $this->assertEquals('<html><head></head><body></body></html>', $response->getContent());
     }
 
-    /**
-     * @depends testToolbarIsInjected
+    /**    #[Depends('testToolbarIsInjected')]
      */
     public function testToolbarIsNotInjectedWhenOnSubRequest()
     {
@@ -172,8 +162,7 @@ class WebDebugToolbarListenerTest extends TestCase
         $this->assertEquals('<html><head></head><body></body></html>', $response->getContent());
     }
 
-    /**
-     * @depends testToolbarIsInjected
+    /**    #[Depends('testToolbarIsInjected')]
      */
     public function testToolbarIsNotInjectedOnIncompleteHtmlResponses()
     {
@@ -188,8 +177,7 @@ class WebDebugToolbarListenerTest extends TestCase
         $this->assertEquals('<div>Some content</div>', $response->getContent());
     }
 
-    /**
-     * @depends testToolbarIsInjected
+    /**    #[Depends('testToolbarIsInjected')]
      */
     public function testToolbarIsNotInjectedOnXmlHttpRequests()
     {
@@ -204,8 +192,7 @@ class WebDebugToolbarListenerTest extends TestCase
         $this->assertEquals('<html><head></head><body></body></html>', $response->getContent());
     }
 
-    /**
-     * @depends testToolbarIsInjected
+    /**    #[Depends('testToolbarIsInjected')]
      */
     public function testToolbarIsNotInjectedOnNonHtmlRequests()
     {
@@ -230,7 +217,8 @@ class WebDebugToolbarListenerTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->with('_profiler', array('token' => 'xxxxxxxx'), UrlGeneratorInterface::ABSOLUTE_URL)
-            ->will($this->returnValue('http://mydomain.com/_profiler/xxxxxxxx'))
+            ->willReturn('http://mydomain.com/_profiler/xxxxxxxx')
+
         ;
 
         $event = new FilterResponseEvent($this->getKernelMock(), $this->getRequestMock(), HttpKernelInterface::MASTER_REQUEST, $response);
@@ -238,7 +226,7 @@ class WebDebugToolbarListenerTest extends TestCase
         $listener = new WebDebugToolbarListener($this->getTwigMock(), false, WebDebugToolbarListener::ENABLED, 'bottom', $urlGenerator);
         $listener->onKernelResponse($event);
 
-        $this->assertEquals('http://mydomain.com/_profiler/xxxxxxxx', $response->headers->get('X-Debug-Token-Link'));
+$this->assertEquals('http://mydomain.com/_profiler/xxxxxxxx', $response->headers->get('X-Debug-Token-Link'));
     }
 
     public function testThrowingUrlGenerator()
@@ -251,7 +239,8 @@ class WebDebugToolbarListenerTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->with('_profiler', array('token' => 'xxxxxxxx'))
-            ->will($this->throwException(new \Exception('foo')))
+            ->willThrowException(new \Exception('foo'))
+
         ;
 
         $event = new FilterResponseEvent($this->getKernelMock(), $this->getRequestMock(), HttpKernelInterface::MASTER_REQUEST, $response);
@@ -259,7 +248,7 @@ class WebDebugToolbarListenerTest extends TestCase
         $listener = new WebDebugToolbarListener($this->getTwigMock(), false, WebDebugToolbarListener::ENABLED, 'bottom', $urlGenerator);
         $listener->onKernelResponse($event);
 
-        $this->assertEquals('Exception: foo', $response->headers->get('X-Debug-Error'));
+$this->assertEquals('Exception: foo', $response->headers->get('X-Debug-Error'));
     }
 
     public function testThrowingErrorCleanup()
@@ -272,7 +261,8 @@ class WebDebugToolbarListenerTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->with('_profiler', array('token' => 'xxxxxxxx'))
-            ->will($this->throwException(new \Exception("This\nmultiline\r\ntabbed text should\tcome out\r on\n \ta single plain\r\nline")))
+            ->willThrowException(new \Exception("This\nmultiline\r\ntabbed text should\tcome out\r on\n \ta single plain\r\nline"))
+
         ;
 
         $event = new FilterResponseEvent($this->getKernelMock(), $this->getRequestMock(), HttpKernelInterface::MASTER_REQUEST, $response);
@@ -280,24 +270,24 @@ class WebDebugToolbarListenerTest extends TestCase
         $listener = new WebDebugToolbarListener($this->getTwigMock(), false, WebDebugToolbarListener::ENABLED, 'bottom', $urlGenerator);
         $listener->onKernelResponse($event);
 
-        $this->assertEquals('Exception: This multiline tabbed text should come out on a single plain line', $response->headers->get('X-Debug-Error'));
+$this->assertEquals('Exception: This multiline tabbed text should come out on a single plain line', $response->headers->get('X-Debug-Error'));
     }
 
     protected function getRequestMock($isXmlHttpRequest = false, $requestFormat = 'html', $hasSession = true)
     {
-        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->setMethods(array('getSession', 'isXmlHttpRequest', 'getRequestFormat'))->disableOriginalConstructor()->getMock();
+        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->onlyMethods(array('getSession', 'isXmlHttpRequest', 'getRequestFormat'))->disableOriginalConstructor()->getMock();
         $request->expects($this->any())
             ->method('isXmlHttpRequest')
-            ->will($this->returnValue($isXmlHttpRequest));
+            ->willReturn($isXmlHttpRequest);
         $request->expects($this->any())
             ->method('getRequestFormat')
-            ->will($this->returnValue($requestFormat));
+            ->willReturn($requestFormat);
 
         if ($hasSession) {
             $session = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')->disableOriginalConstructor()->getMock();
             $request->expects($this->any())
                 ->method('getSession')
-                ->will($this->returnValue($session));
+                ->willReturn($session);
         }
 
         return $request;
@@ -308,7 +298,7 @@ class WebDebugToolbarListenerTest extends TestCase
         $templating = $this->getMockBuilder('Twig\Environment')->disableOriginalConstructor()->getMock();
         $templating->expects($this->any())
             ->method('render')
-            ->will($this->returnValue($render));
+            ->willReturn($render);
 
         return $templating;
     }

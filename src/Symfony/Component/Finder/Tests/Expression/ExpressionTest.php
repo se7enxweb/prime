@@ -11,34 +11,29 @@
 
 namespace Symfony\Component\Finder\Tests\Expression;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Expression\Expression;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class ExpressionTest extends TestCase
 {
-    /**
-     * @dataProvider getTypeGuesserData
-     */
-    public function testTypeGuesser($expr, $type)
+    #[DataProvider('getTypeGuesserData')]    public function testTypeGuesser($expr, $type)
     {
         $this->assertEquals($type, Expression::create($expr)->getType());
     }
 
-    /**
-     * @dataProvider getCaseSensitiveData
-     */
-    public function testCaseSensitive($expr, $isCaseSensitive)
+    #[DataProvider('getCaseSensitiveData')]    public function testCaseSensitive($expr, $isCaseSensitive)
     {
         $this->assertEquals($isCaseSensitive, Expression::create($expr)->isCaseSensitive());
     }
 
-    /**
-     * @dataProvider getRegexRenderingData
-     */
-    public function testRegexRendering($expr, $body)
+    #[DataProvider('getRegexRenderingData')]    public function testRegexRendering($expr, $body)
     {
         $this->assertEquals($body, Expression::create($expr)->renderPattern());
     }

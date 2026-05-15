@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Security\Core\Tests\Authorization;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
@@ -46,7 +48,7 @@ class AuthorizationCheckerTest extends TestCase
             ->expects($this->once())
             ->method('authenticate')
             ->with($this->equalTo($token))
-            ->will($this->returnValue($newToken));
+            ->willReturn($newToken);
 
         // default with() isn't a strict check
         $tokenComparison = function ($value) use ($newToken) {
@@ -58,7 +60,7 @@ class AuthorizationCheckerTest extends TestCase
             ->expects($this->once())
             ->method('decide')
             ->with($this->callback($tokenComparison))
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         // first run the token has not been re-authenticated yet, after isGranted is called, it should be equal
         $this->assertNotSame($newToken, $this->tokenStorage->getToken());
@@ -75,21 +77,18 @@ class AuthorizationCheckerTest extends TestCase
         $this->authorizationChecker->isGranted('ROLE_FOO');
     }
 
-    /**
-     * @dataProvider isGrantedProvider
-     */
-    public function testIsGranted($decide)
+    #[DataProvider('isGrantedProvider')]    public function testIsGranted($decide)
     {
         $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')->getMock();
         $token
             ->expects($this->once())
             ->method('isAuthenticated')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $this->accessDecisionManager
             ->expects($this->once())
             ->method('decide')
-            ->will($this->returnValue($decide));
+            ->willReturn($decide);
         $this->tokenStorage->setToken($token);
         $this->assertSame($decide, $this->authorizationChecker->isGranted('ROLE_FOO'));
     }

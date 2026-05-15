@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\Doctrine\Tests\Form\ChoiceList;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityChoiceList;
@@ -19,9 +21,8 @@ use Symfony\Bridge\Doctrine\Tests\Fixtures\GroupableEntity;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdEntity;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\SingleIntIdNoToStringEntity;
 use Symfony\Component\Form\Extension\Core\View\ChoiceView;
-
+    #[Group('legacy')]
 /**
- * @group legacy
  */
 class GenericEntityChoiceListTest extends TestCase
 {

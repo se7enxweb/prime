@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\FormError;
 
@@ -18,10 +21,7 @@ class TimeTypeTest extends BaseTypeTest
 {
     const TESTED_TYPE = 'Symfony\Component\Form\Extension\Core\Type\TimeType';
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('time');
 
@@ -588,10 +588,7 @@ class TimeTypeTest extends BaseTypeTest
         $this->assertSame('Empty', $view['second']->vars['placeholder']);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testPassEmptyValueBC()
+    #[Group('legacy')]    public function testPassEmptyValueBC()
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'empty_value' => 'Empty',
@@ -666,10 +663,7 @@ class TimeTypeTest extends BaseTypeTest
         );
     }
 
-    /**
-     * @dataProvider provideCompoundWidgets
-     */
-    public function testHourErrorsBubbleUp($widget)
+    #[DataProvider('provideCompoundWidgets')]    public function testHourErrorsBubbleUp($widget)
     {
         $error = new FormError('Invalid!');
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
@@ -681,10 +675,7 @@ class TimeTypeTest extends BaseTypeTest
         $this->assertSame(array($error), iterator_to_array($form->getErrors()));
     }
 
-    /**
-     * @dataProvider provideCompoundWidgets
-     */
-    public function testMinuteErrorsBubbleUp($widget)
+    #[DataProvider('provideCompoundWidgets')]    public function testMinuteErrorsBubbleUp($widget)
     {
         $error = new FormError('Invalid!');
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
@@ -696,10 +687,7 @@ class TimeTypeTest extends BaseTypeTest
         $this->assertSame(array($error), iterator_to_array($form->getErrors()));
     }
 
-    /**
-     * @dataProvider provideCompoundWidgets
-     */
-    public function testSecondErrorsBubbleUp($widget)
+    #[DataProvider('provideCompoundWidgets')]    public function testSecondErrorsBubbleUp($widget)
     {
         $error = new FormError('Invalid!');
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
@@ -815,10 +803,7 @@ class TimeTypeTest extends BaseTypeTest
         $this->assertSame($expectedData, $form->getData());
     }
 
-    /**
-     * @dataProvider provideEmptyData
-     */
-    public function testSubmitNullUsesDateEmptyData($widget, $emptyData, $expectedData)
+    #[DataProvider('provideEmptyData')]    public function testSubmitNullUsesDateEmptyData($widget, $emptyData, $expectedData)
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'widget' => $widget,

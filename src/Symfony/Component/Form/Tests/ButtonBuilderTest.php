@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\ButtonBuilder;
 
@@ -31,10 +33,7 @@ class ButtonBuilderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getValidNames
-     */
-    public function testValidNames($name)
+    #[DataProvider('getValidNames')]    public function testValidNames($name)
     {
         $this->assertInstanceOf('\Symfony\Component\Form\ButtonBuilder', new ButtonBuilder($name));
     }
@@ -48,12 +47,9 @@ class ButtonBuilderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getInvalidNames
-     */
-    public function testInvalidNames($name)
+    #[DataProvider('getInvalidNames')]    public function testInvalidNames($name)
     {
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}(
+        $this->expectException(
             '\Symfony\Component\Form\Exception\InvalidArgumentException',
             'Buttons cannot have empty names.'
         );

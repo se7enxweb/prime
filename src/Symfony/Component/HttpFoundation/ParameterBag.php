@@ -86,6 +86,10 @@ class ParameterBag implements \IteratorAggregate, \Countable
      */
     public function get($key, $default = null, $deep = false)
     {
+        if (null === $key) {
+            return $default;
+        }
+
         if ($deep) {
             @trigger_error('Using paths to find deeper items in '.__METHOD__.' is deprecated since Symfony 2.8 and will be removed in 3.0. Filter the returned value in your own code instead.', E_USER_DEPRECATED);
         }
@@ -129,7 +133,6 @@ class ParameterBag implements \IteratorAggregate, \Countable
                 $currentKey .= $char;
             }
         }
-
         if (null !== $currentKey) {
             throw new \InvalidArgumentException('Malformed path. Path must end with "]".');
         }
@@ -145,6 +148,10 @@ class ParameterBag implements \IteratorAggregate, \Countable
      */
     public function set($key, $value)
     {
+        if (null === $key) {
+            $key = '';
+        }
+
         $this->parameters[$key] = $value;
     }
 
@@ -157,9 +164,12 @@ class ParameterBag implements \IteratorAggregate, \Countable
      */
     public function has($key)
     {
+        if (null === $key) {
+            return false;
+        }
+
         return array_key_exists($key, $this->parameters);
     }
-
     /**
      * Removes a parameter.
      *

@@ -76,8 +76,8 @@ class LdapBindAuthenticationProvider extends UserAuthenticationProvider
         }
 
         try {
-            $username = $this->ldap->escape($username, '', LDAP_ESCAPE_DN);
-            $dn = str_replace('{username}', $username, $this->dnString);
+            $username = (string) $this->ldap->escape((string) $username, '', LDAP_ESCAPE_DN);
+            $dn = str_replace('{username}', $username, (string) $this->dnString);
 
             $this->ldap->bind($dn, $password);
         } catch (ConnectionException $e) {

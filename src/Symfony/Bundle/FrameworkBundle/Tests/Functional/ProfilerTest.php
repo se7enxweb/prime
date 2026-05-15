@@ -11,12 +11,11 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Functional;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 class ProfilerTest extends WebTestCase
 {
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testProfilerIsDisabled($insulate)
+    #[DataProvider('getConfigs')]    public function testProfilerIsDisabled($insulate)
     {
         $client = $this->createClient(array('test_case' => 'Profiler', 'root_config' => 'config.yml'));
         if ($insulate) {

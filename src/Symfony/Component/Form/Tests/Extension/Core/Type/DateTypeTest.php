@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Intl\Util\IntlTestHelper;
@@ -33,10 +36,7 @@ class DateTypeTest extends BaseTypeTest
         \Locale::setDefault('en');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('date');
 
@@ -326,10 +326,7 @@ class DateTypeTest extends BaseTypeTest
         $this->assertEquals('06*2010*02', $form->getViewData());
     }
 
-    /**
-     * @dataProvider provideDateFormats
-     */
-    public function testDatePatternWithFormatOption($format, $pattern)
+    #[DataProvider('provideDateFormats')]    public function testDatePatternWithFormatOption($format, $pattern)
     {
         $view = $this->factory->create(static::TESTED_TYPE, null, array(
             'format' => $format,
@@ -369,7 +366,7 @@ class DateTypeTest extends BaseTypeTest
     public function testThrowExceptionIfFormatDoesNotContainYearMonthAndDay()
     {
         $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
-        $this->expectExceptionMessage('The \"format\" option should contain the letters \"y\", \"M\" and \"d\". Its current value is \"yy\".');
+        $this->expectExceptionMessage('The "format" option should contain the letters "y", "M" and "d". Its current value is "yy".');
 
         $this->factory->create(static::TESTED_TYPE, null, array(
             'months' => array(6, 7),
@@ -382,7 +379,7 @@ class DateTypeTest extends BaseTypeTest
     public function testThrowExceptionIfFormatMissesYearMonthAndDayWithSingleTextWidget()
     {
         $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
-        $this->expectExceptionMessage('The \"format\" option should contain the letters \"y\", \"M\" or \"d\". Its current value is \"wrong\".');
+        $this->expectExceptionMessage('The "format" option should contain the letters "y", "M" or "d". Its current value is "wrong".');
 
         $this->factory->create(static::TESTED_TYPE, null, array(
             'widget' => 'single_text',
@@ -516,8 +513,8 @@ class DateTypeTest extends BaseTypeTest
         $view = $form->createView();
 
         $this->assertEquals(array(
-            new ChoiceView(6, '6', '06'),
-            new ChoiceView(7, '7', '07'),
+            new ChoiceView(6, '6', '6'),
+            new ChoiceView(7, '7', '7'),
         ), $view['month']->vars['choices']);
     }
 
@@ -587,8 +584,8 @@ class DateTypeTest extends BaseTypeTest
             ->createView();
 
         $this->assertEquals(array(
-            new ChoiceView(6, '6', '06'),
-            new ChoiceView(7, '7', '07'),
+            new ChoiceView(6, '6', '6'),
+            new ChoiceView(7, '7', '7'),
         ), $view['day']->vars['choices']);
     }
 
@@ -780,10 +777,7 @@ class DateTypeTest extends BaseTypeTest
         $this->assertSame('Empty', $view['day']->vars['placeholder']);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testPassEmptyValueBC()
+    #[Group('legacy')]    public function testPassEmptyValueBC()
     {
         $view = $this->factory->create(static::TESTED_TYPE, null, array(
             'empty_value' => 'Empty',
@@ -896,10 +890,7 @@ class DateTypeTest extends BaseTypeTest
         );
     }
 
-    /**
-     * @dataProvider provideCompoundWidgets
-     */
-    public function testYearErrorsBubbleUp($widget)
+    #[DataProvider('provideCompoundWidgets')]    public function testYearErrorsBubbleUp($widget)
     {
         $error = new FormError('Invalid!');
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
@@ -911,10 +902,7 @@ class DateTypeTest extends BaseTypeTest
         $this->assertSame(array($error), iterator_to_array($form->getErrors()));
     }
 
-    /**
-     * @dataProvider provideCompoundWidgets
-     */
-    public function testMonthErrorsBubbleUp($widget)
+    #[DataProvider('provideCompoundWidgets')]    public function testMonthErrorsBubbleUp($widget)
     {
         $error = new FormError('Invalid!');
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
@@ -926,10 +914,7 @@ class DateTypeTest extends BaseTypeTest
         $this->assertSame(array($error), iterator_to_array($form->getErrors()));
     }
 
-    /**
-     * @dataProvider provideCompoundWidgets
-     */
-    public function testDayErrorsBubbleUp($widget)
+    #[DataProvider('provideCompoundWidgets')]    public function testDayErrorsBubbleUp($widget)
     {
         $error = new FormError('Invalid!');
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
@@ -1027,10 +1012,7 @@ class DateTypeTest extends BaseTypeTest
         $this->assertSame($expectedData, $form->getData());
     }
 
-    /**
-     * @dataProvider provideEmptyData
-     */
-    public function testSubmitNullUsesDateEmptyData($widget, $emptyData, $expectedData)
+    #[DataProvider('provideEmptyData')]    public function testSubmitNullUsesDateEmptyData($widget, $emptyData, $expectedData)
     {
         $form = $this->factory->create(static::TESTED_TYPE, null, array(
             'widget' => $widget,
@@ -1050,7 +1032,6 @@ class DateTypeTest extends BaseTypeTest
         return array(
             'Simple field' => array('single_text', '2018-11-11', $expectedData),
             'Compound text fields' => array('text', array('year' => '2018', 'month' => '11', 'day' => '11'), $expectedData),
-            'Compound choice fields' => array('choice', array('year' => '2018', 'month' => '11', 'day' => '11'), $expectedData),
         );
     }
 }

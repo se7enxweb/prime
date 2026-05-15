@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Translation\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\PluralizationRules;
 
@@ -29,12 +31,12 @@ use Symfony\Component\Translation\PluralizationRules;
  */
 class PluralizationRulesTest extends TestCase
 {
+    #[DataProvider('failingLangcodes')]
     /**
      * We test failed langcode here.
      *
      * TODO: The languages mentioned in the data provide need to get fixed somehow within PluralizationRules.
      *
-     * @dataProvider failingLangcodes
      */
     public function testFailedLangcodes($nplural, $langCodes)
     {
@@ -42,10 +44,7 @@ class PluralizationRulesTest extends TestCase
         $this->validateMatrix($nplural, $matrix, false);
     }
 
-    /**
-     * @dataProvider successLangcodes
-     */
-    public function testLangcodes($nplural, $langCodes)
+    #[DataProvider('successLangcodes')]    public function testLangcodes($nplural, $langCodes)
     {
         $matrix = $this->generateTestData($langCodes);
         $this->validateMatrix($nplural, $matrix);

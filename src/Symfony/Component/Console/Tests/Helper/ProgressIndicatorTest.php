@@ -2,13 +2,15 @@
 
 namespace Symfony\Component\Console\Tests\Helper;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Helper\ProgressIndicator;
 use Symfony\Component\Console\Output\StreamOutput;
 
-/**
- * @group time-sensitive
- */
+#[Group('time-sensitive')]
 class ProgressIndicatorTest extends TestCase
 {
     public function testDefaultIndicator()
@@ -144,10 +146,7 @@ class ProgressIndicatorTest extends TestCase
         $bar->finish('Finished');
     }
 
-    /**
-     * @dataProvider provideFormat
-     */
-    public function testFormats($format)
+    #[DataProvider('provideFormat')]    public function testFormats($format)
     {
         $bar = new ProgressIndicator($output = $this->getOutputStream(), $format);
         $bar->start('Starting...');

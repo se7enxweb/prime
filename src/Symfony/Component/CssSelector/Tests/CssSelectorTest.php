@@ -11,11 +11,14 @@
 
 namespace Symfony\Component\CssSelector\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\CssSelector\CssSelector;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class CssSelectorTest extends TestCase
 {
@@ -26,9 +29,7 @@ class CssSelectorTest extends TestCase
         $this->assertEquals("descendant-or-self::h1[@id = 'foo']", CssSelector::toXPath('h1#foo'));
         $this->assertEquals("descendant-or-self::h1[@class and contains(concat(' ', normalize-space(@class), ' '), ' foo ')]", CssSelector::toXPath('h1.foo'));
         $this->assertEquals('descendant-or-self::foo:h1', CssSelector::toXPath('foo|h1'));
-    }
-
-    /** @dataProvider getCssToXPathWithoutPrefixTestData */
+    }    #[DataProvider('getCssToXPathWithoutPrefixTestData')]
     public function testCssToXPathWithoutPrefix($css, $xpath)
     {
         $this->assertEquals($xpath, CssSelector::toXPath($css, ''), '->parse() parses an input string and returns a node');

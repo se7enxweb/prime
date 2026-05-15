@@ -11,16 +11,16 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\CallbackTransformer;
 
 class CheckboxTypeTest extends BaseTypeTest
 {
     const TESTED_TYPE = 'Symfony\Component\Form\Extension\Core\Type\CheckboxType';
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('checkbox');
 
@@ -148,10 +148,7 @@ class CheckboxTypeTest extends BaseTypeTest
         $this->assertSame('', $form->getViewData());
     }
 
-    /**
-     * @dataProvider provideCustomModelTransformerData
-     */
-    public function testCustomModelTransformer($data, $checked)
+    #[DataProvider('provideCustomModelTransformerData')]    public function testCustomModelTransformer($data, $checked)
     {
         // present a binary status field as a checkbox
         $transformer = new CallbackTransformer(

@@ -11,13 +11,36 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Kernel;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 class MicroKernelTraitTest extends TestCase
 {
+    private $previousExceptionHandler;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->previousExceptionHandler = set_exception_handler(function () {});
+        restore_exception_handler();
+    }
+
+    protected function tearDown(): void
+    {
+        for ($i = 0; $i < 20; $i++) {
+            $current = set_exception_handler(null);
+            restore_exception_handler();
+            if ($current === $this->previousExceptionHandler) {
+                break;
+            }
+            restore_exception_handler();
+        }
+        parent::tearDown();
+    }
+    #[RequiresPhp('5.4')]
     /**
-     * @requires PHP 5.4
      */
     public function test()
     {

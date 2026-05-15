@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\DataTransformer;
 
+
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToRfc3339Transformer;
 
@@ -38,7 +42,7 @@ class DateTimeToRfc3339TransformerTest extends TestCase
         $this->assertEquals($expected->format('c'), $actual instanceof \DateTime ? $actual->format('c') : $actual, $message);
     }
 
-    public function allProvider()
+    public static function allProvider()
     {
         return array(
             array('UTC', 'UTC', '2010-02-03 04:05:06 UTC', '2010-02-03T04:05:06Z'),
@@ -52,12 +56,12 @@ class DateTimeToRfc3339TransformerTest extends TestCase
 
     public static function transformProvider()
     {
-        return $this->allProvider();
+        return self::allProvider();
     }
 
     public static function reverseTransformProvider()
     {
-        return array_merge($this->allProvider(), array(
+        return array_merge(self::allProvider(), array(
             // format without seconds, as appears in some browsers
             array('UTC', 'UTC', '2010-02-03 04:05:00 UTC', '2010-02-03T04:05Z'),
             array('America/New_York', 'Asia/Hong_Kong', '2010-02-03 04:05:00 America/New_York', '2010-02-03T17:05+08:00'),
@@ -66,19 +70,16 @@ class DateTimeToRfc3339TransformerTest extends TestCase
         ));
     }
 
-    /**
-     * @dataProvider transformProvider
-     */
-    public function testTransform($fromTz, $toTz, $from, $to)
+    #[DataProvider('transformProvider')]    public function testTransform($fromTz, $toTz, $from, $to)
     {
         $transformer = new DateTimeToRfc3339Transformer($fromTz, $toTz);
 
         $this->assertSame($to, $transformer->transform(null !== $from ? new \DateTime($from) : null));
     }
 
+    #[DataProvider('transformProvider')]
+    #[RequiresPhp('5.5')]
     /**
-     * @dataProvider transformProvider
-     * @requires PHP 5.5
      */
     public function testTransformDateTimeImmutable($fromTz, $toTz, $from, $to)
     {
@@ -97,10 +98,7 @@ class DateTimeToRfc3339TransformerTest extends TestCase
         $transformer->transform('2010-01-01');
     }
 
-    /**
-     * @dataProvider reverseTransformProvider
-     */
-    public function testReverseTransform($toTz, $fromTz, $to, $from)
+    #[DataProvider('reverseTransformProvider')]    public function testReverseTransform($toTz, $fromTz, $to, $from)
     {
         $transformer = new DateTimeToRfc3339Transformer($toTz, $fromTz);
 
@@ -132,10 +130,7 @@ class DateTimeToRfc3339TransformerTest extends TestCase
         $transformer->reverseTransform('2010-04-31T04:05Z');
     }
 
-    /**
-     * @dataProvider invalidDateStringProvider
-     */
-    public function testReverseTransformExpectsValidDateString($date)
+    #[DataProvider('invalidDateStringProvider')]    public function testReverseTransformExpectsValidDateString($date)
     {
         $this->expectException(\Symfony\Component\Form\Exception\TransformationFailedException::class);
 

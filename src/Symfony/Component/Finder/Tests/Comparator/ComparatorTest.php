@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Finder\Tests\Comparator;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Finder\Comparator\Comparator;
 
@@ -38,10 +40,7 @@ class ComparatorTest extends TestCase
         $this->assertEquals(8, $comparator->getTarget(), '->getTarget() returns the target');
     }
 
-    /**
-     * @dataProvider getTestData
-     */
-    public function testTest($operator, $target, $match, $noMatch)
+    #[DataProvider('getTestData')]    public function testTest($operator, $target, $match, $noMatch)
     {
         $c = new Comparator();
         $c->setOperator($operator);

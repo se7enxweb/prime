@@ -159,7 +159,6 @@ class Crawler extends \SplObjectStorage
     public function addHtmlContent($content, $charset = 'UTF-8')
     {
         $internalErrors = libxml_use_internal_errors(true);
-        $disableEntities = libxml_disable_entity_loader(true);
 
         $dom = new \DOMDocument('1.0', $charset);
         $dom->validateOnParse = true;
@@ -169,7 +168,7 @@ class Crawler extends \SplObjectStorage
         try {
             // Convert charset to HTML-entities to work around bugs in DOMDocument::loadHTML()
             $content = mb_convert_encoding($content, 'HTML-ENTITIES', $charset);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
         }
 
         restore_error_handler();
@@ -179,7 +178,6 @@ class Crawler extends \SplObjectStorage
         }
 
         libxml_use_internal_errors($internalErrors);
-        libxml_disable_entity_loader($disableEntities);
 
         $this->addDocument($dom);
 
@@ -222,7 +220,6 @@ class Crawler extends \SplObjectStorage
         }
 
         $internalErrors = libxml_use_internal_errors(true);
-        $disableEntities = libxml_disable_entity_loader(true);
 
         $dom = new \DOMDocument('1.0', $charset);
         $dom->validateOnParse = true;
@@ -232,7 +229,6 @@ class Crawler extends \SplObjectStorage
         }
 
         libxml_use_internal_errors($internalErrors);
-        libxml_disable_entity_loader($disableEntities);
 
         $this->addDocument($dom);
 
@@ -296,15 +292,17 @@ class Crawler extends \SplObjectStorage
             $this->document = $node->ownerDocument;
         }
 
-        parent::attach($node);
+        parent::offsetSet($node);
     }
 
     // Serializing and unserializing a crawler creates DOM objects in a corrupted state. DOM elements are not properly serializable.
+    #[\ReturnTypeWillChange]
     public function unserialize($serialized)
     {
         throw new \BadMethodCallException('A Crawler cannot be serialized.');
     }
 
+    #[\ReturnTypeWillChange]
     public function serialize()
     {
         throw new \BadMethodCallException('A Crawler cannot be serialized.');
@@ -831,6 +829,7 @@ class Crawler extends \SplObjectStorage
     /**
      * @deprecated Using the SplObjectStorage API on the Crawler is deprecated as of 2.8 and will be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function attach($object, $data = null)
     {
         $this->triggerDeprecation(__METHOD__);
@@ -841,6 +840,7 @@ class Crawler extends \SplObjectStorage
     /**
      * @deprecated Using the SplObjectStorage API on the Crawler is deprecated as of 2.8 and will be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function detach($object)
     {
         $this->triggerDeprecation(__METHOD__);
@@ -851,6 +851,7 @@ class Crawler extends \SplObjectStorage
     /**
      * @deprecated Using the SplObjectStorage API on the Crawler is deprecated as of 2.8 and will be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function contains($object)
     {
         $this->triggerDeprecation(__METHOD__);
@@ -861,6 +862,7 @@ class Crawler extends \SplObjectStorage
     /**
      * @deprecated Using the SplObjectStorage API on the Crawler is deprecated as of 2.8 and will be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function addAll($storage)
     {
         $this->triggerDeprecation(__METHOD__);
@@ -871,6 +873,7 @@ class Crawler extends \SplObjectStorage
     /**
      * @deprecated Using the SplObjectStorage API on the Crawler is deprecated as of 2.8 and will be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function removeAll($storage)
     {
         $this->triggerDeprecation(__METHOD__);
@@ -881,6 +884,7 @@ class Crawler extends \SplObjectStorage
     /**
      * @deprecated Using the SplObjectStorage API on the Crawler is deprecated as of 2.8 and will be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function removeAllExcept($storage)
     {
         $this->triggerDeprecation(__METHOD__);
@@ -891,6 +895,7 @@ class Crawler extends \SplObjectStorage
     /**
      * @deprecated Using the SplObjectStorage API on the Crawler is deprecated as of 2.8 and will be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function getInfo()
     {
         $this->triggerDeprecation(__METHOD__);
@@ -901,6 +906,7 @@ class Crawler extends \SplObjectStorage
     /**
      * @deprecated Using the SplObjectStorage API on the Crawler is deprecated as of 2.8 and will be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function setInfo($data)
     {
         $this->triggerDeprecation(__METHOD__);
@@ -911,6 +917,7 @@ class Crawler extends \SplObjectStorage
     /**
      * @deprecated Using the SplObjectStorage API on the Crawler is deprecated as of 2.8 and will be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($object)
     {
         $this->triggerDeprecation(__METHOD__);
@@ -921,6 +928,7 @@ class Crawler extends \SplObjectStorage
     /**
      * @deprecated Using the SplObjectStorage API on the Crawler is deprecated as of 2.8 and will be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($object, $data = null)
     {
         $this->triggerDeprecation(__METHOD__);
@@ -931,6 +939,7 @@ class Crawler extends \SplObjectStorage
     /**
      * @deprecated Using the SplObjectStorage API on the Crawler is deprecated as of 2.8 and will be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($object)
     {
         $this->triggerDeprecation(__METHOD__);
@@ -941,6 +950,7 @@ class Crawler extends \SplObjectStorage
     /**
      * @deprecated Using the SplObjectStorage API on the Crawler is deprecated as of 2.8 and will be removed in 3.0.
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($object)
     {
         $this->triggerDeprecation(__METHOD__);

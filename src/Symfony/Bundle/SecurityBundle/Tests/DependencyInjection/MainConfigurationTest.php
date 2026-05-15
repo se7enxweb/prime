@@ -11,6 +11,8 @@
 
 namespace Symfony\Bundle\SecurityBundle\Tests\DependencyInjection;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\MainConfiguration;
 use Symfony\Component\Config\Definition\Processor;
@@ -92,10 +94,7 @@ class MainConfigurationTest extends TestCase
         $this->assertEquals('a_token_id', $processedConfig['firewalls']['stub']['logout']['csrf_token_id']);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyCsrfAliases()
+    #[Group('legacy')]    public function testLegacyCsrfAliases()
     {
         $config = array(
             'firewalls' => array(

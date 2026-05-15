@@ -11,24 +11,20 @@
 
 namespace Symfony\Component\HttpKernel\Tests\Fragment;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 class RoutableFragmentRendererTest extends TestCase
 {
-    /**
-     * @dataProvider getGenerateFragmentUriData
-     */
-    public function testGenerateFragmentUri($uri, $controller)
+    #[DataProvider('getGenerateFragmentUriData')]    public function testGenerateFragmentUri($uri, $controller)
     {
         $this->assertEquals($uri, $this->callGenerateFragmentUriMethod($controller, Request::create('/')));
     }
 
-    /**
-     * @dataProvider getGenerateFragmentUriData
-     */
-    public function testGenerateAbsoluteFragmentUri($uri, $controller)
+    #[DataProvider('getGenerateFragmentUriData')]    public function testGenerateAbsoluteFragmentUri($uri, $controller)
     {
         $this->assertEquals('http://localhost'.$uri, $this->callGenerateFragmentUriMethod($controller, Request::create('/'), true));
     }
@@ -55,10 +51,7 @@ class RoutableFragmentRendererTest extends TestCase
         $this->assertEquals('/_fragment?_path=_format%3Djson%26_locale%3Dfr%26_controller%3Dcontroller', $this->callGenerateFragmentUriMethod($controller, $request));
     }
 
-    /**
-     * @dataProvider      getGenerateFragmentUriDataWithNonScalar
-     */
-    public function testGenerateFragmentUriWithNonScalar($controller)
+    #[DataProvider('getGenerateFragmentUriDataWithNonScalar')]    public function testGenerateFragmentUriWithNonScalar($controller)
     {
         $this->expectException(\LogicException::class);
 
@@ -75,10 +68,9 @@ class RoutableFragmentRendererTest extends TestCase
 
     private function callGenerateFragmentUriMethod(ControllerReference $reference, Request $request, $absolute = false)
     {
-        $renderer = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Fragment\RoutableFragmentRenderer');
+        $renderer = $this->createMock('Symfony\Component\HttpKernel\Fragment\RoutableFragmentRenderer');
         $r = new \ReflectionObject($renderer);
         $m = $r->getMethod('generateFragmentUri');
-        $m->setAccessible(true);
 
         return $m->invoke($renderer, $reference, $request, $absolute);
     }

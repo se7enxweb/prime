@@ -18,8 +18,8 @@ class FormRendererTest extends TestCase
     public function testHumanize()
     {
         $renderer = $this->getMockBuilder('Symfony\Component\Form\FormRenderer')
-            ->setMethods(null)
             ->disableOriginalConstructor()
+            ->onlyMethods([])
             ->getMock()
         ;
 

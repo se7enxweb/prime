@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\PropertyInfo\Tests\Extractor;
 
+
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\Type;
@@ -63,10 +67,7 @@ class ReflectionExtractorTest extends TestCase
         $this->assertNull($this->extractor->getProperties('Symfony\Component\PropertyInfo\Tests\Fixtures\NoProperties'));
     }
 
-    /**
-     * @dataProvider typesProvider
-     */
-    public function testExtractors($property, ?array $type = null)
+    #[DataProvider('typesProvider')]    public function testExtractors($property, ?array $type = null)
     {
         $this->assertEquals($type, $this->extractor->getTypes('Symfony\Component\PropertyInfo\Tests\Fixtures\Dummy', $property, array()));
     }
@@ -86,9 +87,9 @@ class ReflectionExtractorTest extends TestCase
         );
     }
 
+    #[DataProvider('php7TypesProvider')]
+    #[RequiresPhp('7.0')]
     /**
-     * @dataProvider php7TypesProvider
-     * @requires PHP 7.0
      */
     public function testExtractPhp7Type($property, ?array $type = null)
     {
@@ -105,9 +106,9 @@ class ReflectionExtractorTest extends TestCase
         );
     }
 
+    #[DataProvider('php71TypesProvider')]
+    #[RequiresPhp('7.1')]
     /**
-     * @dataProvider php71TypesProvider
-     * @requires PHP 7.1
      */
     public function testExtractPhp71Type($property, ?array $type = null)
     {

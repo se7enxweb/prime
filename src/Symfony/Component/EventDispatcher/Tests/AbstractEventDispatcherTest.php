@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\EventDispatcher\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -138,10 +140,7 @@ abstract class AbstractEventDispatcherTest extends TestCase
         $this->assertSame($event, $return);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyDispatch()
+    #[Group('legacy')]    public function testLegacyDispatch()
     {
         $event = new Event();
         $this->dispatcher->dispatch(self::preFoo, $event);
@@ -265,10 +264,7 @@ abstract class AbstractEventDispatcherTest extends TestCase
         $this->assertFalse($this->dispatcher->hasListeners(self::preFoo));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyEventReceivesTheDispatcherInstance()
+    #[Group('legacy')]    public function testLegacyEventReceivesTheDispatcherInstance()
     {
         $dispatcher = null;
         $this->dispatcher->addListener('test', function ($event) use (&$dispatcher) {
@@ -337,6 +333,7 @@ class CallableClass
 
 class TestEventListener
 {
+    public $name;
     public $preFooInvoked = false;
     public $postFooInvoked = false;
 

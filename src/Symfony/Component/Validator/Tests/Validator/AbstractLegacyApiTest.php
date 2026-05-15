@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Validator;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -20,11 +22,11 @@ use Symfony\Component\Validator\Tests\Fixtures\Entity;
 use Symfony\Component\Validator\Tests\Fixtures\Reference;
 use Symfony\Component\Validator\ValidatorInterface as LegacyValidatorInterface;
 
+#[Group('legacy')]
 /**
  * Verifies that a validator satisfies the API of Symfony < 2.5.
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
- * @group legacy
  */
 abstract class AbstractLegacyApiTest extends AbstractValidatorTest
 {
@@ -275,9 +277,9 @@ abstract class AbstractLegacyApiTest extends AbstractValidatorTest
         $initializer1->expects($this->once())
             ->method('initialize')
             ->with($entity)
-            ->will($this->returnCallback(function ($object) {
+            ->willReturnCallback(function ($object) {
                 $object->initialized = true;
-            }));
+            });
 
         $initializer2->expects($this->once())
             ->method('initialize')

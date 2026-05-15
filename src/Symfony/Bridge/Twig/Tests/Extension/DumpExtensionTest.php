@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\Twig\Tests\Extension;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Extension\DumpExtension;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
@@ -20,10 +22,7 @@ use Twig\Loader\ArrayLoader;
 
 class DumpExtensionTest extends TestCase
 {
-    /**
-     * @dataProvider getDumpTags
-     */
-    public function testDumpTag($template, $debug, $expectedOutput, $expectedDumped)
+    #[DataProvider('getDumpTags')]    public function testDumpTag($template, $debug, $expectedOutput, $expectedDumped)
     {
         $extension = new DumpExtension(new VarCloner());
         $twig = new Environment(new ArrayLoader(array('template' => $template)), array(
@@ -59,11 +58,7 @@ class DumpExtensionTest extends TestCase
             array('A{% dump %}B', false, 'AB', null),
         );
     }
-
-    /**
-     * @dataProvider getDumpArgs
-     */
-    public function testDump($context, $args, $expectedOutput, $debug = true)
+    #[DataProvider('getDumpArgs')]    public function testDump($context, $args, $expectedOutput, $debug = true)
     {
         $extension = new DumpExtension(new VarCloner());
         $twig = new Environment($this->getMockBuilder('Twig\Loader\LoaderInterface')->getMock(), array(

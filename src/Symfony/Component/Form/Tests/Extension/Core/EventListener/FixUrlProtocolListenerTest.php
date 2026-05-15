@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\EventListener;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Core\EventListener\FixUrlProtocolListener;
 use Symfony\Component\Form\FormEvent;
@@ -52,10 +54,7 @@ class FixUrlProtocolListenerTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideUrlsWithSupportedProtocols
-     */
-    public function testSkipOtherProtocol($url)
+    #[DataProvider('provideUrlsWithSupportedProtocols')]    public function testSkipOtherProtocol($url)
     {
         $form = $this->getMockBuilder('Symfony\Component\Form\Test\FormInterface')->getMock();
         $event = new FormEvent($form, $url);

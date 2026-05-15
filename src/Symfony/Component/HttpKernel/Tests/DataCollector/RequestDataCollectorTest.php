@@ -61,6 +61,8 @@ class RequestDataCollectorTest extends TestCase
         $r1 = new \ReflectionMethod($this, 'testControllerInspection');
         $r2 = new \ReflectionMethod($this, 'staticControllerMethod');
         $r3 = new \ReflectionClass($this);
+        $closureController = function () { return 'foo'; };
+        $r4 = new \ReflectionFunction($closureController);
         // test name, callable, expected
         $controllerTests = array(
             array(
@@ -76,12 +78,12 @@ class RequestDataCollectorTest extends TestCase
 
             array(
                 'Closure',
-                function () { return 'foo'; },
+                $closureController,
                 array(
-                    'class' => __NAMESPACE__.'\{closure}',
+                    'class' => $r4->getName(),
                     'method' => null,
-                    'file' => __FILE__,
-                    'line' => __LINE__ - 5,
+                    'file' => $r4->getFileName(),
+                    'line' => $r4->getStartLine(),
                 ),
             ),
 

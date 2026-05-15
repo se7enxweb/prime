@@ -11,16 +11,15 @@
 
 namespace Symfony\Component\Asset\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
 
 class PathPackageTest extends TestCase
 {
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testGetUrl($basePath, $format, $path, $expected)
+    #[DataProvider('getConfigs')]    public function testGetUrl($basePath, $format, $path, $expected)
     {
         $package = new PathPackage($basePath, new StaticVersionStrategy('v1', $format));
         $this->assertEquals($expected, $package->getUrl($path));
@@ -48,10 +47,7 @@ class PathPackageTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getContextConfigs
-     */
-    public function testGetUrlWithContext($basePathRequest, $basePath, $format, $path, $expected)
+    #[DataProvider('getContextConfigs')]    public function testGetUrlWithContext($basePathRequest, $basePath, $format, $path, $expected)
     {
         $package = new PathPackage($basePath, new StaticVersionStrategy('v1', $format), $this->getContext($basePathRequest));
 
@@ -81,15 +77,15 @@ class PathPackageTest extends TestCase
         $versionStrategy->expects($this->any())
             ->method('applyVersion')
             ->willReturn('https://cdn.com/bar/main.css');
-        $package = new PathPackage('/subdirectory', $versionStrategy, $this->getContext('/bar'));
+$package = new PathPackage('/subdirectory', $versionStrategy, $this->getContext('/bar'));
 
-        $this->assertEquals('https://cdn.com/bar/main.css', $package->getUrl('main.css'));
+$this->assertEquals('https://cdn.com/bar/main.css', $package->getUrl('main.css'));
     }
 
     private function getContext($basePath)
     {
         $context = $this->getMockBuilder('Symfony\Component\Asset\Context\ContextInterface')->getMock();
-        $context->expects($this->any())->method('getBasePath')->will($this->returnValue($basePath));
+        $context->expects($this->any())->method('getBasePath')->willReturn($basePath);
 
         return $context;
     }

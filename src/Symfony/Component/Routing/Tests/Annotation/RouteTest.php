@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Routing\Tests\Annotation;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -25,10 +28,7 @@ class RouteTest extends TestCase
         $route = new Route(array('foo' => 'bar'));
     }
 
-    /**
-     * @dataProvider getValidParameters
-     */
-    public function testRouteParameters($parameter, $value, $getter)
+    #[DataProvider('getValidParameters')]    public function testRouteParameters($parameter, $value, $getter)
     {
         $route = new Route(array($parameter => $value));
         $this->assertEquals($route->$getter(), $value);
@@ -49,10 +49,7 @@ class RouteTest extends TestCase
         );
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyGetPattern()
+    #[Group('legacy')]    public function testLegacyGetPattern()
     {
         $route = new Route(array('value' => '/Blog'));
         $this->assertEquals($route->getPattern(), '/Blog');

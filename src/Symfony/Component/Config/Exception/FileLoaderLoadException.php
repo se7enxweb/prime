@@ -62,7 +62,7 @@ class FileLoaderLoadException extends \Exception
             $message .= sprintf(' If the bundle is registered, make sure the bundle path "%s" is not empty.', $resource);
         }
 
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, null === $code ? 0 : $code, $previous);
     }
 
     protected function varToString($var)

@@ -129,7 +129,7 @@ class ControllerResolver implements ControllerResolverInterface
                 } else {
                     $arguments[] = $attributes[$param->name];
                 }
-            } elseif ($param->getClass() && $param->getClass()->isInstance($request)) {
+            } elseif ($param->hasType() && $param->getType() instanceof \ReflectionNamedType && !$param->getType()->isBuiltin() && is_a($request, $param->getType()->getName())) {
                 $arguments[] = $request;
             } elseif ($param->isDefaultValueAvailable()) {
                 $arguments[] = $param->getDefaultValue();
@@ -184,6 +184,10 @@ class ControllerResolver implements ControllerResolverInterface
      */
     protected function instantiateController($class)
     {
-        return new $class();
+        try {
+            return new $class();
+        } catch (\ArgumentCountError $e) {
+            throw new \InvalidArgumentException(sprintf('Controller class "%s" requires constructor arguments and cannot be auto-instantiated.', $class), 0, $e);
+        }
     }
 }

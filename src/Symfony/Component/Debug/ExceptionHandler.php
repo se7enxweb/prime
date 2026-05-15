@@ -38,7 +38,7 @@ class ExceptionHandler
 
     public function __construct($debug = true, $charset = null, $fileLinkFormat = null)
     {
-        if (false !== strpos($charset, '%')) {
+        if (false !== strpos((string) $charset, '%')) {
             @trigger_error('Providing $fileLinkFormat as second argument to '.__METHOD__.' is deprecated since Symfony 2.8 and will be unsupported in 3.0. Please provide it as third argument, after $charset.', E_USER_DEPRECATED);
 
             // Swap $charset and $fileLinkFormat for BC reasons
@@ -137,7 +137,7 @@ class ExceptionHandler
         $this->caughtBuffer = null;
 
         try {
-            \call_user_func($this->handler, $exception);
+            call_user_func($this->handler, $exception);
             $this->caughtLength = $caughtLength;
         } catch (\Exception $e) {
             if (!$caughtLength) {

@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\DependencyInjection\Tests\Dumper;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -87,10 +90,7 @@ class PhpDumperTest extends TestCase
         $this->assertStringEqualsFile(self::$fixturesPath.'/php/services12.php', $dumper->dump(array('file' => __FILE__)), '->dump() dumps __DIR__ relative strings');
     }
 
-    /**
-     * @dataProvider provideInvalidParameters
-     */
-    public function testExportParameters($parameters)
+    #[DataProvider('provideInvalidParameters')]    public function testExportParameters($parameters)
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -139,10 +139,7 @@ class PhpDumperTest extends TestCase
         }
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacySynchronizedServices()
+    #[Group('legacy')]    public function testLegacySynchronizedServices()
     {
         $container = include self::$fixturesPath.'/containers/container20.php';
         $dumper = new PhpDumper($container);
@@ -162,7 +159,7 @@ class PhpDumperTest extends TestCase
     public function testAddServiceInvalidServiceId()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Service id \"bar$\" cannot be converted to a valid PHP method name.');
+        $this->expectExceptionMessage('Service id "bar$" cannot be converted to a valid PHP method name.');
 
         $container = new ContainerBuilder();
         $container->register('bar$', 'FooClass');
@@ -170,10 +167,7 @@ class PhpDumperTest extends TestCase
         $dumper->dump();
     }
 
-    /**
-     * @dataProvider provideInvalidFactories
-     */
-    public function testInvalidFactories($factory)
+    #[DataProvider('provideInvalidFactories')]    public function testInvalidFactories($factory)
     {
         $this->expectException(\Symfony\Component\DependencyInjection\Exception\RuntimeException::class);
         $this->expectExceptionMessage('Cannot dump definition');
@@ -378,14 +372,15 @@ class PhpDumperTest extends TestCase
         $this->assertInstanceOf('stdClass', $container->get('foo'));
     }
 
+    #[Group('legacy')]
     /**
      * This test checks the trigger of a deprecation note and should not be removed in major releases.
      *
-     * @group legacy
-     * @expectedDeprecation The "foo" service is deprecated. You should stop using it, as it will soon be removed.
      */
     public function testPrivateServiceTriggersDeprecation()
     {
+        $this->expectUserDeprecationMessage('The "foo" service is deprecated. You should stop using it, as it will soon be removed.');
+
         $container = new ContainerBuilder();
         $container->register('foo', 'stdClass')
             ->setPublic(false)

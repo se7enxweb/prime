@@ -11,13 +11,17 @@
 
 namespace Symfony\Component\Security\Core\Tests\Util;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Util\StringUtils;
 
+#[Group('legacy')]
 /**
  * Data from PHP.net's hash_equals tests.
  *
- * @group legacy
  */
 class StringUtilsTest extends TestCase
 {
@@ -46,18 +50,12 @@ class StringUtilsTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider dataProviderTrue
-     */
-    public function testEqualsTrue($known, $user)
+    #[DataProvider('dataProviderTrue')]    public function testEqualsTrue($known, $user)
     {
         $this->assertTrue(StringUtils::equals($known, $user));
     }
 
-    /**
-     * @dataProvider dataProviderFalse
-     */
-    public function testEqualsFalse($known, $user)
+    #[DataProvider('dataProviderFalse')]    public function testEqualsFalse($known, $user)
     {
         $this->assertFalse(StringUtils::equals($known, $user));
     }

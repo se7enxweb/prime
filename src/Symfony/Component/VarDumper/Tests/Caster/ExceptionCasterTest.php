@@ -11,15 +11,14 @@
 
 namespace Symfony\Component\VarDumper\Tests\Caster;
 
+
+use PHPUnit\Framework\Attributes\RequiresFunction;
 use Symfony\Component\VarDumper\Caster\FrameStub;
 use Symfony\Component\VarDumper\Test\VarDumperTestCase;
 
 class ExceptionCasterTest extends VarDumperTestCase
 {
-    /**
-     * @requires function Twig\Template::getSourceContext
-     */
-    public function testFrameWithTwig()
+    #[RequiresFunction('Twig\Template::getSourceContext')]    public function testFrameWithTwig()
     {
         require_once \dirname(__DIR__).'/Fixtures/Twig.php';
 

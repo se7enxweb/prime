@@ -11,11 +11,13 @@
 
 namespace Symfony\Component\DependencyInjection\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Definition;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyDefinitionTest extends TestCase
 {

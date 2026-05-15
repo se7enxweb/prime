@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\DependencyInjection\Tests\Dumper;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\XmlDumper;
@@ -45,10 +48,7 @@ class XmlDumperTest extends TestCase
         $this->assertXmlStringEqualsXmlFile(self::$fixturesPath.'/xml/services8.xml', $dumper->dump(), '->dump() dumps parameters');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyAddService()
+    #[Group('legacy')]    public function testLegacyAddService()
     {
         $container = include self::$fixturesPath.'/containers/legacy-container9.php';
         $dumper = new XmlDumper($container);
@@ -121,10 +121,7 @@ class XmlDumperTest extends TestCase
 ", $dumper->dump());
     }
 
-    /**
-     * @dataProvider provideDecoratedServicesData
-     */
-    public function testDumpDecoratedServices($expectedXmlDump, $container)
+    #[DataProvider('provideDecoratedServicesData')]    public function testDumpDecoratedServices($expectedXmlDump, $container)
     {
         $dumper = new XmlDumper($container);
         $this->assertEquals($expectedXmlDump, $dumper->dump());
@@ -152,10 +149,7 @@ class XmlDumperTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideCompiledContainerData
-     */
-    public function testCompiledContainerCanBeDumped($containerFile)
+    #[DataProvider('provideCompiledContainerData')]    public function testCompiledContainerCanBeDumped($containerFile)
     {
         $fixturesPath = __DIR__.'/../Fixtures';
         $container = require $fixturesPath.'/containers/'.$containerFile.'.php';

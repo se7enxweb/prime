@@ -11,16 +11,15 @@
 
 namespace Symfony\Component\DependencyInjection\Tests\Extension;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 
 class ExtensionTest extends TestCase
 {
-    /**
-     * @dataProvider getResolvedEnabledFixtures
-     */
-    public function testIsConfigEnabledReturnsTheResolvedValue($enabled)
+    #[DataProvider('getResolvedEnabledFixtures')]    public function testIsConfigEnabledReturnsTheResolvedValue($enabled)
     {
         $extension = new EnableableExtension();
         $this->assertSame($enabled, $extension->isConfigEnabled(new ContainerBuilder(), array('enabled' => $enabled)));

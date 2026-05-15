@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Intl\Tests\Data\Provider;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Intl\Data\Provider\LanguageDataProvider;
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Intl\Locale;
@@ -850,10 +852,7 @@ abstract class AbstractLanguageDataProviderTest extends AbstractDataProviderTest
         $this->assertEquals(static::$languages, $this->dataProvider->getLanguages());
     }
 
-    /**
-     * @dataProvider provideLocales
-     */
-    public function testGetNames($displayLocale)
+    #[DataProvider('provideLocales')]    public function testGetNames($displayLocale)
     {
         $languages = array_keys($this->dataProvider->getNames($displayLocale));
 
@@ -873,10 +872,7 @@ abstract class AbstractLanguageDataProviderTest extends AbstractDataProviderTest
         );
     }
 
-    /**
-     * @dataProvider provideLocaleAliases
-     */
-    public function testGetNamesSupportsAliases($alias, $ofLocale)
+    #[DataProvider('provideLocaleAliases')]    public function testGetNamesSupportsAliases($alias, $ofLocale)
     {
         // Can't use assertSame(), because some aliases contain scripts with
         // different collation (=order of output) than their aliased locale
@@ -887,10 +883,7 @@ abstract class AbstractLanguageDataProviderTest extends AbstractDataProviderTest
         );
     }
 
-    /**
-     * @dataProvider provideLocales
-     */
-    public function testGetName($displayLocale)
+    #[DataProvider('provideLocales')]    public function testGetName($displayLocale)
     {
         $names = $this->dataProvider->getNames($displayLocale);
 
@@ -918,10 +911,7 @@ abstract class AbstractLanguageDataProviderTest extends AbstractDataProviderTest
         );
     }
 
-    /**
-     * @dataProvider provideLanguagesWithAlpha3Equivalent
-     */
-    public function testGetAlpha3Code($language)
+    #[DataProvider('provideLanguagesWithAlpha3Equivalent')]    public function testGetAlpha3Code($language)
     {
         $this->assertSame(static::$alpha2ToAlpha3[$language], $this->dataProvider->getAlpha3Code($language));
     }
@@ -934,10 +924,7 @@ abstract class AbstractLanguageDataProviderTest extends AbstractDataProviderTest
         );
     }
 
-    /**
-     * @dataProvider provideLanguagesWithoutAlpha3Equivalent
-     */
-    public function testGetAlpha3CodeFailsIfNoAlpha3Equivalent($currency)
+    #[DataProvider('provideLanguagesWithoutAlpha3Equivalent')]    public function testGetAlpha3CodeFailsIfNoAlpha3Equivalent($currency)
     {
         $this->expectException(\Symfony\Component\Intl\Exception\MissingResourceException::class);
 

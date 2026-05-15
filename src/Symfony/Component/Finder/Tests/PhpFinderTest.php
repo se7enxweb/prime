@@ -11,11 +11,13 @@
 
 namespace Symfony\Component\Finder\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Finder\Adapter\PhpAdapter;
 use Symfony\Component\Finder\Finder;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class PhpFinderTest extends FinderTest
 {

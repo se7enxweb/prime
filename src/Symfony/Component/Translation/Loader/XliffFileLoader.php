@@ -77,7 +77,7 @@ class XliffFileLoader implements LoaderInterface
     private function extractXliff1(\DOMDocument $dom, MessageCatalogue $catalogue, $domain)
     {
         $xml = simplexml_import_dom($dom);
-        $encoding = strtoupper($dom->encoding);
+        $encoding = strtoupper((string) $dom->encoding);
 
         $xml->registerXPathNamespace('xliff', 'urn:oasis:names:tc:xliff:document:1.2');
         foreach ($xml->xpath('//xliff:trans-unit') as $translation) {
@@ -117,7 +117,7 @@ class XliffFileLoader implements LoaderInterface
     private function extractXliff2(\DOMDocument $dom, MessageCatalogue $catalogue, $domain)
     {
         $xml = simplexml_import_dom($dom);
-        $encoding = strtoupper($dom->encoding);
+        $encoding = strtoupper((string) $dom->encoding);
 
         $xml->registerXPathNamespace('xliff', 'urn:oasis:names:tc:xliff:document:2.0');
 
@@ -173,15 +173,12 @@ class XliffFileLoader implements LoaderInterface
     {
         $internalErrors = libxml_use_internal_errors(true);
 
-        $disableEntities = libxml_disable_entity_loader(false);
 
         if (!@$dom->schemaValidateSource($schema)) {
-            libxml_disable_entity_loader($disableEntities);
 
             throw new InvalidResourceException(sprintf('Invalid resource provided: "%s"; Errors: %s', $file, implode("\n", $this->getXmlErrors($internalErrors))));
         }
 
-        libxml_disable_entity_loader($disableEntities);
 
         $dom->normalizeDocument();
 

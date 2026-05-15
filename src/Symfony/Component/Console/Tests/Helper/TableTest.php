@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Console\Tests\Helper;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableCell;
@@ -33,10 +35,7 @@ class TableTest extends TestCase
         $this->stream = null;
     }
 
-    /**
-     * @dataProvider renderProvider
-     */
-    public function testRender($headers, $rows, $style, $expected, $decorated = false)
+    #[DataProvider('renderProvider')]    public function testRender($headers, $rows, $style, $expected, $decorated = false)
     {
         $table = new Table($output = $this->getOutputStream($decorated));
         $table
@@ -49,10 +48,7 @@ class TableTest extends TestCase
         $this->assertEquals($expected, $this->getOutputContent($output));
     }
 
-    /**
-     * @dataProvider renderProvider
-     */
-    public function testRenderAddRows($headers, $rows, $style, $expected, $decorated = false)
+    #[DataProvider('renderProvider')]    public function testRenderAddRows($headers, $rows, $style, $expected, $decorated = false)
     {
         $table = new Table($output = $this->getOutputStream($decorated));
         $table
@@ -65,10 +61,7 @@ class TableTest extends TestCase
         $this->assertEquals($expected, $this->getOutputContent($output));
     }
 
-    /**
-     * @dataProvider renderProvider
-     */
-    public function testRenderAddRowsOneByOne($headers, $rows, $style, $expected, $decorated = false)
+    #[DataProvider('renderProvider')]    public function testRenderAddRowsOneByOne($headers, $rows, $style, $expected, $decorated = false)
     {
         $table = new Table($output = $this->getOutputStream($decorated));
         $table
@@ -731,7 +724,7 @@ TABLE;
     public function testIsNotDefinedStyleException()
     {
         $this->expectException(\Symfony\Component\Console\Exception\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Style \"absent\" is not defined.');
+        $this->expectExceptionMessage('Style "absent" is not defined.');
 
         $table = new Table($this->getOutputStream());
         $table->setStyle('absent');
@@ -742,7 +735,7 @@ TABLE;
     public function testGetStyleDefinition()
     {
         $this->expectException(\Symfony\Component\Console\Exception\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Style \"absent\" is not defined.');
+        $this->expectExceptionMessage('Style "absent" is not defined.');
 
         Table::getStyleDefinition('absent');
     }

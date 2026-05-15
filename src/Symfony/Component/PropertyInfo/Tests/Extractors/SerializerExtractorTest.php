@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Component\PropertyInfo\PropertyInfo\Tests\Extractors;
+namespace Symfony\Component\PropertyInfo\Tests\Extractors;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PropertyInfo\Extractor\SerializerExtractor;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
@@ -29,6 +30,7 @@ class SerializerExtractorTest extends TestCase
 
     protected function setUp(): void
     {
+        AnnotationRegistry::registerLoader('class_exists');
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $this->extractor = new SerializerExtractor($classMetadataFactory);
     }

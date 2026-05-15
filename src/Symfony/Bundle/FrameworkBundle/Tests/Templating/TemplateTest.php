@@ -11,15 +11,14 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Templating;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 class TemplateTest extends TestCase
 {
-    /**
-     * @dataProvider getTemplateToPathProvider
-     */
-    public function testGetPathForTemplate($template, $path)
+    #[DataProvider('getTemplateToPathProvider')]    public function testGetPathForTemplate($template, $path)
     {
         $this->assertSame($template->getPath(), $path);
     }

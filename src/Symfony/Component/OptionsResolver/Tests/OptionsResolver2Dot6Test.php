@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\OptionsResolver\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -34,7 +36,7 @@ class OptionsResolver2Dot6Test extends TestCase
     public function testResolveFailsIfNonExistingOption()
     {
         $this->expectException(\Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException::class);
-        $this->expectExceptionMessage('The option \"foo\" does not exist. Defined options are: \"a\", \"z\".');
+        $this->expectExceptionMessage('The option "foo" does not exist. Defined options are: "a", "z".');
 
         $this->resolver->setDefault('z', '1');
         $this->resolver->setDefault('a', '2');
@@ -47,7 +49,7 @@ class OptionsResolver2Dot6Test extends TestCase
     public function testResolveFailsIfMultipleNonExistingOptions()
     {
         $this->expectException(\Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException::class);
-        $this->expectExceptionMessage('The options \"baz\", \"foo\", \"ping\" do not exist. Defined options are: \"a\", \"z\".');
+        $this->expectExceptionMessage('The options "baz", "foo", "ping" do not exist. Defined options are: "a", "z".');
 
         $this->resolver->setDefault('z', '1');
         $this->resolver->setDefault('a', '2');
@@ -481,10 +483,7 @@ class OptionsResolver2Dot6Test extends TestCase
         $this->resolver->resolve();
     }
 
-    /**
-     * @dataProvider provideInvalidTypes
-     */
-    public function testResolveFailsIfInvalidType($actualType, $allowedType, $exceptionMessage)
+    #[DataProvider('provideInvalidTypes')]    public function testResolveFailsIfInvalidType($actualType, $allowedType, $exceptionMessage)
     {
         $this->resolver->setDefined('option');
         $this->resolver->setAllowedTypes('option', $allowedType);
@@ -493,7 +492,8 @@ class OptionsResolver2Dot6Test extends TestCase
             $this->expectException('Symfony\Component\OptionsResolver\Exception\InvalidOptionsException');
             $this->expectExceptionMessage($exceptionMessage);
         } else {
-            $this->setExpectedException('Symfony\Component\OptionsResolver\Exception\InvalidOptionsException', $exceptionMessage);
+            $this->expectException('Symfony\Component\OptionsResolver\Exception\InvalidOptionsException');
+        $this->expectExceptionMessage($exceptionMessage);
         }
 
         $this->resolver->resolve(array('option' => $actualType));
@@ -526,7 +526,7 @@ class OptionsResolver2Dot6Test extends TestCase
     public function testResolveFailsIfInvalidTypeMultiple()
     {
         $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
-        $this->expectExceptionMessage('The option \"foo\" with value 42 is expected to be of type \"string\" or \"bool\", but is of type \"integer\".');
+        $this->expectExceptionMessage('The option "foo" with value 42 is expected to be of type "string" or "bool", but is of type "integer".');
 
         $this->resolver->setDefault('foo', 42);
         $this->resolver->setAllowedTypes('foo', array('string', 'bool'));
@@ -665,7 +665,7 @@ class OptionsResolver2Dot6Test extends TestCase
     public function testResolveFailsIfInvalidValue()
     {
         $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
-        $this->expectExceptionMessage('The option \"foo\" with value 42 is invalid. Accepted values are: \"bar\".');
+        $this->expectExceptionMessage('The option "foo" with value 42 is invalid. Accepted values are: "bar".');
 
         $this->resolver->setDefined('foo');
         $this->resolver->setAllowedValues('foo', 'bar');
@@ -678,7 +678,7 @@ class OptionsResolver2Dot6Test extends TestCase
     public function testResolveFailsIfInvalidValueIsNull()
     {
         $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
-        $this->expectExceptionMessage('The option \"foo\" with value null is invalid. Accepted values are: \"bar\".');
+        $this->expectExceptionMessage('The option "foo" with value null is invalid. Accepted values are: "bar".');
 
         $this->resolver->setDefault('foo', null);
         $this->resolver->setAllowedValues('foo', 'bar');
@@ -719,7 +719,7 @@ class OptionsResolver2Dot6Test extends TestCase
     public function testResolveFailsIfInvalidValueMultiple()
     {
         $this->expectException(\Symfony\Component\OptionsResolver\Exception\InvalidOptionsException::class);
-        $this->expectExceptionMessage('The option \"foo\" with value 42 is invalid. Accepted values are: \"bar\", false, null.');
+        $this->expectExceptionMessage('The option "foo" with value 42 is invalid. Accepted values are: "bar", false, null.');
 
         $this->resolver->setDefault('foo', 42);
         $this->resolver->setAllowedValues('foo', array('bar', false, null));
@@ -1460,7 +1460,7 @@ class OptionsResolver2Dot6Test extends TestCase
     public function testFailIfGetNonExisting()
     {
         $this->expectException(\Symfony\Component\OptionsResolver\Exception\NoSuchOptionException::class);
-        $this->expectExceptionMessage('The option \"undefined\" does not exist. Defined options are: \"foo\", \"lazy\".');
+        $this->expectExceptionMessage('The option "undefined" does not exist. Defined options are: "foo", "lazy".');
 
         $this->resolver->setDefault('foo', 'bar');
 
@@ -1476,7 +1476,7 @@ class OptionsResolver2Dot6Test extends TestCase
     public function testFailIfGetDefinedButUnset()
     {
         $this->expectException(\Symfony\Component\OptionsResolver\Exception\NoSuchOptionException::class);
-        $this->expectExceptionMessage('The optional option \"defined\" has no value set. You should make sure it is set with \"isset\" before reading it.');
+        $this->expectExceptionMessage('The optional option "defined" has no value set. You should make sure it is set with "isset" before reading it.');
 
         $this->resolver->setDefined('defined');
 

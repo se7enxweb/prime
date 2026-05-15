@@ -24,4 +24,9 @@ class ArgumentsNode extends ArrayNode
     {
         $this->compileArguments($compiler, false);
     }
+
+    public function evaluate($functions, $values)
+    {
+        return array_values(parent::evaluate($functions, $values));
+    }
 }

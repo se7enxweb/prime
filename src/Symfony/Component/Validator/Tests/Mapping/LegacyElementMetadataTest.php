@@ -11,13 +11,15 @@
 
 namespace Symfony\Component\Validator\Tests\Mapping;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Mapping\ElementMetadata;
 use Symfony\Component\Validator\Tests\Fixtures\ConstraintA;
 use Symfony\Component\Validator\Tests\Fixtures\ConstraintB;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyElementMetadataTest extends TestCase
 {

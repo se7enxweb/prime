@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Console\Tests\Input;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -74,17 +76,10 @@ class InputOptionTest extends TestCase
         $this->assertTrue($option->isValueOptional(), '__construct() can take "InputOption::VALUE_OPTIONAL" as its mode');
     }
 
-    /**
-     * @dataProvider provideInvalidModes
-     */
-    public function testInvalidModes($mode)
+    #[DataProvider('provideInvalidModes')]    public function testInvalidModes($mode)
     {
-        if (method_exists($this, 'expectException')) {
-            $this->expectException('InvalidArgumentException');
+$this->expectException('InvalidArgumentException');
             $this->expectExceptionMessage(sprintf('Option mode "%s" is not valid.', $mode));
-        } else {
-            $this->setExpectedException('InvalidArgumentException', sprintf('Option mode "%s" is not valid.', $mode));
-        }
 
         new InputOption('foo', 'f', $mode);
     }

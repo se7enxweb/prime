@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Finder\Tests\Iterator;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Finder\Iterator\SortableIterator;
 
 class SortableIteratorTest extends RealIteratorTestCase
@@ -25,10 +27,7 @@ class SortableIteratorTest extends RealIteratorTestCase
         }
     }
 
-    /**
-     * @dataProvider getAcceptData
-     */
-    public function testAccept($mode, $expected)
+    #[DataProvider('getAcceptData')]    public function testAccept($mode, $expected)
     {
         if (!\is_callable($mode)) {
             switch ($mode) {
@@ -36,7 +35,10 @@ class SortableIteratorTest extends RealIteratorTestCase
                     if ('\\' === \DIRECTORY_SEPARATOR) {
                         touch(self::toAbsolute('.git'));
                     } else {
-                        file_get_contents(self::toAbsolute('.git'));
+                        $gitPath = self::toAbsolute('.git');
+                        if (is_file($gitPath)) {
+                            file_get_contents($gitPath);
+                        }
                     }
                     sleep(1);
                     file_get_contents(self::toAbsolute('.bar'));
@@ -172,12 +174,12 @@ class SortableIteratorTest extends RealIteratorTestCase
         );
 
         return array(
-            array(SortableIterator::SORT_BY_NAME, $this->toAbsolute($sortByName)),
-            array(SortableIterator::SORT_BY_TYPE, $this->toAbsolute($sortByType)),
-            array(SortableIterator::SORT_BY_ACCESSED_TIME, $this->toAbsolute($sortByAccessedTime)),
-            array(SortableIterator::SORT_BY_CHANGED_TIME, $this->toAbsolute($sortByChangedTime)),
-            array(SortableIterator::SORT_BY_MODIFIED_TIME, $this->toAbsolute($sortByModifiedTime)),
-            array(function (\SplFileInfo $a, \SplFileInfo $b) { return strcmp($a->getRealPath(), $b->getRealPath()); }, $this->toAbsolute($customComparison)),
+            array(SortableIterator::SORT_BY_NAME, self::toAbsolute($sortByName)),
+            array(SortableIterator::SORT_BY_TYPE, self::toAbsolute($sortByType)),
+            array(SortableIterator::SORT_BY_ACCESSED_TIME, self::toAbsolute($sortByAccessedTime)),
+            array(SortableIterator::SORT_BY_CHANGED_TIME, self::toAbsolute($sortByChangedTime)),
+            array(SortableIterator::SORT_BY_MODIFIED_TIME, self::toAbsolute($sortByModifiedTime)),
+            array(function (\SplFileInfo $a, \SplFileInfo $b) { return strcmp($a->getRealPath(), $b->getRealPath()); }, self::toAbsolute($customComparison)),
         );
     }
 }

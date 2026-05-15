@@ -11,16 +11,18 @@
 
 namespace Symfony\Component\Locale\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Intl\Util\IntlTestHelper;
 use Symfony\Component\Locale\Locale;
 
+#[Group('legacy')]
 /**
  * Test case for the {@link Locale} class.
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  *
- * @group legacy
  */
 class LocaleTest extends TestCase
 {
@@ -46,13 +48,13 @@ class LocaleTest extends TestCase
     public function testGetCountries()
     {
         $countries = Locale::getCountries();
-        $this->assertStringContainsString('BR', $countries);
+        $this->assertContains('BR', $countries);
     }
 
     public function testGetCountriesForSwitzerland()
     {
         $countries = Locale::getCountries();
-        $this->assertStringContainsString('CH', $countries);
+        $this->assertContains('CH', $countries);
     }
 
     public function testGetDisplayLanguages()
@@ -64,7 +66,7 @@ class LocaleTest extends TestCase
     public function testGetLanguages()
     {
         $languages = Locale::getLanguages();
-        $this->assertStringContainsString('pt_BR', $languages);
+        $this->assertContains('pt_BR', $languages);
     }
 
     public function testGetDisplayLocales()
@@ -76,6 +78,6 @@ class LocaleTest extends TestCase
     public function testGetLocales()
     {
         $locales = Locale::getLocales();
-        $this->assertStringContainsString('pt', $locales);
+        $this->assertContains('pt', $locales);
     }
 }

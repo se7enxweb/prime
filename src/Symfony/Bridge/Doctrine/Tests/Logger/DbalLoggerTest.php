@@ -11,22 +11,21 @@
 
 namespace Symfony\Bridge\Doctrine\Tests\Logger;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Doctrine\Logger\DbalLogger;
 
 class DbalLoggerTest extends TestCase
 {
-    /**
-     * @dataProvider getLogFixtures
-     */
-    public function testLog($sql, $params, $logParams)
+    #[DataProvider('getLogFixtures')]    public function testLog($sql, $params, $logParams)
     {
         $logger = $this->getMockBuilder('Psr\\Log\\LoggerInterface')->getMock();
 
         $dbalLogger = $this
             ->getMockBuilder('Symfony\\Bridge\\Doctrine\\Logger\\DbalLogger')
             ->setConstructorArgs(array($logger, null))
-            ->setMethods(array('log'))
+            ->onlyMethods(array('log'))
             ->getMock()
         ;
 
@@ -58,7 +57,7 @@ class DbalLoggerTest extends TestCase
         $dbalLogger = $this
             ->getMockBuilder('Symfony\\Bridge\\Doctrine\\Logger\\DbalLogger')
             ->setConstructorArgs(array($logger, null))
-            ->setMethods(array('log'))
+            ->onlyMethods(array('log'))
             ->getMock()
         ;
 
@@ -81,7 +80,7 @@ class DbalLoggerTest extends TestCase
         $dbalLogger = $this
             ->getMockBuilder('Symfony\\Bridge\\Doctrine\\Logger\\DbalLogger')
             ->setConstructorArgs(array($logger, null))
-            ->setMethods(array('log'))
+            ->onlyMethods(array('log'))
             ->getMock()
         ;
 
@@ -112,7 +111,7 @@ class DbalLoggerTest extends TestCase
         $dbalLogger = $this
             ->getMockBuilder('Symfony\\Bridge\\Doctrine\\Logger\\DbalLogger')
             ->setConstructorArgs(array($logger, null))
-            ->setMethods(array('log'))
+            ->onlyMethods(array('log'))
             ->getMock()
         ;
 
@@ -140,7 +139,7 @@ class DbalLoggerTest extends TestCase
         $dbalLogger = $this
             ->getMockBuilder('Symfony\\Bridge\\Doctrine\\Logger\\DbalLogger')
             ->setConstructorArgs(array($logger, null))
-            ->setMethods(array('log'))
+            ->onlyMethods(array('log'))
             ->getMock()
         ;
 

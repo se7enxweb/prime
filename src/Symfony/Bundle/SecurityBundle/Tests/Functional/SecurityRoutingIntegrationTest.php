@@ -11,12 +11,11 @@
 
 namespace Symfony\Bundle\SecurityBundle\Tests\Functional;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 class SecurityRoutingIntegrationTest extends WebTestCase
 {
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testRoutingErrorIsNotExposedForProtectedResourceWhenAnonymous($config)
+    #[DataProvider('getConfigs')]    public function testRoutingErrorIsNotExposedForProtectedResourceWhenAnonymous($config)
     {
         $client = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => $config));
         $client->request('GET', '/protected_resource');
@@ -24,10 +23,7 @@ class SecurityRoutingIntegrationTest extends WebTestCase
         $this->assertRedirect($client->getResponse(), '/login');
     }
 
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testRoutingErrorIsExposedWhenNotProtected($config)
+    #[DataProvider('getConfigs')]    public function testRoutingErrorIsExposedWhenNotProtected($config)
     {
         $client = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => $config));
         $client->request('GET', '/unprotected_resource');
@@ -35,10 +31,7 @@ class SecurityRoutingIntegrationTest extends WebTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode(), (string) $client->getResponse());
     }
 
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testRoutingErrorIsNotExposedForProtectedResourceWhenLoggedInWithInsufficientRights($config)
+    #[DataProvider('getConfigs')]    public function testRoutingErrorIsNotExposedForProtectedResourceWhenLoggedInWithInsufficientRights($config)
     {
         $client = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => $config));
 
@@ -52,10 +45,7 @@ class SecurityRoutingIntegrationTest extends WebTestCase
         $this->assertNotEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testSecurityConfigurationForSingleIPAddress($config)
+    #[DataProvider('getConfigs')]    public function testSecurityConfigurationForSingleIPAddress($config)
     {
         $allowedClient = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => $config), array('REMOTE_ADDR' => '10.10.10.10'));
         $barredClient = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => $config), array('REMOTE_ADDR' => '10.10.20.10'));
@@ -64,10 +54,7 @@ class SecurityRoutingIntegrationTest extends WebTestCase
         $this->assertRestricted($barredClient, '/secured-by-one-ip');
     }
 
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testSecurityConfigurationForMultipleIPAddresses($config)
+    #[DataProvider('getConfigs')]    public function testSecurityConfigurationForMultipleIPAddresses($config)
     {
         $allowedClientA = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => $config), array('REMOTE_ADDR' => '1.1.1.1'));
         $allowedClientB = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => $config), array('REMOTE_ADDR' => '2.2.2.2'));
@@ -78,10 +65,7 @@ class SecurityRoutingIntegrationTest extends WebTestCase
         $this->assertRestricted($barredClient, '/secured-by-two-ips');
     }
 
-    /**
-     * @dataProvider getConfigs
-     */
-    public function testSecurityConfigurationForExpression($config)
+    #[DataProvider('getConfigs')]    public function testSecurityConfigurationForExpression($config)
     {
         $allowedClient = $this->createClient(array('test_case' => 'StandardFormLogin', 'root_config' => $config), array('HTTP_USER_AGENT' => 'Firefox 1.0'));
         $this->assertAllowed($allowedClient, '/protected-via-expression');

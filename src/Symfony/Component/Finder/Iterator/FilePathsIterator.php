@@ -77,6 +77,7 @@ class FilePathsIterator extends \ArrayIterator
      *
      * @return SplFileInfo File information
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->current;
@@ -85,17 +86,20 @@ class FilePathsIterator extends \ArrayIterator
     /**
      * @return string
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->current->getPathname();
     }
 
+    #[\ReturnTypeWillChange]
     public function next()
     {
         parent::next();
         $this->buildProperties();
     }
 
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         parent::rewind();
@@ -121,6 +125,12 @@ class FilePathsIterator extends \ArrayIterator
     private function buildProperties()
     {
         $absolutePath = parent::current();
+        if (null === $absolutePath) {
+            $this->subPath = $this->subPathname = '';
+            $this->current = new SplFileInfo('', '', '');
+
+            return;
+        }
 
         if ($this->baseDir === substr($absolutePath, 0, $this->baseDirLength)) {
             $this->subPathname = ltrim(substr($absolutePath, $this->baseDirLength), '/\\');
@@ -130,6 +140,6 @@ class FilePathsIterator extends \ArrayIterator
             $this->subPath = $this->subPathname = '';
         }
 
-        $this->current = new SplFileInfo(parent::current(), $this->subPath, $this->subPathname);
+        $this->current = new SplFileInfo($absolutePath, $this->subPath, $this->subPathname);
     }
 }

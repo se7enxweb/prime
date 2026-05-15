@@ -59,7 +59,6 @@ After reviewing the summary, use the individual sub-commands for detail:
   <info>php bin/console prime:migrate:constraints --fix</info>    — reserved keyword constraints (auto-fixer)
   <info>php bin/console prime:migrate:twig --fix</info>           — Twig legacy class names (auto-fixer)
   <info>php bin/console prime:migrate:yaml --fix</info>            — YAML !php/object: tags (auto-fixer)
-  <info>php bin/console prime:migrate:phpunit --fix</info>         — PHP 8.x compat (non-static providers, return types, Serializable)
   <info>php bin/console prime:migrate:report</info>               — full report (text/HTML/JSON)
 HELP)
             ->addDirOption()
@@ -155,41 +154,16 @@ HELP)
             $output->writeln('');
         }
 
-        // 6. Non-static data providers + PHP 8.x return-type / Serializable issues
-        $phpunitResults      = $this->scanFiles($this->phpFiles($dir), [self::class, 'scanPhpunit'],          $dir);
-        $returnTypeResults   = $this->scanFiles($this->phpFiles($dir), [self::class, 'scanReturnTypeCompat'], $dir);
-        $serializableResults = $this->scanFiles($this->phpFiles($dir), [self::class, 'scanSerializable'],     $dir);
-        $optParamResults     = $this->scanFiles($this->phpFiles($dir), [self::class, 'scanOptionalBeforeRequired'], $dir);
-        $phpunitTotal        = $this->countIssues($phpunitResults) + $this->countIssues($returnTypeResults)
-                             + $this->countIssues($serializableResults) + $this->countIssues($optParamResults);
-        $this->writeScanRow($output, 'PHP 8.x compat issues', $phpunitTotal);
-
-        if ($verbose && $phpunitTotal > 0) {
-            foreach ([$phpunitResults, $returnTypeResults, $serializableResults, $optParamResults] as $group) {
-                foreach ($group as $relPath => $issues) {
-                    $this->writeFile($output, $relPath);
-                    foreach ($issues as $issue) {
-                        $this->writeIssue($output, $issue['line'], $issue['snippet']);
-                    }
-                }
-            }
-            $output->writeln('');
-        }
-
         // ── Summary ───────────────────────────────────────────────────────────
 
-        $totalIssues = $nullableCount + $formsCount + $constraintCount + $yamlCount + $twigCount + $phpunitTotal;
+        $totalIssues = $nullableCount + $formsCount + $constraintCount + $yamlCount + $twigCount;
 
         $allFiles = array_unique(array_merge(
             array_keys($nullableResults),
             array_keys($formsResults),
             array_keys($constraintResults),
             array_keys($yamlResults),
-            array_keys($twigResults),
-            array_keys($phpunitResults),
-            array_keys($returnTypeResults),
-            array_keys($serializableResults),
-            array_keys($optParamResults)
+            array_keys($twigResults)
         ));
 
         $output->writeln('');
@@ -222,9 +196,6 @@ HELP)
             }
             if ($yamlCount > 0) {
                 $output->writeln('Run <info>php bin/console prime:migrate:yaml --fix ' . $dirArg . '</info> to auto-fix YAML !php/object: tags (preview with --dry-run first).');
-            }
-            if ($phpunitTotal > 0) {
-                $output->writeln('Run <info>php bin/console prime:migrate:phpunit --fix ' . $dirArg . '</info> to auto-fix PHP 8.x compatibility issues (preview with --dry-run first).');
             }
         }
 

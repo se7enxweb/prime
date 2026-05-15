@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Console\Tests\Style;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -37,10 +39,7 @@ class SymfonyStyleTest extends TestCase
         $this->tester = null;
     }
 
-    /**
-     * @dataProvider inputCommandToOutputFilesProvider
-     */
-    public function testOutputs($inputCommandFilepath, $outputFilepath)
+    #[DataProvider('inputCommandToOutputFilesProvider')]    public function testOutputs($inputCommandFilepath, $outputFilepath)
     {
         $code = require $inputCommandFilepath;
         $this->command->setCode($code);
@@ -67,7 +66,6 @@ class SymfonyStyleWithForcedLineLength extends SymfonyStyle
         parent::__construct($input, $output);
 
         $ref = new \ReflectionProperty(get_parent_class($this), 'lineLength');
-        $ref->setAccessible(true);
         $ref->setValue($this, 120);
     }
 }

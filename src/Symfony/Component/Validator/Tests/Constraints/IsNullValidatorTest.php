@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\Constraints\IsNull;
 use Symfony\Component\Validator\Constraints\IsNullValidator;
 use Symfony\Component\Validator\Validation;
@@ -34,10 +36,7 @@ class IsNullValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getInvalidValues
-     */
-    public function testInvalidValues($value, $valueAsString)
+    #[DataProvider('getInvalidValues')]    public function testInvalidValues($value, $valueAsString)
     {
         $constraint = new IsNull(array(
             'message' => 'myMessage',

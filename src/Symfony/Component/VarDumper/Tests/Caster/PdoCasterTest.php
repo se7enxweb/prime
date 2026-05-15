@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\VarDumper\Tests\Caster;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\VarDumper\Caster\PdoCaster;
 use Symfony\Component\VarDumper\Cloner\Stub;
@@ -20,10 +22,7 @@ use Symfony\Component\VarDumper\Cloner\Stub;
  */
 class PdoCasterTest extends TestCase
 {
-    /**
-     * @requires extension pdo_sqlite
-     */
-    public function testCastPdo()
+    #[RequiresPhpExtension('pdo_sqlite')]    public function testCastPdo()
     {
         $pdo = new \PDO('sqlite::memory:');
         $pdo->setAttribute(\PDO::ATTR_STATEMENT_CLASS, array('PDOStatement', array($pdo)));
@@ -48,6 +47,7 @@ class PdoCasterTest extends TestCase
                 'CLIENT_VERSION' => $pdo->getAttribute(\PDO::ATTR_CLIENT_VERSION),
                 'SERVER_VERSION' => $pdo->getAttribute(\PDO::ATTR_SERVER_VERSION),
                 'STATEMENT_CLASS' => array('PDOStatement'),
+                'STRINGIFY_FETCHES' => false,
                 'DEFAULT_FETCH_MODE' => $attr['DEFAULT_FETCH_MODE'],
             ),
         );

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests\Extension\Core\Type;
 
+
+use PHPUnit\Framework\Attributes\Group;
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
@@ -18,10 +20,7 @@ class SubmitTypeTest extends ButtonTypeTest
 {
     const TESTED_TYPE = 'Symfony\Component\Form\Extension\Core\Type\SubmitType';
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyName()
+    #[Group('legacy')]    public function testLegacyName()
     {
         $form = $this->factory->create('submit');
 

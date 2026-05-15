@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\HttpKernel\Tests\HttpCache;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpCache\Esi;
@@ -18,9 +22,7 @@ use Symfony\Component\HttpKernel\HttpCache\HttpCache;
 use Symfony\Component\HttpKernel\HttpCache\Store;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-/**
- * @group time-sensitive
- */
+#[Group('time-sensitive')]
 class HttpCacheTest extends HttpCacheTestCase
 {
     public function testTerminateDelegatesTerminationOnlyForTerminableInterface()
@@ -39,7 +41,7 @@ class HttpCacheTest extends HttpCacheTestCase
         // implements TerminableInterface
         $kernelMock = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Kernel')
             ->disableOriginalConstructor()
-            ->setMethods(array('terminate', 'registerBundles', 'registerContainerConfiguration'))
+            ->onlyMethods(array('terminate', 'registerBundles', 'registerContainerConfiguration'))
             ->getMock();
 
         $kernelMock->expects($this->once())
@@ -211,7 +213,8 @@ class HttpCacheTest extends HttpCacheTestCase
     public function testValidatesPrivateResponsesCachedOnTheClient()
     {
         $this->setNextResponse(200, array(), '', function ($request, $response) {
-            $etags = preg_split('/\s*,\s*/', $request->headers->get('IF_NONE_MATCH'));
+            $ifNoneMatch = $request->headers->get('IF_NONE_MATCH');
+            $etags = null === $ifNoneMatch ? array() : preg_split('/\s*,\s*/', $ifNoneMatch);
             if ($request->cookies->has('authenticated')) {
                 $response->headers->set('Cache-Control', 'private, no-store');
                 $response->setETag('"private tag"');
@@ -638,7 +641,6 @@ class HttpCacheTest extends HttpCacheTestCase
         $tmp[0][1]['date'] = $time->format(DATE_RFC2822);
         $r = new \ReflectionObject($this->store);
         $m = $r->getMethod('save');
-        $m->setAccessible(true);
         $m->invoke($this->store, 'md'.hash('sha256', 'http://localhost/'), serialize($tmp));
 
         $this->request('GET', '/');
@@ -688,7 +690,6 @@ class HttpCacheTest extends HttpCacheTestCase
         $tmp[0][1]['date'] = $time->format(DATE_RFC2822);
         $r = new \ReflectionObject($this->store);
         $m = $r->getMethod('save');
-        $m->setAccessible(true);
         $m->invoke($this->store, 'md'.hash('sha256', 'http://localhost/'), serialize($tmp));
 
         $this->request('GET', '/');
@@ -748,7 +749,6 @@ class HttpCacheTest extends HttpCacheTestCase
         $tmp[0][1]['expires'] = $time->format(DATE_RFC2822);
         $r = new \ReflectionObject($this->store);
         $m = $r->getMethod('save');
-        $m->setAccessible(true);
         $m->invoke($this->store, 'md'.hash('sha256', 'http://localhost/'), serialize($tmp));
 
         // build subsequent request; should be found but miss due to freshness
@@ -1308,10 +1308,7 @@ class HttpCacheTest extends HttpCacheTestCase
         });
     }
 
-    /**
-     * @dataProvider getTrustedProxyData
-     */
-    public function testHttpCacheIsSetAsATrustedProxy(array $existing)
+    #[DataProvider('getTrustedProxyData')]    public function testHttpCacheIsSetAsATrustedProxy(array $existing)
     {
         Request::setTrustedProxies($existing);
 
@@ -1338,10 +1335,7 @@ class HttpCacheTest extends HttpCacheTestCase
         );
     }
 
-    /**
-     * @dataProvider getForwardedData
-     */
-    public function testForwarderHeaderForForwardedRequests($forwarded, $expected)
+    #[DataProvider('getForwardedData')]    public function testForwarderHeaderForForwardedRequests($forwarded, $expected)
     {
         $this->setNextResponse();
         $server = array('REMOTE_ADDR' => '10.0.0.1');

@@ -26,7 +26,6 @@ class DaoAuthenticationProviderTest extends TestCase
 
         $provider = $this->getProvider('fabien');
         $method = new \ReflectionMethod($provider, 'retrieveUser');
-        $method->setAccessible(true);
 
         $method->invoke($provider, 'fabien', $this->getSupportedToken());
     }
@@ -40,12 +39,12 @@ class DaoAuthenticationProviderTest extends TestCase
         $userProvider = $this->getMockBuilder('Symfony\\Component\\Security\\Core\\User\\UserProviderInterface')->getMock();
         $userProvider->expects($this->once())
                      ->method('loadUserByUsername')
-                     ->will($this->throwException(new UsernameNotFoundException()))
+                     ->willThrowException(new UsernameNotFoundException())
+
         ;
 
         $provider = new DaoAuthenticationProvider($userProvider, $this->getMockBuilder('Symfony\\Component\\Security\\Core\\User\\UserCheckerInterface')->getMock(), 'key', $this->getMockBuilder('Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface')->getMock());
         $method = new \ReflectionMethod($provider, 'retrieveUser');
-        $method->setAccessible(true);
 
         $method->invoke($provider, 'fabien', $this->getSupportedToken());
     }
@@ -59,12 +58,12 @@ class DaoAuthenticationProviderTest extends TestCase
         $userProvider = $this->getMockBuilder('Symfony\\Component\\Security\\Core\\User\\UserProviderInterface')->getMock();
         $userProvider->expects($this->once())
                      ->method('loadUserByUsername')
-                     ->will($this->throwException(new \RuntimeException()))
+                     ->willThrowException(new \RuntimeException())
+
         ;
 
         $provider = new DaoAuthenticationProvider($userProvider, $this->getMockBuilder('Symfony\\Component\\Security\\Core\\User\\UserCheckerInterface')->getMock(), 'key', $this->getMockBuilder('Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface')->getMock());
         $method = new \ReflectionMethod($provider, 'retrieveUser');
-        $method->setAccessible(true);
 
         $method->invoke($provider, 'fabien', $this->getSupportedToken());
     }
@@ -80,12 +79,12 @@ class DaoAuthenticationProviderTest extends TestCase
         $token = $this->getSupportedToken();
         $token->expects($this->once())
               ->method('getUser')
-              ->will($this->returnValue($user))
+              ->willReturn($user)
+
         ;
 
         $provider = new DaoAuthenticationProvider($userProvider, $this->getMockBuilder('Symfony\\Component\\Security\\Core\\User\\UserCheckerInterface')->getMock(), 'key', $this->getMockBuilder('Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface')->getMock());
         $reflection = new \ReflectionMethod($provider, 'retrieveUser');
-        $reflection->setAccessible(true);
         $result = $reflection->invoke($provider, null, $token);
 
         $this->assertSame($user, $result);
@@ -98,12 +97,12 @@ class DaoAuthenticationProviderTest extends TestCase
         $userProvider = $this->getMockBuilder('Symfony\\Component\\Security\\Core\\User\\UserProviderInterface')->getMock();
         $userProvider->expects($this->once())
                      ->method('loadUserByUsername')
-                     ->will($this->returnValue($user))
+                     ->willReturn($user)
+
         ;
 
         $provider = new DaoAuthenticationProvider($userProvider, $this->getMockBuilder('Symfony\\Component\\Security\\Core\\User\\UserCheckerInterface')->getMock(), 'key', $this->getMockBuilder('Symfony\\Component\\Security\\Core\\Encoder\\EncoderFactoryInterface')->getMock());
         $method = new \ReflectionMethod($provider, 'retrieveUser');
-        $method->setAccessible(true);
 
         $this->assertSame($user, $method->invoke($provider, 'fabien', $this->getSupportedToken()));
     }
@@ -122,13 +121,13 @@ class DaoAuthenticationProviderTest extends TestCase
 
         $provider = $this->getProvider(null, null, $encoder);
         $method = new \ReflectionMethod($provider, 'checkAuthentication');
-        $method->setAccessible(true);
 
         $token = $this->getSupportedToken();
         $token
             ->expects($this->once())
             ->method('getCredentials')
-            ->will($this->returnValue(''))
+            ->willReturn('')
+
         ;
 
         $method->invoke(
@@ -144,18 +143,19 @@ class DaoAuthenticationProviderTest extends TestCase
         $encoder
             ->expects($this->once())
             ->method('isPasswordValid')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
+
         ;
 
         $provider = $this->getProvider(null, null, $encoder);
         $method = new \ReflectionMethod($provider, 'checkAuthentication');
-        $method->setAccessible(true);
 
         $token = $this->getSupportedToken();
         $token
             ->expects($this->once())
             ->method('getCredentials')
-            ->will($this->returnValue('0'))
+            ->willReturn('0')
+
         ;
 
         $method->invoke(
@@ -174,17 +174,18 @@ class DaoAuthenticationProviderTest extends TestCase
         $encoder = $this->getMockBuilder('Symfony\\Component\\Security\\Core\\Encoder\\PasswordEncoderInterface')->getMock();
         $encoder->expects($this->once())
                 ->method('isPasswordValid')
-                ->will($this->returnValue(false))
+                ->willReturn(false)
+
         ;
 
         $provider = $this->getProvider(null, null, $encoder);
         $method = new \ReflectionMethod($provider, 'checkAuthentication');
-        $method->setAccessible(true);
 
         $token = $this->getSupportedToken();
         $token->expects($this->once())
               ->method('getCredentials')
-              ->will($this->returnValue('foo'))
+              ->willReturn('foo')
+
         ;
 
         $method->invoke($provider, $this->getMockBuilder('Symfony\\Component\\Security\\Core\\User\\UserInterface')->getMock(), $token);
@@ -199,23 +200,24 @@ class DaoAuthenticationProviderTest extends TestCase
         $user = $this->getMockBuilder('Symfony\\Component\\Security\\Core\\User\\UserInterface')->getMock();
         $user->expects($this->once())
              ->method('getPassword')
-             ->will($this->returnValue('foo'))
+             ->willReturn('foo')
+
         ;
 
         $token = $this->getSupportedToken();
         $token->expects($this->once())
               ->method('getUser')
-              ->will($this->returnValue($user));
+              ->willReturn($user);
 
         $dbUser = $this->getMockBuilder('Symfony\\Component\\Security\\Core\\User\\UserInterface')->getMock();
         $dbUser->expects($this->once())
                ->method('getPassword')
-               ->will($this->returnValue('newFoo'))
+               ->willReturn('newFoo')
+
         ;
 
         $provider = $this->getProvider();
         $reflection = new \ReflectionMethod($provider, 'checkAuthentication');
-        $reflection->setAccessible(true);
         $reflection->invoke($provider, $dbUser, $token);
     }
 
@@ -224,23 +226,24 @@ class DaoAuthenticationProviderTest extends TestCase
         $user = $this->getMockBuilder('Symfony\\Component\\Security\\Core\\User\\UserInterface')->getMock();
         $user->expects($this->once())
              ->method('getPassword')
-             ->will($this->returnValue('foo'))
+             ->willReturn('foo')
+
         ;
 
         $token = $this->getSupportedToken();
         $token->expects($this->once())
               ->method('getUser')
-              ->will($this->returnValue($user));
+              ->willReturn($user);
 
         $dbUser = $this->getMockBuilder('Symfony\\Component\\Security\\Core\\User\\UserInterface')->getMock();
         $dbUser->expects($this->once())
                ->method('getPassword')
-               ->will($this->returnValue('foo'))
+               ->willReturn('foo')
+
         ;
 
         $provider = $this->getProvider();
         $reflection = new \ReflectionMethod($provider, 'checkAuthentication');
-        $reflection->setAccessible(true);
         $reflection->invoke($provider, $dbUser, $token);
     }
 
@@ -249,17 +252,18 @@ class DaoAuthenticationProviderTest extends TestCase
         $encoder = $this->getMockBuilder('Symfony\\Component\\Security\\Core\\Encoder\\PasswordEncoderInterface')->getMock();
         $encoder->expects($this->once())
                 ->method('isPasswordValid')
-                ->will($this->returnValue(true))
+                ->willReturn(true)
+
         ;
 
         $provider = $this->getProvider(null, null, $encoder);
         $method = new \ReflectionMethod($provider, 'checkAuthentication');
-        $method->setAccessible(true);
 
         $token = $this->getSupportedToken();
         $token->expects($this->once())
               ->method('getCredentials')
-              ->will($this->returnValue('foo'))
+              ->willReturn('foo')
+
         ;
 
         $method->invoke($provider, $this->getMockBuilder('Symfony\\Component\\Security\\Core\\User\\UserInterface')->getMock(), $token);
@@ -267,11 +271,12 @@ class DaoAuthenticationProviderTest extends TestCase
 
     protected function getSupportedToken()
     {
-        $mock = $this->getMockBuilder('Symfony\\Component\\Security\\Core\\Authentication\\Token\\UsernamePasswordToken')->setMethods(array('getCredentials', 'getUser', 'getProviderKey'))->disableOriginalConstructor()->getMock();
+        $mock = $this->getMockBuilder('Symfony\\Component\\Security\\Core\\Authentication\\Token\\UsernamePasswordToken')->onlyMethods(array('getCredentials', 'getUser', 'getProviderKey'))->disableOriginalConstructor()->getMock();
         $mock
             ->expects($this->any())
             ->method('getProviderKey')
-            ->will($this->returnValue('key'))
+            ->willReturn('key')
+
         ;
 
         return $mock;
@@ -283,7 +288,8 @@ class DaoAuthenticationProviderTest extends TestCase
         if (null !== $user) {
             $userProvider->expects($this->once())
                          ->method('loadUserByUsername')
-                         ->will($this->returnValue($user))
+                         ->willReturn($user)
+
             ;
         }
 
@@ -299,7 +305,8 @@ class DaoAuthenticationProviderTest extends TestCase
         $encoderFactory
             ->expects($this->any())
             ->method('getEncoder')
-            ->will($this->returnValue($passwordEncoder))
+            ->willReturn($passwordEncoder)
+
         ;
 
         return new DaoAuthenticationProvider($userProvider, $userChecker, 'key', $encoderFactory);

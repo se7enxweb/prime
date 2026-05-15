@@ -11,6 +11,11 @@
 
 namespace Symfony\Component\Serializer\Tests\Normalizer;
 
+
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
@@ -62,7 +67,7 @@ class GetSetMethodNormalizerTest extends TestCase
             ->expects($this->once())
             ->method('normalize')
             ->with($object, 'any')
-            ->will($this->returnValue('string_object'))
+            ->willReturn('string_object')
         ;
 
         $this->assertEquals(
@@ -101,10 +106,7 @@ class GetSetMethodNormalizerTest extends TestCase
         $this->assertEquals('bar', $obj->getBar());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyDenormalizeOnCamelCaseFormat()
+    #[Group('legacy')]    public function testLegacyDenormalizeOnCamelCaseFormat()
     {
         $this->normalizer->setCamelizedAttributes(array('camel_case'));
         $obj = $this->normalizer->denormalize(
@@ -130,10 +132,7 @@ class GetSetMethodNormalizerTest extends TestCase
         $this->assertEquals(new GetSetDummy(), $this->normalizer->denormalize(null, __NAMESPACE__.'\GetSetDummy'));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyCamelizedAttributesNormalize()
+    #[Group('legacy')]    public function testLegacyCamelizedAttributesNormalize()
     {
         $obj = new GetCamelizedDummy('dunglas.fr');
         $obj->setFooBar('les-tilleuls.coop');
@@ -154,10 +153,7 @@ class GetSetMethodNormalizerTest extends TestCase
         ));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyCamelizedAttributesDenormalize()
+    #[Group('legacy')]    public function testLegacyCamelizedAttributesDenormalize()
     {
         $obj = new GetCamelizedDummy('dunglas.fr');
         $obj->setFooBar('les-tilleuls.coop');
@@ -208,10 +204,10 @@ class GetSetMethodNormalizerTest extends TestCase
         $this->assertEquals(array(1, 2, 3), $obj->getBaz());
     }
 
+    #[RequiresPhp('5.3.17')]
     /**
      * @see https://bugs.php.net/62715
      *
-     * @requires PHP 5.3.17
      */
     public function testConstructorDenormalizeWithOptionalDefaultArgument()
     {
@@ -222,8 +218,8 @@ class GetSetMethodNormalizerTest extends TestCase
         $this->assertEquals('test', $obj->getBar());
     }
 
+    #[RequiresPhp('5.6')]
     /**
-     * @requires PHP 5.6
      */
     public function testConstructorDenormalizeWithVariadicArgument()
     {
@@ -233,8 +229,8 @@ class GetSetMethodNormalizerTest extends TestCase
         $this->assertEquals(array(1, 2, 3), $obj->getFoo());
     }
 
+    #[RequiresPhp('5.6')]
     /**
-     * @requires PHP 5.6
      */
     public function testConstructorDenormalizeWithMissingVariadicArgument()
     {
@@ -362,10 +358,7 @@ class GetSetMethodNormalizerTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideCallbacks
-     */
-    public function testCallbacks($callbacks, $value, $result, $message)
+    #[DataProvider('provideCallbacks')]    public function testCallbacks($callbacks, $value, $result, $message)
     {
         $this->normalizer->setCallbacks($callbacks);
 
@@ -471,7 +464,7 @@ class GetSetMethodNormalizerTest extends TestCase
     public function testUnableToNormalizeObjectAttribute()
     {
         $this->expectException(\Symfony\Component\Serializer\Exception\LogicException::class);
-        $this->expectExceptionMessage('Cannot normalize attribute \"object\" because injected serializer is not a normalizer');
+        $this->expectExceptionMessage('Cannot normalize attribute "object" because injected serializer is not a normalizer');
 
         $serializer = $this->getMockBuilder('Symfony\Component\Serializer\SerializerInterface')->getMock();
         $this->normalizer->setSerializer($serializer);

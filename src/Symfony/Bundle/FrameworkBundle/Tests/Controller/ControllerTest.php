@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\User;
@@ -34,19 +35,18 @@ class ControllerTest extends TestCase
         $requestStack->push($request);
 
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
-        $kernel->expects($this->once())->method('handle')->will($this->returnCallback(function (Request $request) {
-            return new Response($request->getRequestFormat().'--'.$request->getLocale());
-        }));
+        $kernel->expects($this->once())->method('handle')->willReturnCallback(function (Request $request) {
+return new Response($request->getRequestFormat().'--'.$request->getLocale());
+        });
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('get')->will($this->returnValue($requestStack));
-        $container->expects($this->at(1))->method('get')->will($this->returnValue($kernel));
+        $container->expects($this->exactly(2))->method('get')->willReturnOnConsecutiveCalls($requestStack, $kernel);
 
         $controller = new TestController();
         $controller->setContainer($container);
 
         $response = $controller->forward('a_controller');
-        $this->assertEquals('xml--fr', $response->getContent());
+$this->assertEquals('xml--fr', $response->getContent());
     }
 
     public function testGetUser()
@@ -90,7 +90,7 @@ class ControllerTest extends TestCase
             ->expects($this->once())
             ->method('has')
             ->with('security.token_storage')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $controller = new TestController();
         $controller->setContainer($container);
@@ -109,20 +109,20 @@ class ControllerTest extends TestCase
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
-            ->will($this->returnValue($token));
+            ->willReturn($token);
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
         $container
             ->expects($this->once())
             ->method('has')
             ->with('security.token_storage')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $container
             ->expects($this->once())
             ->method('get')
             ->with('security.token_storage')
-            ->will($this->returnValue($tokenStorage));
+            ->willReturn($tokenStorage);
 
         return $container;
     }
@@ -133,13 +133,13 @@ class ControllerTest extends TestCase
         $authorizationChecker->expects($this->once())->method('isGranted')->willReturn(true);
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('has')->will($this->returnValue(true));
-        $container->expects($this->at(1))->method('get')->will($this->returnValue($authorizationChecker));
+        $container->method('has')->willReturn(true);
+        $container->method('get')->willReturn($authorizationChecker);
 
         $controller = new TestController();
         $controller->setContainer($container);
 
-        $this->assertTrue($controller->isGranted('foo'));
+$this->assertTrue($controller->isGranted('foo'));
     }
 
     /**
@@ -152,8 +152,8 @@ class ControllerTest extends TestCase
         $authorizationChecker->expects($this->once())->method('isGranted')->willReturn(false);
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('has')->will($this->returnValue(true));
-        $container->expects($this->at(1))->method('get')->will($this->returnValue($authorizationChecker));
+        $container->method('has')->willReturn(true);
+        $container->method('get')->willReturn($authorizationChecker);
 
         $controller = new TestController();
         $controller->setContainer($container);
@@ -167,14 +167,13 @@ class ControllerTest extends TestCase
         $twig->expects($this->once())->method('render')->willReturn('bar');
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('has')->will($this->returnValue(false));
-        $container->expects($this->at(1))->method('has')->will($this->returnValue(true));
-        $container->expects($this->at(2))->method('get')->will($this->returnValue($twig));
+        $container->method('has')->willReturnOnConsecutiveCalls(false, true);
+        $container->method('get')->willReturn($twig);
 
         $controller = new TestController();
         $controller->setContainer($container);
 
-        $this->assertEquals('bar', $controller->renderView('foo'));
+$this->assertEquals('bar', $controller->renderView('foo'));
     }
 
     public function testRenderTwig()
@@ -183,14 +182,13 @@ class ControllerTest extends TestCase
         $twig->expects($this->once())->method('render')->willReturn('bar');
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('has')->will($this->returnValue(false));
-        $container->expects($this->at(1))->method('has')->will($this->returnValue(true));
-        $container->expects($this->at(2))->method('get')->will($this->returnValue($twig));
+        $container->method('has')->willReturnOnConsecutiveCalls(false, true);
+        $container->method('get')->willReturn($twig);
 
         $controller = new TestController();
         $controller->setContainer($container);
 
-        $this->assertEquals('bar', $controller->render('foo')->getContent());
+$this->assertEquals('bar', $controller->render('foo')->getContent());
     }
 
     public function testStreamTwig()
@@ -198,14 +196,13 @@ class ControllerTest extends TestCase
         $twig = $this->getMockBuilder('Twig\Environment')->disableOriginalConstructor()->getMock();
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('has')->will($this->returnValue(false));
-        $container->expects($this->at(1))->method('has')->will($this->returnValue(true));
-        $container->expects($this->at(2))->method('get')->will($this->returnValue($twig));
+        $container->method('has')->willReturnOnConsecutiveCalls(false, true);
+        $container->method('get')->willReturn($twig);
 
         $controller = new TestController();
         $controller->setContainer($container);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\StreamedResponse', $controller->stream('foo'));
+$this->assertInstanceOf('Symfony\Component\HttpFoundation\StreamedResponse', $controller->stream('foo'));
     }
 
     public function testRedirectToRoute()
@@ -214,20 +211,18 @@ class ControllerTest extends TestCase
         $router->expects($this->once())->method('generate')->willReturn('/foo');
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('get')->will($this->returnValue($router));
+        $container->method('get')->willReturn($router);
 
         $controller = new TestController();
         $controller->setContainer($container);
         $response = $controller->redirectToRoute('foo');
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertSame('/foo', $response->getTargetUrl());
-        $this->assertSame(302, $response->getStatusCode());
+$this->assertSame('/foo', $response->getTargetUrl());
+$this->assertSame(302, $response->getStatusCode());
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    #[RunInSeparateProcess]
     public function testAddFlash()
     {
         $flashBag = new FlashBag();
@@ -235,14 +230,14 @@ class ControllerTest extends TestCase
         $session->expects($this->once())->method('getFlashBag')->willReturn($flashBag);
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('has')->will($this->returnValue(true));
-        $container->expects($this->at(1))->method('get')->will($this->returnValue($session));
+        $container->method('has')->willReturn(true);
+        $container->method('get')->willReturn($session);
 
         $controller = new TestController();
         $controller->setContainer($container);
         $controller->addFlash('foo', 'bar');
 
-        $this->assertSame(array('bar'), $flashBag->get('foo'));
+$this->assertSame(array('bar'), $flashBag->get('foo'));
     }
 
     public function testCreateAccessDeniedException()
@@ -258,13 +253,13 @@ class ControllerTest extends TestCase
         $tokenManager->expects($this->once())->method('isTokenValid')->willReturn(true);
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('has')->will($this->returnValue(true));
-        $container->expects($this->at(1))->method('get')->will($this->returnValue($tokenManager));
+        $container->method('has')->willReturn(true);
+        $container->method('get')->willReturn($tokenManager);
 
         $controller = new TestController();
         $controller->setContainer($container);
 
-        $this->assertTrue($controller->isCsrfTokenValid('foo', 'bar'));
+$this->assertTrue($controller->isCsrfTokenValid('foo', 'bar'));
     }
 
     public function testGenerateUrl()
@@ -273,12 +268,12 @@ class ControllerTest extends TestCase
         $router->expects($this->once())->method('generate')->willReturn('/foo');
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('get')->will($this->returnValue($router));
+        $container->method('get')->willReturn($router);
 
         $controller = new Controller();
         $controller->setContainer($container);
 
-        $this->assertEquals('/foo', $controller->generateUrl('foo'));
+$this->assertEquals('/foo', $controller->generateUrl('foo'));
     }
 
     public function testRedirect()
@@ -297,13 +292,13 @@ class ControllerTest extends TestCase
         $templating->expects($this->once())->method('render')->willReturn('bar');
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('has')->willReturn(true);
-        $container->expects($this->at(1))->method('get')->will($this->returnValue($templating));
+        $container->method('has')->willReturn(true);
+        $container->method('get')->willReturn($templating);
 
         $controller = new Controller();
         $controller->setContainer($container);
 
-        $this->assertEquals('bar', $controller->renderView('foo'));
+$this->assertEquals('bar', $controller->renderView('foo'));
     }
 
     public function testRenderTemplating()
@@ -312,13 +307,13 @@ class ControllerTest extends TestCase
         $templating->expects($this->once())->method('renderResponse')->willReturn(new Response('bar'));
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('has')->willReturn(true);
-        $container->expects($this->at(1))->method('get')->will($this->returnValue($templating));
+        $container->method('has')->willReturn(true);
+        $container->method('get')->willReturn($templating);
 
         $controller = new Controller();
         $controller->setContainer($container);
 
-        $this->assertEquals('bar', $controller->render('foo')->getContent());
+$this->assertEquals('bar', $controller->render('foo')->getContent());
     }
 
     public function testStreamTemplating()
@@ -326,13 +321,13 @@ class ControllerTest extends TestCase
         $templating = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->getMock();
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('has')->willReturn(true);
-        $container->expects($this->at(1))->method('get')->will($this->returnValue($templating));
+        $container->method('has')->willReturn(true);
+        $container->method('get')->willReturn($templating);
 
         $controller = new Controller();
         $controller->setContainer($container);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\StreamedResponse', $controller->stream('foo'));
+$this->assertInstanceOf('Symfony\Component\HttpFoundation\StreamedResponse', $controller->stream('foo'));
     }
 
     public function testCreateNotFoundException()
@@ -350,12 +345,12 @@ class ControllerTest extends TestCase
         $formFactory->expects($this->once())->method('create')->willReturn($form);
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('get')->will($this->returnValue($formFactory));
+        $container->method('get')->willReturn($formFactory);
 
         $controller = new Controller();
         $controller->setContainer($container);
 
-        $this->assertEquals($form, $controller->createForm('foo'));
+$this->assertEquals($form, $controller->createForm('foo'));
     }
 
     public function testCreateFormBuilder()
@@ -366,12 +361,12 @@ class ControllerTest extends TestCase
         $formFactory->expects($this->once())->method('createBuilder')->willReturn($formBuilder);
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('get')->will($this->returnValue($formFactory));
+        $container->method('get')->willReturn($formFactory);
 
         $controller = new Controller();
         $controller->setContainer($container);
 
-        $this->assertEquals($formBuilder, $controller->createFormBuilder('foo'));
+$this->assertEquals($formBuilder, $controller->createFormBuilder('foo'));
     }
 
     public function testGetDoctrine()
@@ -379,13 +374,13 @@ class ControllerTest extends TestCase
         $doctrine = $this->getMockBuilder('Doctrine\Common\Persistence\ManagerRegistry')->getMock();
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container->expects($this->at(0))->method('has')->will($this->returnValue(true));
-        $container->expects($this->at(1))->method('get')->will($this->returnValue($doctrine));
+        $container->method('has')->willReturn(true);
+        $container->method('get')->willReturn($doctrine);
 
         $controller = new Controller();
         $controller->setContainer($container);
 
-        $this->assertEquals($doctrine, $controller->getDoctrine());
+$this->assertEquals($doctrine, $controller->getDoctrine());
     }
 }
 

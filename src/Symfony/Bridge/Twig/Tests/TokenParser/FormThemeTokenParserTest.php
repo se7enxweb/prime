@@ -11,9 +11,12 @@
 
 namespace Symfony\Bridge\Twig\Tests\TokenParser;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Node\FormThemeNode;
 use Symfony\Bridge\Twig\TokenParser\FormThemeTokenParser;
+use Twig\Compiler;
 use Twig\Environment;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -23,17 +26,19 @@ use Twig\Source;
 
 class FormThemeTokenParserTest extends TestCase
 {
-    /**
-     * @dataProvider getTestsForFormTheme
-     */
-    public function testCompile($source, $expected)
+    #[DataProvider('getTestsForFormTheme')]    public function testCompile($source, $expected)
     {
         $env = new Environment($this->getMockBuilder('Twig\Loader\LoaderInterface')->getMock(), array('cache' => false, 'autoescape' => false, 'optimizations' => 0));
         $env->addTokenParser(new FormThemeTokenParser());
         $stream = $env->tokenize(new Source($source, ''));
         $parser = new Parser($env);
 
-        $this->assertEquals($expected, $parser->parse($stream)->getNode('body')->getNode(0));
+        $actual = $parser->parse($stream)->getNode('body')->getNode(0);
+        $compiler = new Compiler($env);
+        $this->assertEquals(
+            trim($compiler->compile($expected)->getSource()),
+            trim($compiler->compile($actual)->getSource())
+        );
     }
 
     public static function getTestsForFormTheme()

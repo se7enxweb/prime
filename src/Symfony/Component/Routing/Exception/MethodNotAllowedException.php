@@ -26,6 +26,10 @@ class MethodNotAllowedException extends \RuntimeException implements ExceptionIn
     {
         $this->allowedMethods = array_map('strtoupper', $allowedMethods);
 
+        if (null === $message) {
+            $message = '';
+        }
+
         parent::__construct($message, $code, $previous);
     }
 

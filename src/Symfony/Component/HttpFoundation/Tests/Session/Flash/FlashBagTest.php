@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\HttpFoundation\Tests\Session\Flash;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 
@@ -155,10 +157,7 @@ class FlashBagTest extends TestCase
         );
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyGetIterator()
+    #[Group('legacy')]    public function testLegacyGetIterator()
     {
         $flashes = array('hello' => 'world', 'beep' => 'boop', 'notice' => 'nope');
         foreach ($flashes as $key => $val) {

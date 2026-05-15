@@ -11,13 +11,17 @@
 
 namespace Symfony\Component\Routing\Tests\Matcher;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Matcher\ApacheUrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyApacheUrlMatcherTest extends TestCase
 {
@@ -33,10 +37,7 @@ class LegacyApacheUrlMatcherTest extends TestCase
         $_SERVER = $this->server;
     }
 
-    /**
-     * @dataProvider getMatchData
-     */
-    public function testMatch($name, $pathinfo, $server, $expect)
+    #[DataProvider('getMatchData')]    public function testMatch($name, $pathinfo, $server, $expect)
     {
         $collection = new RouteCollection();
         $context = new RequestContext();

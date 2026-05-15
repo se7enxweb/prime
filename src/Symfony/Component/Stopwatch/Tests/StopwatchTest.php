@@ -11,16 +11,17 @@
 
 namespace Symfony\Component\Stopwatch\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Stopwatch\Stopwatch;
 
+#[Group('time-sensitive')]
 /**
  * StopwatchTest.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @group time-sensitive
- */
+ * */
 class StopwatchTest extends TestCase
 {
     const DELTA = 20;
@@ -55,11 +56,9 @@ class StopwatchTest extends TestCase
         $stopwatch = new Stopwatch();
 
         $sections = new \ReflectionProperty('Symfony\Component\Stopwatch\Stopwatch', 'sections');
-        $sections->setAccessible(true);
         $section = $sections->getValue($stopwatch);
 
         $events = new \ReflectionProperty('Symfony\Component\Stopwatch\Section', 'events');
-        $events->setAccessible(true);
 
         $stopwatchMockEvent = $this->getMockBuilder('Symfony\Component\Stopwatch\StopwatchEvent')
             ->setConstructorArgs(array(microtime(true) * 1000))
@@ -79,7 +78,7 @@ class StopwatchTest extends TestCase
         $event = $stopwatch->stop('foo');
 
         $this->assertInstanceOf('Symfony\Component\Stopwatch\StopwatchEvent', $event);
-        $this->assertEquals(200, $event->getDuration(), null, self::DELTA);
+        $this->assertEqualsWithDelta(200, $event->getDuration(), self::DELTA);
     }
 
     /**

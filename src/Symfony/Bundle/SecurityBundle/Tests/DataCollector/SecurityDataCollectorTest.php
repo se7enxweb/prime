@@ -11,7 +11,10 @@
 
 namespace Symfony\Bundle\SecurityBundle\Tests\DataCollector;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\DataCollector\SecurityDataCollector;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -50,10 +53,7 @@ class SecurityDataCollectorTest extends TestCase
         $this->assertEmpty($collector->getUser());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyCollectWhenAuthenticationTokenIsNull()
+    #[Group('legacy')]    public function testLegacyCollectWhenAuthenticationTokenIsNull()
     {
         $tokenStorage = $this->getMockBuilder('Symfony\Component\Security\Core\SecurityContextInterface')->getMock();
         $collector = new SecurityDataCollector($tokenStorage, $this->getRoleHierarchy());
@@ -66,9 +66,7 @@ class SecurityDataCollectorTest extends TestCase
         $this->assertCount(0, $collector->getRoles());
         $this->assertCount(0, $collector->getInheritedRoles());
         $this->assertEmpty($collector->getUser());
-    }
-
-    /** @dataProvider provideRoles */
+    }    #[DataProvider('provideRoles')]
     public function testCollectAuthenticationTokenAndRoles(array $roles, array $normalizedRoles, array $inheritedRoles)
     {
         $tokenStorage = new TokenStorage();

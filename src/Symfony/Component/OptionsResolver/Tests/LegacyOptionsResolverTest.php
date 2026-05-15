@@ -11,12 +11,14 @@
 
 namespace Symfony\Component\OptionsResolver\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+#[Group('legacy')]
 /**
- * @group legacy
  */
 class LegacyOptionsResolverTest extends TestCase
 {
@@ -212,7 +214,7 @@ class LegacyOptionsResolverTest extends TestCase
     public function testResolveFailsIfNonExistingOption()
     {
         $this->expectException(\Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException::class);
-        $this->expectExceptionMessage('The option \"foo\" does not exist. Defined options are: \"one\", \"three\", \"two\".');
+        $this->expectExceptionMessage('The option "foo" does not exist. Defined options are: "one", "three", "two".');
 
         $this->resolver->setDefaults(array(
             'one' => '1',

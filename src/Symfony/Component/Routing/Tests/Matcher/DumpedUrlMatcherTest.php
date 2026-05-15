@@ -22,9 +22,12 @@ class DumpedUrlMatcherTest extends UrlMatcherTest
     public function testSchemeRequirement()
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('The \"schemes\" requirement is only supported for URL matchers that implement RedirectableUrlMatcherInterface.');
+        $this->expectExceptionMessage('The "schemes" requirement is only supported for URL matchers that implement RedirectableUrlMatcherInterface.');
 
-        parent::testSchemeRequirement();
+        $coll = new RouteCollection();
+        $coll->add('foo', new \Symfony\Component\Routing\Route('/foo', array(), array(), array(), '', array('https')));
+        $matcher = $this->getUrlMatcher($coll);
+        $matcher->match('/foo');
     }
 
     /**
@@ -32,9 +35,12 @@ class DumpedUrlMatcherTest extends UrlMatcherTest
     public function testSchemeAndMethodMismatch()
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('The \"schemes\" requirement is only supported for URL matchers that implement RedirectableUrlMatcherInterface.');
+        $this->expectExceptionMessage('The "schemes" requirement is only supported for URL matchers that implement RedirectableUrlMatcherInterface.');
 
-        parent::testSchemeRequirement();
+        $coll = new RouteCollection();
+        $coll->add('foo', new \Symfony\Component\Routing\Route('/foo', array(), array(), array(), '', array('https'), array('POST')));
+        $matcher = $this->getUrlMatcher($coll);
+        $matcher->match('/foo');
     }
 
     protected function getUrlMatcher(RouteCollection $routes, ?RequestContext $context = null)

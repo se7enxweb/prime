@@ -50,7 +50,7 @@ class FormValidatorTest extends AbstractConstraintValidatorTest
     {
         $this->dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')->getMock();
         $this->factory = $this->getMockBuilder('Symfony\Component\Form\FormFactoryInterface')->getMock();
-        $this->serverParams = $this->getMockBuilder('Symfony\Component\Form\Extension\Validator\Util\ServerParams')->setMethods(array('getNormalizedIniPostMaxSize', 'getContentLength'))->getMock();
+        $this->serverParams = $this->getMockBuilder('Symfony\Component\Form\Extension\Validator\Util\ServerParams')->onlyMethods(array('getNormalizedIniPostMaxSize', 'getContentLength'))->getMock();
 
         parent::setUp();
 
@@ -691,11 +691,11 @@ class FormValidatorTest extends AbstractConstraintValidatorTest
         $validator->expects($this->any())
             ->method('inContext')
             ->with($context)
-            ->will($this->returnValue($contextualValidator));
+            ->willReturn($contextualValidator);
 
         $context->expects($this->any())
             ->method('getValidator')
-            ->will($this->returnValue($validator));
+            ->willReturn($validator);
 
         return $context;
     }

@@ -102,13 +102,11 @@ class AssetExtension extends AbstractExtension
             $package = $this->packages->getPackage($packageName);
 
             $v = new \ReflectionProperty('Symfony\Component\Asset\Package', 'versionStrategy');
-            $v->setAccessible(true);
 
             $currentVersionStrategy = $v->getValue($package);
 
             if (property_exists($currentVersionStrategy, 'format')) {
                 $f = new \ReflectionProperty($currentVersionStrategy, 'format');
-                $f->setAccessible(true);
 
                 $format = $f->getValue($currentVersionStrategy);
 

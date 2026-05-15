@@ -181,6 +181,11 @@ class Parser
                     $key = (string) $key;
                 }
 
+                // Keep null keys addressable without triggering null-offset deprecations.
+                if (null === $key) {
+                    $key = '';
+                }
+
                 if ('<<' === $key && (!isset($values['value']) || !self::preg_match('#^&(?P<ref>[^ ]+)#u', $values['value'], $refMatches))) {
                     $mergeNode = true;
                     $allowOverwrite = true;
@@ -529,13 +534,13 @@ class Parser
         if (self::preg_match('/^'.self::BLOCK_SCALAR_HEADER_PATTERN.'$/', $value, $matches)) {
             $modifiers = isset($matches['modifiers']) ? $matches['modifiers'] : '';
 
-            return $this->parseBlockScalar($matches['separator'], preg_replace('#\d+#', '', $modifiers), (int) abs($modifiers));
+            return $this->parseBlockScalar($matches['separator'], preg_replace('#\d+#', '', $modifiers), (int) abs((int) $modifiers));
         }
 
         try {
             $parsedValue = Inline::parse($value, $exceptionOnInvalidType, $objectSupport, $objectForMap, $this->refs);
 
-            if ('mapping' === $context && '"' !== $value[0] && "'" !== $value[0] && '[' !== $value[0] && '{' !== $value[0] && '!' !== $value[0] && false !== strpos($parsedValue, ': ')) {
+            if ('mapping' === $context && '"' !== $value[0] && "'" !== $value[0] && '[' !== $value[0] && '{' !== $value[0] && '!' !== $value[0] && is_string($parsedValue) && false !== strpos($parsedValue, ': ')) {
                 @trigger_error(sprintf('Using a colon in the unquoted mapping value "%s" in line %d is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.', $value, $this->getRealCurrentLineNb() + 1), E_USER_DEPRECATED);
 
                 // to be thrown in 3.0
@@ -734,6 +739,7 @@ class Parser
      */
     private function cleanup($value)
     {
+        $value = (string) $value;
         $value = str_replace(array("\r\n", "\r"), "\n", $value);
 
         // strip YAML header

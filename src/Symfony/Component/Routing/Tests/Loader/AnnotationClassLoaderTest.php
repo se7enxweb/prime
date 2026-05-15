@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Routing\Tests\Loader;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
@@ -44,10 +46,7 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
         $this->loader->load('Symfony\Component\Routing\Tests\Fixtures\AnnotatedClasses\AbstractClass');
     }
 
-    /**
-     * @dataProvider provideTestSupportsChecksResource
-     */
-    public function testSupportsChecksResource($resource, $expectedSupports)
+    #[DataProvider('provideTestSupportsChecksResource')]    public function testSupportsChecksResource($resource, $expectedSupports)
     {
         $this->assertSame($expectedSupports, $this->loader->supports($resource), '->supports() returns true if the resource is loadable');
     }
@@ -102,10 +101,7 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
         );
     }
 
-    /**
-     * @dataProvider getLoadTests
-     */
-    public function testLoad($className, $routeData = array(), $methodArgs = array())
+    #[DataProvider('getLoadTests')]    public function testLoad($className, $routeData = array(), $methodArgs = array())
     {
         $routeData = array_replace(array(
             'name' => 'route',
@@ -121,7 +117,7 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
         $this->reader
             ->expects($this->once())
             ->method('getMethodAnnotations')
-            ->will($this->returnValue(array($this->getAnnotatedRoute($routeData))))
+            ->willReturn(array($this->getAnnotatedRoute($routeData)))
         ;
 
         $routeCollection = $this->loader->load($className);
@@ -166,12 +162,12 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
         $this->reader
             ->expects($this->once())
             ->method('getClassAnnotation')
-            ->will($this->returnValue($this->getAnnotatedRoute($classRouteData)))
+            ->willReturn($this->getAnnotatedRoute($classRouteData))
         ;
         $this->reader
             ->expects($this->once())
             ->method('getMethodAnnotations')
-            ->will($this->returnValue(array($this->getAnnotatedRoute($methodRouteData))))
+            ->willReturn(array($this->getAnnotatedRoute($methodRouteData)))
         ;
 
         $routeCollection = $this->loader->load('Symfony\Component\Routing\Tests\Fixtures\AnnotatedClasses\BarClass');

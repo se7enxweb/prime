@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\Serializer\Tests\Encoder;
 
+
+
+use PHPUnit\Framework\Attributes\RequiresFunction;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -31,10 +35,7 @@ class JsonDecodeTest extends TestCase
         $this->assertFalse($this->decode->supportsDecoding('foobar'));
     }
 
-    /**
-     * @dataProvider decodeProvider
-     */
-    public function testDecode($toDecode, $expected, $context)
+    #[DataProvider('decodeProvider')]    public function testDecode($toDecode, $expected, $context)
     {
         $this->assertEquals(
             $expected,
@@ -55,9 +56,9 @@ class JsonDecodeTest extends TestCase
         );
     }
 
+    #[RequiresFunction('json_last_error_msg')]
+    #[DataProvider('decodeProviderException')]
     /**
-     * @requires function json_last_error_msg
-     * @dataProvider decodeProviderException
      */
     public function testDecodeWithException($value)
     {

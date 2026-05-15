@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\HttpKernel\Tests\EventListener;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -27,10 +29,7 @@ class RouterListenerTest extends TestCase
         $this->requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')->disableOriginalConstructor()->getMock();
     }
 
-    /**
-     * @dataProvider getPortData
-     */
-    public function testPort($defaultHttpPort, $defaultHttpsPort, $uri, $expectedHttpPort, $expectedHttpsPort)
+    #[DataProvider('getPortData')]    public function testPort($defaultHttpPort, $defaultHttpsPort, $uri, $expectedHttpPort, $expectedHttpsPort)
     {
         $urlMatcher = $this->getMockBuilder('Symfony\Component\Routing\Matcher\UrlMatcherInterface')
             ->disableOriginalConstructor()
@@ -40,15 +39,15 @@ class RouterListenerTest extends TestCase
         $context->setHttpsPort($defaultHttpsPort);
         $urlMatcher->expects($this->any())
             ->method('getContext')
-            ->will($this->returnValue($context));
+            ->willReturn($context);
 
         $listener = new RouterListener($urlMatcher, $this->requestStack);
         $event = $this->createGetResponseEventForUri($uri);
         $listener->onKernelRequest($event);
 
-        $this->assertEquals($expectedHttpPort, $context->getHttpPort());
-        $this->assertEquals($expectedHttpsPort, $context->getHttpsPort());
-        $this->assertEquals(0 === strpos($uri, 'https') ? 'https' : 'http', $context->getScheme());
+$this->assertEquals($expectedHttpPort, $context->getHttpPort());
+$this->assertEquals($expectedHttpsPort, $context->getHttpsPort());
+$this->assertEquals(0 === strpos($uri, 'https') ? 'https' : 'http', $context->getScheme());
     }
 
     public static function getPortData()
@@ -94,9 +93,9 @@ class RouterListenerTest extends TestCase
         $requestMatcher->expects($this->once())
                        ->method('matchRequest')
                        ->with($this->isInstanceOf('Symfony\Component\HttpFoundation\Request'))
-                       ->will($this->returnValue(array()));
+                       ->willReturn(array());
 
-        $listener = new RouterListener($requestMatcher, $this->requestStack, new RequestContext());
+$listener = new RouterListener($requestMatcher, $this->requestStack, new RequestContext());
         $listener->onKernelRequest($event);
     }
 
@@ -110,11 +109,11 @@ class RouterListenerTest extends TestCase
         $requestMatcher->expects($this->any())
                        ->method('matchRequest')
                        ->with($this->isInstanceOf('Symfony\Component\HttpFoundation\Request'))
-                       ->will($this->returnValue(array()));
+                       ->willReturn(array());
 
         $context = new RequestContext();
 
-        $listener = new RouterListener($requestMatcher, $this->requestStack, new RequestContext());
+$listener = new RouterListener($requestMatcher, $this->requestStack, new RequestContext());
         $listener->onKernelRequest($event);
 
         // sub-request with another HTTP method
@@ -127,20 +126,17 @@ class RouterListenerTest extends TestCase
         $this->assertEquals('GET', $context->getMethod());
     }
 
-    /**
-     * @dataProvider getLoggingParameterData
-     */
-    public function testLoggingParameter($parameter, $log)
+    #[DataProvider('getLoggingParameterData')]    public function testLoggingParameter($parameter, $log)
     {
         $requestMatcher = $this->getMockBuilder('Symfony\Component\Routing\Matcher\RequestMatcherInterface')->getMock();
         $requestMatcher->expects($this->once())
             ->method('matchRequest')
-            ->will($this->returnValue($parameter));
+            ->willReturn($parameter);
 
         $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')->getMock();
         $logger->expects($this->once())
             ->method('info')
-            ->with($this->equalTo($log));
+->with($this->equalTo($log));
 
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
         $request = Request::create('http://localhost/');

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Constraints;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Validator\Constraints\Bic;
 use Symfony\Component\Validator\Constraints\BicValidator;
 
@@ -35,10 +37,7 @@ class BicValidatorTest extends AbstractConstraintValidatorTest
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider getValidBics
-     */
-    public function testValidBics($bic)
+    #[DataProvider('getValidBics')]    public function testValidBics($bic)
     {
         $this->validator->validate($bic, new Bic());
 
@@ -58,10 +57,7 @@ class BicValidatorTest extends AbstractConstraintValidatorTest
         );
     }
 
-    /**
-     * @dataProvider getInvalidBics
-     */
-    public function testInvalidBics($bic, $code)
+    #[DataProvider('getInvalidBics')]    public function testInvalidBics($bic, $code)
     {
         $constraint = new Bic(array(
             'message' => 'myMessage',

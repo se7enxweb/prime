@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Console\Tests\Output;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\Output;
@@ -81,10 +83,7 @@ class OutputTest extends TestCase
         $this->assertEquals("foo\nbar\n", $output->output, '->writeln() can take an array of messages to output');
     }
 
-    /**
-     * @dataProvider provideWriteArguments
-     */
-    public function testWriteRawMessage($message, $type, $expectedOutput)
+    #[DataProvider('provideWriteArguments')]    public function testWriteRawMessage($message, $type, $expectedOutput)
     {
         $output = new TestOutput();
         $output->writeln($message, $type);
@@ -130,10 +129,7 @@ class OutputTest extends TestCase
         $this->assertEquals("<bar>foo</bar>\n", $output->output, '->writeln() do nothing when a style does not exist');
     }
 
-    /**
-     * @dataProvider verbosityProvider
-     */
-    public function testWriteWithVerbosityOption($verbosity, $expected, $msg)
+    #[DataProvider('verbosityProvider')]    public function testWriteWithVerbosityOption($verbosity, $expected, $msg)
     {
         $output = new TestOutput();
 

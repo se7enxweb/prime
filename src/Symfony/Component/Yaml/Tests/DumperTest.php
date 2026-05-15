@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Yaml\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Parser;
@@ -96,7 +98,7 @@ EOF;
                     // TODO
                 } else {
                     eval('$expected = '.trim($test['php']).';');
-                    $this->assertSame($expected, $this->parser->parse($this->dumper->dump($expected, 10)), $test['test']);
+                    $this->assertSame($expected, $this->parser->parse($this->dumper->dump($expected, 10)), (string) $test['test']);
                 }
             }
         }
@@ -200,10 +202,7 @@ EOF;
         $this->dumper->dump(array('foo' => new A(), 'bar' => 1), 0, 0, true, false);
     }
 
-    /**
-     * @dataProvider getEscapeSequences
-     */
-    public function testEscapedEscapeSequencesInQuotedScalar($input, $expected)
+    #[DataProvider('getEscapeSequences')]    public function testEscapedEscapeSequencesInQuotedScalar($input, $expected)
     {
         $this->assertEquals($expected, $this->dumper->dump($input));
     }

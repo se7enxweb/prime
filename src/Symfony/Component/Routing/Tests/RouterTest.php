@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Routing\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
@@ -46,7 +48,7 @@ class RouterTest extends TestCase
     public function testSetOptionsWithUnsupportedOptions()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The Router does not support the following options: \"option_foo\", \"option_bar\"');
+        $this->expectExceptionMessage('The Router does not support the following options: "option_foo", "option_bar"');
 
         $this->router->setOptions(array(
             'cache_dir' => './cache',
@@ -68,7 +70,7 @@ class RouterTest extends TestCase
     public function testSetOptionWithUnsupportedOption()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The Router does not support the \"option_foo\" option');
+        $this->expectExceptionMessage('The Router does not support the "option_foo" option');
 
         $this->router->setOption('option_foo', true);
     }
@@ -78,7 +80,7 @@ class RouterTest extends TestCase
     public function testGetOptionWithUnsupportedOption()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The Router does not support the \"option_foo\" option');
+        $this->expectExceptionMessage('The Router does not support the "option_foo" option');
 
         $this->router->getOption('option_foo', true);
     }
@@ -91,21 +93,18 @@ class RouterTest extends TestCase
 
         $this->loader->expects($this->once())
             ->method('load')->with('routing.yml', 'ResourceType')
-            ->will($this->returnValue($routeCollection));
+            ->willReturn($routeCollection);
 
         $this->assertSame($routeCollection, $this->router->getRouteCollection());
     }
 
-    /**
-     * @dataProvider provideMatcherOptionsPreventingCaching
-     */
-    public function testMatcherIsCreatedIfCacheIsNotConfigured($option)
+    #[DataProvider('provideMatcherOptionsPreventingCaching')]    public function testMatcherIsCreatedIfCacheIsNotConfigured($option)
     {
         $this->router->setOption($option, null);
 
         $this->loader->expects($this->once())
             ->method('load')->with('routing.yml', null)
-            ->will($this->returnValue(new RouteCollection()));
+            ->willReturn(new RouteCollection());
 
         $this->assertInstanceOf('Symfony\\Component\\Routing\\Matcher\\UrlMatcher', $this->router->getMatcher());
     }
@@ -118,16 +117,13 @@ class RouterTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideGeneratorOptionsPreventingCaching
-     */
-    public function testGeneratorIsCreatedIfCacheIsNotConfigured($option)
+    #[DataProvider('provideGeneratorOptionsPreventingCaching')]    public function testGeneratorIsCreatedIfCacheIsNotConfigured($option)
     {
         $this->router->setOption($option, null);
 
         $this->loader->expects($this->once())
             ->method('load')->with('routing.yml', null)
-            ->will($this->returnValue(new RouteCollection()));
+            ->willReturn(new RouteCollection());
 
         $this->assertInstanceOf('Symfony\\Component\\Routing\\Generator\\UrlGenerator', $this->router->getGenerator());
     }
@@ -146,7 +142,6 @@ class RouterTest extends TestCase
         $matcher->expects($this->once())->method('match');
 
         $p = new \ReflectionProperty($this->router, 'matcher');
-        $p->setAccessible(true);
         $p->setValue($this->router, $matcher);
 
         $this->router->matchRequest(Request::create('/'));
@@ -158,7 +153,6 @@ class RouterTest extends TestCase
         $matcher->expects($this->once())->method('matchRequest');
 
         $p = new \ReflectionProperty($this->router, 'matcher');
-        $p->setAccessible(true);
         $p->setValue($this->router, $matcher);
 
         $this->router->matchRequest(Request::create('/'));

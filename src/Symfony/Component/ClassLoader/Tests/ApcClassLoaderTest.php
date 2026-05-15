@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\ClassLoader\Tests;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\ClassLoader\ApcClassLoader;
 use Symfony\Component\ClassLoader\ClassLoader;
@@ -43,10 +45,7 @@ class ApcClassLoaderTest extends TestCase
         $this->assertEquals($loader->findFile('\Apc\Namespaced\FooBar'), apcu_fetch('test.prefix.\Apc\Namespaced\FooBar'), '__construct() takes a prefix as its first argument');
     }
 
-    /**
-     * @dataProvider getLoadClassTests
-     */
-    public function testLoadClass($className, $testClassName, $message)
+    #[DataProvider('getLoadClassTests')]    public function testLoadClass($className, $testClassName, $message)
     {
         $loader = new ClassLoader();
         $loader->addPrefix('Apc\Namespaced', __DIR__.\DIRECTORY_SEPARATOR.'Fixtures');
@@ -65,10 +64,7 @@ class ApcClassLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getLoadClassFromFallbackTests
-     */
-    public function testLoadClassFromFallback($className, $testClassName, $message)
+    #[DataProvider('getLoadClassFromFallbackTests')]    public function testLoadClassFromFallback($className, $testClassName, $message)
     {
         $loader = new ClassLoader();
         $loader->addPrefix('Apc\Namespaced', __DIR__.\DIRECTORY_SEPARATOR.'Fixtures');
@@ -91,10 +87,7 @@ class ApcClassLoaderTest extends TestCase
        );
     }
 
-    /**
-     * @dataProvider getLoadClassNamespaceCollisionTests
-     */
-    public function testLoadClassNamespaceCollision($namespaces, $className, $message)
+    #[DataProvider('getLoadClassNamespaceCollisionTests')]    public function testLoadClassNamespaceCollision($namespaces, $className, $message)
     {
         $loader = new ClassLoader();
         $loader->addPrefixes($namespaces);
@@ -143,10 +136,7 @@ class ApcClassLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getLoadClassPrefixCollisionTests
-     */
-    public function testLoadClassPrefixCollision($prefixes, $className, $message)
+    #[DataProvider('getLoadClassPrefixCollisionTests')]    public function testLoadClassPrefixCollision($prefixes, $className, $message)
     {
         $loader = new ClassLoader();
         $loader->addPrefixes($prefixes);

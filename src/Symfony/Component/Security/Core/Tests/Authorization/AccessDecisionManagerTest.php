@@ -11,16 +11,17 @@
 
 namespace Symfony\Component\Security\Core\Tests\Authorization;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class AccessDecisionManagerTest extends TestCase
 {
-    /**
-     * @group legacy
-     */
-    public function testSupportsClass()
+    #[Group('legacy')]    public function testSupportsClass()
     {
         $manager = new AccessDecisionManager(array(
             $this->getVoterSupportsClass(true),
@@ -35,10 +36,7 @@ class AccessDecisionManagerTest extends TestCase
         $this->assertFalse($manager->supportsClass('FooClass'));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testSupportsAttribute()
+    #[Group('legacy')]    public function testSupportsAttribute()
     {
         $manager = new AccessDecisionManager(array(
             $this->getVoterSupportsAttribute(true),
@@ -62,10 +60,7 @@ class AccessDecisionManagerTest extends TestCase
         new AccessDecisionManager(array($this->getVoter(VoterInterface::ACCESS_GRANTED)), 'fooBar');
     }
 
-    /**
-     * @dataProvider getStrategyTests
-     */
-    public function testStrategies($strategy, $voters, $allowIfAllAbstainDecisions, $allowIfEqualGrantedDeniedDecisions, $expected)
+    #[DataProvider('getStrategyTests')]    public function testStrategies($strategy, $voters, $allowIfAllAbstainDecisions, $allowIfEqualGrantedDeniedDecisions, $expected)
     {
         $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')->getMock();
         $manager = new AccessDecisionManager($voters, $strategy, $allowIfAllAbstainDecisions, $allowIfEqualGrantedDeniedDecisions);
@@ -73,10 +68,7 @@ class AccessDecisionManagerTest extends TestCase
         $this->assertSame($expected, $manager->decide($token, array('ROLE_FOO')));
     }
 
-    /**
-     * @dataProvider getStrategiesWith2RolesTests
-     */
-    public function testStrategiesWith2Roles($token, $strategy, $voter, $expected)
+    #[DataProvider('getStrategiesWith2RolesTests')]    public function testStrategiesWith2Roles($token, $strategy, $voter, $expected)
     {
         $manager = new AccessDecisionManager(array($voter), $strategy);
 
@@ -85,95 +77,120 @@ class AccessDecisionManagerTest extends TestCase
 
     public static function getStrategiesWith2RolesTests()
     {
-        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')->getMock();
+        $token = new class() implements TokenInterface {
+            public function __toString() { return ''; }
+            public function getRoles() { return []; }
+            public function getCredentials() { return null; }
+            public function getUser() { return null; }
+            public function setUser($user) {}
+            public function getUsername() { return ''; }
+            public function isAuthenticated() { return false; }
+            public function setAuthenticated($isAuthenticated) {}
+            public function eraseCredentials() {}
+            public function getAttributes() { return []; }
+            public function setAttributes(array $attributes) {}
+            public function hasAttribute($name) { return false; }
+            public function getAttribute($name) { return null; }
+            public function setAttribute($name, $value) {}
+            public function serialize() { return ''; }
+            public function unserialize($serialized) {}
+            public function __serialize(): array { return []; }
+            public function __unserialize(array $data): void {}
+        };
 
         return array(
-            array($token, 'affirmative', $this->getVoter(VoterInterface::ACCESS_DENIED), false),
-            array($token, 'affirmative', $this->getVoter(VoterInterface::ACCESS_GRANTED), true),
+            array($token, 'affirmative', self::getVoter(VoterInterface::ACCESS_DENIED), false),
+            array($token, 'affirmative', self::getVoter(VoterInterface::ACCESS_GRANTED), true),
 
-            array($token, 'consensus', $this->getVoter(VoterInterface::ACCESS_DENIED), false),
-            array($token, 'consensus', $this->getVoter(VoterInterface::ACCESS_GRANTED), true),
+            array($token, 'consensus', self::getVoter(VoterInterface::ACCESS_DENIED), false),
+            array($token, 'consensus', self::getVoter(VoterInterface::ACCESS_GRANTED), true),
 
-            array($token, 'unanimous', $this->getVoterFor2Roles($token, VoterInterface::ACCESS_DENIED, VoterInterface::ACCESS_DENIED), false),
-            array($token, 'unanimous', $this->getVoterFor2Roles($token, VoterInterface::ACCESS_DENIED, VoterInterface::ACCESS_GRANTED), false),
-            array($token, 'unanimous', $this->getVoterFor2Roles($token, VoterInterface::ACCESS_GRANTED, VoterInterface::ACCESS_DENIED), false),
-            array($token, 'unanimous', $this->getVoterFor2Roles($token, VoterInterface::ACCESS_GRANTED, VoterInterface::ACCESS_GRANTED), true),
+            array($token, 'unanimous', self::getVoterFor2Roles($token, VoterInterface::ACCESS_DENIED, VoterInterface::ACCESS_DENIED), false),
+            array($token, 'unanimous', self::getVoterFor2Roles($token, VoterInterface::ACCESS_DENIED, VoterInterface::ACCESS_GRANTED), false),
+            array($token, 'unanimous', self::getVoterFor2Roles($token, VoterInterface::ACCESS_GRANTED, VoterInterface::ACCESS_DENIED), false),
+            array($token, 'unanimous', self::getVoterFor2Roles($token, VoterInterface::ACCESS_GRANTED, VoterInterface::ACCESS_GRANTED), true),
         );
     }
 
-    protected function getVoterFor2Roles($token, $vote1, $vote2)
+    protected static function getVoterFor2Roles($token, $vote1, $vote2)
     {
-        $voter = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\Voter\VoterInterface')->getMock();
-        $voter->expects($this->any())
-              ->method('vote')
-              ->will($this->returnValueMap(array(
-                  array($token, null, array('ROLE_FOO'), $vote1),
-                  array($token, null, array('ROLE_BAR'), $vote2),
-              )))
-        ;
+        $map = array(
+            serialize(array('ROLE_FOO')) => $vote1,
+            serialize(array('ROLE_BAR')) => $vote2,
+        );
 
-        return $voter;
+        return new class($map) implements VoterInterface {
+            private $map;
+            public function __construct(array $map) { $this->map = $map; }
+            public function supportsAttribute($attribute) { return true; }
+            public function supportsClass($class) { return true; }
+            public function vote(TokenInterface $token, $object, array $attributes) {
+                $key = serialize($attributes);
+                return isset($this->map[$key]) ? $this->map[$key] : VoterInterface::ACCESS_ABSTAIN;
+            }
+        };
     }
 
     public static function getStrategyTests()
     {
         return array(
             // affirmative
-            array(AccessDecisionManager::STRATEGY_AFFIRMATIVE, $this->getVoters(1, 0, 0), false, true, true),
-            array(AccessDecisionManager::STRATEGY_AFFIRMATIVE, $this->getVoters(1, 2, 0), false, true, true),
-            array(AccessDecisionManager::STRATEGY_AFFIRMATIVE, $this->getVoters(0, 1, 0), false, true, false),
-            array(AccessDecisionManager::STRATEGY_AFFIRMATIVE, $this->getVoters(0, 0, 1), false, true, false),
-            array(AccessDecisionManager::STRATEGY_AFFIRMATIVE, $this->getVoters(0, 0, 1), true, true, true),
+            array(AccessDecisionManager::STRATEGY_AFFIRMATIVE, self::getVoters(1, 0, 0), false, true, true),
+            array(AccessDecisionManager::STRATEGY_AFFIRMATIVE, self::getVoters(1, 2, 0), false, true, true),
+            array(AccessDecisionManager::STRATEGY_AFFIRMATIVE, self::getVoters(0, 1, 0), false, true, false),
+            array(AccessDecisionManager::STRATEGY_AFFIRMATIVE, self::getVoters(0, 0, 1), false, true, false),
+            array(AccessDecisionManager::STRATEGY_AFFIRMATIVE, self::getVoters(0, 0, 1), true, true, true),
 
             // consensus
-            array(AccessDecisionManager::STRATEGY_CONSENSUS, $this->getVoters(1, 0, 0), false, true, true),
-            array(AccessDecisionManager::STRATEGY_CONSENSUS, $this->getVoters(1, 2, 0), false, true, false),
-            array(AccessDecisionManager::STRATEGY_CONSENSUS, $this->getVoters(2, 1, 0), false, true, true),
+            array(AccessDecisionManager::STRATEGY_CONSENSUS, self::getVoters(1, 0, 0), false, true, true),
+            array(AccessDecisionManager::STRATEGY_CONSENSUS, self::getVoters(1, 2, 0), false, true, false),
+            array(AccessDecisionManager::STRATEGY_CONSENSUS, self::getVoters(2, 1, 0), false, true, true),
 
-            array(AccessDecisionManager::STRATEGY_CONSENSUS, $this->getVoters(0, 0, 1), false, true, false),
+            array(AccessDecisionManager::STRATEGY_CONSENSUS, self::getVoters(0, 0, 1), false, true, false),
 
-            array(AccessDecisionManager::STRATEGY_CONSENSUS, $this->getVoters(0, 0, 1), true, true, true),
+            array(AccessDecisionManager::STRATEGY_CONSENSUS, self::getVoters(0, 0, 1), true, true, true),
 
-            array(AccessDecisionManager::STRATEGY_CONSENSUS, $this->getVoters(2, 2, 0), false, true, true),
-            array(AccessDecisionManager::STRATEGY_CONSENSUS, $this->getVoters(2, 2, 1), false, true, true),
+            array(AccessDecisionManager::STRATEGY_CONSENSUS, self::getVoters(2, 2, 0), false, true, true),
+            array(AccessDecisionManager::STRATEGY_CONSENSUS, self::getVoters(2, 2, 1), false, true, true),
 
-            array(AccessDecisionManager::STRATEGY_CONSENSUS, $this->getVoters(2, 2, 0), false, false, false),
-            array(AccessDecisionManager::STRATEGY_CONSENSUS, $this->getVoters(2, 2, 1), false, false, false),
+            array(AccessDecisionManager::STRATEGY_CONSENSUS, self::getVoters(2, 2, 0), false, false, false),
+            array(AccessDecisionManager::STRATEGY_CONSENSUS, self::getVoters(2, 2, 1), false, false, false),
 
             // unanimous
-            array(AccessDecisionManager::STRATEGY_UNANIMOUS, $this->getVoters(1, 0, 0), false, true, true),
-            array(AccessDecisionManager::STRATEGY_UNANIMOUS, $this->getVoters(1, 0, 1), false, true, true),
-            array(AccessDecisionManager::STRATEGY_UNANIMOUS, $this->getVoters(1, 1, 0), false, true, false),
+            array(AccessDecisionManager::STRATEGY_UNANIMOUS, self::getVoters(1, 0, 0), false, true, true),
+            array(AccessDecisionManager::STRATEGY_UNANIMOUS, self::getVoters(1, 0, 1), false, true, true),
+            array(AccessDecisionManager::STRATEGY_UNANIMOUS, self::getVoters(1, 1, 0), false, true, false),
 
-            array(AccessDecisionManager::STRATEGY_UNANIMOUS, $this->getVoters(0, 0, 2), false, true, false),
-            array(AccessDecisionManager::STRATEGY_UNANIMOUS, $this->getVoters(0, 0, 2), true, true, true),
+            array(AccessDecisionManager::STRATEGY_UNANIMOUS, self::getVoters(0, 0, 2), false, true, false),
+            array(AccessDecisionManager::STRATEGY_UNANIMOUS, self::getVoters(0, 0, 2), true, true, true),
         );
     }
 
-    protected function getVoters($grants, $denies, $abstains)
+    protected static function getVoters($grants, $denies, $abstains)
     {
         $voters = array();
         for ($i = 0; $i < $grants; ++$i) {
-            $voters[] = $this->getVoter(VoterInterface::ACCESS_GRANTED);
+            $voters[] = self::getVoter(VoterInterface::ACCESS_GRANTED);
         }
         for ($i = 0; $i < $denies; ++$i) {
-            $voters[] = $this->getVoter(VoterInterface::ACCESS_DENIED);
+            $voters[] = self::getVoter(VoterInterface::ACCESS_DENIED);
         }
         for ($i = 0; $i < $abstains; ++$i) {
-            $voters[] = $this->getVoter(VoterInterface::ACCESS_ABSTAIN);
+            $voters[] = self::getVoter(VoterInterface::ACCESS_ABSTAIN);
         }
 
         return $voters;
     }
 
-    protected function getVoter($vote)
+    protected static function getVoter($vote)
     {
-        $voter = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\Voter\VoterInterface')->getMock();
-        $voter->expects($this->any())
-              ->method('vote')
-              ->will($this->returnValue($vote));
-
-        return $voter;
+        return new class($vote) implements VoterInterface {
+            private $vote;
+            public function __construct(int $vote) { $this->vote = $vote; }
+            public function supportsAttribute($attribute) { return true; }
+            public function supportsClass($class) { return true; }
+            public function vote(TokenInterface $token, $object, array $attributes) { return $this->vote; }
+        };
     }
 
     protected function getVoterSupportsClass($ret)
@@ -181,7 +198,7 @@ class AccessDecisionManagerTest extends TestCase
         $voter = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\Voter\VoterInterface')->getMock();
         $voter->expects($this->any())
               ->method('supportsClass')
-              ->will($this->returnValue($ret));
+              ->willReturn($ret);
 
         return $voter;
     }
@@ -191,7 +208,7 @@ class AccessDecisionManagerTest extends TestCase
         $voter = $this->getMockBuilder('Symfony\Component\Security\Core\Authorization\Voter\VoterInterface')->getMock();
         $voter->expects($this->any())
               ->method('supportsAttribute')
-              ->will($this->returnValue($ret));
+              ->willReturn($ret);
 
         return $voter;
     }

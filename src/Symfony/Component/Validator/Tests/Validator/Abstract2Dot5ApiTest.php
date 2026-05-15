@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator\Tests\Validator;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\Expression;
@@ -541,10 +543,7 @@ abstract class Abstract2Dot5ApiTest extends AbstractValidatorTest
         $this->assertSame(42, $violations[0]->getCode());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testMetadataMustImplementClassMetadataInterface()
+    #[Group('legacy')]    public function testMetadataMustImplementClassMetadataInterface()
     {
         $this->expectException(\Symfony\Component\Validator\Exception\UnsupportedMetadataException::class);
 
@@ -553,17 +552,14 @@ abstract class Abstract2Dot5ApiTest extends AbstractValidatorTest
         $metadata = $this->getMockBuilder('Symfony\Component\Validator\Tests\Fixtures\LegacyClassMetadata')->getMock();
         $metadata->expects($this->any())
             ->method('getClassName')
-            ->will($this->returnValue(\get_class($entity)));
+            ->willReturn(\get_class($entity));
 
         $this->metadataFactory->addMetadata($metadata);
 
         $this->validator->validate($entity);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testReferenceMetadataMustImplementClassMetadataInterface()
+    #[Group('legacy')]    public function testReferenceMetadataMustImplementClassMetadataInterface()
     {
         $this->expectException(\Symfony\Component\Validator\Exception\UnsupportedMetadataException::class);
 
@@ -573,7 +569,7 @@ abstract class Abstract2Dot5ApiTest extends AbstractValidatorTest
         $metadata = $this->getMockBuilder('Symfony\Component\Validator\Tests\Fixtures\LegacyClassMetadata')->getMock();
         $metadata->expects($this->any())
             ->method('getClassName')
-            ->will($this->returnValue(\get_class($entity->reference)));
+            ->willReturn(\get_class($entity->reference));
 
         $this->metadataFactory->addMetadata($metadata);
 
@@ -582,10 +578,7 @@ abstract class Abstract2Dot5ApiTest extends AbstractValidatorTest
         $this->validator->validate($entity);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyPropertyMetadataMustImplementPropertyMetadataInterface()
+    #[Group('legacy')]    public function testLegacyPropertyMetadataMustImplementPropertyMetadataInterface()
     {
         $this->expectException(\Symfony\Component\Validator\Exception\UnsupportedMetadataException::class);
 
@@ -683,9 +676,9 @@ abstract class Abstract2Dot5ApiTest extends AbstractValidatorTest
         $initializer1->expects($this->once())
             ->method('initialize')
             ->with($entity)
-            ->will($this->returnCallback(function ($object) {
+            ->willReturnCallback(function ($object) {
                 $object->initialized = true;
-            }));
+            });
 
         $initializer2->expects($this->once())
             ->method('initialize')

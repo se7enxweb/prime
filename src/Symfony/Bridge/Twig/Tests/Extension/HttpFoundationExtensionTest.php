@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\Twig\Tests\Extension;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Extension\HttpFoundationExtension;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,8 +21,8 @@ use Symfony\Component\Routing\RequestContext;
 
 class HttpFoundationExtensionTest extends TestCase
 {
+    #[DataProvider('getGenerateAbsoluteUrlData')]
     /**
-     * @dataProvider getGenerateAbsoluteUrlData()
      */
     public function testGenerateAbsoluteUrl($expected, $path, $pathinfo)
     {
@@ -53,11 +55,7 @@ class HttpFoundationExtensionTest extends TestCase
             array('http://localhost/foo/baz?baz=1#baz', 'baz?baz=1#baz', '/foo/bar?foo=1'),
         );
     }
-
-    /**
-     * @dataProvider getGenerateAbsoluteUrlRequestContextData
-     */
-    public function testGenerateAbsoluteUrlWithRequestContext($path, $baseUrl, $host, $scheme, $httpPort, $httpsPort, $expected)
+    #[DataProvider('getGenerateAbsoluteUrlRequestContextData')]    public function testGenerateAbsoluteUrlWithRequestContext($path, $baseUrl, $host, $scheme, $httpPort, $httpsPort, $expected)
     {
         if (!class_exists('Symfony\Component\Routing\RequestContext')) {
             $this->markTestSkipped('The Routing component is needed to run tests that depend on its request context.');
@@ -68,11 +66,7 @@ class HttpFoundationExtensionTest extends TestCase
 
         $this->assertEquals($expected, $extension->generateAbsoluteUrl($path));
     }
-
-    /**
-     * @dataProvider getGenerateAbsoluteUrlRequestContextData
-     */
-    public function testGenerateAbsoluteUrlWithoutRequestAndRequestContext($path)
+    #[DataProvider('getGenerateAbsoluteUrlRequestContextData')]    public function testGenerateAbsoluteUrlWithoutRequestAndRequestContext($path)
     {
         if (!class_exists('Symfony\Component\Routing\RequestContext')) {
             $this->markTestSkipped('The Routing component is needed to run tests that depend on its request context.');
@@ -111,9 +105,8 @@ class HttpFoundationExtensionTest extends TestCase
             $extension->generateAbsoluteUrl('/app/web/bundles/framework/css/structure.css')
         );
     }
-
+    #[DataProvider('getGenerateRelativePathData')]
     /**
-     * @dataProvider getGenerateRelativePathData()
      */
     public function testGenerateRelativePath($expected, $path, $pathinfo)
     {

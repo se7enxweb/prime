@@ -28,6 +28,7 @@ class CacheClearCommandTest extends TestCase
     /** @var Filesystem */
     private $fs;
     private $rootDir;
+    private $previousExceptionHandler;
 
     protected function setUp(): void
     {
@@ -36,11 +37,21 @@ class CacheClearCommandTest extends TestCase
         $this->rootDir = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid('sf2_cache_', true);
         $this->kernel->setRootDir($this->rootDir);
         $this->fs->mkdir($this->rootDir);
+        $this->previousExceptionHandler = set_exception_handler(function () {});
+        restore_exception_handler();
     }
 
     protected function tearDown(): void
     {
         $this->fs->remove($this->rootDir);
+        for ($i = 0; $i < 20; $i++) {
+            $current = set_exception_handler(null);
+            restore_exception_handler();
+            if ($current === $this->previousExceptionHandler) {
+                break;
+            }
+            restore_exception_handler();
+        }
     }
 
     public function testCacheIsFreshAfterCacheClearedWithWarmup()

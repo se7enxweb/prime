@@ -59,6 +59,20 @@ abstract class Constraint
     public $payload;
 
     /**
+     * The groups that the constraint belongs to.
+     *
+     * @var array
+     */
+    public $groups = array(self::DEFAULT_GROUP);
+
+    /**
+     * Whether the groups option was explicitly provided.
+     *
+     * @var bool
+     */
+    protected $groupsSet = false;
+
+    /**
      * Returns the name of the given error code.
      *
      * @param string $errorCode The error code
@@ -123,7 +137,12 @@ abstract class Constraint
         if (\is_array($options) && \count($options) > 0 && \is_string(key($options))) {
             foreach ($options as $option => $value) {
                 if (array_key_exists($option, $knownOptions)) {
-                    $this->$option = $value;
+                    if ('groups' === $option) {
+                        $this->groups = (array) $value;
+                        $this->groupsSet = true;
+                    } else {
+                        $this->$option = $value;
+                    }
                     unset($missingOptions[$option]);
                 } else {
                     $invalidOptions[] = $option;
@@ -137,7 +156,12 @@ abstract class Constraint
             }
 
             if (array_key_exists($option, $knownOptions)) {
-                $this->$option = $options;
+                if ('groups' === $option) {
+                    $this->groups = (array) $options;
+                    $this->groupsSet = true;
+                } else {
+                    $this->$option = $options;
+                }
                 unset($missingOptions[$option]);
             } else {
                 $invalidOptions[] = $option;
@@ -169,6 +193,7 @@ abstract class Constraint
     {
         if ('groups' === $option) {
             $this->groups = (array) $value;
+            $this->groupsSet = true;
 
             return;
         }
@@ -213,14 +238,28 @@ abstract class Constraint
     }
 
     /**
+     * Returns whether groups have been explicitly configured.
+     *
+     * @return bool
+     */
+    public function isGroupsOptionSet()
+    {
+        return $this->groupsSet;
+    }
+
+    /**
      * Adds the given group if this constraint is in the Default group.
      *
      * @param string $group
      */
     public function addImplicitGroupName($group)
     {
-        if (\in_array(self::DEFAULT_GROUP, $this->groups) && !\in_array($group, $this->groups)) {
-            $this->groups[] = $group;
+        $groups = (array) $this->groups;
+
+        if (\in_array(self::DEFAULT_GROUP, $groups) && !\in_array($group, $groups)) {
+            $groups[] = $group;
+            $this->groups = $groups;
+            $this->groupsSet = true;
         }
     }
 
@@ -292,6 +331,7 @@ abstract class Constraint
     {
         // Initialize "groups" option if it is not set
         $this->groups;
+        $this->groupsSet = true;
 
         return array_keys(get_object_vars($this));
     }

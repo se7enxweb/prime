@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\HttpKernel\Tests\EventListener;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -23,10 +25,10 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class ProfilerListenerTest extends TestCase
 {
+    #[Group('legacy')]
     /**
      * Test to ensure BC without RequestStack.
      *
-     * @group legacy
      */
     public function testLegacyEventsWithoutRequestStack()
     {
@@ -39,7 +41,7 @@ class ProfilerListenerTest extends TestCase
             ->getMock();
         $profiler->expects($this->once())
             ->method('collect')
-            ->will($this->returnValue($profile));
+            ->willReturn($profile);
 
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
 
@@ -72,7 +74,7 @@ class ProfilerListenerTest extends TestCase
 
         $profiler->expects($this->once())
             ->method('collect')
-            ->will($this->returnValue($profile));
+            ->willReturn($profile);
 
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
 

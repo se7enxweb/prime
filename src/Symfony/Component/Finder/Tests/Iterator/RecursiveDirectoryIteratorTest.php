@@ -11,14 +11,13 @@
 
 namespace Symfony\Component\Finder\Tests\Iterator;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
 
 class RecursiveDirectoryIteratorTest extends IteratorTestCase
 {
-    /**
-     * @group network
-     */
-    public function testRewindOnFtp()
+    #[Group('network')]    public function testRewindOnFtp()
     {
         try {
             $i = new RecursiveDirectoryIterator('ftp://speedtest.tele2.net/', \RecursiveDirectoryIterator::SKIP_DOTS);
@@ -31,10 +30,7 @@ class RecursiveDirectoryIteratorTest extends IteratorTestCase
         $this->assertTrue(true);
     }
 
-    /**
-     * @group network
-     */
-    public function testSeekOnFtp()
+    #[Group('network')]    public function testSeekOnFtp()
     {
         try {
             $i = new RecursiveDirectoryIterator('ftp://speedtest.tele2.net/', \RecursiveDirectoryIterator::SKIP_DOTS);

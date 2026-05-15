@@ -11,6 +11,8 @@
 
 namespace Symfony\Bridge\Monolog\Tests\Handler;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
@@ -40,17 +42,13 @@ class ConsoleHandlerTest extends TestCase
         $handler = new ConsoleHandler();
         $this->assertFalse($handler->isHandling(array()), '->isHandling returns false when no output is set');
     }
-
-    /**
-     * @dataProvider provideVerbosityMappingTests
-     */
-    public function testVerbosityMapping($verbosity, $level, $isHandling, array $map = array())
+    #[DataProvider('provideVerbosityMappingTests')]    public function testVerbosityMapping($verbosity, $level, $isHandling, array $map = array())
     {
         $output = $this->getMockBuilder('Symfony\Component\Console\Output\OutputInterface')->getMock();
         $output
             ->expects($this->atLeastOnce())
             ->method('getVerbosity')
-            ->will($this->returnValue($verbosity))
+            ->willReturn($verbosity)
         ;
         $handler = new ConsoleHandler($output, true, $map);
         $this->assertSame($isHandling, $handler->isHandling(array('level' => $level)),
@@ -83,15 +81,12 @@ class ConsoleHandlerTest extends TestCase
     {
         $output = $this->getMockBuilder('Symfony\Component\Console\Output\OutputInterface')->getMock();
         $output
-            ->expects($this->at(0))
+            ->expects($this->any())
             ->method('getVerbosity')
-            ->will($this->returnValue(OutputInterface::VERBOSITY_QUIET))
-        ;
-        $output
-            ->expects($this->at(1))
-            ->method('getVerbosity')
-            ->will($this->returnValue(OutputInterface::VERBOSITY_DEBUG))
-        ;
+            ->willReturnOnConsecutiveCalls(
+                OutputInterface::VERBOSITY_QUIET,
+                OutputInterface::VERBOSITY_DEBUG
+            );
         $handler = new ConsoleHandler($output);
         $this->assertFalse($handler->isHandling(array('level' => Logger::NOTICE)),
             'when verbosity is set to quiet, the handler does not handle the log'
@@ -115,7 +110,7 @@ class ConsoleHandlerTest extends TestCase
         $output
             ->expects($this->any())
             ->method('getVerbosity')
-            ->will($this->returnValue(OutputInterface::VERBOSITY_DEBUG))
+            ->willReturn(OutputInterface::VERBOSITY_DEBUG)
         ;
         $output
             ->expects($this->once())
@@ -168,12 +163,12 @@ class ConsoleHandlerTest extends TestCase
 
         $event = new ConsoleCommandEvent(new Command('foo'), $this->getMockBuilder('Symfony\Component\Console\Input\InputInterface')->getMock(), $output);
         $dispatcher->dispatch(ConsoleEvents::COMMAND, $event);
-        $this->assertContains('Before command message.', $out = $output->fetch());
+        $this->assertStringContainsString('Before command message.', $out = $output->fetch());
         $this->assertStringContainsString('After command message.', $out);
 
         $event = new ConsoleTerminateEvent(new Command('foo'), $this->getMockBuilder('Symfony\Component\Console\Input\InputInterface')->getMock(), $output, 0);
         $dispatcher->dispatch(ConsoleEvents::TERMINATE, $event);
-        $this->assertContains('Before terminate message.', $out = $output->fetch());
+        $this->assertStringContainsString('Before terminate message.', $out = $output->fetch());
         $this->assertStringContainsString('After terminate message.', $out);
     }
 }

@@ -100,7 +100,6 @@ class DeprecationErrorHandler
                 if (isset($mode[0]) && '/' === $mode[0] && preg_match($mode, $msg)) {
                     $e = new \Exception($msg);
                     $r = new \ReflectionProperty($e, 'trace');
-                    $r->setAccessible(true);
                     $r->setValue($e, \array_slice($trace, 1, $i));
 
                     echo "\n".ucfirst($group).' deprecation triggered by '.$class.'::'.$method.':';

@@ -11,6 +11,8 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Templating\Helper;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Templating\Helper\AssetsHelper;
 use Symfony\Component\Asset\Package;
@@ -20,10 +22,7 @@ use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
 
 class AssetsHelperTest extends TestCase
 {
-    /**
-     * @group legacy
-     */
-    public function testLegacyGetUrl()
+    #[Group('legacy')]    public function testLegacyGetUrl()
     {
         $versionStrategy = new StaticVersionStrategy('22', '%s?version=%s');
         $package = new Package($versionStrategy);
@@ -35,10 +34,7 @@ class AssetsHelperTest extends TestCase
         $this->assertEquals('/images/me.png?version=42', $helper->getUrl('me.png', 'images', '42'));
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyGetVersion()
+    #[Group('legacy')]    public function testLegacyGetVersion()
     {
         $package = new Package(new StaticVersionStrategy('22'));
         $imagePackage = new Package(new StaticVersionStrategy('42'));

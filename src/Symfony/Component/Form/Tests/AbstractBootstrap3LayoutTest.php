@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Form\Tests;
 
+
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Form\FormError;
 
 abstract class AbstractBootstrap3LayoutTest extends AbstractLayoutTest
@@ -1876,10 +1878,7 @@ abstract class AbstractBootstrap3LayoutTest extends AbstractLayoutTest
         );
     }
 
-    /**
-     * @group legacy
-     */
-    public function testLegacyReadOnly()
+    #[Group('legacy')]    public function testLegacyReadOnly()
     {
         $form = $this->factory->createNamed('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', null, array(
             'read_only' => true,

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Process\Tests;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\PhpExecutableFinder;
 
@@ -43,10 +45,10 @@ class PhpExecutableFinderTest extends TestCase
         $this->assertEquals($f->find(false), $current, '::find() returns the executable PHP');
     }
 
+    #[RequiresPhp('5.4')]
     /**
      * tests find() with the constant PHP_BINARY.
      *
-     * @requires PHP 5.4
      */
     public function testFind()
     {

@@ -188,7 +188,7 @@ class XmlFileLoader extends FileLoader
             $subCollection->setSchemes($schemes);
         }
         if (null !== $methods) {
-            $subCollection->setMethods($methods);
+            $subCollection->onlyMethods($methods);
         }
         $subCollection->addDefaults($defaults);
         $subCollection->addRequirements($requirements);

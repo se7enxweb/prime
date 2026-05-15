@@ -94,12 +94,14 @@ class WebDebugToolbarListener implements EventSubscriberInterface
             $response->headers->remove('Location');
         }
 
+        $contentDisposition = $response->headers->get('Content-Disposition');
+
         if (self::DISABLED === $this->mode
             || !$response->headers->has('X-Debug-Token')
             || $response->isRedirection()
             || ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
             || 'html' !== $request->getRequestFormat()
-            || false !== stripos($response->headers->get('Content-Disposition'), 'attachment;')
+            || (null !== $contentDisposition && false !== stripos($contentDisposition, 'attachment;'))
         ) {
             return;
         }

@@ -35,7 +35,7 @@ class AbstractExtensionTest extends TestCase
     public function testCustomOptionsResolver()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Custom resolver \"Symfony\\Component\\Form\\Tests\\Fixtures\\CustomOptionsResolver\" must extend \"Symfony\\Component\\OptionsResolver\\OptionsResolver\".');
+        $this->expectExceptionMessage('Custom resolver "Symfony\\Component\\Form\\Tests\\Fixtures\\CustomOptionsResolver" must extend "Symfony\\Component\\OptionsResolver\\OptionsResolver".');
 
         $extension = new Fixtures\LegacyFooTypeBarExtension();
         $resolver = new Fixtures\CustomOptionsResolver();

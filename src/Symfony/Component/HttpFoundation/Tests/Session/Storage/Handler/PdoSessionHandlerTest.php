@@ -11,12 +11,15 @@
 
 namespace Symfony\Component\HttpFoundation\Tests\Session\Storage\Handler;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 
+#[RequiresPhpExtension('pdo_sqlite')]
 /**
- * @requires extension pdo_sqlite
- * @group time-sensitive
  */
 class PdoSessionHandlerTest extends TestCase
 {
@@ -150,7 +153,7 @@ class PdoSessionHandlerTest extends TestCase
         $stream = $this->createStream($content);
 
         $pdo->prepareResult->expects($this->once())->method('fetchAll')
-            ->will($this->returnValue(array(array($stream, 42, time()))));
+            ->willReturn(array(array($stream, 42, time())));
 
         $storage = new PdoSessionHandler($pdo);
         $result = $storage->read('foo');
@@ -177,14 +180,14 @@ class PdoSessionHandlerTest extends TestCase
         $exception = null;
 
         $selectStmt->expects($this->atLeast(2))->method('fetchAll')
-            ->will($this->returnCallback(function () use (&$exception, $stream) {
+            ->willReturnCallback(function () use (&$exception, $stream) {
                 return $exception ? array(array($stream, 42, time())) : array();
-            }));
+            });
 
         $insertStmt->expects($this->once())->method('execute')
-            ->will($this->returnCallback(function () use (&$exception) {
+            ->willReturnCallback(function () use (&$exception) {
                 throw $exception = new \PDOException('', '23');
-            }));
+            });
 
         $storage = new PdoSessionHandler($pdo);
         $result = $storage->read('foo');
@@ -272,8 +275,8 @@ class PdoSessionHandlerTest extends TestCase
         $this->assertSame('', $data, 'Destroyed session returns empty string');
     }
 
+    #[RunInSeparateProcess]
     /**
-     * @runInSeparateProcess
      */
     public function testSessionGC()
     {
@@ -309,7 +312,6 @@ class PdoSessionHandlerTest extends TestCase
         $storage = new PdoSessionHandler($this->getMemorySqlitePdo());
 
         $method = new \ReflectionMethod($storage, 'getConnection');
-        $method->setAccessible(true);
 
         $this->assertInstanceOf('\PDO', $method->invoke($storage));
     }
@@ -319,7 +321,6 @@ class PdoSessionHandlerTest extends TestCase
         $storage = new PdoSessionHandler('sqlite::memory:');
 
         $method = new \ReflectionMethod($storage, 'getConnection');
-        $method->setAccessible(true);
 
         $this->assertInstanceOf('\PDO', $method->invoke($storage));
     }

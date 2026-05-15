@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\HttpFoundation\Tests\File;
 
+
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -25,7 +27,7 @@ class UploadedFileTest extends TestCase
 
     public function testConstructWhenFileNotExists()
     {
-        $this->{method_exists($this, $_ = 'expectException') ? $_ : 'setExpectedException'}('Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException');
+        $this->expectException('Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException');
 
         new UploadedFile(
             __DIR__.'/Fixtures/not_here',
@@ -167,7 +169,7 @@ class UploadedFileTest extends TestCase
         $movedFile = $file->move(__DIR__.'/Fixtures/directory');
 
         $this->assertFileExists($targetPath);
-        $this->assertFileNotExists($path);
+        $this->assertFileDoesNotExist($path);
         $this->assertEquals(realpath($targetPath), $movedFile->getRealPath());
 
         @unlink($targetPath);
@@ -232,10 +234,7 @@ class UploadedFileTest extends TestCase
         $this->assertTrue($file->isValid());
     }
 
-    /**
-     * @dataProvider uploadedFileErrorProvider
-     */
-    public function testIsInvalidOnUploadError($error)
+    #[DataProvider('uploadedFileErrorProvider')]    public function testIsInvalidOnUploadError($error)
     {
         $file = new UploadedFile(
             __DIR__.'/Fixtures/test.gif',

@@ -11,6 +11,12 @@
 
 namespace Symfony\Component\Yaml\Tests;
 
+
+
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
@@ -30,12 +36,9 @@ class ParserTest extends TestCase
         $this->parser = null;
     }
 
-    /**
-     * @dataProvider getDataFormSpecifications
-     */
-    public function testSpecifications($file, $expected, $yaml, $comment)
+    #[DataProvider('getDataFormSpecifications')]    public function testSpecifications($file, $expected, $yaml, $comment)
     {
-        $this->assertEquals($expected, var_export($this->parser->parse($yaml), true), $comment);
+        $this->assertEquals($expected, var_export($this->parser->parse($yaml), true), (string) $comment);
     }
 
     public static function getDataFormSpecifications()
@@ -408,10 +411,7 @@ EOF;
         return $tests;
     }
 
-    /**
-     * @dataProvider getBlockChompingTests
-     */
-    public function testBlockChomping($expected, $yaml)
+    #[DataProvider('getBlockChompingTests')]    public function testBlockChomping($expected, $yaml)
     {
         $this->assertSame($expected, $this->parser->parse($yaml));
     }
@@ -452,18 +452,12 @@ EOF;
         $this->assertEquals(array('foo' => new B(), 'bar' => 1), $this->parser->parse($input, false, true), '->parse() is able to parse objects');
     }
 
-    /**
-     * @dataProvider invalidDumpedObjectProvider
-     */
-    public function testObjectSupportDisabledButNoExceptions($input)
+    #[DataProvider('invalidDumpedObjectProvider')]    public function testObjectSupportDisabledButNoExceptions($input)
     {
         $this->assertEquals(array('foo' => null, 'bar' => 1), $this->parser->parse($input), '->parse() does not parse objects');
     }
 
-    /**
-     * @dataProvider getObjectForMapTests
-     */
-    public function testObjectForMap($yaml, $expected)
+    #[DataProvider('getObjectForMapTests')]    public function testObjectForMap($yaml, $expected)
     {
         $this->assertEquals($expected, $this->parser->parse($yaml, false, false, true));
     }
@@ -531,10 +525,7 @@ YAML;
         return $tests;
     }
 
-    /**
-     * @dataProvider invalidDumpedObjectProvider
-     */
-    public function testObjectsSupportDisabledWithExceptions($yaml)
+    #[DataProvider('invalidDumpedObjectProvider')]    public function testObjectsSupportDisabledWithExceptions($yaml)
     {
         $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
 
@@ -558,10 +549,7 @@ EOF;
         );
     }
 
-    /**
-     * @requires extension iconv
-     */
-    public function testNonUtf8Exception()
+    #[RequiresPhpExtension('iconv')]    public function testNonUtf8Exception()
     {
         $yamls = array(
             iconv('UTF-8', 'ISO-8859-1', "foo: 'äöüß'"),
@@ -949,13 +937,14 @@ EOF;
         $this->assertEquals($expected, $this->parser->parse($yaml));
     }
 
+    #[Group('legacy')]
     /**
-     * @group legacy
-     * @expectedDeprecation Using a colon in the unquoted mapping value "bar: baz" in line 1 is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.
      * throw ParseException in Symfony 3.0
      */
     public function testColonInMappingValueException()
     {
+        $this->expectUserDeprecationMessage('Using a colon in the unquoted mapping value "bar: baz" in line 1 is deprecated since Symfony 2.8 and will throw a ParseException in 3.0.');
+
         $yaml = <<<'EOF'
 foo: bar: baz
 EOF;
@@ -973,10 +962,7 @@ EOT;
         $this->assertSame(array('foo' => array('bar' => 'foobar')), $this->parser->parse($yaml));
     }
 
-    /**
-     * @dataProvider getCommentLikeStringInScalarBlockData
-     */
-    public function testCommentLikeStringsAreNotStrippedInBlockScalars($yaml, $expectedParserResult)
+    #[DataProvider('getCommentLikeStringInScalarBlockData')]    public function testCommentLikeStringsAreNotStrippedInBlockScalars($yaml, $expectedParserResult)
     {
         $this->assertSame($expectedParserResult, $this->parser->parse($yaml));
     }
@@ -1158,19 +1144,15 @@ EOT
         );
     }
 
+    #[DataProvider('parserThrowsExceptionWithCorrectLineNumberProvider')]
     /**
      * @param $lineNumber
      * @param $yaml
-     * @dataProvider parserThrowsExceptionWithCorrectLineNumberProvider
      */
     public function testParserThrowsExceptionWithCorrectLineNumber($lineNumber, $yaml)
     {
-        if (method_exists($this, 'expectException')) {
-            $this->expectException('\Symfony\Component\Yaml\Exception\ParseException');
+$this->expectException('\Symfony\Component\Yaml\Exception\ParseException');
             $this->expectExceptionMessage(sprintf('Unexpected characters near "," at line %d (near "bar: "123",").', $lineNumber));
-        } else {
-            $this->setExpectedException('\Symfony\Component\Yaml\Exception\ParseException', sprintf('Unexpected characters near "," at line %d (near "bar: "123",").', $lineNumber));
-        }
 
         $this->parser->parse($yaml);
     }
@@ -1244,7 +1226,7 @@ YAML
     public function testParserCleansUpReferencesBetweenRuns()
     {
         $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
-        $this->expectExceptionMessage('Reference \"foo\" does not exist at line 2');
+        $this->expectExceptionMessage('Reference "foo" does not exist at line 2');
 
         $yaml = <<<YAML
 foo: &foo
@@ -1294,7 +1276,7 @@ YAML;
     public function testEvalRefException()
     {
         $this->expectException(\Symfony\Component\Yaml\Exception\ParseException::class);
-        $this->expectExceptionMessage('Reference \"foo\" does not exist');
+        $this->expectExceptionMessage('Reference "foo" does not exist');
 
         $yaml = <<<EOE
 foo: { &foo { a: Steve, <<: *foo} }

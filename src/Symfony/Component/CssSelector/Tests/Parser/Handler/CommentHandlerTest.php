@@ -15,10 +15,10 @@ use Symfony\Component\CssSelector\Parser\Handler\CommentHandler;
 use Symfony\Component\CssSelector\Parser\Reader;
 use Symfony\Component\CssSelector\Parser\Token;
 use Symfony\Component\CssSelector\Parser\TokenStream;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CommentHandlerTest extends AbstractHandlerTest
-{
-    /** @dataProvider getHandleValueTestData */
+{    #[DataProvider('getHandleValueTestData')]
     public function testHandleValue($value, Token $unusedArgument, $remainingContent)
     {
         $reader = new Reader($value);

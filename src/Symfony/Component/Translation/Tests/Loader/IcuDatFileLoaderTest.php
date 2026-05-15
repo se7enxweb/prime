@@ -11,11 +11,14 @@
 
 namespace Symfony\Component\Translation\Tests\Loader;
 
+
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Translation\Loader\IcuDatFileLoader;
 
+#[RequiresPhpExtension('intl')]
 /**
- * @requires extension intl
  */
 class IcuDatFileLoaderTest extends LocalizedTestCase
 {

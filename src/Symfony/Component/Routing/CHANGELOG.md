@@ -86,7 +86,7 @@ CHANGELOG
    ```php
    $route = new Route();
    $route->setPath('/article/{id}');
-   $route->setMethods(array('POST', 'PUT'));
+   $route->onlyMethods(array('POST', 'PUT'));
    $route->setSchemes('https');
    ```
 
