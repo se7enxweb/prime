@@ -193,13 +193,10 @@ cd myapp
 # 2 — Install dependencies
 composer install
 
-# 3 — Check PHP requirements
-php bin/check_configuration.php
-
-# 4 — Point your web server DocumentRoot to web/
+# 3 — Point your web server DocumentRoot to web/
 #     (see INSTALL.md for full server config)
 
-# 5 — Open http://localhost/ in your browser
+# 4 — Open http://localhost/ in your browser
 ```
 
 ---
